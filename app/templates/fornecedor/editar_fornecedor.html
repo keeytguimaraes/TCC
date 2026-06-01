@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Editar fornecedor
+    </title>
+
+</head>
+
+<body>
+
+    <h1>
+        Editar fornecedor
+    </h1>
+
+    <!-- FORMULÁRIO -->
+    <form
+        action="/fornecedor/editar/{{ fornecedor.id }}"
+        method="POST"
+    >
+
+        <!-- Nome -->
+        <label>
+            Nome:
+        </label>
+
+        <input
+            type="text"
+            name="nome"
+            value="{{ fornecedor.nome }}"
+            required
+        >
+
+        <br><br>
+
+        <!-- Telefone -->
+        <label>
+            Telefone:
+        </label>
+
+        <input
+            type="text"
+            name="telefone"
+            value="{{ fornecedor.telefone }}"
+        >
+
+        <br><br>
+
+        <!-- Observação -->
+        <label>
+            Observação:
+        </label>
+
+        <br>
+
+        <textarea
+            name="observacao"
+            rows="5"
+            cols="40"
+        >{{ fornecedor.observacao }}</textarea>
+
+        <br><br>
+
+        <!-- Botão -->
+        <button type="submit">
+
+            Salvar alterações
+
+        </button>
+
+    </form>
+
+    <br>
+
+    <!-- Voltar -->
+    <a href="/fornecedor">
+
+        Voltar
+
+    </a>
+
+</body>
+
+</html>

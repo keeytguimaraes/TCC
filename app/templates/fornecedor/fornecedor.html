@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Fornecedor
+    </title>
+
+</head>
+
+<body>
+
+    <h1>
+        Cadastro de Fornecedor
+    </h1>
+
+    <!-- FORMULÁRIO -->
+    <form
+        action="/fornecedor/cadastrar"
+        method="POST"
+    >
+
+        <!-- Nome -->
+        <label>
+            Nome:
+        </label>
+
+        <input
+            type="text"
+            name="nome"
+            required
+        >
+
+        <br><br>
+
+        <!-- Telefone -->
+        <label>
+            Telefone:
+        </label>
+
+        <input
+            type="text"
+            name="telefone"
+        >
+
+        <br><br>
+
+        <!-- Observação -->
+        <label>
+            Observação:
+        </label>
+
+        <br>
+
+        <textarea
+            name="observacao"
+            rows="5"
+            cols="40"
+        ></textarea>
+
+        <br><br>
+
+        <!-- Botão -->
+        <button type="submit">
+
+            Salvar
+
+        </button>
+
+    </form>
+
+    <hr>
+
+    <h2>
+        Fornecedores cadastrados
+    </h2>
+
+    <ul>
+
+        {% for fornecedor in fornecedores %}
+
+        <li>
+
+            <strong>
+                {{ fornecedor.nome }}
+            </strong>
+
+            <br>
+
+            Telefone:
+            {{ fornecedor.telefone }}
+
+            <br>
+
+            Observação:
+            {{ fornecedor.observacao }}
+
+            <br><br>
+
+            <!-- Editar -->
+            <a
+                href="/fornecedor/editar/{{ fornecedor.id }}"
+            >
+
+                Editar
+
+            </a>
+
+            <hr>
+
+        </li>
+
+        {% endfor %}
+
+    </ul>
+
+</body>
+
+</html>

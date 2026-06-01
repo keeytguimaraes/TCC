@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Venda
+    </title>
+
+</head>
+
+<body>
+
+    <h1>
+        Venda / Comanda
+    </h1>
+
+    <!-- ==========================
+         FORMULÁRIO
+    ========================== -->
+    <form
+        action="/carrinho/adicionar"
+        method="POST"
+    >
+
+        <!-- Categoria -->
+        <label>
+            Categoria:
+        </label>
+
+        <select
+            id="categoria"
+        >
+
+            <option value="">
+                Selecione
+            </option>
+
+            {% for categoria in categorias %}
+
+            <option
+                value="{{ categoria.categoria }}"
+            >
+                {{ categoria.categoria }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <br><br>
+
+
+        <!-- Produto -->
+        <label>
+            Produto:
+        </label>
+
+        <select
+            name="produto_id"
+            id="produto"
+            required
+        >
+
+            <option value="">
+                Selecione um produto
+            </option>
+
+            {% for produto in produtos %}
+
+            <option
+                value="{{ produto.id }}"
+                data-categoria="{{ produto.categoria }}"
+            >
+                {{ produto.nome }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <br><br>
+
+
+        <!-- Tipo venda -->
+        <label>
+            Tipo venda:
+        </label>
+
+        <select
+            name="tipo_venda"
+            required
+        >
+
+            <option value="unidade">
+                Unidade
+            </option>
+
+            <option value="caixa">
+                Caixa
+            </option>
+
+        </select>
+
+        <br><br>
+
+
+        <!-- Quantidade -->
+        <label>
+            Quantidade:
+        </label>
+
+        <input
+            type="number"
+            name="quantidade"
+            min="1"
+            value="1"
+            required
+        >
+
+        <br><br>
+
+
+        <!-- BOTÃO -->
+        <button type="submit">
+
+            Adicionar ao carrinho
+
+        </button>
+
+    </form>
+
+
+    <hr>
+
+
+    <!-- ==========================
+         CARRINHO
+    ========================== -->
+    <h2>
+        Carrinho
+    </h2>
+
+    {% if carrinho %}
+
+    <ul>
+
+        {% for item in carrinho %}
+
+        <li>
+
+            <strong>
+                {{ item.nome }}
+            </strong>
+
+            <br>
+
+            Tipo:
+            {{ item.tipo_venda }}
+
+            <br>
+
+            Quantidade:
+            {{ item.quantidade }}
+
+            <br>
+
+            Preço unitário:
+            R$
+            {{ item.preco_unitario }}
+
+            <br>
+
+            Subtotal:
+            R$
+            {{ item.subtotal }}
+
+            <hr>
+
+        </li>
+
+        {% endfor %}
+
+    </ul>
+
+    <h3>
+
+        Total:
+        R$
+        {{ total_carrinho }}
+
+    </h3>
+
+    {% else %}
+
+    <p>
+        Carrinho vazio
+    </p>
+
+    {% endif %}
+
+
+    <hr>
+
+
+    <!-- ==========================
+         FINALIZAR VENDA
+    ========================== -->
+    <h2>
+        Finalizar venda
+    </h2>
+
+    <form
+        action="/venda/finalizar"
+        method="POST"
+    >
+
+        <!-- Status -->
+        <label>
+            Status pagamento:
+        </label>
+
+        <select
+            name="status_pagamento"
+            required
+        >
+
+            <option value="Pago">
+                Pago
+            </option>
+
+            <option value="Pendente">
+                Pendente
+            </option>
+
+        </select>
+
+        <br><br>
+
+
+        <!-- Valor recebido -->
+        <label>
+            Valor recebido:
+        </label>
+
+        <input
+            type="number"
+            step="0.01"
+            name="valor_recebido"
+        >
+
+        <br><br>
+
+
+        <!-- Botão -->
+        <button type="submit">
+
+            Finalizar venda
+
+        </button>
+
+    </form>
+
+
+    <hr>
+
+
+    <!-- ==========================
+         HISTÓRICO
+    ========================== -->
+    <h2>
+        Histórico de vendas
+    </h2>
+
+    <ul>
+
+        {% for venda in vendas %}
+
+        <li>
+
+            Venda:
+            {{ venda.id }}
+
+            <br>
+
+            Valor total:
+            R$
+            {{ venda.valor_total }}
+
+            <br>
+
+            Valor recebido:
+            R$
+            {{ venda.valor_recebido }}
+
+            <br>
+
+            Troco:
+            R$
+            {{ venda.troco }}
+
+            <br>
+
+            Status:
+            {{ venda.status_pagamento }}
+
+            <br>
+
+            Data:
+            {{ venda.data_venda }}
+
+            <hr>
+
+        </li>
+
+        {% endfor %}
+
+    </ul>
+
+
+    <!-- ==========================
+         SCRIPT FILTRO
+    ========================== -->
+    <script>
+
+        // Categoria
+        const categoriaSelect =
+            document.getElementById(
+                "categoria"
+            );
+
+        // Produto
+        const produtoSelect =
+            document.getElementById(
+                "produto"
+            );
+
+        // Quando mudar categoria
+        categoriaSelect.addEventListener(
+
+            "change",
+
+            function () {
+
+                // Categoria selecionada
+                const categoria =
+                    this.value;
+
+                // Produtos
+                const produtos =
+                    produtoSelect.options;
+
+                // Percorre produtos
+                for (
+                    let i = 0;
+                    i < produtos.length;
+                    i++
+                ) {
+
+                    // Categoria produto
+                    const categoriaProduto =
+                        produtos[i].getAttribute(
+                            "data-categoria"
+                        );
+
+                    // Primeira opção
+                    if (i === 0) {
+
+                        produtos[i].style.display =
+                            "block";
+
+                        continue;
+                    }
+
+                    // Mostra
+                    if (
+                        categoriaProduto === categoria
+                    ) {
+
+                        produtos[i].style.display =
+                            "block";
+                    }
+
+                    // Esconde
+                    else {
+
+                        produtos[i].style.display =
+                            "none";
+                    }
+                }
+
+                // Limpa seleção
+                produtoSelect.value = "";
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

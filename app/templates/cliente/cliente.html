@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes</title>
+</head>
+
+<body>
+
+    <!-- Título -->
+    <h1>Lista de Clientes</h1>
+
+    <!-- Formulário -->
+    <form action="/cliente/cadastrar" method="POST">
+
+        <!-- Campo de texto -->
+        <input
+            type="text"
+            name="nome"
+            placeholder="Digite o nome do cliente"
+            required
+        >
+
+        <!-- Botão -->
+        <button type="submit">
+            Cadastrar
+        </button>
+
+    </form>
+
+    <hr>
+
+    <!-- Lista -->
+    <ul>
+
+        {% for cliente in clientes %}
+
+        <li>
+
+            ID: {{ cliente.id }}
+            - Nome: {{ cliente.nome }}
+        
+            <!-- Botão editar -->
+            <a href="/cliente/editar/{{ cliente.id }}">
+                <button>
+                    Editar
+                </button>
+            </a>
+        
+            <!-- Botão excluir -->
+            <a href="/cliente/excluir/{{ cliente.id }}">
+                <button>
+                    Excluir
+                </button>
+            </a>
+        
+        </li>
+
+        {% endfor %}
+
+    </ul>
+
+</body>
+</html>
