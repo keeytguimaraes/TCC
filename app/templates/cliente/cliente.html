@@ -38,10 +38,10 @@
         {% for cliente in clientes %}
 
         <li>
+        <strong>
+            Nome: {{ cliente.nome }}
+        </strong>
 
-            ID: {{ cliente.id }}
-            - Nome: {{ cliente.nome }}
-        
             <!-- Botão editar -->
             <a href="/cliente/editar/{{ cliente.id }}">
                 <button>

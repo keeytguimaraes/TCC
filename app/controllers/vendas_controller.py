@@ -2,7 +2,8 @@
 from app.models.vendas_model import (
 
     listar_vendas,
-    cadastrar_venda
+    cadastrar_venda,
+    buscar_produtos_venda
 )
 
 
@@ -11,7 +12,19 @@ from app.models.vendas_model import (
 # ==========================
 def pegar_vendas():
 
-    return listar_vendas()
+    vendas = listar_vendas()
+
+    for venda in vendas:
+
+        venda["produtos"] = (
+
+            buscar_produtos_venda(
+                venda["id"]
+            )
+        )
+
+    return vendas
+    # return listar_vendas()
 
 
 # ==========================

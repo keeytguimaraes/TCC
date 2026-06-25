@@ -1,7 +1,9 @@
 # Importa model
 from app.models.estoque_model import (
     listar_estoque,
-    cadastrar_estoque
+    cadastrar_estoque,
+    baixar_estoque,
+    buscar_estoque_atual
 )
 
 
@@ -51,4 +53,40 @@ def cadastrar_estoque_controller(
 
         preco_total_compra,
         data_entrada
+    )
+
+    # ==========================
+# CONTROLLER:
+# BAIXAR ESTOQUE
+# ==========================
+def baixar_estoque_controller(
+
+    produto_id,
+
+    quantidade,
+
+    tipo_venda
+):
+
+    baixar_estoque(
+
+        produto_id,
+
+        quantidade,
+
+        tipo_venda
+    )
+
+    # ==========================
+# CONTROLLER:
+# BUSCAR ESTOQUE ATUAL
+# ==========================
+def pegar_estoque_atual(
+
+    produto_id
+):
+
+    return buscar_estoque_atual(
+
+        produto_id
     )

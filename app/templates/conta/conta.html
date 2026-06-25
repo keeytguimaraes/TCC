@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Contas Pendentes
+    </title>
+
+</head>
+
+<body>
+
+    <h1>
+        Contas Pendentes
+    </h1>
+
+    <ul>
+
+        {% for conta in contas %}
+        
+        <li>
+
+            <strong>
+        
+                {{ conta.nome_cliente_temporario }}
+        
+            </strong>
+        
+            <br><br>
+        
+            Produtos:
+        
+            <ul>
+        
+                {% for produto in conta.produtos %}
+        
+                <li>
+        
+                    {{ produto.quantidade }}x
+        
+                    {{ produto.nome }}
+        
+                    ({{ produto.tipo_venda }})
+        
+                </li>
+        
+                {% endfor %}
+        
+            </ul>
+        
+            Valor Total:
+        
+            R$ {{ conta.valor_total }}
+        
+            <br><br>
+        
+            Data:
+            {{ conta.data_venda.strftime('%d/%m/%Y %H:%M') }}
+
+            <br><br>
+
+<form
+    action="/conta/pagar/{{ conta.id }}"
+    method="POST"
+>
+
+    <button type="submit">
+
+        Receber Pagamento
+
+    </button>
+
+</form>
+        
+            <hr>
+        
+        </li>
+        
+        {% endfor %}
+        
+        </ul>
+
+</body>
+
+</html>

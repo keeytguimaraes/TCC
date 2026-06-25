@@ -21,6 +21,22 @@ from app.controllers.produto_controller import (
     pegar_categorias
 )
 
+# Importa controller cliente
+from app.controllers.cliente_controller import (
+    pegar_clientes
+)
+
+# Importa controller estoque
+from app.controllers.estoque_controller import (
+    baixar_estoque_controller
+)
+
+# Importa controller estoque
+from app.controllers.estoque_controller import (
+    pegar_estoque_atual
+)
+
+
 
 # ==========================
 # CONFIGURAR ROTAS
@@ -42,6 +58,9 @@ def configurar_venda_routes(app):
         # Busca categorias
         categorias = pegar_categorias()
 
+        # Busca clientes
+        clientes = pegar_clientes()
+
         # Carrinho
         carrinho = session.get(
             "carrinho",
@@ -60,18 +79,20 @@ def configurar_venda_routes(app):
         # Envia HTML
         return render_template(
 
-            "venda/venda.html",
+        "venda/venda.html",
 
-            vendas=vendas,
+        vendas=vendas,
 
-            produtos=produtos,
+        produtos=produtos,
 
-            categorias=categorias,
+        categorias=categorias,
 
-            carrinho=carrinho,
+        clientes=clientes,
 
-            total_carrinho=total_carrinho
-        )
+        carrinho=carrinho,
+
+        total_carrinho=total_carrinho
+)
 
     # ==========================
     # CADASTRAR VENDA
@@ -134,6 +155,7 @@ def configurar_venda_routes(app):
         methods=["POST"]
     )
     def adicionar_carrinho():
+        
 
         # Produto
         produto_id = request.form.get(
@@ -170,7 +192,50 @@ def configurar_venda_routes(app):
         if not produto_encontrado:
 
             return redirect("/venda")
+    # ----------------------
+    # VERIFICA ESTOQUE
+    # ----------------------
+        estoque = pegar_estoque_atual(
 
+        produto_id
+    )
+
+        if estoque:
+
+            if tipo_venda == "caixa":
+
+                quantidade_solicitada = (
+
+                    quantidade
+
+                    * produto_encontrado[
+                        "quantidade_por_caixa"
+                    ]
+                )
+
+            else:
+
+                quantidade_solicitada = (
+                    quantidade
+                )
+
+            if (
+
+                quantidade_solicitada
+
+                >
+
+                estoque[
+                    "quantidade_atual_unidade"
+                ]
+
+            ):
+
+                return redirect(
+                    "/venda"
+                )
+
+       
         # ----------------------
         # PREÇO
         # ----------------------
@@ -271,6 +336,45 @@ def configurar_venda_routes(app):
 
         # Volta página
         return redirect("/venda")
+    
+    # ==========================
+    # REMOVER DO CARRINHO
+    # ==========================
+    @app.route(
+        "/carrinho/remover/<int:indice>",
+        methods=["POST"]
+    )
+    def remover_carrinho(
+
+        indice
+    ):
+
+        carrinho = session.get(
+            "carrinho",
+            []
+        )
+
+        if (
+
+            indice >= 0
+
+            and
+
+            indice < len(carrinho)
+
+        ):
+
+            carrinho.pop(
+                indice
+            )
+
+        session["carrinho"] = (
+            carrinho
+        )
+
+        return redirect(
+            "/venda"
+        )
 
     # ==========================
     # FINALIZAR VENDA
@@ -292,10 +396,45 @@ def configurar_venda_routes(app):
 
             return redirect("/venda")
 
-        # Status pagamento
-        status_pagamento = request.form.get(
-            "status_pagamento"
+        # Tipo finalização
+        tipo_finalizacao = request.form.get(
+            "tipo_finalizacao"
+       )
+
+        # Cliente
+        cliente_id = request.form.get(
+            "cliente_id"
+       )
+
+        # Nome temporário
+        nome_cliente_temporario = request.form.get(
+            "nome_cliente_temporario"
         )
+        
+        # ----------------------
+        # DEFINE PAGAMENTO
+        # ----------------------
+
+        status_pagamento = "Pago"
+
+        conta_id = None
+
+        # Venda fiado
+        if tipo_finalizacao == "fiado":
+
+            status_pagamento = "Pendente"
+
+        # Conta pendente
+        elif tipo_finalizacao == "pendente":
+
+            status_pagamento = "Pendente"
+
+        # Pagamento normal
+        else:
+
+            cliente_id = None
+
+            nome_cliente_temporario = None
 
         # Valor recebido
         valor_recebido = request.form.get(
@@ -338,18 +477,32 @@ def configurar_venda_routes(app):
         cursor = conexao.cursor()
 
         # ----------------------
+        # SALDO DEVEDOR
+        # ----------------------
+
+        if tipo_finalizacao == "fiado":
+
+            saldo_devedor = valor_total
+
+        else:
+
+            saldo_devedor = 0
+
+        # ----------------------
         # INSERT VENDA
         # ----------------------
         sql_venda = """
             INSERT INTO venda (
-
-                valor_total,
-                valor_recebido,
-                troco,
-                status_pagamento
-
-            )
-            VALUES (%s, %s, %s, %s)
+            valor_total,
+            valor_recebido,
+            troco,
+            cliente_id,
+            status_pagamento,
+            conta_id,
+            nome_cliente_temporario,
+            saldo_devedor
+        )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
 
         # Executa venda
@@ -361,7 +514,11 @@ def configurar_venda_routes(app):
                 valor_total,
                 valor_recebido,
                 troco,
-                status_pagamento
+                cliente_id,
+                status_pagamento,
+                conta_id,
+                nome_cliente_temporario,
+                saldo_devedor
             )
         )
 
@@ -411,6 +568,18 @@ def configurar_venda_routes(app):
 
                     item["subtotal"]
                 )
+            )
+
+            # ----------------------
+            # BAIXA ESTOQUE
+            # ----------------------
+            baixar_estoque_controller(
+
+                item["produto_id"],
+
+                item["quantidade"],
+
+                item["tipo_venda"]
             )
 
         # Salva banco

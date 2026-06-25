@@ -101,10 +101,9 @@
         {% for produto in produtos %}
 
         <li>
-
-            ID: {{ produto.id }}
-            -
+        <strong>
             Nome: {{ produto.nome }}
+        </strong>
             -
             Categoria: {{ produto.categoria }}
             -
@@ -113,7 +112,64 @@
             Quantidade por caixa:
             {{ produto.quantidade_por_caixa }}
 
+            <br>
+
+Status:
+
+{% if produto.ativo %}
+
+Ativo
+
+{% else %}
+
+Inativo
+
+{% endif %}
+            <br><br>
+
+<a
+    href="/produto/editar/{{ produto.id }}"
+>
+
+    Editar
+
+</a>
+
+{% if produto.ativo %}
+
+<form
+    action="/produto/inativar/{{ produto.id }}"
+    method="POST"
+    style="display:inline;"
+>
+
+    <button type="submit">
+
+        Inativar
+
+    </button>
+
+</form>
+
+{% else %}
+
+<form
+    action="/produto/ativar/{{ produto.id }}"
+    method="POST"
+    style="display:inline;"
+>
+
+    <button type="submit">
+
+        Ativar
+
+    </button>
+
+</form>
+
+{% endif %}
         </li>
+        
 
         {% endfor %}
 

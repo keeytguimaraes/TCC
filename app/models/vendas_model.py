@@ -288,3 +288,53 @@ def cadastrar_venda(
 
     # Fecha conexão
     conexao.close()
+
+# ==========================
+# BUSCAR PRODUTOS DA VENDA
+# ==========================
+def buscar_produtos_venda(
+
+    venda_id
+):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+         dictionary=True
+    )
+
+    sql = """
+        SELECT
+
+            produto.nome,
+
+            produto_venda.quantidade,
+
+            produto_venda.tipo_venda
+
+        FROM produto_venda
+
+        INNER JOIN produto
+
+            ON produto.id =
+            produto_venda.produto_id
+
+        WHERE produto_venda.venda_id = %s
+    """
+
+    cursor.execute(
+
+        sql,
+
+         (
+            venda_id,
+        )
+     )
+
+    produtos = cursor.fetchall()
+
+    cursor.close()
+
+    conexao.close()
+
+    return produtos

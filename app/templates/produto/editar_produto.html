@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Editar Produto
+    </title>
+
+</head>
+
+<body>
+
+    <h1>
+        Editar Produto
+    </h1>
+
+    <form
+        action="/produto/atualizar/{{ produto.id }}"
+        method="POST"
+    >
+
+        <label>
+            Nome:
+        </label>
+
+        <input
+            type="text"
+            name="nome"
+            value="{{ produto.nome }}"
+            required
+        >
+
+        <br><br>
+
+        <label>
+            Categoria:
+        </label>
+
+        <input
+            type="text"
+            name="categoria"
+            value="{{ produto.categoria }}"
+            required
+        >
+
+        <br><br>
+
+        <label>
+            Preço:
+        </label>
+
+        <input
+            type="number"
+            step="0.01"
+            name="preco_venda"
+            value="{{ produto.preco_venda }}"
+            required
+        >
+
+        <br><br>
+
+        <label>
+            Quantidade por caixa:
+        </label>
+
+        <input
+            type="number"
+            name="quantidade_por_caixa"
+            value="{{ produto.quantidade_por_caixa }}"
+            required
+        >
+
+        <br><br>
+
+        <button type="submit">
+
+            Salvar Alterações
+
+        </button>
+
+    </form>
+
+</body>
+
+</html>

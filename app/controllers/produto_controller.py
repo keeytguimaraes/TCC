@@ -2,7 +2,11 @@
 from app.models.produto_model import (
     listar_produtos,
     cadastrar_produto,
-    listar_categorias
+    listar_categorias,
+    buscar_produto_por_id,
+    editar_produto,
+    inativar_produto,
+    ativar_produto
 )
 
 # ==========================
@@ -43,4 +47,73 @@ def cadastrar_produto_controller(
         preco_venda,
         quantidade_por_caixa
     )
-    
+# ==========================
+# CONTROLLER:
+# BUSCAR PRODUTO POR ID
+# ==========================
+def pegar_produto_por_id(
+
+    produto_id
+):
+
+    return buscar_produto_por_id(
+        produto_id
+    )
+
+
+# ==========================
+# CONTROLLER:
+# EDITAR PRODUTO
+# ==========================
+def editar_produto_controller(
+
+    produto_id,
+
+    nome,
+
+    categoria,
+
+    preco_venda,
+
+    quantidade_por_caixa
+):
+
+    editar_produto(
+
+        produto_id,
+
+        nome,
+
+        categoria,
+
+        preco_venda,
+
+        quantidade_por_caixa
+    )
+
+
+# ==========================
+# CONTROLLER:
+# INATIVAR PRODUTO
+# ==========================
+def inativar_produto_controller(
+
+    produto_id
+):
+
+    inativar_produto(
+        produto_id
+    )
+
+# ==========================
+# CONTROLLER:
+# ATIVAR PRODUTO
+# ==========================
+def ativar_produto_controller(
+
+    produto_id
+):
+
+    ativar_produto(
+        produto_id
+    )

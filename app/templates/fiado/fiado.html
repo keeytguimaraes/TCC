@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Fiados
+    </title>
+
+</head>
+
+<body>
+
+    <h1>
+        Fiados
+    </h1>
+
+    <ul>
+
+        {% for fiado in fiados %}
+        
+        <li>
+        
+            <strong>
+                {{ fiado.nome }}
+            </strong>
+        
+            <br><br>
+        
+            Produtos:
+        
+            <ul>
+        
+                {% for produto in fiado.produtos %}
+        
+                <li>
+        
+                    {{ produto.quantidade }}x
+        
+                    {{ produto.nome }}
+        
+                    ({{ produto.tipo_venda }})
+        
+                </li>
+        
+                {% endfor %}
+        
+            </ul>
+        
+            <br>
+        <strong>
+            Recebimentos:
+        </strong>
+        
+            {% if fiado.recebimentos %}
+        
+            <ul>
+        
+                {% for recebimento in fiado.recebimentos %}
+        
+                <li>
+        
+                    R$ {{ recebimento.valor_recebido }}
+        
+                    -
+        
+                    {{ recebimento.data_recebimento.strftime('%d/%m/%Y %H:%M') }}
+        
+                </li>
+        
+                {% endfor %}
+        
+            </ul>
+        
+            {% else %}
+        
+            Nenhum recebimento registrado.
+        
+            {% endif %}
+        <br>
+            <strong>
+            Saldo Devedor:
+            </strong>
+        
+            R$ {{ fiado.saldo_devedor }}
+        
+            <br><br>
+        
+            <form
+                action="/fiado/receber/{{ fiado.id }}"
+                method="POST"
+            >
+        
+                <label>
+                    Valor recebido:
+                </label>
+        
+                <input
+                    type="number"
+                    step="0.01"
+                    name="valor_recebido"
+                    required
+                >
+        
+                <button type="submit">
+        
+                    Receber Pagamento
+        
+                </button>
+        
+            </form>
+        
+            <br><br>
+            <strong>
+            Data de criação da conta:
+            </strong>
+            {{  fiado.data_venda.strftime('%d/%m/%Y %H:%M') }}
+        
+            <hr>
+        
+        </li>
+        
+        {% endfor %}
+        
+        </ul>
+
+</body>
+
+</html>

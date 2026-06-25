@@ -11,6 +11,12 @@ from app.routes.estoque_route import configurar_estoque_routes
 from app.routes.fornecedor_route import configurar_fornecedor_routes
 # Importa rota venda
 from app.routes.venda_route import configurar_venda_routes
+# Importa rota conta
+from app.routes.conta_route import configurar_conta_routes
+# Importa rota fiado
+from app.routes.fiado_route import configurar_fiado_routes
+# Importa rota relatório
+from app.routes.relatorio_route import configurar_relatorio_routes
 
 # Cria aplicação Flask
 app = Flask(
@@ -28,12 +34,15 @@ app = Flask(
 app.secret_key = "tcc_bar"
 
 
-# Registra rotas do cliente
+# Registra rotas
 configurar_cliente_routes(app)
 configurar_produto_routes(app)
 configurar_estoque_routes(app)
 configurar_fornecedor_routes(app)
 configurar_venda_routes(app)
+configurar_conta_routes(app)
+configurar_fiado_routes(app)
+configurar_relatorio_routes(app)
 
 # Inicia servidor
 if __name__ == "__main__":
