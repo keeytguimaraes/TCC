@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base/base.html" %}
 
-<head>
+{% block titulo %}
+Contas Pendentes
+{% endblock %}
 
-    <meta charset="UTF-8">
-
-    <title>
-        Contas Pendentes
-    </title>
-
-</head>
-
-<body>
+{% block conteudo %}
 
     <h1>
         Contas Pendentes
@@ -67,12 +60,10 @@
     method="POST"
 >
 
-    <button type="submit">
-
-        Receber Pagamento
-
-    </button>
-
+<button class="button button-success">
+    <i class="fa-solid fa-money-bill-wave"></i>
+    Receber Pagamento
+</button>
 </form>
         
             <hr>
@@ -83,6 +74,4 @@
         
         </ul>
 
-</body>
-
-</html>
+        {% endblock %}

@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base/base.html" %}
 
-<head>
-    <meta charset="UTF-8">
+{% block titulo %}
+Produtos
+{% endblock %}
 
-    <title>
-        Produtos
-    </title>
-</head>
-
-<body>
+{% block conteudo %}
 
     <h1>
         Cadastro de Produto
@@ -81,7 +76,8 @@
         <br><br>
 
         <!-- Botão -->
-        <button type="submit">
+        <button class="button button-success">
+            <i class="fa-solid fa-plus"></i>
             Cadastrar Produto
         </button>
 
@@ -128,13 +124,12 @@ Inativo
             <br><br>
 
 <a
-    href="/produto/editar/{{ produto.id }}"
+href="/produto/editar/{{ produto.id }}"
+    class="button button-secondary"
 >
-
+    <i class="fa-solid fa-pen-to-square"></i>
     Editar
-
 </a>
-
 {% if produto.ativo %}
 
 <form
@@ -143,11 +138,10 @@ Inativo
     style="display:inline;"
 >
 
-    <button type="submit">
-
-        Inativar
-
-    </button>
+<button class="button button-success">
+    <i class="fa-solid fa-circle-check"></i>
+    Ativar
+</button>
 
 </form>
 
@@ -159,11 +153,10 @@ Inativo
     style="display:inline;"
 >
 
-    <button type="submit">
-
-        Ativar
-
-    </button>
+<button class="button button-success">
+    <i class="fa-solid fa-circle-check"></i>
+    Ativar
+</button>
 
 </form>
 
@@ -175,5 +168,4 @@ Inativo
 
     </ul>
 
-</body>
-</html>
+    {% endblock %}

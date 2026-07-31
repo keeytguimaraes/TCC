@@ -6,6 +6,13 @@ from flask import (
     redirect,
     session
 )
+from app.models.conta_model import (
+
+                buscar_conta_aberta,
+                criar_conta,
+                atualizar_saldo_conta
+            )
+
 
 # Importa controller venda
 from app.controllers.vendas_controller import (
@@ -411,37 +418,56 @@ def configurar_venda_routes(app):
             "nome_cliente_temporario"
         )
         
-        # ----------------------
-        # DEFINE PAGAMENTO
-        # ----------------------
+       # ----------------------
+       # DEFINE PAGAMENTO
+       # ----------------------
+# ----------------------
+# DEFINE PAGAMENTO
+# ----------------------
 
         status_pagamento = "Pago"
 
         conta_id = None
 
-        # Venda fiado
+# Venda fiado
         if tipo_finalizacao == "fiado":
 
             status_pagamento = "Pendente"
 
-        # Conta pendente
+            conta = buscar_conta_aberta(
+                cliente_id
+            )
+
+            if conta:
+
+                conta_id = conta["id"]
+
+            else:
+
+                conta_id = criar_conta(
+                    cliente_id
+                )
+
+# Conta pendente
         elif tipo_finalizacao == "pendente":
 
             status_pagamento = "Pendente"
 
-        # Pagamento normal
+# Pagamento normal
         else:
 
             cliente_id = None
 
             nome_cliente_temporario = None
 
-        # Valor recebido
+
+# ----------------------
+# VALOR RECEBIDO
+# ----------------------
         valor_recebido = request.form.get(
             "valor_recebido"
         )
 
-        # Se vazio
         if not valor_recebido:
 
             valor_recebido = 0
@@ -480,7 +506,13 @@ def configurar_venda_routes(app):
         # SALDO DEVEDOR
         # ----------------------
 
-        if tipo_finalizacao == "fiado":
+        if tipo_finalizacao in [
+
+            "fiado",
+
+            "pendente"
+
+        ]:
 
             saldo_devedor = valor_total
 
@@ -524,6 +556,18 @@ def configurar_venda_routes(app):
 
         # ID venda
         venda_id = cursor.lastrowid
+        # ----------------------
+        # ATUALIZA SALDO DA CONTA
+        # ----------------------
+        if tipo_finalizacao == "fiado":
+
+
+            atualizar_saldo_conta(
+        
+               conta_id,
+
+                valor_total
+            )
 
         # ----------------------
         # PRODUTOS VENDA

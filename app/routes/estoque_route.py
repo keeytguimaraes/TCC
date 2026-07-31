@@ -53,7 +53,7 @@ def configurar_estoque_routes(app):
             categorias=categorias,
             fornecedores=fornecedores
         )
-
+    
     # ==========================
     # ROTA: CADASTRAR ESTOQUE
     # ==========================

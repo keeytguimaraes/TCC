@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block titulo %}
+            Sistema Integrado de Gestão Comercial
+        {% endblock %}
+    </title>
+
+    <!-- =======================
+         FONT AWESOME
+    ======================== -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- =======================
+         CSS GLOBAL
+    ======================== -->
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/global/base.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/global/menu.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/global/header.css') }}">
+
+    <!-- CSS ESPECÍFICO -->
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/components/button.css') }}">
+
+    {% block css %}
+    {% endblock %}
+
+</head>
+
+<body>
+
+    <!-- =======================
+         MENU LATERAL
+    ======================== -->
+
+    {% include 'componentes/menu.html' %}
+
+    <!-- =======================
+         CONTEÚDO
+    ======================== -->
+
+    <div class="conteudo-principal">
+
+        <!-- HEADER -->
+
+        {% include 'componentes/header.html' %}
+
+        <!-- CONTEÚDO DA PÁGINA -->
+
+        <main class="content-main">
+
+            {% block conteudo %}
+            {% endblock %}
+        
+        </main>
+
+    </div>
+
+    <!-- =======================
+         JAVASCRIPT GLOBAL
+    ======================== -->
+
+    <script src="{{ url_for('static', filename='js/global/menu.js') }}"></script>
+
+    <!-- JS ESPECÍFICO -->
+
+    {% block scripts %}
+    {% endblock %}
+
+</body>
+
+</html>

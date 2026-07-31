@@ -20,21 +20,15 @@ def pegar_fiados():
 
     for fiado in fiados:
 
-     fiado["produtos"] = (
+        fiado["produtos"] = buscar_produtos_fiado(
+            fiado["id"]
+        )
 
-         buscar_produtos_fiado(
-             fiado["id"]
-         )
-     )
+        fiado["recebimentos"] = buscar_recebimentos_fiado(
+            fiado["id"]
+        )
 
-     fiado["recebimentos"] = (
-
-         buscar_recebimentos_fiado(
-             fiado["id"]
-         )
-     )
-
-     return fiados
+    return fiados
 
 # ==========================
 # RECEBER PAGAMENTO FIADO

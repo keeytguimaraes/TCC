@@ -95,4 +95,174 @@ def buscar_produtos_venda(
 
     return produtos
 
-    
+    # ==========================
+# BUSCAR CONTA ABERTA
+# ==========================
+def buscar_conta_aberta(cliente_id):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT *
+
+        FROM conta
+
+        WHERE cliente_id = %s
+
+        AND status_conta = 'aberta'
+
+        LIMIT 1
+    """
+
+    cursor.execute(
+
+        sql,
+
+        (
+            cliente_id,
+        )
+    )
+
+    conta = cursor.fetchone()
+
+    cursor.close()
+
+    conexao.close()
+
+    return conta
+
+
+# ==========================
+# CRIAR CONTA
+# ==========================
+def criar_conta(cliente_id):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor()
+
+    sql = """
+        INSERT INTO conta (
+
+            cliente_id,
+
+            status_conta,
+
+            saldo_devedor
+
+        )
+
+        VALUES (
+
+            %s,
+
+            'aberta',
+
+            0
+        )
+    """
+
+    cursor.execute(
+
+        sql,
+
+        (
+            cliente_id,
+        )
+    )
+
+    conexao.commit()
+
+    conta_id = cursor.lastrowid
+
+    cursor.close()
+
+    conexao.close()
+
+    return conta_id
+
+
+# ==========================
+# ATUALIZAR SALDO
+# ==========================
+def atualizar_saldo_conta(
+
+    conta_id,
+
+    valor
+):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor()
+
+    sql = """
+        UPDATE conta
+
+        SET
+
+            saldo_devedor = saldo_devedor + %s
+
+        WHERE id = %s
+    """
+
+    cursor.execute(
+
+        sql,
+
+        (
+            valor,
+
+            conta_id
+        )
+    )
+
+    conexao.commit()
+
+    cursor.close()
+
+    conexao.close()
+
+
+# ==========================
+# BUSCAR CONTA POR ID
+# ==========================
+def buscar_conta_por_id(
+
+    conta_id
+):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT *
+
+        FROM conta
+
+        WHERE id = %s
+    """
+
+    cursor.execute(
+
+        sql,
+
+        (
+            conta_id,
+        )
+    )
+
+    conta = cursor.fetchone()
+
+    cursor.close()
+
+    conexao.close()
+
+    return conta

@@ -1,66 +1,63 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base/base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes</title>
-</head>
+{% block titulo %}
+Clientes
+{% endblock %}
 
-<body>
+{% block conteudo %}
 
-    <!-- Título -->
-    <h1>Lista de Clientes</h1>
+<h1>Lista de Clientes</h1>
 
-    <!-- Formulário -->
-    <form action="/cliente/cadastrar" method="POST">
+<form action="{{ url_for('cadastrar_cliente') }}" method="POST">
 
-        <!-- Campo de texto -->
-        <input
-            type="text"
-            name="nome"
-            placeholder="Digite o nome do cliente"
-            required
-        >
+    <input
+        type="text"
+        name="nome"
+        placeholder="Digite o nome do cliente"
+        required
+    >
 
-        <!-- Botão -->
-        <button type="submit">
-            Cadastrar
-        </button>
+    <button class="button button-success">
+        <i class="fa-solid fa-plus"></i>
+        Cadastrar
+    </button>
 
-    </form>
+</form>
 
-    <hr>
+<hr>
 
-    <!-- Lista -->
-    <ul>
+<ul>
 
-        {% for cliente in clientes %}
+    {% for cliente in clientes %}
 
-        <li>
+    <li>
+
         <strong>
             Nome: {{ cliente.nome }}
         </strong>
 
-            <!-- Botão editar -->
-            <a href="/cliente/editar/{{ cliente.id }}">
-                <button>
-                    Editar
-                </button>
-            </a>
+        <a
+    href="{{ url_for('tela_editar_cliente', id_cliente=cliente.id) }}"
+    class="button button-secondary"
+>
+    <i class="fa-solid fa-pen"></i>
+    Editar
+</a>
+
+<a
+href="{{ url_for('excluir_cliente', id_cliente=cliente.id) }}"
+class="button button-danger"
+onclick="return confirm('Deseja realmente excluir este cliente?')"
+>
+<i class="fa-solid fa-trash"></i>
+Excluir
+</a>
         
-            <!-- Botão excluir -->
-            <a href="/cliente/excluir/{{ cliente.id }}">
-                <button>
-                    Excluir
-                </button>
-            </a>
-        
-        </li>
 
-        {% endfor %}
+    </li>
 
-    </ul>
+    {% endfor %}
 
-</body>
-</html>
+</ul>
+
+{% endblock %}

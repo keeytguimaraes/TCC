@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base/base.html" %}
 
-<head>
-    <meta charset="UTF-8">
+{% block titulo %}
+Estoque
+{% endblock %}
 
-    <title>
-        Estoque
-    </title>
-</head>
-
-<body>
+{% block conteudo %}
 
     <h1>
         Entrada de Estoque
@@ -22,12 +17,6 @@
         action="/estoque/cadastrar"
         method="POST"
     >
-
-        <!-- Produto -->
-        <!-- Categoria -->
-<label>
-    Categoria:
-</label>
 
 <!-- Categoria -->
 <label>
@@ -247,7 +236,8 @@
 
 
         <!-- Botão -->
-        <button type="submit">
+        <button type="submit" class="button button-primary">
+            <i class="fa-solid fa-floppy-disk"></i>
             Salvar Entrada
         </button>
 
@@ -485,5 +475,4 @@ Local:
         atualizarCampos();
     
     </script>
-</body>
-</html>
+{% endblock %}

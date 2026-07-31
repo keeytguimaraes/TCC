@@ -131,18 +131,15 @@ def total_pendencias():
     )
 
     sql = """
-        SELECT
-
-            COALESCE(
-                SUM(saldo_devedor),
-                0
-            ) AS total
-
-        FROM venda
-
-        WHERE conta_id IS NOT NULL
-
-        AND saldo_devedor > 0
+    SELECT
+        COALESCE(
+            SUM(saldo_devedor),
+            0
+        ) AS total
+    FROM venda
+    WHERE cliente_id IS NULL
+    AND status_pagamento = 'Pendente'
+    AND saldo_devedor > 0
     """
 
     cursor.execute(sql)

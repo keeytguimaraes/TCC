@@ -1,17 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base/base.html" %}
 
-<head>
+{% block titulo %}
+Editar Fornecedor
+{% endblock %}
 
-    <meta charset="UTF-8">
-
-    <title>
-        Editar fornecedor
-    </title>
-
-</head>
-
-<body>
+{% block conteudo %}
 
     <h1>
         Editar fornecedor
@@ -66,10 +60,9 @@
         <br><br>
 
         <!-- Botão -->
-        <button type="submit">
-
-            Salvar alterações
-
+        <button type="submit" class="button button-primary">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Salvar Alterações
         </button>
 
     </form>
@@ -77,12 +70,12 @@
     <br>
 
     <!-- Voltar -->
-    <a href="/fornecedor">
+    <a
+    href="/fornecedor"
+    class="button button-secondary"
+>
+    <i class="fa-solid fa-arrow-left"></i>
+    Voltar
+</a>
 
-        Voltar
-
-    </a>
-
-</body>
-
-</html>
+    {% endblock %}

@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base/base.html" %}
 
-<head>
+{% block titulo %}
+Relatórios
+{% endblock %}
 
-    <meta charset="UTF-8">
-
-    <title>
-        Relatórios
-    </title>
-
-</head>
-
-<body>
+{% block conteudo %}
 
     <h1>
         Relatórios
@@ -57,6 +50,4 @@
         R$ {{ dados.pendencias }}
     </p>
 
-</body>
-
-</html>
+    {% endblock %}

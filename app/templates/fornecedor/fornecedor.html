@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base/base.html" %}
 
-<head>
+{% block titulo %}
+Fornecedor
+{% endblock %}
 
-    <meta charset="UTF-8">
-
-    <title>
-        Fornecedor
-    </title>
-
-</head>
-
-<body>
+{% block conteudo %}
 
     <h1>
         Cadastro de Fornecedor
@@ -64,10 +57,9 @@
         <br><br>
 
         <!-- Botão -->
-        <button type="submit">
-
+        <button type="submit" class="button button-primary">
+            <i class="fa-solid fa-floppy-disk"></i>
             Salvar
-
         </button>
 
     </form>
@@ -101,14 +93,13 @@
             <br><br>
 
             <!-- Editar -->
-            <a
-                href="/fornecedor/editar/{{ fornecedor.id }}"
-            >
-
-                Editar
-
-            </a>
-
+<a
+href="/fornecedor/editar/{{ fornecedor.id }}"
+    class="button button-secondary"
+>
+    <i class="fa-solid fa-pen-to-square"></i>
+    Editar
+</a>
             <hr>
 
         </li>
@@ -117,6 +108,4 @@
 
     </ul>
 
-</body>
-
-</html>
+    {% endblock %}

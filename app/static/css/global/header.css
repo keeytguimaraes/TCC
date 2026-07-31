@@ -1,0 +1,91 @@
+/* ======================================================
+   HEADER
+====================================================== */
+
+.header {
+
+    height: var(--altura-header);
+
+    background: var(--cor-branca);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    box-shadow: var(--sombra);
+
+    z-index: 100;
+
+}
+
+
+/* ======================================================
+   LADO ESQUERDO
+====================================================== */
+
+.header-left {
+
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+}
+
+
+/* ======================================================
+   BOTÃO MENU
+====================================================== */
+
+.header-toggle {
+
+    background: transparent;
+
+    border: none;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+    color: var(--cor-texto);
+
+}
+
+
+/* ======================================================
+   TÍTULO
+====================================================== */
+
+.header-title {
+
+    font-size: 24px;
+
+    font-weight: 600;
+
+    color: var(--cor-texto);
+
+}
+
+
+/* ======================================================
+   USUÁRIO
+====================================================== */
+
+.header-user {
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 16px;
+
+    color: var(--cor-texto);
+
+}
+
+.header-user i {
+
+    font-size: 28px;
+
+}

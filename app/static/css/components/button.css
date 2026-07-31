@@ -1,0 +1,99 @@
+/* ======================================================
+   BOTÃO BASE
+====================================================== */
+
+.button {
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 10px 18px;
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: var(--transicao);
+
+    text-decoration: none;
+
+}
+
+
+/* ======================================================
+   BOTÃO PRIMÁRIO
+====================================================== */
+
+.button-primary {
+
+    background: var(--cor-vermelha);
+    color: var(--cor-branca);
+
+}
+
+.button-primary:hover {
+
+    filter: brightness(0.92);
+
+}
+
+
+/* ======================================================
+   BOTÃO SECUNDÁRIO
+====================================================== */
+
+.button-secondary {
+
+    background: #6c757d;
+    color: white;
+
+}
+
+.button-secondary:hover {
+
+    filter: brightness(0.92);
+
+}
+
+
+/* ======================================================
+   BOTÃO SUCESSO
+====================================================== */
+
+.button-success {
+
+    background: #2e7d32;
+    color: white;
+
+}
+
+.button-success:hover {
+
+    filter: brightness(0.92);
+
+}
+
+
+/* ======================================================
+   BOTÃO PERIGO
+====================================================== */
+
+.button-danger {
+
+    background: #d32f2f;
+    color: white;
+
+}
+
+.button-danger:hover {
+
+    filter: brightness(0.92);
+
+}
+

@@ -1,18 +1,10 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base/base.html" %}
 
-<head>
+{% block titulo %}
+Venda
+{% endblock %}
 
-    <meta charset="UTF-8">
-
-    <title>
-        Venda
-    </title>
-
-</head>
-
-<body>
-
+{% block conteudo %}
     <h1>
         Venda / Comanda
     </h1>
@@ -124,10 +116,9 @@
 
 
         <!-- BOTÃO -->
-        <button type="submit">
-
-            Adicionar ao carrinho
-
+        <button class="button button-primary">
+            <i class="fa-solid fa-cart-plus"></i>
+            Adicionar ao Carrinho
         </button>
 
     </form>
@@ -182,11 +173,10 @@
     method="POST"
 >
 
-    <button type="submit">
-
-        Excluir
-
-    </button>
+<button class="button button-danger">
+    <i class="fa-solid fa-trash"></i>
+    Excluir
+</button>
 
 </form>
 
@@ -228,26 +218,31 @@
     </h2>
     
     <button
-        type="button"
-        onclick="mostrarReceber()"
-    >
-        Receber Agora
-    </button>
+    type="button"
+    class="button button-success"
+    onclick="mostrarReceber()"
+>
+    <i class="fa-solid fa-money-bill-wave"></i>
+    Receber Agora
+</button>
     
-    <button
-        type="button"
-        onclick="mostrarFiado()"
-    >
-        Venda Fiado
-    </button>
+<button
+type="button"
+class="button button-success"
+onclick="mostrarFiado()"
+>
+<i class="fa-solid fa-cash-register"></i>
+Venda Fiado
+</button>
     
-    <button
-        type="button"
-        onclick="mostrarPendente()"
-    >
-        Conta Pendente
-    </button>
-    
+<button
+type="button"
+class="button button-success"
+onclick="mostrarPendente()"
+>
+<i class="fa-solid fa-cash-register"></i>
+Conta Pendênte
+</button>
     <hr>
     
     <!-- RECEBER AGORA -->
@@ -280,10 +275,9 @@
     
             <br><br>
     
-            <button type="submit">
-    
+            <button class="button button-success">
+                <i class="fa-solid fa-check"></i>
                 Confirmar Pagamento
-    
             </button>
     
         </form>
@@ -334,10 +328,9 @@
     
             <br><br>
     
-            <button type="submit">
-    
+            <button class="button button-primary">
+                <i class="fa-solid fa-handshake-simple"></i>
                 Confirmar Fiado
-    
             </button>
     
         </form>
@@ -373,10 +366,9 @@
     
             <br><br>
     
-            <button type="submit">
-    
+            <button class="button button-secondary">
+                <i class="fa-solid fa-circle-check"></i>
                 Confirmar Pendência
-    
             </button>
     
         </form>
@@ -580,6 +572,4 @@ document.getElementById(
 
     </script>
 
-</body>
-
-</html>
+{% endblock %}
