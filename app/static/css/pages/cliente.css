@@ -1,0 +1,209 @@
+/* ==========================
+   TÍTULO
+========================== */
+
+.content-main h1{
+
+    margin-bottom: 32px;
+
+    font-size: 2rem;
+
+    font-weight: 700;
+}
+
+
+/* ==========================
+   PESQUISA
+========================== */
+
+.cliente-pesquisa{
+
+    margin-bottom: 28px;
+}
+
+
+/* ==========================
+   FORMULÁRIO
+========================== */
+
+.cliente-form{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+}
+
+.cliente-form input{
+
+    flex:1;
+}
+
+
+/* ==========================
+   LISTA
+========================== */
+
+.cliente-lista{
+
+    list-style:none;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+    padding:0;
+
+    margin:0;
+}
+
+
+/* ==========================
+   ITEM
+========================== */
+
+.cliente-lista li{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    background:#fff;
+
+    padding:18px 24px;
+
+    border-radius:12px;
+
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+    transition:.25s;
+}
+
+.cliente-lista li:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 18px rgba(0,0,0,.12);
+}
+
+
+/* ==========================
+   NOME
+========================== */
+
+.search-text{
+
+    font-size:18px;
+
+    font-weight:600;
+
+    color:#333;
+}
+
+
+/* ==========================
+   BOTÕES
+========================== */
+
+.cliente-acoes{
+
+    display:flex;
+
+    gap:12px;
+
+    align-items:center;
+
+}
+
+
+/* ==========================
+   RESPONSIVIDADE
+========================== */
+
+@media(max-width:768px){
+
+    .cliente-lista li{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:18px;
+    }
+
+    .cliente-acoes{
+
+        width:100%;
+    }
+
+    .cliente-form{
+
+        flex-direction:column;
+
+        align-items:stretch;
+    }
+
+    .cliente-form input{
+
+        min-width:100%;
+    }
+}
+.search-empty{
+
+    text-align:center;
+
+    margin-top:20px;
+
+}
+
+.search-empty i{
+
+    font-size:50px;
+
+    color:#999;
+
+    margin-bottom:15px;
+
+}
+
+.search-empty h3{
+
+    margin-bottom:10px;
+
+}
+
+.search-empty p{
+
+    color:#666;
+
+    margin-bottom:20px;
+
+}
+.search-hidden{
+
+    display:none;
+
+}
+
+.button-conta{
+
+    background:#5e35b1;
+
+    color:white;
+
+    border:none;
+
+}
+
+.button-conta:hover{
+
+    background:#512da8;
+
+    color:white;
+
+}

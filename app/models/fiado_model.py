@@ -14,37 +14,30 @@ def listar_fiados():
     )
 
     sql = """
-        SELECT
+    SELECT
 
-            venda.id,
+        conta.id,
 
-            cliente.nome,
+        cliente.nome,
 
-            venda.valor_total,
+        conta.saldo_devedor,
 
-            venda.saldo_devedor,
+        conta.status_conta,
 
-            venda.data_venda
+        conta.data_abertura
 
-        FROM venda
+    FROM conta
 
-        INNER JOIN cliente
+    INNER JOIN cliente
 
-            ON cliente.id =
-            venda.cliente_id
+        ON cliente.id = conta.cliente_id
 
-        WHERE
+    WHERE
 
-            venda.status_pagamento =
-            'Pendente'
+        conta.status_conta = 'aberta'
 
-            AND
-
-            venda.cliente_id
-            IS NOT NULL
-
-        ORDER BY venda.id DESC
-    """
+    ORDER BY conta.id DESC
+"""
 
     cursor.execute(sql)
 
@@ -62,7 +55,7 @@ def listar_fiados():
 # ==========================
 def buscar_produtos_fiado(
 
-    venda_id
+    conta_id
 ):
 
     conexao = conectar()
@@ -74,28 +67,33 @@ def buscar_produtos_fiado(
     sql = """
         SELECT
 
-            produto.nome,
+    produto.nome,
 
-            produto_venda.quantidade,
+    produto_venda.quantidade,
 
-            produto_venda.tipo_venda
+    produto_venda.tipo_venda,
 
-        FROM produto_venda
+    venda.id AS venda_id
 
-        INNER JOIN produto
+FROM venda
 
-            ON produto.id =
-            produto_venda.produto_id
+INNER JOIN produto_venda
 
-        WHERE produto_venda.venda_id = %s
+    ON venda.id = produto_venda.venda_id
+
+INNER JOIN produto
+
+    ON produto.id = produto_venda.produto_id
+
+WHERE venda.conta_id = %s
     """
 
     cursor.execute(
 
-        sql,
+         sql,
 
         (
-            venda_id,
+        conta_id,
         )
     )
 
@@ -112,7 +110,7 @@ def buscar_produtos_fiado(
 # ==========================
 def buscar_fiado_por_id(
 
-    venda_id
+    conta_id
 ):
 
     conexao = conectar()
@@ -124,9 +122,9 @@ def buscar_fiado_por_id(
     sql = """
         SELECT *
 
-        FROM venda
+FROM conta
 
-        WHERE id = %s
+WHERE id = %s
     """
 
     cursor.execute(
@@ -134,7 +132,7 @@ def buscar_fiado_por_id(
         sql,
 
         (
-            venda_id,
+            conta_id,
         )
     )
 
@@ -151,11 +149,11 @@ def buscar_fiado_por_id(
 # ==========================
 def atualizar_saldo_fiado(
 
-    venda_id,
+    conta_id,
 
     novo_saldo,
 
-    status_pagamento
+    status_conta
 ):
 
     conexao = conectar()
@@ -163,27 +161,31 @@ def atualizar_saldo_fiado(
     cursor = conexao.cursor()
 
     sql = """
-        UPDATE venda
+    UPDATE conta
 
-        SET
+    SET
 
-            saldo_devedor = %s,
+        saldo_devedor = %s,
 
-            status_pagamento = %s
+        status_conta = %s
 
-        WHERE id = %s
-    """
+    WHERE id = %s
+"""
 
     cursor.execute(
 
-        sql,
+    sql,
 
-        (
-            novo_saldo,
-            status_pagamento,
-            venda_id
-        )
+    (
+
+        novo_saldo,
+
+        status_conta,
+
+        conta_id
+
     )
+)
 
     conexao.commit()
 
@@ -196,7 +198,7 @@ def atualizar_saldo_fiado(
 # ==========================
 def registrar_recebimento_fiado(
 
-    venda_id,
+    conta_id,
 
     valor_recebido
 ):
@@ -206,27 +208,29 @@ def registrar_recebimento_fiado(
     cursor = conexao.cursor()
 
     sql = """
-        INSERT INTO recebimento_fiado (
+    INSERT INTO recebimento_fiado (
 
-            venda_id,
+        conta_id,
 
-            valor_recebido
+        valor_recebido
 
-        )
-        VALUES (%s, %s)
-    """
+    )
+
+    VALUES (%s, %s)
+"""
 
     cursor.execute(
 
-        sql,
+    sql,
 
-        (
-            venda_id,
+    (
 
-            valor_recebido
-        )
+        conta_id,
+
+        valor_recebido
+
     )
-
+)
     conexao.commit()
 
     cursor.close()
@@ -238,7 +242,7 @@ def registrar_recebimento_fiado(
 # ==========================
 def buscar_recebimentos_fiado(
 
-    venda_id
+    conta_id
 ):
 
     conexao = conectar()
@@ -256,19 +260,21 @@ def buscar_recebimentos_fiado(
 
         FROM recebimento_fiado
 
-        WHERE venda_id = %s
+        WHERE conta_id = %s
 
         ORDER BY data_recebimento DESC
     """
 
     cursor.execute(
 
-        sql,
+    sql,
 
-        (
-            venda_id,
-        )
+    (
+
+        conta_id,
+
     )
+)
 
     recebimentos = cursor.fetchall()
 

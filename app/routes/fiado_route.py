@@ -23,17 +23,17 @@ def configurar_fiado_routes(app):
 
             fiados=fiados
         )
-    
+
     # ==========================
     # RECEBER PAGAMENTO FIADO
     # ==========================
     @app.route(
-        "/fiado/receber/<int:venda_id>",
+        "/fiado/receber/<int:conta_id>",
         methods=["POST"]
     )
     def receber_pagamento(
 
-        venda_id
+        conta_id
     ):
 
         valor_recebido = request.form.get(
@@ -43,7 +43,7 @@ def configurar_fiado_routes(app):
 
         receber_pagamento_fiado(
 
-            venda_id,
+            conta_id,
 
             valor_recebido
         )

@@ -1,0 +1,100 @@
+/* ==========================
+   CARD
+========================== */
+
+.card{
+
+    background:#ffffff;
+
+    border-radius:16px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+    border:1px solid #e8e8e8;
+
+    overflow:hidden;
+
+    margin-bottom:30px;
+}
+
+
+/* ==========================
+   CABEÇALHO
+========================== */
+
+.card-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:18px 24px;
+
+    background:#f8f9fa;
+
+    border-bottom:1px solid #e8e8e8;
+}
+
+.card-header h2{
+
+    margin:0;
+
+    font-size:20px;
+
+    color:#333;
+}
+
+
+/* ==========================
+   CORPO
+========================== */
+
+.card-body{
+
+    padding:24px;
+}
+
+/* ==========================
+   CARD ANIMATION
+========================== */
+
+#card-cadastro{
+
+    overflow:hidden;
+
+    max-height:500px;
+
+    opacity:1;
+
+    visibility:visible;
+
+    transform:translateY(0);
+
+    transition:
+        max-height .35s ease,
+        opacity .25s ease,
+        transform .25s ease,
+        margin .35s ease,
+        padding .35s ease;
+
+}
+
+#card-cadastro.hidden{
+
+    max-height:0;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transform:translateY(-15px);
+
+    margin:0;
+
+    padding-top:0;
+
+    padding-bottom:0;
+
+}

@@ -4,60 +4,195 @@
 Clientes
 {% endblock %}
 
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/pages/cliente.css') }}"
+>
+
+{% endblock %}
+
 {% block conteudo %}
 
-<h1>Lista de Clientes</h1>
+<h1>Clientes</h1>
 
-<form action="{{ url_for('cadastrar_cliente') }}" method="POST">
+<div class="cliente-pesquisa">
 
-    <input
-        type="text"
-        name="nome"
-        placeholder="Digite o nome do cliente"
-        required
-    >
+    <div class="search-box">
 
-    <button class="button button-success">
-        <i class="fa-solid fa-plus"></i>
-        Cadastrar
-    </button>
+        <i class="fa-solid fa-magnifying-glass"></i>
 
-</form>
+        <input
+            type="text"
+            id="search-input"
+            placeholder="Pesquisar cliente..."
+        >
 
-<hr>
+    </div>
+    <div class="search-info">
 
-<ul>
+        <span id="search-count">
+    
+            {{ clientes|length }} cliente(s)
+    
+        </span>
+    
+    </div>
+
+</div>
+<div class="card search-empty search-hidden" id="search-empty">
+
+    <div class="card-body">
+
+        <i class="fa-solid fa-user-slash"></i>
+
+        <h3>Nenhum cliente encontrado</h3>
+
+        <p>
+            Nenhum cliente corresponde à pesquisa.
+        </p>
+
+        <button
+    type="button"
+    class="button button-success"
+    id="btn-cadastrar-cliente"
+>
+
+    <i class="fa-solid fa-plus"></i>
+
+    Cadastrar cliente
+
+</button>
+
+    </div>
+
+</div>
+
+<div class="card"
+id="card-cadastro">
+
+    <div class="card-header">
+
+        <h2>Novo Cliente</h2>
+
+    </div>
+
+    <div class="card-body">
+
+        <form
+            action="{{ url_for('cadastrar_cliente') }}"
+            method="POST"
+            class="cliente-form"
+        >
+
+        <div class="form-group">
+
+            <label for="nome-cliente">
+        
+                <i class="fa-solid fa-user"></i>
+        
+                Nome do Cliente
+        
+            </label>
+        
+            <input
+        
+                type="text"
+        
+                id="nome-cliente"
+        
+                name="nome"
+        
+                class="input"
+        
+                placeholder="Digite o nome do cliente"
+        
+                required
+        
+            >
+        
+        </div>
+
+            <button class="button button-success">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Cadastrar
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<ul class="cliente-lista">
 
     {% for cliente in clientes %}
 
-    <li>
+    <li class="search-item">
 
-        <strong>
-            Nome: {{ cliente.nome }}
+        <strong class="search-text">
+
+            {{ cliente.nome }}
+
         </strong>
 
-        <a
-    href="{{ url_for('tela_editar_cliente', id_cliente=cliente.id) }}"
-    class="button button-secondary"
+        <div class="cliente-acoes">
+
+            <a
+    href="/conta/{{ cliente.id }}"
+    class="button button-conta"
 >
-    <i class="fa-solid fa-pen"></i>
-    Editar
+
+    <i class="fa-solid fa-wallet"></i>
+
+    Ver Conta
+
 </a>
 
-<a
-href="{{ url_for('excluir_cliente', id_cliente=cliente.id) }}"
-class="button button-danger"
-onclick="return confirm('Deseja realmente excluir este cliente?')"
->
-<i class="fa-solid fa-trash"></i>
-Excluir
-</a>
-        
+            <a
+                href="{{ url_for('tela_editar_cliente', id_cliente=cliente.id) }}"
+                class="button button-secondary"
+            >
+
+                <i class="fa-solid fa-pen"></i>
+
+                Editar
+
+            </a>
+
+            <a
+                href="{{ url_for('excluir_cliente', id_cliente=cliente.id) }}"
+                class="button button-danger"
+                onclick="return confirm('Deseja realmente excluir este cliente?')"
+            >
+
+                <i class="fa-solid fa-trash"></i>
+
+                Excluir
+
+            </a>
+
+        </div>
 
     </li>
 
     {% endfor %}
 
 </ul>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/search_cliente.js'
+    ) }}"
+></script>
 
 {% endblock %}

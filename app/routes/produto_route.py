@@ -147,38 +147,29 @@ def configurar_produto_routes(app):
     # ROTA: INATIVAR PRODUTO
     # ==========================
     @app.route(
-        "/produto/inativar/<int:produto_id>",
-        methods=["POST"]
-    )
-    def inativar_produto(
-
-        produto_id
-    ):
+    "/produto/inativar/<int:produto_id>",
+    methods=["POST"]
+)
+    def inativar_produto(produto_id):
 
         inativar_produto_controller(
-            produto_id
-        )
+        produto_id
+    )
 
-        return redirect(
-            "/produto"
-        )
-    
+        return redirect("/produto")
+
+
     # ==========================
     # ROTA: ATIVAR PRODUTO
     # ==========================
     @app.route(
-        "/produto/ativar/<int:produto_id>",
-        methods=["POST"]
-    )
-    def ativar_produto_route(
-
-        produto_id
-    ):
+    "/produto/ativar/<int:produto_id>",
+    methods=["POST"]
+)
+    def ativar_produto_route(produto_id):
 
         ativar_produto_controller(
-            produto_id
-        )
+        produto_id
+    )
 
-        return redirect(
-            "/produto"
-        )
+        return redirect("/produto")

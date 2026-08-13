@@ -17,7 +17,9 @@ from app.routes.conta_route import configurar_conta_routes
 from app.routes.fiado_route import configurar_fiado_routes
 # Importa rota relatório
 from app.routes.relatorio_route import configurar_relatorio_routes
+# Importa rota rotas
 from app.routes.routes import configurar_rotas
+# Importa rota dashboard
 from app.routes.dashboard_route import configurar_rotas_dashboard
 
 # Cria aplicação Flask

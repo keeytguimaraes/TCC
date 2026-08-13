@@ -30,10 +30,27 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/global/header.css') }}">
+    <link
+          rel="stylesheet"href="{{ url_for('static', filename='css/components/modal.css') }}">
 
     <!-- CSS ESPECÍFICO -->
     <link rel="stylesheet"
     href="{{ url_for('static', filename='css/components/button.css') }}">
+
+    <link
+    rel="stylesheet" 
+    href="{{ url_for('static', filename='css/components/input.css') }}">
+
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/components/search.css') }}">
+      
+      <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/components/card.css') }}">
+
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static',filename='css/components/product-card.css') }}">
 
     {% block css %}
     {% endblock %}
@@ -76,6 +93,7 @@
     <script src="{{ url_for('static', filename='js/global/menu.js') }}"></script>
 
     <!-- JS ESPECÍFICO -->
+    <script src="{{ url_for( 'static',filename='js/components/modal.js') }}"></script>
 
     {% block scripts %}
     {% endblock %}

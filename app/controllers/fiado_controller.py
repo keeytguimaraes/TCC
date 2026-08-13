@@ -20,8 +20,29 @@ def pegar_fiados():
 
     for fiado in fiados:
 
-        fiado["produtos"] = buscar_produtos_fiado(
+        produtos = buscar_produtos_fiado(
             fiado["id"]
+        )
+
+        agrupados = {}
+
+        for produto in produtos:
+
+            chave = (
+                produto["nome"],
+                produto["tipo_venda"]
+            )
+
+            if chave not in agrupados:
+
+                agrupados[chave] = produto.copy()
+
+            else:
+
+                agrupados[chave]["quantidade"] += produto["quantidade"]
+
+        fiado["produtos"] = list(
+            agrupados.values()
         )
 
         fiado["recebimentos"] = buscar_recebimentos_fiado(
@@ -30,19 +51,21 @@ def pegar_fiados():
 
     return fiados
 
+    return fiados
+
 # ==========================
 # RECEBER PAGAMENTO FIADO
 # ==========================
 def receber_pagamento_fiado(
 
-    venda_id,
+    conta_id,
 
     valor_recebido
 ):
 
     fiado = buscar_fiado_por_id(
 
-        venda_id
+        conta_id
     )
 
     saldo_atual = float(
@@ -57,30 +80,30 @@ def receber_pagamento_fiado(
     )
     registrar_recebimento_fiado(
 
-    venda_id,
+    conta_id,
 
     valor_recebido
-    )
+)
 
     if novo_saldo <= 0:
 
         novo_saldo = 0
 
-        status_pagamento = (
-            "Pago"
+        status_conta = (
+            "quitada"
         )
 
     else:
 
-        status_pagamento = (
-            "Pendente"
+        status_conta = (
+            "aberta"
         )
 
     atualizar_saldo_fiado(
 
-        venda_id,
+    conta_id,
 
-        novo_saldo,
+    novo_saldo,
 
-        status_pagamento
-    )
+    status_conta
+)

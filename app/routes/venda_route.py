@@ -556,15 +556,19 @@ def configurar_venda_routes(app):
 
         # ID venda
         venda_id = cursor.lastrowid
-        # ----------------------
+       # ----------------------
         # ATUALIZA SALDO DA CONTA
         # ----------------------
         if tipo_finalizacao == "fiado":
 
+            from app.models.conta_model import (
+                atualizar_saldo_conta
+            )
 
             atualizar_saldo_conta(
-        
-               conta_id,
+                cursor,
+
+                conta_id,
 
                 valor_total
             )

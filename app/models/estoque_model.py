@@ -454,38 +454,43 @@ def baixar_estoque(
     sql_insert = """
     INSERT INTO estoque (
 
-        produto_id,
+    produto_id,
 
-        tipo_movimentacao,
+    quantidade_recebida_caixa,
 
-        quantidade_recebida_caixa,
+    quantidade_recebida_unidade,
 
-        quantidade_recebida_unidade,
+    quantidade_atual_caixa,
 
-        quantidade_atual_caixa,
+    quantidade_atual_unidade,
 
-        quantidade_atual_unidade,
+    data_entrada,
 
-        data_entrada
+    entrada,
+
+    saida
 
     )
+
     VALUES (
 
-        %s,
+    %s,
 
-        'saida',
+    0,
 
-        0,
+    0,
 
-        0,
+    %s,
 
-        %s,
+    %s,
 
-        %s,
+    NOW(),
 
-        NOW()
+    0,
+
+    %s
+
     )
-
     """
 
     cursor.execute(
@@ -497,7 +502,9 @@ def baixar_estoque(
 
             nova_caixa,
 
-            nova_unidade
+            nova_unidade,
+
+            baixa_unidade
         )
     )
 

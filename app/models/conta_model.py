@@ -190,42 +190,24 @@ def criar_conta(cliente_id):
 # ATUALIZAR SALDO
 # ==========================
 def atualizar_saldo_conta(
-
+    cursor,
     conta_id,
-
     valor
 ):
 
-    conexao = conectar()
-
-    cursor = conexao.cursor()
-
     sql = """
         UPDATE conta
-
-        SET
-
-            saldo_devedor = saldo_devedor + %s
-
+        SET saldo_devedor = saldo_devedor + %s
         WHERE id = %s
     """
 
     cursor.execute(
-
         sql,
-
         (
             valor,
-
             conta_id
         )
     )
-
-    conexao.commit()
-
-    cursor.close()
-
-    conexao.close()
 
 
 # ==========================

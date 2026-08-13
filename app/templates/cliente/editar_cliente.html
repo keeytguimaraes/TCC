@@ -4,34 +4,71 @@
 Editar Cliente
 {% endblock %}
 
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/pages/cliente.css') }}"
+>
+
+{% endblock %}
+
 {% block conteudo %}
 
-    <h1>Editar Cliente</h1>
+<h1>Editar Cliente</h1>
 
-    <form method="POST">
+<div class="card">
 
-        <label>Nome:</label>
+    <div class="card-header">
 
-        <input
-            type="text"
-            name="nome"
-            value="{{ cliente.nome }}"
-            required
+        <h2>Editar Cliente</h2>
+
+    </div>
+
+    <div class="card-body">
+
+        <form
+            method="POST"
+            class="cliente-form"
         >
 
-        <button type="submit" class="button button-primary">
-            <i class="fa-solid fa-floppy-disk"></i>
-            Salvar
-        </button>
+            <input
+                type="text"
+                name="nome"
+                value="{{ cliente.nome }}"
+                required
+            >
 
-        <a
-    href="{{ url_for('cliente') }}"
-    class="button button-secondary"
->
-    <i class="fa-solid fa-arrow-left"></i>
-    Voltar
-</a>
+            <div class="cliente-acoes">
 
-    </form>
+                <button
+                    type="submit"
+                    class="button button-primary"
+                >
 
-    {% endblock %}
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    Salvar
+
+                </button>
+
+                <a
+                    href="{{ url_for('cliente') }}"
+                    class="button button-secondary"
+                >
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    Voltar
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
