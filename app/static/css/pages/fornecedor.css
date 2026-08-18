@@ -1,0 +1,421 @@
+/* ==========================
+   TÍTULO
+========================== */
+
+.page-title{
+
+    margin-bottom:24px;
+
+}
+
+.page-title h1{
+
+    margin:0;
+
+    font-size:2rem;
+
+    font-weight:700;
+
+}
+
+/* ==========================
+   CARD NOVO FORNECEDOR
+========================== */
+
+.nova-entrada-card{
+
+    width:350px;
+
+    height:250px;
+
+    margin:24px auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    gap:20px;
+
+    background:#fff;
+
+    border-radius:28px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.08);
+
+    transition:.25s;
+
+}
+
+.nova-entrada-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 10px 20px rgba(0,0,0,.12);
+
+}
+
+.nova-entrada-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+
+    background:#2e7d32;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:28px;
+
+}
+
+.nova-entrada-card h3{
+
+    margin:0;
+
+}
+
+.nova-entrada-card p{
+
+    margin:0;
+
+    color:#777;
+
+}
+
+/* ==========================
+   GRID FORNECEDORES
+========================== */
+
+.fornecedor-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(320px,1fr)
+        );
+
+    gap:24px;
+
+    margin-top:30px;
+
+}
+
+/* ==========================
+   CARD FORNECEDOR
+========================== */
+
+.fornecedor-card{
+
+    background:#fff;
+
+    padding:24px;
+
+    border-radius:18px;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.08);
+
+    transition:.25s;
+
+}
+
+.fornecedor-card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+.fornecedor-card h3{
+
+    margin-top:0;
+
+    margin-bottom:16px;
+
+    color:#2e7d32;
+
+}
+
+.fornecedor-card p{
+
+    margin:10px 0;
+
+    color:#444;
+
+    line-height:1.5;
+
+}
+
+/* ==========================
+   MODAL
+========================== */
+
+.modal-content{
+
+    width:700px;
+
+    max-width:95%;
+
+    border-radius:20px;
+
+}
+
+.modal-body{
+
+    padding:25px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.form-group label{
+
+    font-weight:600;
+
+    color:#333;
+
+}
+
+.form-group input,
+.form-group textarea{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+    box-sizing:border-box;
+
+}
+
+.form-group textarea{
+
+    resize:vertical;
+
+}
+
+.modal-footer{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    padding:20px;
+
+    border-top:1px solid #eee;
+
+}
+
+/* ==========================
+   RESPONSIVO
+========================== */
+
+@media(max-width:768px){
+
+    .fornecedor-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .nova-entrada-card{
+
+        width:100%;
+
+        max-width:350px;
+
+    }
+
+}
+
+/* ==========================
+   EDITAR FORNECEDOR
+========================== */
+
+.editar-card{
+
+    background:#fff;
+
+    padding:30px;
+
+    border-radius:20px;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.08);
+
+    max-width:800px;
+
+    margin:auto;
+
+}
+
+.editar-card form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+.editar-acoes{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-top:10px;
+
+}
+
+/* ==========================
+   PESQUISA
+========================== */
+
+.pesquisa-container{
+
+    margin-bottom:25px;
+
+}
+
+.pesquisa-container input{
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #ddd;
+
+    border-radius:12px;
+
+    font-size:15px;
+
+    box-sizing:border-box;
+
+}
+
+.search-hidden{
+
+    display:none;
+
+}
+
+.fornecedor-pesquisa{
+
+    margin-bottom:24px;
+
+}
+
+.search-info{
+
+    margin-top:10px;
+
+    color:#666;
+
+}
+
+.search-empty{
+
+    max-width: 420px;
+
+    margin: 30px auto;
+
+    padding: 40px 30px;
+
+    background: #fff;
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.08);
+
+    text-align: center;
+
+}
+
+.search-empty .card-body{
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 15px;
+
+}
+
+.search-empty i{
+
+    font-size: 42px;
+
+    color: #2e7d32;
+
+}
+
+.search-empty h3{
+
+    margin: 0;
+
+    font-size: 24px;
+
+}
+
+.search-empty p{
+
+    margin: 0;
+
+    color: #666;
+
+    line-height: 1.5;
+
+}
+
+.search-empty{
+
+    grid-column: 1 / -1;
+
+}

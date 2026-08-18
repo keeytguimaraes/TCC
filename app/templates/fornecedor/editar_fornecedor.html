@@ -1,81 +1,102 @@
-<!DOCTYPE html>
 {% extends "base/base.html" %}
 
 {% block titulo %}
 Editar Fornecedor
 {% endblock %}
 
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/fornecedor.css'
+    ) }}"
+>
+
+{% endblock %}
+
 {% block conteudo %}
 
+<div class="page-title">
+
     <h1>
-        Editar fornecedor
+        Editar Fornecedor
     </h1>
 
-    <!-- FORMULÁRIO -->
+</div>
+
+<div class="editar-card">
+
     <form
         action="/fornecedor/editar/{{ fornecedor.id }}"
         method="POST"
     >
 
-        <!-- Nome -->
-        <label>
-            Nome:
-        </label>
+        <div class="form-group">
 
-        <input
-            type="text"
-            name="nome"
-            value="{{ fornecedor.nome }}"
-            required
-        >
+            <label>
+                Nome
+            </label>
 
-        <br><br>
+            <input
+                type="text"
+                name="nome"
+                value="{{ fornecedor.nome }}"
+                required
+            >
 
-        <!-- Telefone -->
-        <label>
-            Telefone:
-        </label>
+        </div>
 
-        <input
-            type="text"
-            name="telefone"
-            value="{{ fornecedor.telefone }}"
-        >
+        <div class="form-group">
 
-        <br><br>
+            <label>
+                Telefone
+            </label>
 
-        <!-- Observação -->
-        <label>
-            Observação:
-        </label>
+            <input
+                type="text"
+                name="telefone"
+                value="{{ fornecedor.telefone }}"
+            >
 
-        <br>
+        </div>
 
-        <textarea
-            name="observacao"
-            rows="5"
-            cols="40"
-        >{{ fornecedor.observacao }}</textarea>
+        <div class="form-group">
 
-        <br><br>
+            <label>
+                Observação
+            </label>
 
-        <!-- Botão -->
-        <button type="submit" class="button button-primary">
-            <i class="fa-solid fa-floppy-disk"></i>
-            Salvar Alterações
-        </button>
+            <textarea
+                name="observacao"
+                rows="5"
+            >{{ fornecedor.observacao }}</textarea>
+
+        </div>
+
+        <div class="editar-acoes">
+
+            <a
+                href="/fornecedor"
+                class="button button-secondary"
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+                Voltar
+            </a>
+
+            <button
+                type="submit"
+                class="button button-success"
+            >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Salvar Alterações
+            </button>
+
+        </div>
 
     </form>
 
-    <br>
+</div>
 
-    <!-- Voltar -->
-    <a
-    href="/fornecedor"
-    class="button button-secondary"
->
-    <i class="fa-solid fa-arrow-left"></i>
-    Voltar
-</a>
-
-    {% endblock %}
+{% endblock %}

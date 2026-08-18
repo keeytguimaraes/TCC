@@ -107,3 +107,18 @@ def receber_pagamento_fiado(
 
     status_conta
 )
+def pegar_fiado_detalhes(conta_id):
+
+    fiado = buscar_fiado_por_id(
+        conta_id
+    )
+
+    fiado["produtos"] = buscar_produtos_fiado(
+        conta_id
+    )
+
+    fiado["recebimentos"] = buscar_recebimentos_fiado(
+        conta_id
+    )
+
+    return fiado

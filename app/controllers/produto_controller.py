@@ -1,6 +1,8 @@
 # Importa funções do model
 from app.models.produto_model import (
     listar_produtos,
+    listar_produtos_ativos,
+    listar_produtos_inativos,
     cadastrar_produto,
     listar_categorias,
     buscar_produto_por_id,
@@ -27,6 +29,21 @@ def pegar_produtos():
 
     # Retorna lista
     return produtos
+
+# ==========================
+# PRODUTOS ATIVOS
+# ==========================
+def pegar_produtos_ativos():
+
+    return listar_produtos_ativos()
+
+
+# ==========================
+# PRODUTOS INATIVOS
+# ==========================
+def pegar_produtos_inativos():
+
+    return listar_produtos_inativos()
 
 # ==========================
 # CONTROLLER:

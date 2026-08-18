@@ -6,12 +6,16 @@ from flask import (
 
 from app.controllers.fiado_controller import (
     pegar_fiados,
+    pegar_fiado_detalhes,
     receber_pagamento_fiado
 )
 
 
 def configurar_fiado_routes(app):
 
+    # ==========================
+    # LISTAR FIADOS
+    # ==========================
     @app.route("/fiado")
     def fiado():
 
@@ -24,6 +28,27 @@ def configurar_fiado_routes(app):
             fiados=fiados
         )
 
+
+    # ==========================
+    # DETALHES DO FIADO
+    # ==========================
+    @app.route(
+        "/fiado/detalhes/<int:conta_id>"
+    )
+    def detalhes_fiado(conta_id):
+
+        fiado = pegar_fiado_detalhes(
+            conta_id
+        )
+
+        return render_template(
+
+            "fiado/detalhes_fiado.html",
+
+            fiado=fiado
+        )
+
+
     # ==========================
     # RECEBER PAGAMENTO FIADO
     # ==========================
@@ -31,13 +56,9 @@ def configurar_fiado_routes(app):
         "/fiado/receber/<int:conta_id>",
         methods=["POST"]
     )
-    def receber_pagamento(
-
-        conta_id
-    ):
+    def receber_pagamento(conta_id):
 
         valor_recebido = request.form.get(
-
             "valor_recebido"
         )
 
@@ -49,5 +70,5 @@ def configurar_fiado_routes(app):
         )
 
         return redirect(
-            "/fiado"
-        )
+    f"/fiado/detalhes/{conta_id}"
+)

@@ -108,10 +108,7 @@ WHERE venda.conta_id = %s
 # ==========================
 # BUSCAR FIADO POR ID
 # ==========================
-def buscar_fiado_por_id(
-
-    conta_id
-):
+def buscar_fiado_por_id(conta_id):
 
     conexao = conectar()
 
@@ -120,20 +117,26 @@ def buscar_fiado_por_id(
     )
 
     sql = """
-        SELECT *
+        SELECT
 
-FROM conta
+            conta.*,
 
-WHERE id = %s
+            cliente.nome
+
+        FROM conta
+
+        INNER JOIN cliente
+
+            ON cliente.id = conta.cliente_id
+
+        WHERE conta.id = %s
     """
 
     cursor.execute(
 
         sql,
 
-        (
-            conta_id,
-        )
+        (conta_id,)
     )
 
     fiado = cursor.fetchone()

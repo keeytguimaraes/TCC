@@ -1,0 +1,188 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Detalhes do Fiado
+{% endblock %}
+
+{% block conteudo %}
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/detalhes_fiado.css'
+    ) }}"
+>
+
+{% endblock %}
+
+<div class="page-header">
+
+    <h1>
+        Detalhes do Fiado
+    </h1>
+
+    <a
+        href="/fiado"
+        class="button button-secondary"
+    >
+        <i class="fa-solid fa-arrow-left"></i>
+        Voltar
+    </a>
+
+</div>
+
+<div class="detalhes-grid">
+
+    <!-- CLIENTE -->
+
+    <div class="detalhe-card cliente-card">
+
+        <h2>
+            👤 {{ fiado.nome }}
+        </h2>
+
+        <p>
+            <strong>Status:</strong>
+            {{ fiado.status_conta }}
+        </p>
+
+        <p>
+            <strong>Aberta em:</strong>
+
+            {{ fiado.data_abertura.strftime('%d/%m/%Y %H:%M') }}
+        </p>
+
+    </div>
+
+    <!-- FINANCEIRO -->
+
+    <div class="detalhe-card financeiro-card">
+
+        <h2>
+            💰 Financeiro
+        </h2>
+
+        <p>
+            <strong>
+                Saldo Devedor:
+            </strong>
+
+            R$ {{ fiado.saldo_devedor }}
+        </p>
+
+    </div>
+
+    <!-- PRODUTOS -->
+
+    <div class="detalhe-card produtos-card">
+
+        <h2>
+            📦 Produtos
+        </h2>
+
+        {% if fiado.produtos %}
+
+            {% for produto in fiado.produtos %}
+
+                <p>
+
+                    {{ produto.quantidade }}x
+
+                    {{ produto.nome }}
+
+                    ({{ produto.tipo_venda }})
+
+                </p>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                Nenhum produto encontrado.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+    <!-- RECEBIMENTOS -->
+
+    <div class="detalhe-card recebimentos-card">
+
+        <h2>
+            💵 Recebimentos
+        </h2>
+
+        {% if fiado.recebimentos %}
+
+            {% for recebimento in fiado.recebimentos %}
+
+                <p>
+
+                    R$
+                    {{ recebimento.valor_recebido }}
+
+                    -
+
+                    {{ recebimento.data_recebimento.strftime('%d/%m/%Y %H:%M') }}
+
+                </p>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                Nenhum recebimento registrado.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<!-- RECEBER PAGAMENTO -->
+
+<div class="detalhe-card pagamento-card">
+
+    <h2>
+        💵 Receber Pagamento
+    </h2>
+
+    <form
+        action="/fiado/receber/{{ fiado.id }}"
+        method="POST"
+    >
+
+        <div class="pagamento-form">
+
+            <input
+                type="number"
+                step="0.01"
+                name="valor_recebido"
+                placeholder="Valor recebido"
+                required
+            >
+
+            <button
+                type="submit"
+                class="button button-success"
+            >
+
+                <i class="fa-solid fa-money-bill-wave"></i>
+
+                Receber Parcial
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

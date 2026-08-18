@@ -8,6 +8,8 @@ from flask import (
 # Importa controllers
 from app.controllers.produto_controller import (
     pegar_produtos,
+    pegar_produtos_ativos,
+    pegar_produtos_inativos,
     cadastrar_produto_controller,
     pegar_produto_por_id,
     editar_produto_controller,
@@ -38,6 +40,26 @@ def configurar_produto_routes(app):
             # Variável do HTML
             produtos=dados
         )
+    
+    @app.route("/produto/ativos")
+    def produtos_ativos():
+
+        dados = pegar_produtos_ativos()
+
+        return render_template(
+        "produto/produto.html",
+        produtos=dados
+    )
+
+    @app.route("/produto/inativos")
+    def produtos_inativos():
+
+        dados = pegar_produtos_inativos()
+
+        return render_template(
+        "produto/produto.html",
+        produtos=dados
+    )
 
 
     # ==========================

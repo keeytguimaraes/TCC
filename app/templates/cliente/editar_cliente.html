@@ -15,53 +15,72 @@ Editar Cliente
 
 {% block conteudo %}
 
-<h1>Editar Cliente</h1>
+<div class="page-header">
 
-<div class="card">
+    <h1>
+        Editar Cliente
+    </h1>
 
-    <div class="card-header">
+    <a
+        href="{{ url_for('cliente') }}"
+        class="button button-secondary"
+    >
+        <i class="fa-solid fa-arrow-left"></i>
+        Voltar
+    </a>
 
-        <h2>Editar Cliente</h2>
+</div>
 
-    </div>
+<div class="card card-cliente">
 
     <div class="card-body">
 
+        <h2>
+            <i class="fa-solid fa-user"></i>
+            Cliente
+        </h2>
+
+        <div class="cliente-info">
+
+            <span class="cliente-label">
+                Nome Atual
+            </span>
+
+            <h3>
+                {{ cliente.nome }}
+            </h3>
+
+        </div>
+
         <form
             method="POST"
-            class="cliente-form"
+            class="cliente-form-editar"
         >
 
-            <input
-                type="text"
-                name="nome"
-                value="{{ cliente.nome }}"
-                required
-            >
+            <div class="form-group">
+
+                <label>
+                    Alterar Nome
+                </label>
+
+                <input
+                    type="text"
+                    name="nome"
+                    value="{{ cliente.nome }}"
+                    required
+                >
+
+            </div>
 
             <div class="cliente-acoes">
 
                 <button
                     type="submit"
-                    class="button button-primary"
+                    class="button button-success"
                 >
-
                     <i class="fa-solid fa-floppy-disk"></i>
-
-                    Salvar
-
+                    Salvar Alterações
                 </button>
-
-                <a
-                    href="{{ url_for('cliente') }}"
-                    class="button button-secondary"
-                >
-
-                    <i class="fa-solid fa-arrow-left"></i>
-
-                    Voltar
-
-                </a>
 
             </div>
 

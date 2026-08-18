@@ -6,116 +6,136 @@ Fiados
 
 {% block conteudo %}
 
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/fiado.css'
+    ) }}"
+>
+
+{% endblock %}
+
+<div class="page-title">
+
     <h1>
         Fiados
     </h1>
 
-    <ul>
+</div>
 
-        {% for fiado in fiados %}
-        
-        <li>
-        
-            <strong>
+<div class="fiado-pesquisa">
+
+    <div class="search-box">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+            type="text"
+            id="search-input"
+            placeholder="Pesquisar cliente..."
+        >
+
+    </div>
+
+    <div class="search-info">
+
+        <span id="search-count">
+
+            {{ fiados|length }} fiado(s)
+
+        </span>
+
+    </div>
+
+</div>
+
+<div
+    class="search-empty search-hidden"
+    id="search-empty"
+>
+
+    <h3>
+        Nenhum fiado encontrado
+    </h3>
+
+    <p>
+        Nenhum cliente corresponde à pesquisa.
+    </p>
+
+</div>
+
+<div class="fiado-grid">
+
+    {% for fiado in fiados %}
+
+    <div
+    class="fiado-card search-item"
+>
+
+        <div class="fiado-card-header">
+
+            <h3 class="search-text">
                 {{ fiado.nome }}
-            </strong>
-        
-            <br><br>
-        
-            Produtos:
-        
-            <ul>
-        
-                {% for produto in fiado.produtos %}
-        
-                <li>
-        
-                    {{ produto.quantidade }}x
-        
-                    {{ produto.nome }}
-        
-                    ({{ produto.tipo_venda }})
-        
-                </li>
-        
-                {% endfor %}
-        
-            </ul>
-        
-            <br>
-        <strong>
-            Recebimentos:
-        </strong>
-        
-            {% if fiado.recebimentos %}
-        
-            <ul>
-        
-                {% for recebimento in fiado.recebimentos %}
-        
-                <li>
-        
-                    R$ {{ recebimento.valor_recebido }}
-        
-                    -
-        
-                    {{ recebimento.data_recebimento.strftime('%d/%m/%Y %H:%M') }}
-        
-                </li>
-        
-                {% endfor %}
-        
-            </ul>
-        
-            {% else %}
-        
-            Nenhum recebimento registrado.
-        
-            {% endif %}
-        <br>
-            <strong>
-            Saldo Devedor:
-            </strong>
-        
-            R$ {{ fiado.saldo_devedor }}
-        
-            <br><br>
-        
-            <form
-                action="/fiado/receber/{{ fiado.id }}"
-                method="POST"
-            >
-        
-                <label>
-                    Valor recebido:
-                </label>
-        
-                <input
-                    type="number"
-                    step="0.01"
-                    name="valor_recebido"
-                    required
-                >
-        
-                <button class="button button-success">
-                    <i class="fa-solid fa-money-bill-wave"></i>
-                    Receber Pagamento
-                </button>
-        
-            </form>
-        
-            <br><br>
-            <strong>
-            Data de criação da conta:
-            </strong>
-            {{  fiado.data_abertura.strftime('%d/%m/%Y %H:%M') }}
-        
-            <hr>
-        
-        </li>
-        
-        {% endfor %}
-        
-        </ul>
+            </h3>
 
-        {% endblock %}
+        </div>
+
+        <div class="fiado-card-body">
+
+            <p>
+
+                <strong>
+                    Saldo Devedor:
+                </strong>
+
+                R$ {{ fiado.saldo_devedor }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Aberto em:
+                </strong>
+
+                {{ fiado.data_abertura.strftime('%d/%m/%Y') }}
+
+            </p>
+
+        </div>
+
+        <div class="fiado-card-footer">
+
+            <a
+                href="/fiado/detalhes/{{ fiado.id }}"
+                class="button button-secondary"
+            >
+
+                <i class="fa-solid fa-eye"></i>
+
+                Detalhes
+
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+{% block scripts %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/search_fiado.js'
+    ) }}"
+></script>
+
+{% endblock %}
+
+{% endblock %}

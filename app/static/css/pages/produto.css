@@ -462,3 +462,42 @@
     gap:8px;
 
 }
+
+.filtros-produto{
+
+    display:flex;
+
+    gap:12px;
+
+    margin:20px 0;
+
+}
+
+.filtros-produto a{
+
+    text-decoration:none;
+
+    padding:10px 20px;
+
+    border-radius:12px;
+
+    background:#ffffff;
+
+    color:#333;
+
+    font-weight:600;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.08);
+
+    transition:.2s;
+
+}
+
+.filtros-produto a:hover{
+
+    transform:translateY(-2px);
+
+    background:#f5f5f5;
+
+}

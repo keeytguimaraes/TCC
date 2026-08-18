@@ -1,0 +1,119 @@
+/* ==========================
+   TÍTULO
+========================== */
+
+.page-title{
+
+    margin-bottom:24px;
+
+}
+
+/* ==========================
+   GRID
+========================== */
+
+.fiado-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(320px,1fr)
+        );
+
+    gap:24px;
+
+}
+
+/* ==========================
+   CARD
+========================== */
+
+.fiado-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:24px;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.08);
+
+    transition:.25s;
+
+}
+
+.fiado-card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+.fiado-card-header h3{
+
+    margin:0;
+
+    color:#2e7d32;
+
+}
+
+.fiado-card-body{
+
+    margin-top:20px;
+
+}
+
+.fiado-card-body p{
+
+    margin:10px 0;
+
+}
+
+.fiado-card-footer{
+
+    margin-top:20px;
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+.fiado-pesquisa{
+
+    margin-bottom:25px;
+
+}
+
+.search-hidden{
+
+    display:none;
+
+}
+
+.search-info{
+
+    margin-top:10px;
+
+    color:#666;
+
+}
+
+.search-empty{
+
+    background:#fff;
+
+    padding:25px;
+
+    border-radius:18px;
+
+    margin-top:20px;
+
+    text-align:center;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.08);
+
+}

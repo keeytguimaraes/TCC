@@ -331,3 +331,56 @@ def ativar_produto(
     cursor.close()
 
     conexao.close()
+
+# ==========================
+# LISTAR PRODUTOS ATIVOS
+# ==========================
+def listar_produtos_ativos():
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT *
+        FROM produto
+        WHERE ativo = TRUE
+    """
+
+    cursor.execute(sql)
+
+    produtos = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return produtos
+
+
+# ==========================
+# LISTAR PRODUTOS INATIVOS
+# ==========================
+def listar_produtos_inativos():
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT *
+        FROM produto
+        WHERE ativo = FALSE
+    """
+
+    cursor.execute(sql)
+
+    produtos = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return produtos

@@ -4,108 +4,276 @@
 Fornecedor
 {% endblock %}
 
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/fornecedor.css'
+    ) }}"
+>
+
+{% endblock %}
+
 {% block conteudo %}
 
+<div class="page-title">
+
     <h1>
-        Cadastro de Fornecedor
+        Fornecedores
     </h1>
 
-    <!-- FORMULÁRIO -->
-    <form
-        action="/fornecedor/cadastrar"
-        method="POST"
-    >
+</div>
 
-        <!-- Nome -->
-        <label>
-            Nome:
-        </label>
+<!-- PESQUISA -->
 
-        <input
-            type="text"
-            name="nome"
-            required
-        >
+<div class="fornecedor-pesquisa">
 
-        <br><br>
+    <div class="search-box">
 
-        <!-- Telefone -->
-        <label>
-            Telefone:
-        </label>
+        <i class="fa-solid fa-magnifying-glass"></i>
 
         <input
             type="text"
-            name="telefone"
+            id="search-input"
+            placeholder="Pesquisar fornecedor..."
         >
 
-        <br><br>
+    </div>
 
-        <!-- Observação -->
-        <label>
-            Observação:
-        </label>
+    <div class="search-info">
 
-        <br>
+        <span id="search-count">
 
-        <textarea
-            name="observacao"
-            rows="5"
-            cols="40"
-        ></textarea>
+            {{ fornecedores|length }} fornecedor(es)
 
-        <br><br>
+        </span>
 
-        <!-- Botão -->
-        <button type="submit" class="button button-primary">
-            <i class="fa-solid fa-floppy-disk"></i>
-            Salvar
+    </div>
+
+</div>
+
+<!-- CARD NENHUM ENCONTRADO -->
+
+<div
+    class="card search-empty search-hidden"
+    id="search-empty"
+>
+
+    <div class="card-body">
+
+        <i class="fa-solid fa-truck"></i>
+
+        <h3>
+            Nenhum fornecedor encontrado
+        </h3>
+
+        <p>
+            Nenhum fornecedor corresponde à pesquisa.
+        </p>
+
+        <button
+            class="button button-success"
+            data-modal="fornecedor-modal"
+        >
+            <i class="fa-solid fa-plus"></i>
+            Cadastrar fornecedor
         </button>
 
-    </form>
+    </div>
 
-    <hr>
+</div>
 
-    <h2>
-        Fornecedores cadastrados
-    </h2>
+<!-- CARD NOVO FORNECEDOR -->
 
-    <ul>
+<div
+    class="nova-entrada-card"
+    id="card-cadastro"
+    data-modal="fornecedor-modal"
+>
 
-        {% for fornecedor in fornecedores %}
+    <div class="nova-entrada-icon">
 
-        <li>
+        <i class="fa-solid fa-truck"></i>
+
+    </div>
+
+    <h3>
+        Novo Fornecedor
+    </h3>
+
+    <p>
+        Cadastrar fornecedor
+    </p>
+
+</div>
+
+<!-- LISTA DE FORNECEDORES -->
+
+<div class="fornecedor-grid">
+
+    {% for fornecedor in fornecedores %}
+
+    <div
+        class="fornecedor-card search-item"
+    >
+
+        <h3 class="search-text">
+            {{ fornecedor.nome }}
+        </h3>
+
+        <p>
 
             <strong>
-                {{ fornecedor.nome }}
+                Telefone:
             </strong>
 
-            <br>
-
-            Telefone:
             {{ fornecedor.telefone }}
 
-            <br>
+        </p>
 
-            Observação:
+        <p>
+
+            <strong>
+                Observação:
+            </strong>
+
             {{ fornecedor.observacao }}
 
-            <br><br>
+        </p>
 
-            <!-- Editar -->
-<a
-href="/fornecedor/editar/{{ fornecedor.id }}"
-    class="button button-secondary"
+        <a
+            href="/fornecedor/editar/{{ fornecedor.id }}"
+            class="button button-secondary"
+        >
+
+            <i class="fa-solid fa-pen-to-square"></i>
+
+            Editar
+
+        </a>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+<!-- MODAL -->
+
+<div
+    class="modal"
+    id="fornecedor-modal"
 >
-    <i class="fa-solid fa-pen-to-square"></i>
-    Editar
-</a>
-            <hr>
 
-        </li>
+    <div class="modal-content">
 
-        {% endfor %}
+        <div class="modal-header">
 
-    </ul>
+            <h2>
+                Novo Fornecedor
+            </h2>
 
-    {% endblock %}
+            <button
+                class="modal-close"
+                data-close-modal
+            >
+                ×
+            </button>
+
+        </div>
+
+        <form
+            action="/fornecedor/cadastrar"
+            method="POST"
+        >
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label>
+                        Nome
+                    </label>
+
+                    <input
+                        type="text"
+                        name="nome"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Telefone
+                    </label>
+
+                    <input
+                        type="text"
+                        name="telefone"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Observação
+                    </label>
+
+                    <textarea
+                        name="observacao"
+                        rows="4"
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="button button-secondary"
+                    data-close-modal
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    class="button button-success"
+                >
+                    Salvar
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/modal.js'
+    ) }}"
+></script>
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/search_fornecedor.js'
+    ) }}"
+></script>
+
+{% endblock %}

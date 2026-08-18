@@ -1,0 +1,206 @@
+/* ==========================
+   HEADER
+========================== */
+
+.page-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+}
+
+.page-header h1{
+
+    margin:0;
+
+    font-size:2.4rem;
+
+    font-weight:700;
+
+}
+
+/* ==========================
+   GRID
+========================== */
+
+.detalhes-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(450px,1fr)
+        );
+
+    gap:28px;
+
+    margin-bottom:30px;
+
+}
+
+/* ==========================
+   CARD PADRÃO
+========================== */
+
+.detalhe-card{
+
+    background:#fff;
+
+    padding:25px;
+
+    border-radius:24px;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.08);
+
+}
+
+.detalhe-card{
+
+    min-height:220px;
+
+}
+
+.detalhe-card h2{
+
+    margin-top:0;
+
+    margin-bottom:25px;
+
+    font-size:1.6rem;
+
+}
+
+.detalhe-card p{
+
+    font-size:1.1rem;
+
+    margin:12px 0;
+
+    color:#444;
+
+}
+
+/* ==========================
+   CORES DOS CARDS
+========================== */
+
+.cliente-card{
+
+    border-left:
+        8px solid #2196f3;
+
+}
+
+.financeiro-card{
+
+    border-left:
+        8px solid #4caf50;
+
+}
+
+.produtos-card{
+
+    border-left:
+        8px solid #ff9800;
+
+}
+
+.recebimentos-card{
+
+    border-left:
+        8px solid #9c27b0;
+
+}
+
+.pagamento-card{
+
+    border-left:
+        8px solid #2e7d32;
+        min-height:auto;
+
+}
+
+/* ==========================
+   PAGAMENTO
+========================== */
+
+.pagamento-form{
+
+    display:flex;
+
+    gap:15px;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+}
+
+.pagamento-form input{
+
+    width:250px;
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+}
+
+/* ==========================
+   RESPONSIVO
+========================== */
+
+@media(max-width:768px){
+
+    .page-header{
+
+        flex-direction:column;
+
+        gap:15px;
+
+        align-items:flex-start;
+
+    }
+
+    .detalhes-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .pagamento-form{
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+    .pagamento-form input{
+
+        width:100%;
+
+    }
+
+}
+
+.detalhes-grid{
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(380px,1fr)
+        );
+
+}
