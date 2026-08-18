@@ -49,7 +49,8 @@ def cadastrar_produto(
     preco_venda,
     quantidade_por_caixa,
     vende_por_dose,
-    volume_dose_ml
+    volume_dose_ml,
+    imagem
 ):
 
     # Conecta banco
@@ -69,10 +70,11 @@ def cadastrar_produto(
             preco_venda,
             quantidade_por_caixa,
             vende_por_dose,
-            volume_dose_ml
+            volume_dose_ml,
+            imagem
 
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
 
     # Executa SQL
@@ -87,7 +89,8 @@ def cadastrar_produto(
             preco_venda,
             quantidade_por_caixa,
             vende_por_dose,
-            volume_dose_ml
+            volume_dose_ml,
+            imagem
         )
     )
 

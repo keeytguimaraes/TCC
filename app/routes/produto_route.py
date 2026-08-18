@@ -15,6 +15,8 @@ from app.controllers.produto_controller import (
     ativar_produto_controller
 )
 
+from werkzeug.utils import secure_filename
+import os
 
 # Função responsável
 # por registrar rotas
@@ -84,6 +86,25 @@ def configurar_produto_routes(app):
         volume_dose_ml = request.form.get(
         "volume_dose_ml"
     )
+        
+        imagem = request.files.get(
+        "imagem"
+    )
+        
+        nome_imagem = None
+
+        if imagem and imagem.filename != "":
+
+            nome_imagem = secure_filename(
+        imagem.filename
+    )
+
+            caminho = os.path.join(
+        "app/static/uploads/produtos",
+        nome_imagem
+    )
+
+            imagem.save(caminho)
 
         cadastrar_produto_controller(
 
@@ -95,7 +116,8 @@ def configurar_produto_routes(app):
         preco_venda,
         quantidade_por_caixa,
         vende_por_dose,
-        volume_dose_ml
+        volume_dose_ml,
+        nome_imagem
 
     )
 

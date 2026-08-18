@@ -42,7 +42,8 @@ def cadastrar_produto_controller(
             preco_venda,
             quantidade_por_caixa,
             vende_por_dose,
-            volume_dose_ml
+            volume_dose_ml,
+            imagem
 ):
 
     # Envia dados para model
@@ -55,7 +56,8 @@ def cadastrar_produto_controller(
             preco_venda,
             quantidade_por_caixa,
             vende_por_dose,
-            volume_dose_ml
+            volume_dose_ml,
+            imagem
     )
 # ==========================
 # CONTROLLER:
