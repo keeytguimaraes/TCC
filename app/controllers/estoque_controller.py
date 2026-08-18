@@ -3,7 +3,9 @@ from app.models.estoque_model import (
     listar_estoque,
     cadastrar_estoque,
     baixar_estoque,
-    buscar_estoque_atual
+    buscar_estoque_atual,
+    listar_estoque_atual,
+    buscar_detalhes_produto
 )
 
 
@@ -88,5 +90,21 @@ def pegar_estoque_atual(
 
     return buscar_estoque_atual(
 
+        produto_id
+    )
+
+# ==========================
+# ESTOQUE ATUAL COMPLETO
+# ==========================
+def pegar_estoque_atual_completo():
+
+    return listar_estoque_atual()
+
+# ==========================
+# DETALHES PRODUTO ESTOQUE
+# ==========================
+def pegar_detalhes_produto_estoque(produto_id):
+
+    return buscar_detalhes_produto(
         produto_id
     )

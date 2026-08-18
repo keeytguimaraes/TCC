@@ -34,18 +34,28 @@ def pegar_produtos():
 # ==========================
 def cadastrar_produto_controller(
 
-    nome,
-    categoria,
-    preco_venda,
-    quantidade_por_caixa
+            nome,
+            categoria,
+            sabor,
+            tipo_embalagem,
+            volume,
+            preco_venda,
+            quantidade_por_caixa,
+            vende_por_dose,
+            volume_dose_ml
 ):
 
     # Envia dados para model
     cadastrar_produto(
-        nome,
-        categoria,
-        preco_venda,
-        quantidade_por_caixa
+            nome,
+            categoria,
+            sabor,
+            tipo_embalagem,
+            volume,
+            preco_venda,
+            quantidade_por_caixa,
+            vende_por_dose,
+            volume_dose_ml
     )
 # ==========================
 # CONTROLLER:
@@ -73,22 +83,42 @@ def editar_produto_controller(
 
     categoria,
 
+    sabor,
+
+    tipo_embalagem,
+
+    volume,
+
     preco_venda,
 
-    quantidade_por_caixa
+    quantidade_por_caixa,
+
+    vende_por_dose,
+
+    volume_dose_ml
 ):
 
     editar_produto(
 
         produto_id,
 
-        nome,
+    nome,
 
-        categoria,
+    categoria,
 
-        preco_venda,
+    sabor,
 
-        quantidade_por_caixa
+    tipo_embalagem,
+
+    volume,
+
+    preco_venda,
+
+    quantidade_por_caixa,
+
+    vende_por_dose,
+
+    volume_dose_ml
     )
 
 

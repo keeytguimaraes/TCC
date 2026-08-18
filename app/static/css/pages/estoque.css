@@ -1,0 +1,324 @@
+/* ==========================
+   TÍTULO
+========================== */
+
+.page-title{
+
+    margin-bottom:24px;
+
+}
+
+.page-title h1{
+
+    margin:0;
+
+    font-size:2rem;
+
+    font-weight:700;
+
+}
+
+/* ==========================
+   PESQUISA
+========================== */
+
+.estoque-pesquisa{
+
+    margin-bottom:24px;
+
+}
+
+/* ==========================
+   NOVA ENTRADA
+========================== */
+
+.nova-entrada-card{
+
+    width: 350px;
+
+    height: 250px;
+
+    margin: 24px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    gap: 20px;
+
+    background: #fff;
+
+    border-radius: 28px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.08);
+
+    transition: .25s;
+
+    text-decoration: none;
+
+    color: inherit;
+
+}
+
+.nova-entrada-card{
+
+    text-decoration: none;
+
+    color: inherit;
+
+}
+
+.nova-entrada-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 10px 20px rgba(0,0,0,.12);
+
+}
+
+.nova-entrada-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+
+    background:#2e7d32;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:28px;
+
+}
+
+.nova-entrada-card h3{
+
+    margin:0;
+
+}
+
+.nova-entrada-card p{
+
+    margin-top:6px;
+
+    color:#777;
+
+}
+
+/* ==========================
+   HISTÓRICO
+========================== */
+
+.estoque-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(320px,1fr)
+        );
+
+    gap:24px;
+
+}
+
+/* ==========================
+   CARD ESTOQUE
+========================== */
+
+.estoque-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:24px;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.08);
+
+    transition:.25s;
+
+}
+
+.estoque-card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+.estoque-card h3{
+
+    margin-top:0;
+
+    margin-bottom:12px;
+
+}
+
+.estoque-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.estoque-info span{
+
+    color:#444;
+
+}
+
+/* ==========================
+   RESPONSIVO
+========================== */
+
+@media(max-width:768px){
+
+    .estoque-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+.modal-content.large{
+
+    width:900px;
+    max-width:95%;
+
+}
+
+.modal-body{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            1fr
+        );
+
+    gap:20px;
+
+    padding:25px;
+
+}
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.form-group label{
+
+    font-weight:600;
+
+    color:#333;
+
+}
+
+.form-group input,
+.form-group select{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+    box-sizing:border-box;
+
+}
+
+.modal-footer{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    padding:20px;
+
+    border-top:1px solid #eee;
+
+}
+.cards-estoque{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:40px;
+
+    flex-wrap:wrap;
+
+    margin-top:40px;
+
+}
+
+.nova-entrada-card{
+
+    width:400px;
+
+    height:300px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    gap:15px;
+
+    background:#fff;
+
+    border-radius:25px;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.08);
+
+    text-decoration:none;
+
+    color:inherit;
+
+    margin:0;
+
+}

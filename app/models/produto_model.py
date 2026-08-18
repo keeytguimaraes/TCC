@@ -43,8 +43,13 @@ def listar_produtos():
 def cadastrar_produto(
     nome,
     categoria,
+    sabor,
+    tipo_embalagem,
+    volume,
     preco_venda,
-    quantidade_por_caixa
+    quantidade_por_caixa,
+    vende_por_dose,
+    volume_dose_ml
 ):
 
     # Conecta banco
@@ -58,10 +63,16 @@ def cadastrar_produto(
         INSERT INTO produto (
             nome,
             categoria,
+            sabor,
+            tipo_embalagem,
+            volume,
             preco_venda,
-            quantidade_por_caixa
+            quantidade_por_caixa,
+            vende_por_dose,
+            volume_dose_ml
+
         )
-        VALUES (%s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
 
     # Executa SQL
@@ -70,8 +81,13 @@ def cadastrar_produto(
         (
             nome,
             categoria,
+            sabor,
+            tipo_embalagem,
+            volume,
             preco_venda,
-            quantidade_por_caixa
+            quantidade_por_caixa,
+            vende_por_dose,
+            volume_dose_ml
         )
     )
 
@@ -164,15 +180,25 @@ def buscar_produto_por_id(
 # ==========================
 def editar_produto(
 
-    produto_id,
+     produto_id,
 
     nome,
 
     categoria,
 
+    sabor,
+
+    tipo_embalagem,
+
+    volume,
+
     preco_venda,
 
-    quantidade_por_caixa
+    quantidade_por_caixa,
+
+    vende_por_dose,
+
+    volume_dose_ml
 ):
 
     conexao = conectar()
@@ -180,36 +206,54 @@ def editar_produto(
     cursor = conexao.cursor()
 
     sql = """
-        UPDATE produto
+    UPDATE produto
 
-        SET
+    SET
 
-            nome = %s,
+        nome = %s,
 
-            categoria = %s,
+        categoria = %s,
 
-            preco_venda = %s,
+        sabor = %s,
 
-            quantidade_por_caixa = %s
+        tipo_embalagem = %s,
 
-        WHERE id = %s
-    """
+        volume = %s,
 
+        preco_venda = %s,
+
+        quantidade_por_caixa = %s,
+
+        vende_por_dose = %s,
+
+        volume_dose_ml = %s
+
+    WHERE id = %s
+"""
     cursor.execute(
 
         sql,
 
         (
+ nome,
 
-            nome,
+        categoria,
 
-            categoria,
+        sabor,
 
-            preco_venda,
+        tipo_embalagem,
 
-            quantidade_por_caixa,
+        volume,
 
-            produto_id
+        preco_venda,
+
+        quantidade_por_caixa,
+
+        vende_por_dose,
+
+        volume_dose_ml,
+
+        produto_id
         )
     )
 

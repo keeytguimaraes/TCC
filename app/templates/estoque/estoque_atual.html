@@ -1,0 +1,228 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Estoque Atual
+{% endblock %}
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/estoque_atual.css'
+    ) }}"
+>
+
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="page-header">
+
+    <h1>
+        Estoque Atual
+    </h1>
+
+    <a
+        href="/estoque"
+        class="btn-voltar"
+    >
+        ← Voltar
+    </a>
+
+</div>
+<!-- DASHBOARD -->
+
+<div class="dashboard-cards">
+
+    <div class="dashboard-card">
+        <h3>{{ total_produtos }}</h3>
+        <p>Produtos</p>
+    </div>
+
+    <div class="dashboard-card">
+        <h3>{{ total_em_estoque }}</h3>
+        <p>Em estoque</p>
+    </div>
+
+    <div class="dashboard-card">
+        <h3>{{ total_baixo }}</h3>
+        <p>Estoque baixo</p>
+    </div>
+
+    <div class="dashboard-card">
+        <h3>{{ total_sem_estoque }}</h3>
+        <p>Sem estoque</p>
+    </div>
+
+    <div class="dashboard-card">
+        <h3>{{ total_nunca_abastecido }}</h3>
+        <p>Nunca abastecido</p>
+    </div>
+
+</div>
+
+<!-- LEGENDA -->
+
+<div class="status-legenda">
+
+    🟢 Em estoque
+
+    •
+
+    🟡 Estoque baixo
+
+    •
+
+    🔴 Sem estoque
+
+    •
+
+    ⚫ Nunca abastecido
+
+</div>
+
+<div class="filtros-status">
+
+    <button class="filtro-btn" data-status="todos">
+        Todos
+    </button>
+
+    <button class="filtro-btn" data-status="normal">
+        Em estoque
+    </button>
+
+    <button class="filtro-btn" data-status="baixo">
+        Estoque baixo
+    </button>
+
+    <button class="filtro-btn" data-status="sem">
+        Sem estoque
+    </button>
+
+    <button class="filtro-btn" data-status="nunca">
+        Nunca abastecido
+    </button>
+
+</div>
+
+
+<!-- PESQUISA -->
+
+<div class="estoque-pesquisa">
+
+    <div class="search-box">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+            type="text"
+            id="search-input"
+            placeholder="Pesquisar Produto..."
+        >
+
+    </div>
+</div>   
+<div class="estoque-grid">
+
+    {% for item in estoque %}
+
+    <div
+    class="estoque-card
+
+    {% if item.quantidade_atual_unidade == None %}
+        status-nunca
+    {% elif item.quantidade_atual_unidade == 0 %}
+        status-sem
+    {% elif item.quantidade_atual_unidade <= 10 %}
+        status-baixo
+    {% else %}
+        status-normal
+    {% endif %}
+    "
+
+    data-status="{% if item.quantidade_atual_unidade == None %}nunca{% elif item.quantidade_atual_unidade == 0 %}sem{% elif item.quantidade_atual_unidade <= 10 %}baixo{% else %}normal{% endif %}"
+
+    onclick="window.location.href='/estoque/produto/{{ item.id }}'"
+>
+
+        <h3>
+
+            {% if item.quantidade_atual_unidade == None %}
+                ⚫
+            {% elif item.quantidade_atual_unidade == 0 %}
+                🔴
+            {% elif item.quantidade_atual_unidade <= 10 %}
+                🟡
+            {% else %}
+                🟢
+            {% endif %}
+
+            {{ item.nome }}
+
+        </h3>
+
+        {% if item.quantidade_atual_unidade == None %}
+
+        <strong>
+            Nunca abastecido
+        </strong>
+    
+    {% else %}
+    
+    <div class="quantidade-principal">
+    
+        📦 {{ item.quantidade_atual_caixa or 0 }}
+        caixas
+    
+    </div>
+    
+    <div class="estoque-quantidade">
+    
+        📦 {{ item.quantidade_atual_unidade or 0 }}
+        unidades
+    
+    </div>
+    
+    {% endif %}
+    
+    <hr>
+    
+    <div class="estoque-info">
+    
+        <span>
+            Categoria:
+            {{ item.categoria }}
+        </span>
+    
+        <span>
+            Embalagem:
+            {{ item.tipo_embalagem }}
+        </span>
+    
+        <span>
+            Sabor:
+            {{ item.sabor }}
+        </span>
+    
+        <span>
+            Volume:
+            {{ item.volume }}
+        </span>
+    
+    </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/search_estoque.js'
+    ) }}"
+></script>
+
+{% endblock %}

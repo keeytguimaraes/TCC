@@ -1,0 +1,51 @@
+<h1>Saída de Estoque</h1>
+
+<form method="POST"
+      action="/estoque/saida">
+
+    <label>Produto</label>
+
+    <select name="produto_id">
+
+        {% for produto in produtos %}
+
+            <option
+                value="{{ produto.id }}"
+            >
+                {{ produto.nome }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+    <label>Tipo de saída</label>
+
+    <select name="tipo_saida">
+
+        <option value="unidade">
+            Unidade
+        </option>
+
+        <option value="caixa">
+            Caixa
+        </option>
+
+    </select>
+
+    <label>Quantidade</label>
+
+    <input
+        type="number"
+        name="quantidade"
+        min="1"
+        required
+    >
+
+    <button type="submit">
+
+        Registrar Saída
+
+    </button>
+
+</form>

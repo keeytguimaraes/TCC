@@ -1,0 +1,155 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Detalhes do Produto
+{% endblock %}
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/detalhes_produto.css'
+    ) }}"
+>
+
+{% endblock %}
+
+{% block conteudo %}
+<div class="page-header">
+
+    <h1>
+        Detalhes do Produto
+    </h1>
+
+    <a
+        href="/estoque/atual"
+        class="btn-voltar"
+    >
+        ← Voltar
+    </a>
+
+</div>
+
+{% if produto %}
+
+<div class="detalhes-grid">
+
+    <!-- PRODUTO -->
+
+    <div class="detalhe-card">
+
+        <h2>
+            🥤 {{ produto.nome }}
+        </h2>
+
+        <p>
+            <strong>Categoria:</strong>
+            {{ produto.categoria }}
+        </p>
+
+        <p>
+            <strong>Embalagem:</strong>
+            {{ produto.tipo_embalagem }}
+        </p>
+
+        <p>
+            <strong>Volume:</strong>
+            {{ produto.volume }}
+        </p>
+
+    </div>
+
+    <!-- MOVIMENTAÇÃO -->
+
+    <div class="detalhe-card">
+
+        <h2>
+            📦 Última movimentação
+        </h2>
+
+        <p>
+            <strong>Tipo:</strong>
+            {{ produto.tipo_entrada }}
+        </p>
+
+        <p>
+            <strong>Origem:</strong>
+            {{ produto.origem }}
+        </p>
+
+        <p>
+            <strong>Local:</strong>
+            {{ produto.nome_origem }}
+        </p>
+
+        <p>
+            <strong>Data:</strong>
+            {{ produto.data_entrada.strftime('%d/%m/%Y') }}
+        </p>
+
+    </div>
+
+    <!-- CUSTOS -->
+
+    <div class="detalhe-card">
+
+        <h2>
+            💰 Custos
+        </h2>
+
+        <p>
+            <strong>Total:</strong>
+            R$ {{ produto.preco_total_compra }}
+        </p>
+
+        <p>
+            <strong>Caixa:</strong>
+            R$ {{ produto.preco_por_caixa }}
+        </p>
+
+        <p>
+            <strong>Unidade:</strong>
+            R$ {{ produto.preco_por_unidade }}
+        </p>
+
+    </div>
+
+    <!-- ESTOQUE -->
+
+    <div class="detalhe-card">
+
+        <h2>
+            📊 Estoque
+        </h2>
+
+        <p>
+            📦 {{ produto.quantidade_atual_caixa }} caixas
+        </p>
+
+        <p>
+            📦 {{ produto.quantidade_atual_unidade }} unidades
+        </p>
+
+    </div>
+
+</div>
+
+{% else %}
+
+<div class="detalhe-card card-sem-movimentacao">
+
+    <h2>
+        Produto sem movimentações
+    </h2>
+
+    <p>
+        Este produto ainda não possui entradas no estoque.
+    </p>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

@@ -17,7 +17,12 @@
     display: flex;
 
     justify-content: center;
-    align-items: center;
+
+    align-items: flex-start;
+
+    overflow-y: auto;
+
+    padding: 30px 20px;
 
     opacity: 0;
 
@@ -47,12 +52,9 @@
 
     border-radius: 14px;
 
-    overflow: hidden;
+    overflow: visible;
 
-    animation: modalOpen .3s ease;
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.15);
+    margin: auto 0;
 
 }
 

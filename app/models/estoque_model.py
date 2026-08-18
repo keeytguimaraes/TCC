@@ -560,3 +560,119 @@ def buscar_estoque_atual(
     conexao.close()
 
     return estoque
+
+# ==========================
+# LISTAR ESTOQUE ATUAL
+# ==========================
+def listar_estoque_atual():
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT
+
+            p.id,
+            p.nome,
+            p.categoria,
+
+            p.tipo_embalagem,
+            p.sabor,
+            p.volume,
+
+            e.quantidade_atual_caixa,
+            e.quantidade_atual_unidade
+
+        FROM produto p
+
+        LEFT JOIN estoque e
+            ON e.id = (
+
+                SELECT MAX(id)
+
+                FROM estoque
+
+                WHERE produto_id = p.id
+            )
+
+        ORDER BY p.nome
+    """
+
+    cursor.execute(sql)
+
+    dados = cursor.fetchall()
+
+    cursor.close()
+
+    conexao.close()
+
+    return dados
+
+# ==========================
+# DETALHES DO PRODUTO
+# ==========================
+def buscar_detalhes_produto(produto_id):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT
+
+    p.nome,
+    p.categoria,
+
+    p.sabor,
+    p.tipo_embalagem,
+    p.volume,
+
+    e.tipo_entrada,
+
+    oc.nome AS origem,
+
+    e.nome_origem,
+
+    e.quantidade_recebida_caixa,
+    e.quantidade_recebida_unidade,
+
+    e.quantidade_atual_caixa,
+    e.quantidade_atual_unidade,
+
+    e.preco_total_compra,
+    e.preco_por_caixa,
+    e.preco_por_unidade,
+
+    e.data_entrada
+
+        FROM estoque e
+
+        INNER JOIN produto p
+            ON p.id = e.produto_id
+
+        LEFT JOIN origem_compra oc
+            ON oc.id = e.origem_compra_id
+
+        WHERE e.produto_id = %s
+
+        ORDER BY e.id DESC
+
+        LIMIT 1
+    """
+
+    cursor.execute(
+        sql,
+        (produto_id,)
+    )
+
+    dados = cursor.fetchone()
+
+    cursor.close()
+    conexao.close()
+
+    return dados

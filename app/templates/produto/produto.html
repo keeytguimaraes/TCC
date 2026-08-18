@@ -132,10 +132,84 @@ Produtos
                         <input
                             type="text"
                             name="categoria"
+                            placeholder="Bebida, Comida..."
                             required
                         >
                 
                     </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Sabor
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="sabor"
+                            placeholder="Original, Zero, Queijo, Presunto..."
+                        >
+                    
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Tipo da embalagem
+                        </label>
+                    
+                        <select name="tipo_embalagem">
+                    
+                            <option value="">
+                                Selecione
+                            </option>
+                    
+                            <option value="Lata">
+                                Lata
+                            </option>
+                    
+                            <option value="PET">
+                                PET
+                            </option>
+                    
+                            <option value="KS">
+                                KS
+                            </option>
+                    
+                            <option value="Long Neck">
+                                Long Neck
+                            </option>
+                    
+                            <option value="Pacote">
+                                Pacote
+                            </option>
+                    
+                            <option value="Saco">
+                                Saco
+                            </option>
+                    
+                            <option value="Garrafa">
+                                Garrafa
+                            </option>
+                    
+                        </select>
+                    
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Volume / Peso
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="volume"
+                            placeholder="350ml, 2L, 90g..."
+                        >
+                    
+                    </div>
+                    
                 
                     <div class="form-group">
                 
@@ -165,6 +239,40 @@ Produtos
                         >
                 
                     </div>
+
+                    <div class="checkbox-group">
+
+                        <input
+                            type="checkbox"
+                            id="vende_por_dose"
+                            name="vende_por_dose"
+                        >
+                    
+                        <label for="vende_por_dose">
+                    
+                            Produto vendido por dose
+                    
+                        </label>
+                    
+                    </div>
+
+                    <div
+    class="form-group"
+    id="campo-dose"
+    style="display:none;"
+>
+
+    <label>
+        Volume da dose (ml)
+    </label>
+
+    <input
+        type="number"
+        name="volume_dose_ml"
+        placeholder="50"
+    >
+
+</div>
                 
                 </div>
 
@@ -217,44 +325,72 @@ Produtos
             <h3 class="product-card-title search-text">
 
                 {{ produto.nome }}
-
+            
+                {% if produto.volume %}
+                    {{ produto.volume }}
+                {% endif %}
+            
             </h3>
-
-            <span class="product-card-category">
-
-                {{ produto.categoria }}
-
-            </span>
-
-            <div class="product-card-info">
-
+            
+            <div class="product-card-details">
+            
                 <span>
-
-                    💰 R$ {{ produto.preco_venda }}
-
+                    🥤 {{ produto.categoria }}
                 </span>
-
+            
+                {% if produto.tipo_embalagem %}
                 <span>
-
+                    📦 {{ produto.tipo_embalagem }}
+                </span>
+                {% endif %}
+            
+                {% if produto.sabor %}
+                <span>
+                    🍇 {{ produto.sabor }}
+                </span>
+                {% endif %}
+            
+                {% if produto.volume %}
+                <span>
+                    ⚖️ {{ produto.volume }}
+                </span>
+                {% endif %}
+            
+            </div>
+            
+            <div class="product-card-info">
+            
+                <span>
+                    💰 R$ {{ produto.preco_venda }}
+                </span>
+            
+                <span>
                     📦 {{ produto.quantidade_por_caixa }}
                     por caixa
-
                 </span>
-
+            
+                {% if produto.vende_por_dose %}
+            
                 <span>
-
-                    {% if produto.ativo %}
-
-                        ✅ Ativo
-
-                    {% else %}
-
-                        ❌ Inativo
-
-                    {% endif %}
-
+                    🥃 Dose {{ produto.volume_dose_ml }}ml
                 </span>
-
+            
+                {% endif %}
+            
+                {% if produto.ativo %}
+            
+                <span class="badge badge-success">
+                    Ativo
+                </span>
+            
+                {% else %}
+            
+                <span class="badge badge-danger">
+                    Inativo
+                </span>
+            
+                {% endif %}
+            
             </div>
 
             <div class="cliente-acoes">
@@ -328,6 +464,13 @@ Produtos
     src="{{ url_for(
         'static',
         filename='js/components/search_produto.js'
+    ) }}"
+></script>
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/pages/produto.js'
     ) }}"
 ></script>
 

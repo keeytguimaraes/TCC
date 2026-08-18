@@ -196,7 +196,7 @@
 
     color:white;
 
-    border:none;
+
 
 }
 
@@ -205,5 +205,27 @@
     background:#512da8;
 
     color:white;
+
+}
+
+/* ==========================
+   BOTÃO CADASTRAR CLIENTE
+========================== */
+
+.btn-cadastrar-cliente{
+
+    min-width: 180px;
+
+    padding: 12px 20px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+}
+
+.btn-cadastrar-cliente i{
+
+    font-size: 18px;
 
 }

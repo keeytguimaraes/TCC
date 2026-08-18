@@ -42,38 +42,66 @@ def configurar_produto_routes(app):
     # ROTA: CADASTRAR PRODUTO
     # ==========================
     @app.route(
-        "/produto/cadastrar",
-        methods=["POST"]
-    )
+    "/produto/cadastrar",
+    methods=["POST"]
+)
     def cadastrar_produto():
 
-        # Pega dados do formulário
         nome = request.form.get(
-            "nome"
-        )
+        "nome"
+    )
 
         categoria = request.form.get(
-            "categoria"
-        )
+        "categoria"
+    )
+
+        sabor = request.form.get(
+        "sabor"
+    )
+
+        tipo_embalagem = request.form.get(
+        "tipo_embalagem"
+    )
+
+        volume = request.form.get(
+        "volume"
+    )
 
         preco_venda = request.form.get(
-            "preco_venda"
-        )
+        "preco_venda"
+    )
 
         quantidade_por_caixa = request.form.get(
-            "quantidade_por_caixa"
-        )
+        "quantidade_por_caixa"
+    )
 
-        # Envia para controller
+        vende_por_dose = (
+        request.form.get(
+            "vende_por_dose"
+        ) is not None
+    )
+
+        volume_dose_ml = request.form.get(
+        "volume_dose_ml"
+    )
+
         cadastrar_produto_controller(
-            nome,
-            categoria,
-            preco_venda,
-            quantidade_por_caixa
-        )
 
-        # Atualiza tela
-        return redirect("/produto")
+        nome,
+        categoria,
+        sabor,
+        tipo_embalagem,
+        volume,
+        preco_venda,
+        quantidade_por_caixa,
+        vende_por_dose,
+        volume_dose_ml
+
+    )
+
+        return redirect(
+        "/produto"
+    )
     # ==========================
 # ROTA: TELA EDITAR
 # ==========================
@@ -109,33 +137,56 @@ def configurar_produto_routes(app):
         produto_id
     ):
 
-        nome = request.form.get(
-            "nome"
-        )
+        nome = request.form.get("nome")
 
-        categoria = request.form.get(
-            "categoria"
-        )
+        categoria = request.form.get("categoria")
+
+        sabor = request.form.get("sabor")
+
+        tipo_embalagem = request.form.get(
+    "tipo_embalagem"
+)
+
+        volume = request.form.get("volume")
 
         preco_venda = request.form.get(
-            "preco_venda"
-        )
+    "preco_venda"
+)
 
         quantidade_por_caixa = request.form.get(
-            "quantidade_por_caixa"
-        )
+    "quantidade_por_caixa"
+)
+
+        vende_por_dose = (
+    request.form.get("vende_por_dose")
+    == "on"
+)
+
+        volume_dose_ml = request.form.get(
+    "volume_dose_ml"
+)
 
         editar_produto_controller(
 
             produto_id,
 
-            nome,
+    nome,
 
-            categoria,
+    categoria,
 
-            preco_venda,
+    sabor,
 
-            quantidade_por_caixa
+    tipo_embalagem,
+
+    volume,
+
+    preco_venda,
+
+    quantidade_por_caixa,
+
+    vende_por_dose,
+
+    volume_dose_ml
         )
 
         return redirect(

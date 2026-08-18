@@ -4,475 +4,370 @@
 Estoque
 {% endblock %}
 
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/estoque.css'
+    ) }}"
+>
+
+{% endblock %}
+
 {% block conteudo %}
 
+<div class="page-title">
+
     <h1>
-        Entrada de Estoque
+        Estoque
     </h1>
-
-    <!-- ==========================
-         FORMULÁRIO
-    ========================== -->
-    <form
-        action="/estoque/cadastrar"
-        method="POST"
-    >
-
-<!-- Categoria -->
-<label>
-    Categoria:
-</label>
-
-<select
-    id="categoria"
->
-    <option value="">
-        Selecione a categoria
-    </option>
-
-    {% for categoria in categorias %}
-
-    <option
-        value="{{ categoria.categoria }}"
-    >
-        {{ categoria.categoria }}
-    </option>
-
-    {% endfor %}
-
-</select>
-
-<br><br>
-
-
-<!-- Produto -->
-<label>
-    Produto:
-</label>
-
-<select
-    name="produto_id"
-    id="produto"
-    required
->
-
-    <option value="">
-        Selecione um produto
-    </option>
-
-    {% for produto in produtos %}
-
-    <option
-        value="{{ produto.id }}"
-        data-categoria="{{ produto.categoria }}"
-    >
-        {{ produto.nome }}
-    </option>
-
-    {% endfor %}
-
-</select>
-
-<br><br>
-
-        <!-- Origem da compra -->
-        <label>
-            Origem da compra:
-        </label>
-
-        <select
-            name="origem_compra_id"
-            required
-        >
-
-            <option value="">
-                Selecione
-            </option>
-
-            <option value="1">
-                Fornecedor
-            </option>
-
-            <option value="2">
-                Mercado
-            </option>
-
-            <option value="3">
-                Compra Avulsa
-            </option>
-
-        </select>
-
-        <br><br>
-
-
-        <!-- Nome do local -->
-        <label>
-            Nome do local:
-        </label>
-
-        <input
-            type="text"
-            name="nome_origem"
-            placeholder="Ex: Assaí"
-        >
-
-        <br><br>
-
-
-        <!-- Fornecedor -->
-        <!-- Fornecedor -->
-<div id="campo-fornecedor">
-
-    <label>
-        Fornecedor:
-    </label>
-
-    <select
-        name="fornecedor_id"
-    >
-
-        <option value="">
-            Selecione o fornecedor
-        </option>
-
-        {% for fornecedor in fornecedores %}
-
-        <option
-            value="{{ fornecedor.id }}"
-        >
-            {{ fornecedor.nome }}
-        </option>
-
-        {% endfor %}
-
-    </select>
 
 </div>
 
-        <br><br>
+<div class="cards-estoque">
 
+    <!-- Nova Entrada -->
+    <div
+        class="nova-entrada-card"
+        data-modal="estoque-modal"
+    >
 
-        <!-- Tipo entrada -->
-        <label>
-            Tipo de entrada:
-        </label>
+        <div class="nova-entrada-icon">
 
-        <select
-            name="tipo_entrada"
-            required
+            <i class="fa-solid fa-plus"></i>
+
+        </div>
+
+        <h3>
+            Nova Entrada
+        </h3>
+
+        <p>
+            Registrar entrada de produtos
+        </p>
+
+    </div>
+
+    <!-- Estoque Atual -->
+    <a
+        href="/estoque/atual"
+        class="nova-entrada-card"
+    >
+
+        <div class="nova-entrada-icon">
+
+            <i class="fa-solid fa-boxes-stacked"></i>
+
+        </div>
+
+        <h3>
+            Estoque Atual
+        </h3>
+
+        <p>
+            Consultar quantidade disponível
+        </p>
+
+    </a>
+
+</div>
+<!-- MODAL -->
+
+<div
+    class="modal"
+    id="estoque-modal"
+>
+
+    <div class="modal-content large">
+
+        <div class="modal-header">
+
+            <h2>
+                Nova Entrada de Estoque
+            </h2>
+
+            <button
+                class="modal-close"
+                data-close-modal
+            >
+                ×
+            </button>
+
+        </div>
+
+        <form
+            action="/estoque/cadastrar"
+            method="POST"
         >
 
-            <option value="compra">
-                Compra
-            </option>
+            <div class="modal-body">
+
+                <!-- Categoria -->
+                <div class="form-group">
+
+                    <label>
+                        Categoria
+                    </label>
+                
+                    <select id="categoria">
+                
+                        <option value="">
+                            Selecione a categoria
+                        </option>
+                
+                        {% for categoria in categorias %}
+                
+                        <option value="{{ categoria.categoria }}">
+                            {{ categoria.categoria }}
+                        </option>
+                
+                        {% endfor %}
+                
+                    </select>
+                
+                </div>
+                
+                <div class="form-group">
+                
+                    <label>
+                        Produto
+                    </label>
+                
+                    <select
+                        name="produto_id"
+                        id="produto"
+                        required
+                    >
+                
+                        <option value="">
+                            Selecione um produto
+                        </option>
+                
+                        {% for produto in produtos %}
+                
+                        <option
+                            value="{{ produto.id }}"
+                            data-categoria="{{ produto.categoria }}"
+                        >
+                            {{ produto.nome }}
+                        </option>
+                
+                        {% endfor %}
+                
+                    </select>
+                
+                </div>
+                
+                <div class="form-group">
+                
+                    <label>
+                        Origem da compra
+                    </label>
+                
+                    <select
+                        id="origem_compra"
+                        name="origem_compra_id"
+                        required
+                    >
+                
+                        <option value="">
+                            Selecione
+                        </option>
+                
+                        <option value="1">
+                            Fornecedor
+                        </option>
+                
+                        <option value="2">
+                            Mercado
+                        </option>
+                
+                        <option value="3">
+                            Compra Avulsa
+                        </option>
+                
+                    </select>
+                
+                </div>
+                
+                <div
+                    class="form-group"
+                    id="local-group"
+                >
+                
+                    <label>
+                        Nome do local
+                    </label>
+                
+                    <input
+                        type="text"
+                        name="nome_origem"
+                        placeholder="Ex: Atacadão"
+                    >
+                
+                </div>
+                
+                <div
+                    class="form-group"
+                    id="fornecedor-group"
+                >
+                
+                    <label>
+                        Fornecedor
+                    </label>
+                
+                    <select name="fornecedor_id">
+                
+                        <option value="">
+                            Selecione o fornecedor
+                        </option>
+                
+                        {% for fornecedor in fornecedores %}
+                
+                        <option value="{{ fornecedor.id }}">
+                            {{ fornecedor.nome }}
+                        </option>
+                
+                        {% endfor %}
+                
+                    </select>
+                
+                </div>
+                
+                <div class="form-group">
+                
+                    <label>
+                        Tipo de entrada
+                    </label>
+                
+                    <select
+                        id="tipo_entrada"
+                        name="tipo_entrada"
+                        required
+                    >
+                
+                        <option value="compra">
+                            Compra
+                        </option>
+                
+                        <option value="bonificacao">
+                            Bonificação
+                        </option>
+                
+                    </select>
+                
+                </div>
+                
+                <div class="form-group">
+                
+                    <label>
+                        Quantidade recebida (CAIXA)
+                    </label>
+                
+                    <input
+                        type="number"
+                        name="quantidade_recebida_caixa"
+                        value="0"
+                    >
+                
+                </div>
+                
+                <div class="form-group">
+                
+                    <label>
+                        Quantidade recebida (UNIDADE)
+                    </label>
+                
+                    <input
+                        type="number"
+                        name="quantidade_recebida_unidade"
+                        value="0"
+                    >
+                
+                </div>
+                
+                <div
+                    class="form-group"
+                    id="preco-group"
+                >
+                
+                    <label>
+                        Preço total pago
+                    </label>
+                
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="preco_total_compra"
+                        value="0"
+                    >
+                
+                </div>
+                
+                <div class="form-group">
+                
+                    <label>
+                        Data da entrada
+                    </label>
+                
+                    <input
+                        type="date"
+                        name="data_entrada"
+                        required
+                    >
+                
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="button button-secondary"
+                    data-close-modal
+                >
+
+                    Cancelar
+
+                </button>
+
+                <button
+                    type="submit"
+                    class="button button-success"
+                >
+
+                    Salvar Entrada
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/modal.js'
+    ) }}"
+></script>
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/pages/estoque.js'
+    ) }}"
+></script>
 
-            <option value="bonificacao">
-                Bonificação
-            </option>
-
-        </select>
-
-        <br><br>
-
-
-        <!-- Quantidade caixa -->
-        <label>
-            Quantidade recebida (caixa):
-        </label>
-
-        <input
-            type="number"
-            name="quantidade_recebida_caixa"
-            value="0"
-            required
-        >
-
-        <br><br>
-
-
-        <!-- Quantidade unidade -->
-        <label>
-            Quantidade recebida (unidade):
-        </label>
-
-        <input
-            type="number"
-            name="quantidade_recebida_unidade"
-            value="0"
-            required
-        >
-
-        <br><br>
-
-
-        <!-- Preço -->
-        <label>
-            Preço total pago:
-        </label>
-
-        <input
-            type="number"
-            step="0.01"
-            name="preco_total_compra"
-            value="0"
-        >
-
-        <br><br>
-
-
-        <!-- Data -->
-        <label>
-            Data da entrada:
-        </label>
-
-        <input
-            type="date"
-            name="data_entrada"
-            required
-        >
-
-        <br><br>
-
-
-        <!-- Botão -->
-        <button type="submit" class="button button-primary">
-            <i class="fa-solid fa-floppy-disk"></i>
-            Salvar Entrada
-        </button>
-
-    </form>
-
-
-    <hr>
-
-
-    <h2>
-        Histórico do Estoque
-    </h2>
-
-    <ul>
-
-        {% for item in estoque %}
-
-        <li>
-
-            <strong>
-                {{ item.nome }}
-            </strong>
-
-            -
-            Categoria:
-            {{ item.categoria }}
-            <br>
-
-Tipo:
-{{ item.tipo_entrada }}
-
-<br>
-
-Origem:
-{{ item.origem_compra }}
-
-<br>
-{% if item.fornecedor %}
-
-Fornecedor:
-{{ item.fornecedor }}
-
-<br>
-
-{% endif %}
-{% if item.nome_origem %}
-
-Local:
-{{ item.nome_origem }}
-
-<br>
-
-{% endif %}
-
-            <br>
-
-            Recebido:
-
-            {{ item.quantidade_recebida_caixa }}
-            caixas
-
-            |
-
-            {{ item.quantidade_recebida_unidade }}
-            unidades
-
-            <br>
-
-            Estoque atual:
-
-            {{ item.quantidade_atual_caixa }}
-            caixas
-
-            |
-
-            {{ item.quantidade_atual_unidade }}
-            unidades
-
-            <br>
-
-            Preço total pago:
-            R$
-            {{ item.preco_total_compra }}
-
-            <br>
-
-            Preço por caixa:
-            R$
-            {{ item.preco_por_caixa }}
-
-            <br>
-
-            Preço por unidade:
-            R$
-            {{ item.preco_por_unidade }}
-
-            <br>
-
-            Data:
-            {{ item.data_entrada.strftime('%d/%m/%Y') }}
-
-            <hr>
-
-        </li>
-
-        {% endfor %}
-
-    </ul>
-    <script>
-
-        // Pega categoria
-        const categoriaSelect =
-            document.getElementById(
-                "categoria"
-            );
-    
-        // Pega produtos
-        const produtoSelect =
-            document.getElementById(
-                "produto"
-            );
-    
-        // Quando mudar categoria
-        categoriaSelect.addEventListener(
-            "change",
-    
-            function () {
-    
-                // Categoria escolhida
-                const categoria =
-                    this.value;
-    
-                // Todas opções produto
-                const produtos =
-                    produtoSelect.options;
-    
-                // Percorre opções
-                for (
-                    let i = 0;
-                    i < produtos.length;
-                    i++
-                ) {
-    
-                    // Categoria produto
-                    const categoriaProduto =
-                        produtos[i].getAttribute(
-                            "data-categoria"
-                        );
-    
-                    // Primeira opção
-                    if (i === 0) {
-    
-                        produtos[i].style.display =
-                            "block";
-    
-                        continue;
-                    }
-    
-                    // Mostra produtos categoria
-                    if (
-                        categoriaProduto === categoria
-                    ) {
-    
-                        produtos[i].style.display =
-                            "block";
-                    }
-    
-                    // Esconde outros
-                    else {
-    
-                        produtos[i].style.display =
-                            "none";
-                    }
-                }
-    
-                // Reseta select produto
-                produtoSelect.value = "";
-            }
-        );
-    
-    </script>
-    <script>
-
-        // Origem compra
-        const origemCompra =
-            document.querySelector(
-                '[name="origem_compra_id"]'
-            );
-    
-        // Campo fornecedor
-        const campoFornecedor =
-            document.getElementById(
-                "campo-fornecedor"
-            );
-    
-        // Campo nome origem
-        const campoNomeOrigem =
-            document.querySelector(
-                '[name="nome_origem"]'
-            );
-    
-        // Atualiza campos
-        function atualizarCampos() {
-    
-            // Se fornecedor
-            if (
-                origemCompra.value == "1"
-            ) {
-    
-                campoFornecedor.style.display =
-                    "block";
-    
-                campoNomeOrigem.style.display =
-                    "none";
-            }
-    
-            // Mercado ou avulsa
-            else {
-    
-                campoFornecedor.style.display =
-                    "none";
-    
-                campoNomeOrigem.style.display =
-                    "block";
-            }
-        }
-    
-        // Quando mudar
-        origemCompra.addEventListener(
-            "change",
-            atualizarCampos
-        );
-    
-        // Executa ao carregar
-        atualizarCampos();
-    
-    </script>
 {% endblock %}

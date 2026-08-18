@@ -8,7 +8,9 @@ from flask import (
 # Importa controller do estoque
 from app.controllers.estoque_controller import (
     pegar_estoque,
-    cadastrar_estoque_controller
+    cadastrar_estoque_controller,
+    pegar_estoque_atual_completo,
+    pegar_detalhes_produto_estoque
 )
 
 # Importa controller produto
@@ -21,6 +23,8 @@ from app.controllers.produto_controller import (
 from app.controllers.fornecedor_controller import (
     pegar_fornecedores
 )
+
+
 # ==========================
 # CONFIGURAR ROTAS ESTOQUE
 # ==========================
@@ -32,9 +36,7 @@ def configurar_estoque_routes(app):
     @app.route("/estoque")
     def estoque():
 
-        # Busca estoque
-        dados_estoque = pegar_estoque()
-
+       
         # Busca produtos
         produtos = pegar_produtos()
 
@@ -48,7 +50,6 @@ def configurar_estoque_routes(app):
         return render_template(
             "estoque/estoque.html",
 
-            estoque=dados_estoque,
             produtos=produtos,
             categorias=categorias,
             fornecedores=fornecedores
@@ -137,3 +138,73 @@ def configurar_estoque_routes(app):
 
         # Atualiza página
         return redirect("/estoque")
+    # ==========================
+    # ESTOQUE ATUAL
+    # ==========================
+    @app.route("/estoque/atual")
+    def estoque_atual():
+
+        estoque = (
+            pegar_estoque_atual_completo()
+        )
+
+        total_produtos = len(estoque)
+
+        total_em_estoque = 0
+        total_baixo = 0
+        total_sem_estoque = 0
+        total_nunca_abastecido = 0
+
+        for item in estoque:
+
+            quantidade = item["quantidade_atual_unidade"]
+
+            if quantidade is None:
+
+                total_nunca_abastecido += 1
+
+            elif quantidade == 0:
+
+                total_sem_estoque += 1
+
+            elif quantidade <= 10:
+    
+                total_baixo += 1
+
+            else:
+
+                total_em_estoque += 1
+
+        return render_template(
+
+            "estoque/estoque_atual.html",
+
+            estoque=estoque,
+
+            total_produtos=total_produtos,
+
+            total_em_estoque=total_em_estoque,
+
+           total_baixo=total_baixo,
+
+            total_sem_estoque=total_sem_estoque,
+
+            total_nunca_abastecido=total_nunca_abastecido
+        )
+    
+    # ==========================
+    # DETALHES PRODUTO ESTOQUE
+    # ==========================
+    @app.route("/estoque/produto/<int:produto_id>")
+    def detalhes_produto(produto_id):
+
+        produto = pegar_detalhes_produto_estoque(
+        produto_id
+    )
+
+        return render_template(
+
+        "estoque/detalhes_produto.html",
+
+        produto=produto
+    )

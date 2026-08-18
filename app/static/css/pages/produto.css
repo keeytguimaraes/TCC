@@ -47,7 +47,7 @@
     grid-template-columns:
         repeat(
             auto-fill,
-            minmax(280px,1fr)
+            minmax(320px, 360px)
         );
 
     gap:24px;
@@ -375,5 +375,91 @@
 .hidden{
 
     display:none !important;
+
+}
+
+/* ==========================
+   VENDA POR DOSE
+========================== */
+
+.checkbox-group{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-top:15px;
+
+}
+
+.checkbox-group input{
+
+    width:18px;
+
+    height:18px;
+
+    margin:0;
+
+}
+
+.checkbox-group label{
+
+    margin:0;
+
+    font-weight:600;
+
+}
+
+.produto-form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+.produto-form-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    margin-top:10px;
+
+}
+
+/* ==========================
+   DETALHES DO PRODUTO
+========================== */
+
+.product-card-details{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+
+    margin-top:8px;
+
+    color:#666;
+
+    font-size:.95rem;
+
+}
+
+.product-card-details span{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
 
 }
