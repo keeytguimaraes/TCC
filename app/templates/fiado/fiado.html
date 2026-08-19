@@ -4,8 +4,6 @@
 Fiados
 {% endblock %}
 
-{% block conteudo %}
-
 {% block css %}
 
 <link
@@ -17,6 +15,8 @@ Fiados
 >
 
 {% endblock %}
+
+{% block conteudo %}
 
 <div class="page-title">
 
@@ -67,13 +67,13 @@ Fiados
 
 </div>
 
+{% if fiados %}
+
 <div class="fiado-grid">
 
     {% for fiado in fiados %}
 
-    <div
-    class="fiado-card search-item"
->
+    <div class="fiado-card search-item">
 
         <div class="fiado-card-header">
 
@@ -127,6 +127,24 @@ Fiados
     {% endfor %}
 
 </div>
+
+{% else %}
+
+<div class="search-empty">
+
+    <i class="fa-solid fa-money-bill-wave"></i>
+
+    <h3>
+        Nenhum fiado encontrado
+    </h3>
+
+    <p>
+        Não existem contas abertas no momento.
+    </p>
+
+</div>
+
+{% endif %}
 {% block scripts %}
 
 <script

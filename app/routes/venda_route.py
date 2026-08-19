@@ -24,7 +24,7 @@ from app.controllers.vendas_controller import (
 # Importa controller produto
 from app.controllers.produto_controller import (
 
-    pegar_produtos,
+    pegar_produtos_venda,
     pegar_categorias
 )
 
@@ -60,7 +60,7 @@ def configurar_venda_routes(app):
         vendas = pegar_vendas()
 
         # Busca produtos
-        produtos = pegar_produtos()
+        produtos = pegar_produtos_venda()
 
         # Busca categorias
         categorias = pegar_categorias()
@@ -182,7 +182,7 @@ def configurar_venda_routes(app):
         )
 
         # Busca produtos
-        produtos = pegar_produtos()
+        produtos = pegar_produtos_venda()
 
         # Procura produto
         produto_encontrado = None

@@ -17,9 +17,30 @@ def listar_produtos():
 
     # SQL
     sql = """
-        SELECT *
-        FROM produto
-    """
+    SELECT
+        p.*,
+
+        COALESCE(
+            SUM(
+                e.quantidade_atual_caixa
+            ),
+            0
+        ) AS estoque_caixa,
+
+        COALESCE(
+            SUM(
+                e.quantidade_atual_unidade
+            ),
+            0
+        ) AS estoque_unidade
+
+    FROM produto p
+
+    LEFT JOIN estoque e
+        ON p.id = e.produto_id
+
+    GROUP BY p.id
+"""
 
     # Executa SQL
     cursor.execute(sql)
@@ -344,9 +365,31 @@ def listar_produtos_ativos():
     )
 
     sql = """
-        SELECT *
-        FROM produto
-        WHERE ativo = TRUE
+        SELECT
+            p.*,
+
+            COALESCE(
+                SUM(
+                    e.quantidade_atual_caixa
+                ),
+                0
+            ) AS estoque_caixa,
+
+            COALESCE(
+                SUM(
+                    e.quantidade_atual_unidade
+                ),
+                0
+            ) AS estoque_unidade
+
+        FROM produto p
+
+        LEFT JOIN estoque e
+            ON p.id = e.produto_id
+
+        WHERE p.ativo = TRUE
+
+        GROUP BY p.id
     """
 
     cursor.execute(sql)
@@ -371,9 +414,79 @@ def listar_produtos_inativos():
     )
 
     sql = """
-        SELECT *
-        FROM produto
-        WHERE ativo = FALSE
+    SELECT
+        p.*,
+
+        COALESCE(
+            SUM(
+                e.quantidade_atual_caixa
+            ),
+            0
+        ) AS estoque_caixa,
+
+        COALESCE(
+            SUM(
+                e.quantidade_atual_unidade
+            ),
+            0
+        ) AS estoque_unidade
+
+    FROM produto p
+
+    LEFT JOIN estoque e
+        ON p.id = e.produto_id
+
+    WHERE p.ativo = FALSE
+
+    GROUP BY p.id
+"""
+
+    cursor.execute(sql)
+
+    produtos = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return produtos
+
+# ==========================
+# LISTAR PRODUTOS PARA VENDA
+# ==========================
+def listar_produtos_venda():
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT
+            p.*,
+
+            COALESCE(
+                SUM(
+                    e.quantidade_atual_caixa
+                ),
+                0
+            ) AS estoque_caixa,
+
+            COALESCE(
+                SUM(
+                    e.quantidade_atual_unidade
+                ),
+                0
+            ) AS estoque_unidade
+
+        FROM produto p
+
+        LEFT JOIN estoque e
+            ON p.id = e.produto_id
+
+        WHERE p.ativo = TRUE
+
+        GROUP BY p.id
     """
 
     cursor.execute(sql)

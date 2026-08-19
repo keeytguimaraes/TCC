@@ -8,7 +8,8 @@ from app.models.produto_model import (
     buscar_produto_por_id,
     editar_produto,
     inativar_produto,
-    ativar_produto
+    ativar_produto,
+    listar_produtos_venda
 )
 
 # ==========================
@@ -166,3 +167,10 @@ def ativar_produto_controller(
     ativar_produto(
         produto_id
     )
+
+# ==========================
+# PRODUTOS PARA VENDA
+# ==========================
+def pegar_produtos_venda():
+
+    return listar_produtos_venda()

@@ -113,9 +113,30 @@ def pegar_fiado_detalhes(conta_id):
         conta_id
     )
 
-    fiado["produtos"] = buscar_produtos_fiado(
-        conta_id
+    produtos = buscar_produtos_fiado(
+    conta_id
+)
+
+    agrupados = {}
+
+    for produto in produtos:
+
+        chave = (
+        produto["nome"],
+        produto["tipo_venda"]
     )
+
+        if chave not in agrupados:
+
+            agrupados[chave] = produto.copy()
+
+        else:
+
+            agrupados[chave]["quantidade"] += produto["quantidade"]
+
+    fiado["produtos"] = list(
+    agrupados.values()
+)
 
     fiado["recebimentos"] = buscar_recebimentos_fiado(
         conta_id
