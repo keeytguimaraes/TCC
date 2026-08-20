@@ -4,7 +4,8 @@ from flask import (
     render_template,
     request,
     redirect,
-    session
+    session,
+    flash
 )
 from app.models.conta_model import (
 
@@ -230,17 +231,22 @@ def configurar_venda_routes(app):
 
                 quantidade_solicitada
 
-                >
+    >
 
                 estoque[
-                    "quantidade_atual_unidade"
-                ]
+        "quantidade_atual_unidade"
+    ]
 
-            ):
+):
+
+                flash(
+        "Estoque insuficiente para essa venda.",
+        "danger"
+    )
 
                 return redirect(
-                    "/venda"
-                )
+        "/venda"
+    )
 
        
         # ----------------------
@@ -320,329 +326,23 @@ def configurar_venda_routes(app):
 
                 "produto_id": produto_id,
 
-                "nome":
-                produto_encontrado[
-                    "nome"
-                ],
+    "nome": produto_encontrado["nome"],
 
-                "tipo_venda":
-                tipo_venda,
+    "imagem": produto_encontrado["imagem"],
 
-                "quantidade":
-                quantidade,
+    "tipo_venda": tipo_venda,
 
-                "preco_unitario":
-                preco_unitario,
+    "quantidade": quantidade,
 
-                "subtotal":
-                subtotal
+     "preco_original": preco_unitario,
+
+    "preco_unitario": preco_unitario,
+
+    "subtotal": subtotal
             })
 
         # Atualiza session
         session["carrinho"] = carrinho
-
-        # Volta página
-        return redirect("/venda")
-    
-    # ==========================
-    # REMOVER DO CARRINHO
-    # ==========================
-    @app.route(
-        "/carrinho/remover/<int:indice>",
-        methods=["POST"]
-    )
-    def remover_carrinho(
-
-        indice
-    ):
-
-        carrinho = session.get(
-            "carrinho",
-            []
-        )
-
-        if (
-
-            indice >= 0
-
-            and
-
-            indice < len(carrinho)
-
-        ):
-
-            carrinho.pop(
-                indice
-            )
-
-        session["carrinho"] = (
-            carrinho
-        )
-
-        return redirect(
-            "/venda"
-        )
-
-    # ==========================
-    # FINALIZAR VENDA
-    # ==========================
-    @app.route(
-        "/venda/finalizar",
-        methods=["POST"]
-    )
-    def finalizar_venda():
-
-        # Carrinho
-        carrinho = session.get(
-            "carrinho",
-            []
-        )
-
-        # Se carrinho vazio
-        if not carrinho:
-
-            return redirect("/venda")
-
-        # Tipo finalização
-        tipo_finalizacao = request.form.get(
-            "tipo_finalizacao"
-       )
-
-        # Cliente
-        cliente_id = request.form.get(
-            "cliente_id"
-       )
-
-        # Nome temporário
-        nome_cliente_temporario = request.form.get(
-            "nome_cliente_temporario"
-        )
-        
-       # ----------------------
-       # DEFINE PAGAMENTO
-       # ----------------------
-# ----------------------
-# DEFINE PAGAMENTO
-# ----------------------
-
-        status_pagamento = "Pago"
-
-        conta_id = None
-
-# Venda fiado
-        if tipo_finalizacao == "fiado":
-
-            status_pagamento = "Pendente"
-
-            conta = buscar_conta_aberta(
-                cliente_id
-            )
-
-            if conta:
-
-                conta_id = conta["id"]
-
-            else:
-
-                conta_id = criar_conta(
-                    cliente_id
-                )
-
-# Conta pendente
-        elif tipo_finalizacao == "pendente":
-
-            status_pagamento = "Pendente"
-
-# Pagamento normal
-        else:
-
-            cliente_id = None
-
-            nome_cliente_temporario = None
-
-
-# ----------------------
-# VALOR RECEBIDO
-# ----------------------
-        valor_recebido = request.form.get(
-            "valor_recebido"
-        )
-
-        if not valor_recebido:
-
-            valor_recebido = 0
-
-        # ----------------------
-        # TOTAL VENDA
-        # ----------------------
-        valor_total = 0
-
-        for item in carrinho:
-
-            valor_total += item[
-                "subtotal"
-            ]
-
-        # ----------------------
-        # TROCO
-        # ----------------------
-        troco = (
-            float(valor_recebido)
-            - valor_total
-        )
-
-        # ----------------------
-        # IMPORTA CONEXÃO
-        # ----------------------
-        from app.database.conexao import conectar
-
-        # Conecta banco
-        conexao = conectar()
-
-        # Cursor
-        cursor = conexao.cursor()
-
-        # ----------------------
-        # SALDO DEVEDOR
-        # ----------------------
-
-        if tipo_finalizacao in [
-
-            "fiado",
-
-            "pendente"
-
-        ]:
-
-            saldo_devedor = valor_total
-
-        else:
-
-            saldo_devedor = 0
-
-        # ----------------------
-        # INSERT VENDA
-        # ----------------------
-        sql_venda = """
-            INSERT INTO venda (
-            valor_total,
-            valor_recebido,
-            troco,
-            cliente_id,
-            status_pagamento,
-            conta_id,
-            nome_cliente_temporario,
-            saldo_devedor
-        )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        """
-
-        # Executa venda
-        cursor.execute(
-
-            sql_venda,
-
-            (
-                valor_total,
-                valor_recebido,
-                troco,
-                cliente_id,
-                status_pagamento,
-                conta_id,
-                nome_cliente_temporario,
-                saldo_devedor
-            )
-        )
-
-        # ID venda
-        venda_id = cursor.lastrowid
-       # ----------------------
-        # ATUALIZA SALDO DA CONTA
-        # ----------------------
-        if tipo_finalizacao == "fiado":
-
-            from app.models.conta_model import (
-                atualizar_saldo_conta
-            )
-
-            atualizar_saldo_conta(
-                cursor,
-
-                conta_id,
-
-                valor_total
-            )
-
-        # ----------------------
-        # PRODUTOS VENDA
-        # ----------------------
-        for item in carrinho:
-
-            sql_produto_venda = """
-                INSERT INTO produto_venda (
-
-                    venda_id,
-                    produto_id,
-
-                    quantidade,
-                    tipo_venda,
-
-                    preco_unitario,
-                    subtotal
-
-                )
-                VALUES (
-                    %s, %s,
-                    %s, %s,
-                    %s, %s
-                )
-            """
-
-            # Executa produto venda
-            cursor.execute(
-
-                sql_produto_venda,
-
-                (
-                    venda_id,
-
-                    item["produto_id"],
-
-                    item["quantidade"],
-
-                    item["tipo_venda"],
-
-                    item["preco_unitario"],
-
-                    item["subtotal"]
-                )
-            )
-
-            # ----------------------
-            # BAIXA ESTOQUE
-            # ----------------------
-            baixar_estoque_controller(
-
-                item["produto_id"],
-
-                item["quantidade"],
-
-                item["tipo_venda"]
-            )
-
-        # Salva banco
-        conexao.commit()
-
-        # Fecha cursor
-        cursor.close()
-
-        # Fecha conexão
-        conexao.close()
-
-        # ----------------------
-        # LIMPA CARRINHO
-        # ----------------------
-        session["carrinho"] = []
 
         # Volta página
         return redirect("/venda")

@@ -430,3 +430,12 @@
 
     font-weight:600;
 }
+
+
+.alert-danger{
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}

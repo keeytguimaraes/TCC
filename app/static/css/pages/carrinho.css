@@ -1,0 +1,413 @@
+.carrinho-grid {
+
+    display: grid;
+
+    gap: 20px;
+
+    margin-top: 20px;
+}
+
+.carrinho-card {
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+
+.carrinho-card h3 {
+
+    margin-bottom: 10px;
+}
+
+.carrinho-card p {
+
+    margin: 6px 0;
+}
+
+.subtotal {
+
+    margin-top: 15px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid #ddd;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-weight: bold;
+}
+
+.carrinho-total{
+
+    margin-top:25px;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    background:#fff;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.carrinho-card {
+
+    display: flex;
+
+    gap: 20px;
+
+    align-items: center;
+}
+
+.carrinho-imagem {
+    width: 90px;
+    height: 90px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carrinho-imagem img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.cabecalho-carrinho {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.carrinho-card {
+
+    width: 100%;
+}
+
+.carrinho-grid {
+
+    display: grid;
+
+    grid-template-columns:
+    repeat(auto-fill, minmax(550px, 1fr));
+
+    gap: 20px;
+}
+
+.controle-quantidade {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 15px 0;
+
+    flex-wrap: wrap;
+}
+
+.input-quantidade {
+
+    width: 70px;
+
+    height: 42px;
+
+    text-align: center;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    border: 1px solid #ccc;
+
+    border-radius: 8px;
+}
+
+.controle-quantidade form {
+
+    margin: 0;
+}
+
+.controle-quantidade .button {
+
+    min-width: 60px;
+}
+
+.alerta-preco{
+
+    display: inline-block;
+
+    padding: 8px 12px;
+
+    margin: 10px 0;
+
+    border-radius: 8px;
+
+    background: #fff3cd;
+
+    color: #856404;
+
+    font-weight: bold;
+}
+
+/* ==========================
+   FINALIZAÇÃO DA VENDA
+========================== */
+
+.opcoes-finalizacao{
+
+    display:flex;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+    margin-top:20px;
+}
+
+.card-finalizacao{
+
+    border:none;
+
+    cursor:pointer;
+
+    min-width:220px;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    transition:.2s;
+
+    color:white;
+}
+
+.card-finalizacao:hover{
+
+    transform:translateY(-3px);
+}
+
+.card-finalizacao i{
+
+    font-size:30px;
+}
+
+.card-finalizacao span{
+
+    font-size:20px;
+
+    font-weight:bold;
+}
+
+.card-finalizacao small{
+
+    opacity:.9;
+}
+
+.receber{
+
+    background:#198754;
+}
+
+.fiado{
+
+    background:#0d6efd;
+}
+
+.pendente{
+
+    background:#6c757d;
+}
+
+.desconto-geral{
+
+    margin-top:20px;
+
+    background:#fff;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+}
+
+.desconto-geral label{
+
+    font-weight:bold;
+}
+
+.desconto-geral input{
+
+    width:120px;
+
+    padding:10px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+}
+
+.resumo-venda{
+
+    width:100%;
+}
+
+.linha-resumo{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin:8px 0;
+}
+
+.total-final{
+
+    margin-top:20px;
+
+    padding-top:20px;
+
+    border-top:2px solid #ddd;
+
+    font-size:2rem;
+
+    font-weight:bold;
+
+    color:#198754;
+}
+
+.carrinho-total{
+
+    background:#fff;
+
+    border-radius:12px;
+
+    padding:25px;
+
+    margin:25px 0;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.linha-resumo{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:12px;
+
+    font-size:18px;
+}
+
+#valor-desconto{
+
+    color:#dc3545;
+
+    font-weight:bold;
+}
+
+.total-final{
+
+    border-top:2px solid #e5e5e5;
+
+    padding-top:20px;
+
+    margin-top:20px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    font-size:2rem;
+
+    font-weight:bold;
+
+    color:#198754;
+}
+
+/* ==========================
+   FORMULÁRIOS FINALIZAÇÃO
+========================== */
+
+.finalizacao-box{
+
+    background:#fff;
+
+    margin-top:20px;
+
+    padding:25px;
+
+    border-radius:12px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+    max-width:600px;
+}
+
+.finalizacao-box label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:bold;
+}
+
+.finalizacao-box input,
+.finalizacao-box select{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    margin-bottom:15px;
+}
+
+.finalizacao-box button{
+
+    width:100%;
+}
+
+.titulo-finalizacao{
+
+    font-size:1.2rem;
+
+    font-weight:bold;
+
+    margin-bottom:15px;
+}

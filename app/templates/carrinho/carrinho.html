@@ -1,0 +1,494 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Carrinho
+{% endblock %}
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/pages/carrinho.css') }}"
+>
+
+{% endblock %}
+
+
+{% block conteudo %}
+
+<div class="cabecalho-carrinho">
+
+    <h1>
+        Carrinho
+    </h1>
+
+    <a
+        href="/venda"
+        class="button button-secondary"
+    >
+        <i class="fa-solid fa-arrow-left"></i>
+        Voltar para Vendas
+    </a>
+
+</div>
+
+{% if carrinho %}
+
+<div class="carrinho-grid">
+
+    {% for item in carrinho %}
+
+    <div class="carrinho-card">
+    
+        <div class="carrinho-imagem">
+    
+            {% if item.imagem %}
+    
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='uploads/produtos/' ~ item.imagem
+                ) }}"
+                alt="{{ item.nome }}"
+            >
+    
+            {% else %}
+    
+            <i class="fa-solid fa-box fa-3x"></i>
+    
+            {% endif %}
+    
+        </div>
+    
+        <div class="carrinho-info">
+    
+            <h3>
+                {{ item.nome }}
+            </h3>
+    
+            <p>
+                Tipo:
+                {{ item.tipo_venda }}
+            </p>
+    
+            <div class="controle-quantidade">
+
+                <form
+                    action="/carrinho/menos/{{ loop.index0 }}"
+                    method="POST"
+                >
+            
+                    <button
+                        class="button button-secondary"
+                    >
+                        -
+                    </button>
+            
+                </form>
+            
+                <form
+    action="/carrinho/atualizar/{{ loop.index0 }}"
+    method="POST"
+>
+
+    <input
+        type="number"
+        name="quantidade"
+        min="1"
+        value="{{ item.quantidade }}"
+        class="input-quantidade"
+    >
+
+    <button
+        type="submit"
+        class="button button-primary"
+    >
+        OK
+    </button>
+
+</form>
+                <form
+                    action="/carrinho/mais/{{ loop.index0 }}"
+                    method="POST"
+                >
+            
+                    <button
+                        class="button button-success"
+                    >
+                        +
+                    </button>
+            
+                </form>
+            
+            </div>
+
+            {% if item.preco_unitario != item.get('preco_original', item.preco_unitario) %}
+
+
+            <div class="alerta-preco">
+
+                <i class="fa-solid fa-tag"></i>
+            
+                Desconto aplicado
+            
+                (R$ {{ "%.2f"|format(
+                    item.preco_original - item.preco_unitario
+                ) }} por unidade)
+            
+            </div>
+            
+            {% endif %}
+
+<p>
+
+    Preço original:
+
+    <strong>
+        R$ {{ "%.2f"|format(item.get('preco_original', item.preco_unitario)) }}
+    </strong>
+
+</p>
+
+<form
+    action="/carrinho/preco/{{ loop.index0 }}"
+    method="POST"
+>
+
+    <label>
+        Preço aplicado:
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0.01"
+        name="preco_unitario"
+        value="{{ item.preco_unitario }}"
+        required
+    >
+
+    <button
+        class="button button-primary"
+    >
+        Salvar
+    </button>
+
+</form>
+
+            <div class="subtotal">
+    
+                <span>
+                    Subtotal
+                </span>
+    
+                <strong>
+                    R$ {{ "%.2f"|format(item.subtotal) }}
+                </strong>
+    
+            </div>
+    
+            <form
+                action="/carrinho/remover/{{ loop.index0 }}"
+                method="POST"
+            >
+    
+                <button
+                    class="button button-danger"
+                >
+    
+                    <i class="fa-solid fa-trash"></i>
+    
+                    Excluir
+    
+                </button>
+    
+            </form>
+    
+        </div>
+    
+    </div>
+    
+    {% endfor %}
+</div>
+
+<div class="carrinho-total">
+
+    <div class="linha-resumo">
+
+        <span>Total bruto</span>
+
+        <strong id="total-bruto">
+            R$ {{ "%.2f"|format(total_carrinho) }}
+        </strong>
+
+    </div>
+
+    <div class="linha-resumo">
+
+        <span>Desconto</span>
+
+        <strong id="valor-desconto">
+            R$ 0,00
+        </strong>
+
+    </div>
+
+    <div class="total-final">
+
+        <span>Total final</span>
+
+        <strong id="valor-final">
+            R$ {{ "%.2f"|format(total_carrinho) }}
+        </strong>
+
+    </div>
+
+</div>
+
+<div class="desconto-geral">
+
+    <label>
+        Desconto da venda (R$)
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        min="0"
+        name="desconto_venda"
+        value="0"
+    >
+
+</div>
+
+<form
+    action="/carrinho/limpar"
+    method="POST"
+>
+
+    <button
+        type="submit"
+        class="button button-danger"
+    >
+        <i class="fa-solid fa-trash"></i>
+        Limpar Carrinho
+    </button>
+
+</form>
+
+{% else %}
+
+<p>
+    Carrinho vazio
+</p>
+
+{% endif %}
+
+<hr>
+
+<h2>
+    Finalizar venda
+</h2>
+
+<div class="opcoes-finalizacao">
+
+    <button
+        type="button"
+        class="card-finalizacao receber"
+        onclick="mostrarReceber()"
+    >
+        <i class="fa-solid fa-money-bill-wave"></i>
+
+        <span>
+            Receber Agora
+        </span>
+
+        <small>
+            Pagamento imediato
+        </small>
+    </button>
+
+    <button
+        type="button"
+        class="card-finalizacao fiado"
+        onclick="mostrarFiado()"
+    >
+        <i class="fa-solid fa-user-clock"></i>
+
+        <span>
+            Venda Fiado
+        </span>
+
+        <small>
+            Vincular ao cliente
+        </small>
+    </button>
+
+    <button
+        type="button"
+        class="card-finalizacao pendente"
+        onclick="mostrarPendente()"
+    >
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+
+        <span>
+            Conta Pendente
+        </span>
+
+        <small>
+            Pagamento depois
+        </small>
+    </button>
+
+</div>
+<!-- RECEBER AGORA -->
+<div
+    id="div_receber"
+    class="finalizacao-box"
+    style="display:none;"
+>
+
+<p class="titulo-finalizacao">
+    Pagamento imediato
+</p>
+    <form
+        action="/carrinho/finalizar"
+        method="POST"
+    >
+
+        <input
+            type="hidden"
+            name="tipo_finalizacao"
+            value="pago"
+        >
+
+        <label>
+            Valor recebido:
+        </label>
+
+        <input
+            type="number"
+            step="0.01"
+            name="valor_recebido"
+            required
+        >
+
+        <button
+            class="button button-success"
+        >
+            Confirmar Pagamento
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- VENDA FIADO -->
+<div
+    id="div_fiado"
+    class="finalizacao-box"
+    style="display:none;"
+>
+
+<p class="titulo-finalizacao">
+    Vincular cliente ao fiado
+</p>
+
+    <form
+        action="/carrinho/finalizar"
+        method="POST"
+    >
+
+        <input
+            type="hidden"
+            name="tipo_finalizacao"
+            value="fiado"
+        >
+
+        <label>
+            Cliente:
+        </label>
+
+        <select
+            name="cliente_id"
+            required
+        >
+
+            <option value="">
+                Selecione
+            </option>
+
+            {% for cliente in clientes %}
+
+            <option
+                value="{{ cliente.id }}"
+            >
+                {{ cliente.nome }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button
+            class="button button-primary"
+        >
+            Confirmar Fiado
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- CONTA PENDENTE -->
+<div
+    id="div_pendente"
+    class="finalizacao-box"
+    style="display:none;"
+>
+
+<p class="titulo-finalizacao">
+    Registrar conta pendente
+</p>
+
+    <form
+        action="/carrinho/finalizar"
+        method="POST"
+    >
+
+        <input
+            type="hidden"
+            name="tipo_finalizacao"
+            value="pendente"
+        >
+
+        <label>
+            Nome:
+        </label>
+
+        <input
+            type="text"
+            name="nome_cliente_temporario"
+            required
+        >
+
+        <button
+            class="button button-secondary"
+        >
+            Confirmar Pendência
+        </button>
+
+    </form>
+
+</div>
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/pages/carrinho.js'
+    ) }}"
+></script>
+
+{% endblock %}

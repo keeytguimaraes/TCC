@@ -463,30 +463,31 @@ def listar_produtos_venda():
 
     sql = """
         SELECT
+
             p.*,
 
-            COALESCE(
-                SUM(
-                    e.quantidade_atual_caixa
-                ),
-                0
-            ) AS estoque_caixa,
+            e.quantidade_atual_caixa
+                AS estoque_caixa,
 
-            COALESCE(
-                SUM(
-                    e.quantidade_atual_unidade
-                ),
-                0
-            ) AS estoque_unidade
+            e.quantidade_atual_unidade
+                AS estoque_unidade
 
         FROM produto p
 
         LEFT JOIN estoque e
-            ON p.id = e.produto_id
+            ON e.id = (
+
+                SELECT MAX(id)
+
+                FROM estoque
+
+                WHERE produto_id = p.id
+
+            )
 
         WHERE p.ativo = TRUE
 
-        GROUP BY p.id
+        ORDER BY p.nome
     """
 
     cursor.execute(sql)
