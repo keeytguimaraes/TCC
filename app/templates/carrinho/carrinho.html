@@ -11,6 +11,11 @@ Carrinho
     href="{{ url_for('static', filename='css/pages/carrinho.css') }}"
 >
 
+<link
+    href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+    rel="stylesheet"
+/>
+
 {% endblock %}
 
 
@@ -276,27 +281,18 @@ Carrinho
 
 </form>
 
-{% else %}
-
-<p>
-    Carrinho vazio
-</p>
-
-{% endif %}
-
-<hr>
-
-<h2>
+<h2 class="titulo-finalizar">
     Finalizar venda
 </h2>
 
 <div class="opcoes-finalizacao">
 
     <button
-        type="button"
-        class="card-finalizacao receber"
-        onclick="mostrarReceber()"
-    >
+    id="card_receber"
+    type="button"
+    class="card-finalizacao receber"
+    onclick="mostrarReceber()"
+>
         <i class="fa-solid fa-money-bill-wave"></i>
 
         <span>
@@ -309,10 +305,11 @@ Carrinho
     </button>
 
     <button
-        type="button"
-        class="card-finalizacao fiado"
-        onclick="mostrarFiado()"
-    >
+    id="card_fiado"
+    type="button"
+    class="card-finalizacao fiado"
+    onclick="mostrarFiado()"
+>
         <i class="fa-solid fa-user-clock"></i>
 
         <span>
@@ -325,10 +322,11 @@ Carrinho
     </button>
 
     <button
-        type="button"
-        class="card-finalizacao pendente"
-        onclick="mostrarPendente()"
-    >
+    id="card_pendente"
+    type="button"
+    class="card-finalizacao pendente"
+    onclick="mostrarPendente()"
+>
         <i class="fa-solid fa-file-invoice-dollar"></i>
 
         <span>
@@ -411,9 +409,10 @@ Carrinho
         </label>
 
         <select
-            name="cliente_id"
-            required
-        >
+    name="cliente_id"
+    class="select-cliente"
+    required
+>
 
             <option value="">
                 Selecione
@@ -483,6 +482,18 @@ Carrinho
     </form>
 
 </div>
+
+{% else %}
+
+<p>
+    Carrinho vazio
+</p>
+
+{% endif %}
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script
     src="{{ url_for(

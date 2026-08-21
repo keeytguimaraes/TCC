@@ -242,6 +242,8 @@
 
     margin-top:20px;
 
+    margin-bottom:30px;
+
     background:#fff;
 
     padding:20px;
@@ -410,4 +412,214 @@
     font-weight:bold;
 
     margin-bottom:15px;
+}
+
+.select2-container {
+
+    width: 100% !important;
+
+}
+
+.select2-selection {
+
+    min-height: 50px !important;
+
+    border-radius: 10px !important;
+
+    border: 1px solid #ced4da !important;
+
+    padding: 8px !important;
+
+}
+
+.select2-selection__rendered {
+
+    line-height: 34px !important;
+
+}
+
+.select2-selection__arrow {
+
+    height: 50px !important;
+
+}
+
+
+#valor-final{
+
+    font-size:2rem;
+
+    font-weight:bold;
+
+}
+
+/* ==========================
+   RESUMO DA VENDA
+========================== */
+
+.resumo-venda{
+
+    background:#fff;
+
+    padding:25px;
+
+    border-radius:12px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+    margin-top:20px;
+}
+
+.linha-resumo{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin:10px 0;
+
+    font-size:1.1rem;
+}
+
+.total-final{
+
+    font-size:1.6rem;
+
+    font-weight:bold;
+
+    color:#198754;
+}
+
+#valor-desconto{
+
+    color:#dc3545;
+
+    font-weight:bold;
+}
+
+.carrinho-limpar{
+    margin-top: 25px;
+    margin-bottom: 35px;
+}
+
+.titulo-finalizar{
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+.card-finalizacao.ativo{
+
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 0 0 4px rgba(255,255,255,.4),
+        0 8px 20px rgba(0,0,0,.25);
+
+    border: 3px solid white;
+}
+
+/* ==========================
+   SELECT2 CLIENTES
+========================== */
+
+.select2-container{
+    width:100% !important;
+}
+
+/* Caixa principal */
+.select2-container--default .select2-selection--single{
+
+    height:60px !important;
+
+    border:1px solid #ced4da !important;
+
+    border-radius:15px !important;
+
+    display:flex !important;
+
+    align-items:center !important;
+
+    padding-left:10px !important;
+
+    box-shadow:none !important;
+}
+
+/* Texto selecionado */
+.select2-container--default
+.select2-selection--single
+.select2-selection__rendered{
+
+    line-height:60px !important;
+
+    font-size:18px;
+
+    color:#212529;
+}
+
+/* Seta */
+.select2-container--default
+.select2-selection--single
+.select2-selection__arrow{
+
+    height:60px !important;
+
+    right:10px !important;
+}
+
+/* Dropdown */
+.select2-dropdown{
+
+    border-radius:15px !important;
+
+    overflow:hidden;
+
+    border:1px solid #ced4da !important;
+}
+
+/* Campo de pesquisa */
+.select2-search--dropdown{
+
+    padding:10px !important;
+}
+
+.select2-search__field{
+
+    height:40px !important;
+
+    border:1px solid #ced4da !important;
+
+    border-radius:10px !important;
+
+    padding:8px 12px !important;
+
+    font-size:15px !important;
+}
+
+/* Itens da lista */
+.select2-results__option{
+
+    padding:12px 15px !important;
+
+    font-size:16px !important;
+}
+
+/* Item selecionado */
+.select2-results__option--highlighted{
+
+    background:#0d6efd !important;
+
+    color:white !important;
+}
+
+/* Foco */
+.select2-container--default.select2-container--focus
+.select2-selection--single{
+
+    border-color:#0d6efd !important;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(13,110,253,.15) !important;
 }

@@ -16,6 +16,26 @@ function esconderTudo() {
     ).style.display = "none";
 }
 
+// ==========================
+// REMOVE CARD ATIVO
+// ==========================
+function removerSelecao() {
+
+    document
+        .getElementById("card_receber")
+        .classList
+        .remove("ativo");
+
+    document
+        .getElementById("card_fiado")
+        .classList
+        .remove("ativo");
+
+    document
+        .getElementById("card_pendente")
+        .classList
+        .remove("ativo");
+}
 
 // ==========================
 // RECEBER AGORA
@@ -24,11 +44,17 @@ function mostrarReceber() {
 
     esconderTudo();
 
+    removerSelecao();
+
+    document
+        .getElementById("card_receber")
+        .classList
+        .add("ativo");
+
     document.getElementById(
         "div_receber"
     ).style.display = "block";
 }
-
 
 // ==========================
 // VENDA FIADO
@@ -37,11 +63,29 @@ function mostrarFiado() {
 
     esconderTudo();
 
+    removerSelecao();
+
+    document
+        .getElementById("card_fiado")
+        .classList
+        .add("ativo");
+
     document.getElementById(
         "div_fiado"
     ).style.display = "block";
-}
 
+    if (!$('.select-cliente').hasClass("select2-hidden-accessible")) {
+
+        $('.select-cliente').select2({
+
+            placeholder: "Pesquisar cliente...",
+
+            width: '100%'
+        });
+
+    }
+
+}
 
 // ==========================
 // CONTA PENDENTE
@@ -49,6 +93,13 @@ function mostrarFiado() {
 function mostrarPendente() {
 
     esconderTudo();
+
+    removerSelecao();
+
+    document
+        .getElementById("card_pendente")
+        .classList
+        .add("ativo");
 
     document.getElementById(
         "div_pendente"
@@ -156,3 +207,19 @@ function atualizarResumoVenda(){
     valorFinal.style.fontWeight =
         "bold";
 }
+
+// ==========================
+// SELECT2 CLIENTES
+// ==========================
+
+function iniciarSelectCliente(){
+
+    $('.select-cliente').select2({
+
+        placeholder: "Pesquisar cliente...",
+
+        width: '100%'
+    });
+
+}
+

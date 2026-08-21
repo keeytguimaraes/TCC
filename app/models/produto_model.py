@@ -204,7 +204,7 @@ def buscar_produto_por_id(
 # ==========================
 def editar_produto(
 
-     produto_id,
+    produto_id,
 
     nome,
 
@@ -229,6 +229,60 @@ def editar_produto(
 
     cursor = conexao.cursor()
 
+    # ==========================
+    # BUSCA PREÇO ATUAL
+    # ==========================
+    sql_preco = """
+        SELECT preco_venda
+
+        FROM produto
+
+        WHERE id = %s
+    """
+
+    cursor.execute(
+
+        sql_preco,
+
+        (
+            produto_id,
+        )
+    )
+
+    produto = cursor.fetchone()
+
+    preco_antigo = produto[0]
+
+    # ==========================
+    # REGISTRA HISTÓRICO
+    # ==========================
+    if float(preco_antigo) != float(preco_venda):
+
+        sql_historico = """
+            INSERT INTO historico_preco (
+
+                produto_id,
+                preco_antigo,
+                preco_novo
+
+            )
+            VALUES (%s, %s, %s)
+        """
+
+        cursor.execute(
+
+            sql_historico,
+
+            (
+                produto_id,
+                preco_antigo,
+                preco_venda
+            )
+        )
+
+    # ==========================
+    # ATUALIZA PRODUTO
+    # ==========================
     sql = """
     UPDATE produto
 
@@ -253,31 +307,33 @@ def editar_produto(
         volume_dose_ml = %s
 
     WHERE id = %s
-"""
+    """
+
     cursor.execute(
 
         sql,
 
         (
- nome,
 
-        categoria,
+            nome,
 
-        sabor,
+            categoria,
 
-        tipo_embalagem,
+            sabor,
 
-        volume,
+            tipo_embalagem,
 
-        preco_venda,
+            volume,
 
-        quantidade_por_caixa,
+            preco_venda,
 
-        vende_por_dose,
+            quantidade_por_caixa,
 
-        volume_dose_ml,
+            vende_por_dose,
 
-        produto_id
+            volume_dose_ml,
+
+            produto_id
         )
     )
 
