@@ -1,0 +1,284 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Detalhes do Produto
+{% endblock %}
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/detalhes_produto.css'
+    ) }}"
+>
+
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="page-header">
+
+    <h1>
+        Detalhes do Produto
+    </h1>
+
+    <a
+        href="/produto"
+        class="btn-voltar"
+    >
+        ← Voltar
+    </a>
+
+</div>
+
+<div class="detalhes-grid">
+
+    <!-- PRODUTO -->
+
+    <div class="detalhe-card">
+
+        <h2>
+            🥤 Produto
+        </h2>
+
+        {% if produto.imagem %}
+
+        <div class="produto-imagem">
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='uploads/produtos/' ~ produto.imagem
+                ) }}"
+                alt="{{ produto.nome }}"
+            >
+
+        </div>
+
+        {% endif %}
+
+        <p>
+            <strong>Nome:</strong>
+            {{ produto.nome }}
+        </p>
+
+        <p>
+            <strong>Categoria:</strong>
+            {{ produto.categoria }}
+        </p>
+
+        {% if produto.sabor %}
+        <p>
+            <strong>Sabor:</strong>
+            {{ produto.sabor }}
+        </p>
+        {% endif %}
+
+        {% if produto.tipo_embalagem %}
+        <p>
+            <strong>Embalagem:</strong>
+            {{ produto.tipo_embalagem }}
+        </p>
+        {% endif %}
+
+        {% if produto.volume %}
+        <p>
+            <strong>Volume:</strong>
+            {{ produto.volume }}
+        </p>
+        {% endif %}
+
+    </div>
+
+    <!-- PREÇO -->
+
+    <div class="detalhe-card">
+
+        <h2>
+            💰 Preço
+        </h2>
+
+        <p>
+            <strong>Preço de venda:</strong>
+            R$ {{ produto.preco_venda }}
+        </p>
+
+        <p>
+            <strong>Quantidade por caixa:</strong>
+            {{ produto.quantidade_por_caixa }}
+        </p>
+
+        {% if produto.vende_por_dose %}
+
+        <p>
+            <strong>Venda por dose:</strong>
+            Sim
+        </p>
+
+        <p>
+            <strong>Volume da dose:</strong>
+            {{ produto.volume_dose_ml }} ml
+        </p>
+
+        {% endif %}
+
+    </div>
+
+    <!-- STATUS -->
+
+    <div class="detalhe-card">
+
+        <h2>
+            📊 Status
+        </h2>
+
+        {% if produto.ativo %}
+
+        <p>
+            <strong>Situação:</strong>
+            Ativo
+        </p>
+
+        {% else %}
+
+        <p>
+            <strong>Situação:</strong>
+            Inativo
+        </p>
+
+        {% endif %}
+
+    </div>
+
+    <!-- AÇÕES -->
+
+    <div class="detalhe-card">
+
+        <h2>
+            ⚙️ Ações
+        </h2>
+
+        <div class="acoes-produto">
+
+            <a
+                href="/produto/editar/{{ produto.id }}"
+                class="button button-secondary"
+            >
+
+                <i class="fa-solid fa-pen-to-square"></i>
+
+                Editar
+
+            </a>
+
+            {% if produto.ativo %}
+
+            <form
+                action="/produto/inativar/{{ produto.id }}"
+                method="POST"
+            >
+
+                <button
+                    class="button button-danger"
+                >
+
+                    <i class="fa-solid fa-ban"></i>
+
+                    Inativar
+
+                </button>
+
+            </form>
+
+            {% else %}
+
+            <form
+                action="/produto/ativar/{{ produto.id }}"
+                method="POST"
+            >
+
+                <button
+                    class="button button-success"
+                >
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Ativar
+
+                </button>
+
+            </form>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- HISTÓRICO -->
+
+    <div class="detalhe-card historico-card">
+
+        <h2>
+            📈 Histórico de Preços
+        </h2>
+
+        {% if historico %}
+
+        <table class="tabela-historico">
+
+            <thead>
+
+                <tr>
+
+                    <th>Data</th>
+
+                    <th>Preço Antigo</th>
+
+                    <th>Preço Novo</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in historico %}
+
+                <tr>
+
+                    <td>
+                        {{ item.data_alteracao.strftime('%d/%m/%Y %H:%M') }}
+                    </td>
+
+                    <td>
+                        R$ {{ item.preco_antigo }}
+                    </td>
+
+                    <td>
+                        R$ {{ item.preco_novo }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <p>
+            Nenhuma alteração de preço registrada.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

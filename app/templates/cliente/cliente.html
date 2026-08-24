@@ -140,15 +140,16 @@ id="card-cadastro">
         <div class="cliente-acoes">
 
             <a
-    href="/conta/{{ cliente.id }}"
-    class="button button-conta"
->
-
-    <i class="fa-solid fa-wallet"></i>
-
-    Ver Conta Fiado
-
-</a>
+            href="/cliente/fiado/{{ cliente.id }}"
+            class="button button-conta"
+        >
+        
+            <i class="fa-solid fa-wallet"></i>
+        
+            Ver Conta Fiado
+        
+        </a>
+        
 
             <a
                 href="{{ url_for('tela_editar_cliente', id_cliente=cliente.id) }}"

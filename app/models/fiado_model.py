@@ -286,3 +286,46 @@ def buscar_recebimentos_fiado(
     conexao.close()
 
     return recebimentos
+
+# ==========================
+# BUSCAR CONTA POR CLIENTE
+# ==========================
+def buscar_conta_por_cliente(
+
+    cliente_id
+):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT id
+
+        FROM conta
+
+        WHERE cliente_id = %s
+
+        AND status_conta = 'aberta'
+
+        LIMIT 1
+    """
+
+    cursor.execute(
+
+        sql,
+
+        (
+            cliente_id,
+        )
+    )
+
+    conta = cursor.fetchone()
+
+    cursor.close()
+
+    conexao.close()
+
+    return conta

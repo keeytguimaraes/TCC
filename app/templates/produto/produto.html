@@ -6,11 +6,20 @@ Produtos
 
 {% block css %}
 
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/estoque.css'
+    ) }}"
+>
+
+
 <link
     rel="stylesheet"
     href="{{ url_for('static', filename='css/pages/produto.css') }}"
 >
-
 {% endblock %}
 
 {% block conteudo %}
@@ -341,12 +350,17 @@ Produtos
 
     {% for produto in produtos %}
 
-    <div class="product-card search-item">
+    <a
+        href="/produto/detalhes/{{ produto.id }}"
+        class="product-card-link search-item"
+    >
 
-        <div class="product-card-image">
+        <div class="product-card">
 
-            {% if produto.imagem %}
-        
+            <div class="product-card-image">
+
+                {% if produto.imagem %}
+
                 <img
                     src="{{ url_for(
                         'static',
@@ -354,146 +368,96 @@ Produtos
                     ) }}"
                     alt="{{ produto.nome }}"
                 >
-        
-            {% else %}
-        
-                📦
-        
-            {% endif %}
-        
-        </div>
-
-        <div class="product-card-body">
-
-            <h3 class="product-card-title search-text">
-
-                {{ produto.nome }}
-            
-                {% if produto.volume %}
-                    {{ produto.volume }}
-                {% endif %}
-            
-            </h3>
-            
-            <div class="product-card-details">
-            
-                <span>
-                    🥤 {{ produto.categoria }}
-                </span>
-            
-                {% if produto.tipo_embalagem %}
-                <span>
-                    📦 {{ produto.tipo_embalagem }}
-                </span>
-                {% endif %}
-            
-                {% if produto.sabor %}
-                <span>
-                    🍇 {{ produto.sabor }}
-                </span>
-                {% endif %}
-            
-                {% if produto.volume %}
-                <span>
-                    ⚖️ {{ produto.volume }}
-                </span>
-                {% endif %}
-            
-            </div>
-            
-            <div class="product-card-info">
-            
-                <span>
-                    💰 R$ {{ produto.preco_venda }}
-                </span>
-            
-                <span>
-                    📦 {{ produto.quantidade_por_caixa }}
-                    por caixa
-                </span>
-            
-                {% if produto.vende_por_dose %}
-            
-                <span>
-                    🥃 Dose {{ produto.volume_dose_ml }}ml
-                </span>
-            
-                {% endif %}
-            
-                {% if produto.ativo %}
-            
-                <span class="badge badge-success">
-                    Ativo
-                </span>
-            
-                {% else %}
-            
-                <span class="badge badge-danger">
-                    Inativo
-                </span>
-            
-                {% endif %}
-            
-            </div>
-
-            <div class="cliente-acoes">
-
-                <a
-                    href="/produto/editar/{{ produto.id }}"
-                    class="button button-secondary"
-                >
-
-                    <i class="fa-solid fa-pen-to-square"></i>
-
-                    Editar
-
-                </a>
-
-                {% if produto.ativo %}
-
-                <form
-                    action="/produto/inativar/{{ produto.id }}"
-                    method="POST"
-                >
-
-                    <button
-                        class="button button-danger"
-                    >
-
-                        <i class="fa-solid fa-ban"></i>
-
-                        Inativar
-
-                    </button>
-
-                </form>
 
                 {% else %}
 
-                <form
-                    action="/produto/ativar/{{ produto.id }}"
-                    method="POST"
-                >
-
-                    <button
-                        class="button button-success"
-                    >
-
-                        <i class="fa-solid fa-check"></i>
-
-                        Ativar
-
-                    </button>
-
-                </form>
+                <i class="fa-solid fa-box"></i>
 
                 {% endif %}
+
+            </div>
+
+            <div class="product-card-body">
+
+                <h3 class="product-card-title search-text">
+
+                    {{ produto.nome }}
+
+                    {% if produto.volume %}
+                        {{ produto.volume }}
+                    {% endif %}
+
+                </h3>
+
+                <div class="product-card-details">
+
+                    <div class="info-row">
+                        <span class="info-label">Categoria</span>
+                        <span class="info-value">{{ produto.categoria }}</span>
+                    </div>
+                
+                    <div class="info-row">
+                        <span class="info-label">Embalagem</span>
+                        <span class="info-value">{{ produto.tipo_embalagem }}</span>
+                    </div>
+                
+                    {% if produto.sabor %}
+                    <div class="info-row">
+                        <span class="info-label">Sabor</span>
+                        <span class="info-value">{{ produto.sabor }}</span>
+                    </div>
+                    {% endif %}
+                
+                    {% if produto.volume %}
+                    <div class="info-row">
+                        <span class="info-label">Volume</span>
+                        <span class="info-value">{{ produto.volume }}</span>
+                    </div>
+                    {% endif %}
+                
+                </div>
+
+                <div class="product-card-info">
+
+                    <div class="product-price">
+                        R$ {{ produto.preco_venda }}
+                    </div>
+                
+                    <div class="product-extra">
+                
+                        <span>
+                            📦 {{ produto.quantidade_por_caixa }} por caixa
+                        </span>
+                
+                        {% if produto.vende_por_dose %}
+                        <span>
+                            🥃 Dose {{ produto.volume_dose_ml }}ml
+                        </span>
+                        {% endif %}
+                
+                    </div>
+                
+                    {% if produto.ativo %}
+                
+                    <span class="badge badge-success">
+                        Ativo
+                    </span>
+                
+                    {% else %}
+                
+                    <span class="badge badge-danger">
+                        Inativo
+                    </span>
+                
+                    {% endif %}
+                
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+    </a>
 
     {% endfor %}
 

@@ -554,3 +554,40 @@ def listar_produtos_venda():
     conexao.close()
 
     return produtos
+
+# ==========================
+# HISTÓRICO DE PREÇOS
+# ==========================
+def buscar_historico_preco(produto_id):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT *
+
+        FROM historico_preco
+
+        WHERE produto_id = %s
+
+        ORDER BY data_alteracao DESC
+    """
+
+    cursor.execute(
+
+        sql,
+
+        (
+            produto_id,
+        )
+    )
+
+    historico = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return historico

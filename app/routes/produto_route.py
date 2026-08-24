@@ -14,7 +14,8 @@ from app.controllers.produto_controller import (
     pegar_produto_por_id,
     editar_produto_controller,
     inativar_produto_controller,
-    ativar_produto_controller
+    ativar_produto_controller,
+    pegar_historico_preco
 )
 
 from werkzeug.utils import secure_filename
@@ -268,3 +269,47 @@ def configurar_produto_routes(app):
     )
 
         return redirect("/produto")
+    
+    # ==========================
+    # ROTA: HISTÓRICO PRODUTO
+    # ==========================
+    @app.route(
+    "/produto/detalhes/<int:produto_id>"
+)
+    def detalhes_produto_produto(produto_id):
+
+        produto = pegar_produto_por_id(
+        produto_id
+    )
+
+        historico = pegar_historico_preco(
+        produto_id
+    )
+
+        return render_template(
+
+        "produto/detalhes_produto.html",
+
+        produto=produto,
+
+        historico=historico
+    )
+
+    # ==========================
+    # DETALHES PRODUTO
+    # ==========================
+    @app.route(
+    "/produto/detalhes/<int:produto_id>"
+)
+    def detalhes_produto_route(produto_id):
+
+        produto = pegar_produto_por_id(
+        produto_id
+    )
+
+        return render_template(
+
+        "produto/detalhes_produto.html",
+
+        produto=produto
+    )

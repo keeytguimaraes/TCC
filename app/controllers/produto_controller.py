@@ -9,7 +9,8 @@ from app.models.produto_model import (
     editar_produto,
     inativar_produto,
     ativar_produto,
-    listar_produtos_venda
+    listar_produtos_venda,
+    buscar_historico_preco
 )
 
 # ==========================
@@ -174,3 +175,12 @@ def ativar_produto_controller(
 def pegar_produtos_venda():
 
     return listar_produtos_venda()
+
+# ==========================
+# HISTÓRICO DE PREÇOS
+# ==========================
+def pegar_historico_preco(produto_id):
+
+    return buscar_historico_preco(
+        produto_id
+    )

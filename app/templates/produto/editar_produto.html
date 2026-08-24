@@ -84,7 +84,10 @@ Editar Produto
                     Tipo da embalagem
                 </label>
 
-                <select name="tipo_embalagem">
+                <select
+    name="tipo_embalagem"
+    class="form-select"
+>
 
                     <option value="Lata"
                         {% if produto.tipo_embalagem == 'Lata' %}selected{% endif %}

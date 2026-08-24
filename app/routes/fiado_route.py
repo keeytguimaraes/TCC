@@ -7,7 +7,8 @@ from flask import (
 from app.controllers.fiado_controller import (
     pegar_fiados,
     pegar_fiado_detalhes,
-    receber_pagamento_fiado
+    receber_pagamento_fiado,
+    pegar_conta_cliente
 )
 
 
@@ -72,3 +73,29 @@ def configurar_fiado_routes(app):
         return redirect(
     f"/fiado/detalhes/{conta_id}"
 )
+    
+    # ==========================
+    # ABRIR FIADO PELO CLIENTE
+    # ==========================
+    @app.route(
+    "/cliente/fiado/<int:cliente_id>"
+)
+    def abrir_fiado_cliente(
+
+    cliente_id
+):
+
+        conta = pegar_conta_cliente(
+        cliente_id
+    )
+
+        if not conta:
+
+            return redirect(
+            "/fiado"
+        )
+
+        return redirect(
+
+        f"/fiado/detalhes/{conta['id']}"
+    )

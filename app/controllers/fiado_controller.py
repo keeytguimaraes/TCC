@@ -10,7 +10,9 @@ from app.models.fiado_model import (
 
     registrar_recebimento_fiado,
 
-    buscar_recebimentos_fiado
+    buscar_recebimentos_fiado,
+
+    buscar_conta_por_cliente
 )
 
 
@@ -143,3 +145,12 @@ def pegar_fiado_detalhes(conta_id):
     )
 
     return fiado
+
+def pegar_conta_cliente(
+
+    cliente_id
+):
+
+    return buscar_conta_por_cliente(
+        cliente_id
+    )
