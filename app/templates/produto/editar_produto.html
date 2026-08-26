@@ -203,6 +203,67 @@ Editar Produto
 
             </div>
 
+            <div
+    class="form-group"
+    id="campo-preco-dose"
+    {% if not produto.vende_por_dose %}
+    style="display:none;"
+    {% endif %}
+>
+
+    <label>
+        Preço da dose
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        name="preco_dose"
+        value="{{ produto.preco_dose or '' }}"
+    >
+
+</div>
+
+<div class="checkbox-group">
+
+    <input
+        type="checkbox"
+        id="vende_por_unidade"
+        name="vende_por_unidade"
+        {% if produto.vende_por_unidade %}
+        checked
+        {% endif %}
+    >
+
+    <label for="vende_por_unidade">
+
+        Produto vendido por unidade
+
+    </label>
+
+</div>
+
+<div
+    class="form-group"
+    id="campo-preco-unidade"
+    {% if not produto.vende_por_unidade %}
+    style="display:none;"
+    {% endif %}
+>
+
+    <label>
+        Preço unitário
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        name="preco_unidade"
+        value="{{ produto.preco_unidade or '' }}"
+    >
+
+</div>
+
             <div class="produto-form-actions">
 
                 <a

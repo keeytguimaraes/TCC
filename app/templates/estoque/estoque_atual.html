@@ -47,6 +47,11 @@ Estoque Atual
     </div>
 
     <div class="dashboard-card">
+        <h3>{{ total_minimo }}</h3>
+        <p>Estoque no mínimo</p>
+    </div>
+
+    <div class="dashboard-card">
         <h3>{{ total_baixo }}</h3>
         <p>Estoque baixo</p>
     </div>
@@ -68,18 +73,14 @@ Estoque Atual
 <div class="status-legenda">
 
     🟢 Em estoque
-
-    •
-
-    🟡 Estoque baixo
-
-    •
-
-    🔴 Sem estoque
-
-    •
-
-    ⚫ Nunca abastecido
+•
+🔵 Estoque no mínimo
+•
+🟡 Estoque baixo
+•
+🔴 Sem estoque
+•
+⚫ Nunca abastecido
 
 </div>
 
@@ -88,20 +89,24 @@ Estoque Atual
     <button class="filtro-btn" data-status="todos">
         Todos
     </button>
-
+    
     <button class="filtro-btn" data-status="normal">
         Em estoque
     </button>
-
+    
+    <button class="filtro-btn" data-status="minimo">
+        Estoque no mínimo
+    </button>
+    
     <button class="filtro-btn" data-status="baixo">
         Estoque baixo
     </button>
-
-    <button class="filtro-btn" data-status="sem">
+    
+    <button class="filtro-btn" data-status="sem_estoque">
         Sem estoque
     </button>
-
-    <button class="filtro-btn" data-status="nunca">
+    
+    <button class="filtro-btn" data-status="nunca_abastecido">
         Nunca abastecido
     </button>
 
@@ -131,33 +136,37 @@ Estoque Atual
     <div
     class="estoque-card
 
-    {% if item.quantidade_atual_unidade == None %}
+    {% if item.status_estoque == 'nunca_abastecido' %}
         status-nunca
-    {% elif item.quantidade_atual_unidade == 0 %}
+    {% elif item.status_estoque == 'sem_estoque' %}
         status-sem
-    {% elif item.quantidade_atual_unidade <= 10 %}
+    {% elif item.status_estoque == 'baixo' %}
         status-baixo
+    {% elif item.status_estoque == 'minimo' %}
+        status-minimo
     {% else %}
         status-normal
     {% endif %}
     "
 
-    data-status="{% if item.quantidade_atual_unidade == None %}nunca{% elif item.quantidade_atual_unidade == 0 %}sem{% elif item.quantidade_atual_unidade <= 10 %}baixo{% else %}normal{% endif %}"
+    data-status="{{ item.status_estoque }}"
 
     onclick="window.location.href='/estoque/produto/{{ item.id }}'"
 >
 
         <h3>
 
-            {% if item.quantidade_atual_unidade == None %}
-                ⚫
-            {% elif item.quantidade_atual_unidade == 0 %}
-                🔴
-            {% elif item.quantidade_atual_unidade <= 10 %}
-                🟡
-            {% else %}
-                🟢
-            {% endif %}
+            {% if item.status_estoque == "nunca_abastecido" %}
+    ⚫
+{% elif item.status_estoque == "sem_estoque" %}
+    🔴
+{% elif item.status_estoque == "baixo" %}
+    🟡
+{% elif item.status_estoque == "minimo" %}
+    🔵
+{% else %}
+    🟢
+{% endif %}
 
             {{ item.nome }}
 

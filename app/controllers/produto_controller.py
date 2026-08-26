@@ -60,8 +60,13 @@ def cadastrar_produto_controller(
             volume,
             preco_venda,
             quantidade_por_caixa,
+            estoque_minimo,
             vende_por_dose,
+            vende_por_unidade,
             volume_dose_ml,
+            preco_dose,
+            preco_unidade,
+            quantidade_por_unidade,
             imagem
 ):
 
@@ -74,8 +79,13 @@ def cadastrar_produto_controller(
             volume,
             preco_venda,
             quantidade_por_caixa,
+            estoque_minimo,
             vende_por_dose,
+            vende_por_unidade,
             volume_dose_ml,
+            preco_dose,
+            preco_unidade,
+            quantidade_por_unidade,
             imagem
     )
 # ==========================
@@ -116,7 +126,15 @@ def editar_produto_controller(
 
     vende_por_dose,
 
-    volume_dose_ml
+    vende_por_unidade,
+
+    volume_dose_ml,
+
+    preco_dose,
+
+    preco_unidade,
+
+    quantidade_por_unidade
 ):
 
     editar_produto(
@@ -139,7 +157,15 @@ def editar_produto_controller(
 
     vende_por_dose,
 
-    volume_dose_ml
+    vende_por_unidade,
+
+    volume_dose_ml,
+
+    preco_dose,
+
+    preco_unidade,
+
+    quantidade_por_unidade
     )
 
 

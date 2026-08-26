@@ -124,6 +124,12 @@
 
 }
 
+.status-minimo {
+
+    border-left: 5px solid #3b82f6;
+
+}
+
 .status-legenda{
 
     display:flex;

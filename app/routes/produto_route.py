@@ -99,6 +99,10 @@ def configurar_produto_routes(app):
         quantidade_por_caixa = request.form.get(
         "quantidade_por_caixa"
     )
+        
+        estoque_minimo = request.form.get(
+        "estoque_minimo"
+    )
 
         vende_por_dose = (
         request.form.get(
@@ -109,6 +113,24 @@ def configurar_produto_routes(app):
         volume_dose_ml = request.form.get(
         "volume_dose_ml"
     )
+        
+        vende_por_unidade = (
+        request.form.get(
+            "vende_por_unidade"
+        ) is not None
+    )
+        
+        preco_dose = request.form.get(
+            "preco_dose"
+    )
+
+        preco_unidade = request.form.get(
+            "preco_unidade"
+    )
+        
+        quantidade_por_unidade = request.form.get(
+    "quantidade_por_unidade"
+)
         
         imagem = request.files.get(
         "imagem"
@@ -138,8 +160,13 @@ def configurar_produto_routes(app):
         volume,
         preco_venda,
         quantidade_por_caixa,
+        estoque_minimo,
         vende_por_dose,
+        vende_por_unidade,
         volume_dose_ml,
+        preco_dose,
+        preco_unidade,
+        quantidade_por_unidade,
         nome_imagem
 
     )
@@ -210,6 +237,24 @@ def configurar_produto_routes(app):
         volume_dose_ml = request.form.get(
     "volume_dose_ml"
 )
+        
+        vende_por_unidade = (
+    request.form.get("vende_por_unidade")
+    == "on"
+)
+        
+        preco_dose = request.form.get(
+    "preco_dose"
+)
+
+        preco_unidade = request.form.get(
+    "preco_unidade"
+)
+        
+        quantidade_por_unidade = request.form.get(
+    "quantidade_por_unidade"
+)
+
 
         editar_produto_controller(
 
@@ -231,7 +276,13 @@ def configurar_produto_routes(app):
 
     vende_por_dose,
 
-    volume_dose_ml
+    vende_por_unidade,
+
+    volume_dose_ml,
+
+    preco_dose,
+
+    preco_unidade
         )
 
         return redirect(
@@ -295,21 +346,3 @@ def configurar_produto_routes(app):
         historico=historico
     )
 
-    # ==========================
-    # DETALHES PRODUTO
-    # ==========================
-    @app.route(
-    "/produto/detalhes/<int:produto_id>"
-)
-    def detalhes_produto_route(produto_id):
-
-        produto = pegar_produto_por_id(
-        produto_id
-    )
-
-        return render_template(
-
-        "produto/detalhes_produto.html",
-
-        produto=produto
-    )

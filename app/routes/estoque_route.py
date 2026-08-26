@@ -145,8 +145,8 @@ def configurar_estoque_routes(app):
     def estoque_atual():
 
         estoque = (
-            pegar_estoque_atual_completo()
-        )
+        pegar_estoque_atual_completo()
+    )
 
         total_produtos = len(estoque)
 
@@ -154,43 +154,50 @@ def configurar_estoque_routes(app):
         total_baixo = 0
         total_sem_estoque = 0
         total_nunca_abastecido = 0
+        total_minimo = 0
 
         for item in estoque:
 
-            quantidade = item["quantidade_atual_unidade"]
+         status = item["status_estoque"]
 
-            if quantidade is None:
+         if status == "normal":
 
-                total_nunca_abastecido += 1
+          total_em_estoque += 1
 
-            elif quantidade == 0:
+         elif status == "minimo":
 
-                total_sem_estoque += 1
+          total_minimo += 1
 
-            elif quantidade <= 10:
-    
-                total_baixo += 1
+         elif status == "baixo":
 
-            else:
+          total_baixo += 1
 
-                total_em_estoque += 1
+         elif status == "sem_estoque":
+
+          total_sem_estoque += 1
+
+         elif status == "nunca_abastecido":
+
+           total_nunca_abastecido += 1
 
         return render_template(
 
-            "estoque/estoque_atual.html",
+    "estoque/estoque_atual.html",
 
-            estoque=estoque,
+    estoque=estoque,
 
-            total_produtos=total_produtos,
+    total_produtos=total_produtos,
 
-            total_em_estoque=total_em_estoque,
+    total_em_estoque=total_em_estoque,
 
-           total_baixo=total_baixo,
+    total_minimo=total_minimo,
 
-            total_sem_estoque=total_sem_estoque,
+    total_baixo=total_baixo,
 
-            total_nunca_abastecido=total_nunca_abastecido
-        )
+    total_sem_estoque=total_sem_estoque,
+
+    total_nunca_abastecido=total_nunca_abastecido
+)
     
     # ==========================
     # DETALHES PRODUTO ESTOQUE

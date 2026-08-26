@@ -7,54 +7,52 @@ from app.database.conexao import conectar
 # ==========================
 def listar_produtos():
 
-    # Conecta no banco
     conexao = conectar()
 
-    # Cursor em formato dicionário
     cursor = conexao.cursor(
         dictionary=True
     )
 
-    # SQL
     sql = """
     SELECT
-        p.*,
+    p.*,
 
-        COALESCE(
-            SUM(
-                e.quantidade_atual_caixa
-            ),
-            0
-        ) AS estoque_caixa,
+    COALESCE(
+        e.quantidade_atual_caixa,
+        0
+    ) AS estoque_caixa,
 
-        COALESCE(
-            SUM(
-                e.quantidade_atual_unidade
-            ),
-            0
-        ) AS estoque_unidade
+    COALESCE(
+        e.quantidade_atual_unidade,
+        0
+    ) AS estoque_unidade,
 
-    FROM produto p
+    COALESCE(
+        e.quantidade_fracionada,
+        0
+    ) AS estoque_fracionado
 
-    LEFT JOIN estoque e
-        ON p.id = e.produto_id
+FROM produto p
 
-    GROUP BY p.id
+LEFT JOIN estoque e
+ON e.id = (
+
+    SELECT MAX(id)
+
+    FROM estoque
+
+    WHERE produto_id = p.id
+)
 """
 
-    # Executa SQL
     cursor.execute(sql)
 
-    # Busca produtos
     produtos = cursor.fetchall()
 
-    # Fecha cursor
     cursor.close()
 
-    # Fecha conexão
     conexao.close()
 
-    # Retorna lista
     return produtos
 
 
@@ -69,8 +67,13 @@ def cadastrar_produto(
     volume,
     preco_venda,
     quantidade_por_caixa,
+    estoque_minimo,
     vende_por_dose,
+    vende_por_unidade,
     volume_dose_ml,
+    preco_dose,
+    preco_unidade,
+    quantidade_por_unidade,
     imagem
 ):
 
@@ -90,29 +93,39 @@ def cadastrar_produto(
             volume,
             preco_venda,
             quantidade_por_caixa,
+            estoque_minimo,
             vende_por_dose,
+            vende_por_unidade,
             volume_dose_ml,
+            preco_dose,
+            preco_unidade,
+            quantidade_por_unidade,
             imagem
 
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
 
     # Executa SQL
     cursor.execute(
         sql,
         (
-            nome,
-            categoria,
-            sabor,
-            tipo_embalagem,
-            volume,
-            preco_venda,
-            quantidade_por_caixa,
-            vende_por_dose,
-            volume_dose_ml,
-            imagem
-        )
+    nome,
+    categoria,
+    sabor,
+    tipo_embalagem,
+    volume,
+    preco_venda,
+    quantidade_por_caixa,
+    estoque_minimo,
+    vende_por_dose,
+    vende_por_unidade,
+    volume_dose_ml,
+    preco_dose,
+    preco_unidade,
+    quantidade_por_unidade,
+    imagem
+)
     )
 
     # Salva no banco
@@ -222,7 +235,13 @@ def editar_produto(
 
     vende_por_dose,
 
-    volume_dose_ml
+    vende_por_unidade,
+
+    volume_dose_ml,
+
+    preco_dose,
+
+    preco_unidade
 ):
 
     conexao = conectar()
@@ -304,7 +323,17 @@ def editar_produto(
 
         vende_por_dose = %s,
 
-        volume_dose_ml = %s
+        vende_por_unidade = %s,
+
+        volume_dose_ml = %s,
+
+    vende_por_unidade = %s,
+
+    volume_dose_ml = %s,
+
+    preco_dose = %s,
+
+    preco_unidade = %s
 
     WHERE id = %s
     """
@@ -330,6 +359,8 @@ def editar_produto(
             quantidade_por_caixa,
 
             vende_por_dose,
+
+            vende_por_unidade,
 
             volume_dose_ml,
 

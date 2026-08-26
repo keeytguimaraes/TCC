@@ -99,33 +99,53 @@ Detalhes do Produto
         <h2>
             💰 Preço
         </h2>
-
+    
         <p>
             <strong>Preço de venda:</strong>
             R$ {{ produto.preco_venda }}
         </p>
-
+    
         <p>
             <strong>Quantidade por caixa:</strong>
             {{ produto.quantidade_por_caixa }}
         </p>
-
+    
         {% if produto.vende_por_dose %}
-
+    
         <p>
             <strong>Venda por dose:</strong>
             Sim
         </p>
-
+    
         <p>
             <strong>Volume da dose:</strong>
             {{ produto.volume_dose_ml }} ml
         </p>
-
+    
+        <p>
+            <strong>Preço da dose:</strong>
+            R$ {{ produto.preco_dose }}
+        </p>
+    
         {% endif %}
-
+    
+        {% if produto.vende_por_unidade %}
+    
+        <p>
+            <strong>Preço da unidade:</strong>
+            R$ {{ produto.preco_unidade }}
+        </p>
+    
+        <p>
+            <strong>Quantidade por unidade:</strong>
+            {{ produto.quantidade_por_unidade }}
+        </p>
+    
+        {% endif %}
+    
     </div>
 
+  
     <!-- STATUS -->
 
     <div class="detalhe-card">

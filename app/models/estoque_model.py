@@ -105,7 +105,8 @@ def cadastrar_estoque(
     sql_buscar = """
     SELECT
         quantidade_atual_caixa,
-        quantidade_atual_unidade
+        quantidade_atual_unidade,
+    quantidade_fracionada
 
     FROM estoque
 
@@ -136,36 +137,40 @@ def cadastrar_estoque(
             estoque_atual[1]
         )
 
+        atual_fracionada = estoque_atual[2]
+
     # Se não existe
     else:
 
         atual_caixa = 0
         atual_unidade = 0
+        atual_fracionada = 0
 
     # --------------------------
     # BUSCA QUANTIDADE CAIXA
     # --------------------------
     sql_produto = """
-        SELECT quantidade_por_caixa
+    SELECT
 
-        FROM produto
+        quantidade_por_caixa,
 
-        WHERE id = %s
-    """
+        quantidade_por_unidade
+
+    FROM produto
+
+    WHERE id = %s
+"""
 
     cursor.execute(
         sql_produto,
         (produto_id,)
     )
 
-    produto = (
-        cursor.fetchone()
-    )
+    produto = cursor.fetchone()
 
-    quantidade_por_caixa = (
-        produto[0]
-    )
+    quantidade_por_caixa = produto[0]
 
+    quantidade_por_unidade = produto[1]
     # --------------------------
     # CONVERSÃO
     # --------------------------
@@ -188,6 +193,24 @@ def cadastrar_estoque(
     )
 
     # --------------------------
+    # QUANTIDADE FRACIONADA
+    # --------------------------
+
+    if quantidade_por_unidade:
+
+        quantidade_fracionada_recebida = (
+
+            total_unidades_recebidas
+
+            * quantidade_por_unidade
+
+        )
+
+    else:
+
+        quantidade_fracionada_recebida = 0
+
+    # --------------------------
     # NOVO ESTOQUE
     # --------------------------
     nova_caixa = (
@@ -198,6 +221,14 @@ def cadastrar_estoque(
     nova_unidade = (
         atual_unidade
         + total_unidades_recebidas
+    )
+
+    nova_fracionada = (
+
+    atual_fracionada
+
+    + quantidade_fracionada_recebida
+
     )
 
     # --------------------------
@@ -260,6 +291,7 @@ def cadastrar_estoque(
 
         quantidade_atual_caixa,
         quantidade_atual_unidade,
+    quantidade_fracionada,
 
         preco_total_compra,
         preco_por_caixa,
@@ -272,15 +304,15 @@ def cadastrar_estoque(
 
         %s, %s, %s,
 
-        %s, %s,
+    %s, %s,
 
-        %s, %s,
+    %s, %s,
 
-        %s, %s,
+    %s, %s, %s,
 
-        %s, %s, %s,
+    %s, %s, %s,
 
-        %s
+    %s
     )
 """
 
@@ -300,6 +332,7 @@ def cadastrar_estoque(
 
         nova_caixa,
         nova_unidade,
+    nova_fracionada,
 
         preco_total,
         preco_por_caixa,
@@ -338,20 +371,20 @@ def baixar_estoque(
     # BUSCA ÚLTIMO ESTOQUE
     # --------------------------
     sql_buscar = """
-        SELECT
+    SELECT
 
         quantidade_atual_caixa,
+        quantidade_atual_unidade,
+        quantidade_fracionada
 
-        quantidade_atual_unidade
+    FROM estoque
 
-        FROM estoque
+    WHERE produto_id = %s
 
-        WHERE produto_id = %s
+    ORDER BY id DESC
 
-        ORDER BY id DESC
-
-        LIMIT 1
-    """
+    LIMIT 1
+"""
 
     cursor.execute(
 
@@ -377,16 +410,21 @@ def baixar_estoque(
 
     atual_unidade = estoque[1]
 
+    atual_fracionada = estoque[2]
+
     # --------------------------
     # QUANTIDADE POR CAIXA
     # --------------------------
     sql_produto = """
-        SELECT quantidade_por_caixa
+    SELECT
 
-        FROM produto
+        quantidade_por_caixa,
+        quantidade_por_unidade
 
-        WHERE id = %s
-    """
+    FROM produto
+
+    WHERE id = %s
+"""
 
     cursor.execute(
 
@@ -400,6 +438,8 @@ def baixar_estoque(
     produto = cursor.fetchone()
 
     quantidade_por_caixa = produto[0]
+
+    quantidade_por_unidade = produto[1]
 
     # --------------------------
     # CONVERSÃO
@@ -533,7 +573,9 @@ def buscar_estoque_atual(
 
             quantidade_atual_caixa,
 
-            quantidade_atual_unidade
+            quantidade_atual_unidade,
+
+    quantidade_fracionada
 
         FROM estoque
 
@@ -583,8 +625,13 @@ def listar_estoque_atual():
             p.sabor,
             p.volume,
 
+            p.estoque_minimo,
+            p.vende_por_dose,
+            p.vende_por_unidade,
+
             e.quantidade_atual_caixa,
-            e.quantidade_atual_unidade
+            e.quantidade_atual_unidade,
+            e.quantidade_fracionada
 
         FROM produto p
 
@@ -604,6 +651,33 @@ def listar_estoque_atual():
     cursor.execute(sql)
 
     dados = cursor.fetchall()
+
+    for produto in dados:
+
+        if produto["quantidade_atual_caixa"] is None:
+
+            produto["status_estoque"] = "nunca_abastecido"
+            continue
+
+        minimo = produto["estoque_minimo"] or 0
+
+        estoque = produto["quantidade_atual_unidade"] or 0
+
+        if estoque == 0:
+
+            produto["status_estoque"] = "sem_estoque"
+
+        elif estoque < minimo:
+
+            produto["status_estoque"] = "baixo"
+
+        elif estoque == minimo:
+
+            produto["status_estoque"] = "minimo"
+
+        else:
+
+            produto["status_estoque"] = "normal"
 
     cursor.close()
 

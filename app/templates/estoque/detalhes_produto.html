@@ -54,10 +54,13 @@ Detalhes do Produto
             {{ produto.tipo_embalagem }}
         </p>
 
-        <p>
-            <strong>Volume:</strong>
-            {{ produto.volume }}
-        </p>
+        {% if produto.volume %}
+<p>
+    <strong>Volume:</strong>
+    {{ produto.volume }}
+</p>
+{% endif %}
+
 
     </div>
 
