@@ -152,34 +152,75 @@ Venda
                     >
         
                     <input
-                        type="hidden"
-                        name="tipo_venda"
-                        value="unidade"
-                        class="tipo-venda-input"
-                    >
-        
+    type="hidden"
+    name="tipo_venda"
+
+    value="{% if produto.vende_por_dose %}dose{% else %}unidade{% endif %}"
+
+    class="tipo-venda-input"
+>
                     <label>
                         Tipo de venda
                     </label>
         
                     <div class="tipo-venda-botoes">
-        
-                        <button
-                            type="button"
-                            class="tipo-btn ativo"
-                            data-tipo="unidade"
-                        >
-                            Unidade
-                        </button>
-        
-                        <button
-                            type="button"
-                            class="tipo-btn"
-                            data-tipo="caixa"
-                        >
-                            Caixa
-                        </button>
-        
+
+                        {% if produto.vende_por_dose %}
+                    
+                            <button
+                                type="button"
+                                class="tipo-btn ativo"
+                                data-tipo="dose"
+                            >
+                                Dose
+                            </button>
+                    
+                            <button
+                                type="button"
+                                class="tipo-btn"
+                                data-tipo="caixa"
+                            >
+                                Embalagem
+                            </button>
+                    
+                        {% elif produto.vende_por_unidade %}
+                    
+                            <button
+                                type="button"
+                                class="tipo-btn ativo"
+                                data-tipo="unidade"
+                            >
+                                Unidade
+                            </button>
+                    
+                            <button
+                                type="button"
+                                class="tipo-btn"
+                                data-tipo="caixa"
+                            >
+                                Embalagem
+                            </button>
+                    
+                        {% else %}
+                    
+                            <button
+                                type="button"
+                                class="tipo-btn ativo"
+                                data-tipo="unidade"
+                            >
+                                Unidade
+                            </button>
+                    
+                            <button
+                                type="button"
+                                class="tipo-btn"
+                                data-tipo="caixa"
+                            >
+                                Caixa
+                            </button>
+                    
+                        {% endif %}
+                    
                     </div>
         
                     <label>

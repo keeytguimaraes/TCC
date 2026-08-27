@@ -196,6 +196,8 @@ def configurar_venda_routes(app):
 
                 break
 
+            print(produto_encontrado)
+
         # Se não encontrou
         if not produto_encontrado:
 
@@ -252,20 +254,34 @@ def configurar_venda_routes(app):
         # ----------------------
         # PREÇO
         # ----------------------
-        preco_unitario = float(
-            produto_encontrado[
-                "preco_venda"
-            ]
-        )
 
-        # Caixa
-        if tipo_venda == "caixa":
+        if tipo_venda == "dose":
 
-            preco_unitario *= int(
-                produto_encontrado[
-                    "quantidade_por_caixa"
-                ]
-            )
+            preco_unitario = float(
+        produto_encontrado[
+            "preco_dose"
+        ] or 0
+    )
+
+        elif tipo_venda == "caixa":
+
+            preco_unitario = float(
+        produto_encontrado[
+            "preco_venda"
+        ]
+    ) * int(
+        produto_encontrado[
+            "quantidade_por_caixa"
+        ]
+    )
+
+        else:
+
+            preco_unitario = float(
+        produto_encontrado[
+            "preco_venda"
+        ]
+    )
 
         # ----------------------
         # SUBTOTAL

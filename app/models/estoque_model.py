@@ -150,17 +150,17 @@ def cadastrar_estoque(
     # BUSCA QUANTIDADE CAIXA
     # --------------------------
     sql_produto = """
-    SELECT
+SELECT
 
-        quantidade_por_caixa,
+    quantidade_por_caixa,
+    quantidade_por_unidade,
+    vende_por_dose,
+    volume_dose_ml
 
-        quantidade_por_unidade
+FROM produto
 
-    FROM produto
-
-    WHERE id = %s
+WHERE id = %s
 """
-
     cursor.execute(
         sql_produto,
         (produto_id,)
@@ -171,6 +171,10 @@ def cadastrar_estoque(
     quantidade_por_caixa = produto[0]
 
     quantidade_por_unidade = produto[1]
+
+    vende_por_dose = produto[2]
+
+    volume_dose_ml = produto[3]
     # --------------------------
     # CONVERSÃO
     # --------------------------
@@ -416,16 +420,17 @@ def baixar_estoque(
     # QUANTIDADE POR CAIXA
     # --------------------------
     sql_produto = """
-    SELECT
+SELECT
 
-        quantidade_por_caixa,
-        quantidade_por_unidade
+    quantidade_por_caixa,
+    quantidade_por_unidade,
+    vende_por_dose,
+    volume_dose_ml
 
-    FROM produto
+FROM produto
 
-    WHERE id = %s
+WHERE id = %s
 """
-
     cursor.execute(
 
         sql_produto,
@@ -441,6 +446,10 @@ def baixar_estoque(
 
     quantidade_por_unidade = produto[1]
 
+    vende_por_dose = produto[2]
+
+    volume_dose_ml = produto[3]
+
     # --------------------------
     # CONVERSÃO
     # --------------------------
@@ -450,21 +459,36 @@ def baixar_estoque(
 
     if tipo_venda == "caixa":
 
-        baixa_caixa = quantidade
+     baixa_caixa = quantidade
 
-        baixa_unidade = (
-            quantidade
-            * quantidade_por_caixa
-        )
+     baixa_unidade = (
+        quantidade
+        * quantidade_por_caixa
+    )
+
+     baixa_fracionada = 0
+
+    elif tipo_venda == "dose":
+
+     baixa_caixa = 0
+
+     baixa_unidade = 0
+
+     baixa_fracionada = (
+        quantidade
+        * volume_dose_ml
+     )
 
     else:
 
-        baixa_caixa = (
-            quantidade
-            // quantidade_por_caixa
-        )
+     baixa_caixa = (
+        quantidade
+        // quantidade_por_caixa
+    )
 
-        baixa_unidade = quantidade
+     baixa_unidade = quantidade
+
+     baixa_fracionada = 0
 
     # --------------------------
     # NOVO ESTOQUE
@@ -479,6 +503,11 @@ def baixar_estoque(
         - baixa_unidade
     )
 
+    nova_fracionada = (
+    atual_fracionada
+    - baixa_fracionada
+)
+
     # Evita negativo
     if nova_caixa < 0:
 
@@ -487,6 +516,10 @@ def baixar_estoque(
     if nova_unidade < 0:
 
         nova_unidade = 0
+
+    if nova_fracionada < 0:
+
+        nova_fracionada = 0    
 
     # --------------------------
     # REGISTRA HISTÓRICO
@@ -503,6 +536,8 @@ def baixar_estoque(
     quantidade_atual_caixa,
 
     quantidade_atual_unidade,
+
+    quantidade_fracionada,
 
     data_entrada,
 
@@ -524,12 +559,13 @@ def baixar_estoque(
 
     %s,
 
+    %s,
+
     NOW(),
 
     0,
 
     %s
-
     )
     """
 
@@ -543,6 +579,8 @@ def baixar_estoque(
             nova_caixa,
 
             nova_unidade,
+
+            nova_fracionada,
 
             baixa_unidade
         )

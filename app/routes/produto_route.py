@@ -63,95 +63,148 @@ def configurar_produto_routes(app):
     )
 
 
-    # ==========================
-    # ROTA: CADASTRAR PRODUTO
-    # ==========================
+# ==========================
+# ROTA: CADASTRAR PRODUTO
+# ==========================
     @app.route(
     "/produto/cadastrar",
     methods=["POST"]
 )
     def cadastrar_produto():
 
-        nome = request.form.get(
+    # --------------------------
+    # DADOS BÁSICOS
+    # --------------------------
+      nome = request.form.get(
         "nome"
     )
 
-        categoria = request.form.get(
+      categoria = request.form.get(
         "categoria"
     )
 
-        sabor = request.form.get(
+      sabor = request.form.get(
         "sabor"
     )
 
-        tipo_embalagem = request.form.get(
+      tipo_embalagem = request.form.get(
         "tipo_embalagem"
     )
 
-        volume = request.form.get(
-        "volume"
+    # --------------------------
+    # VOLUME / PESO
+    # --------------------------
+      valor_volume = float(
+        request.form.get(
+            "valor_volume",
+            0
+        )
     )
 
-        preco_venda = request.form.get(
+      unidade_volume = request.form.get(
+        "unidade_volume"
+    )
+      
+
+    # Texto exibido no sistema
+      volume = (
+        str(valor_volume)
+        + unidade_volume
+    )
+
+     # Valor convertido para base
+      if unidade_volume == "L":
+
+          quantidade_por_unidade = (
+            valor_volume * 1000
+        )
+
+      elif unidade_volume == "kg":
+
+          quantidade_por_unidade = (
+            valor_volume * 1000
+        )
+
+      else:
+
+          quantidade_por_unidade = (
+            valor_volume
+        )
+
+    # --------------------------
+    # PREÇOS
+    # --------------------------
+      preco_venda = request.form.get(
         "preco_venda"
     )
 
-        quantidade_por_caixa = request.form.get(
+      preco_dose = request.form.get(
+        "preco_dose"
+    )
+
+      preco_unidade = request.form.get(
+        "preco_unidade"
+    )
+
+    # --------------------------
+    # ESTOQUE
+    # --------------------------
+      quantidade_por_caixa = request.form.get(
         "quantidade_por_caixa"
     )
-        
-        estoque_minimo = request.form.get(
+
+      estoque_minimo = request.form.get(
         "estoque_minimo"
     )
 
-        vende_por_dose = (
+    # --------------------------
+    # TIPOS DE VENDA
+    # --------------------------
+      vende_por_dose = (
         request.form.get(
             "vende_por_dose"
         ) is not None
     )
 
-        volume_dose_ml = request.form.get(
-        "volume_dose_ml"
-    )
-        
-        vende_por_unidade = (
+      vende_por_unidade = (
         request.form.get(
             "vende_por_unidade"
         ) is not None
     )
-        
-        preco_dose = request.form.get(
-            "preco_dose"
+
+      volume_dose_ml = request.form.get(
+        "volume_dose_ml"
     )
 
-        preco_unidade = request.form.get(
-            "preco_unidade"
-    )
-        
-        quantidade_por_unidade = request.form.get(
-    "quantidade_por_unidade"
-)
-        
-        imagem = request.files.get(
+    # --------------------------
+    # IMAGEM
+    # --------------------------
+    
+      imagem = request.files.get(
         "imagem"
     )
-        
-        nome_imagem = None
 
-        if imagem and imagem.filename != "":
+      nome_imagem = None
 
-            nome_imagem = secure_filename(
-        imagem.filename
-    )
+      if imagem and imagem.filename != "":
 
-            caminho = os.path.join(
-        "app/static/uploads/produtos",
-        nome_imagem
-    )
+          nome_imagem = secure_filename(
+            imagem.filename
+        )
 
-            imagem.save(caminho)
+          caminho = os.path.join(
+            "app/static/uploads/produtos",
+            nome_imagem
+        )
 
-        cadastrar_produto_controller(
+          imagem.save(
+            caminho
+        )
+
+    # --------------------------
+    # SALVA PRODUTO
+    # --------------------------
+      cadastrar_produto_controller(
 
         nome,
         categoria,
@@ -168,128 +221,11 @@ def configurar_produto_routes(app):
         preco_unidade,
         quantidade_por_unidade,
         nome_imagem
-
     )
 
-        return redirect(
+      return redirect(
         "/produto"
     )
-    # ==========================
-# ROTA: TELA EDITAR
-# ==========================
-    @app.route(
-        "/produto/editar/<int:produto_id>"
-    )
-    def editar_produto(
-
-        produto_id
-    ):
-
-        produto = pegar_produto_por_id(
-            produto_id
-        )
-
-        return render_template(
-
-            "produto/editar_produto.html",
-
-            produto=produto
-        )
-
-
-    # ==========================
-    # ROTA: SALVAR EDIÇÃO
-    # ==========================
-    @app.route(
-        "/produto/atualizar/<int:produto_id>",
-        methods=["POST"]
-    )
-    def atualizar_produto(
-
-        produto_id
-    ):
-
-        nome = request.form.get("nome")
-
-        categoria = request.form.get("categoria")
-
-        sabor = request.form.get("sabor")
-
-        tipo_embalagem = request.form.get(
-    "tipo_embalagem"
-)
-
-        volume = request.form.get("volume")
-
-        preco_venda = request.form.get(
-    "preco_venda"
-)
-
-        quantidade_por_caixa = request.form.get(
-    "quantidade_por_caixa"
-)
-
-        vende_por_dose = (
-    request.form.get("vende_por_dose")
-    == "on"
-)
-
-        volume_dose_ml = request.form.get(
-    "volume_dose_ml"
-)
-        
-        vende_por_unidade = (
-    request.form.get("vende_por_unidade")
-    == "on"
-)
-        
-        preco_dose = request.form.get(
-    "preco_dose"
-)
-
-        preco_unidade = request.form.get(
-    "preco_unidade"
-)
-        
-        quantidade_por_unidade = request.form.get(
-    "quantidade_por_unidade"
-)
-
-
-        editar_produto_controller(
-
-            produto_id,
-
-    nome,
-
-    categoria,
-
-    sabor,
-
-    tipo_embalagem,
-
-    volume,
-
-    preco_venda,
-
-    quantidade_por_caixa,
-
-    vende_por_dose,
-
-    vende_por_unidade,
-
-    volume_dose_ml,
-
-    preco_dose,
-
-    preco_unidade
-        )
-
-        return redirect(
-            "/produto"
-        )
-
-
     # ==========================
     # ROTA: INATIVAR PRODUTO
     # ==========================

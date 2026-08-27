@@ -224,12 +224,32 @@ Produtos
                         <label>
                             Volume / Peso
                         </label>
-                    
+                        
                         <input
-                            type="text"
-                            name="volume"
-                            placeholder="350ml, 2L, 90g..."
+                            type="number"
+                            step="0.01"
+                            name="valor_volume"
                         >
+                        
+                        <select name="unidade_volume">
+                        
+                            <option value="ml">
+                                ml
+                            </option>
+                        
+                            <option value="L">
+                                L
+                            </option>
+                        
+                            <option value="g">
+                                g
+                            </option>
+                        
+                            <option value="kg">
+                                kg
+                            </option>
+                        
+                        </select>
                     
                     </div>
                     
@@ -306,6 +326,7 @@ Produtos
         type="number"
         step="0.01"
         name="preco_dose"
+        placeholder="R$3,00"
     >
 
 </div>
