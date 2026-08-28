@@ -180,19 +180,34 @@ Estoque Atual
     
     {% else %}
     
-    <div class="quantidade-principal">
-    
-        📦 {{ item.quantidade_atual_caixa or 0 }}
-        caixas
-    
-    </div>
-    
-    <div class="estoque-quantidade">
-    
-        📦 {{ item.quantidade_atual_unidade or 0 }}
-        unidades
-    
-    </div>
+    {% if item.vende_por_dose %}
+
+<div class="quantidade-principal">
+
+    🍾 {{ item.quantidade_atual_caixa or 0 }}
+    garrafas
+
+</div>
+
+{% else %}
+
+<div class="quantidade-principal">
+
+    📦 {{ item.quantidade_atual_caixa or 0 }}
+    caixas
+
+</div>
+
+<div class="estoque-quantidade">
+
+    📦 {{ item.quantidade_atual_unidade or 0 }}
+    unidades
+
+</div>
+
+{% endif %}
+
+
     
     {% endif %}
     

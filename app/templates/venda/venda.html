@@ -154,9 +154,7 @@ Venda
                     <input
     type="hidden"
     name="tipo_venda"
-
-    value="{% if produto.vende_por_dose %}dose{% else %}unidade{% endif %}"
-
+    value="{% if produto.categoria|lower == 'cigarro' %}solto{% elif produto.vende_por_dose %}dose{% else %}unidade{% endif %}"
     class="tipo-venda-input"
 >
                     <label>
@@ -165,59 +163,86 @@ Venda
         
                     <div class="tipo-venda-botoes">
 
-                        {% if produto.vende_por_dose %}
+                        {% if produto.categoria|lower == "cigarro" %}
+
+                        <button
+                            type="button"
+                            class="tipo-btn ativo"
+                            data-tipo="solto"
+                        >
+                            Solto
+                        </button>
                     
-                            <button
-                                type="button"
-                                class="tipo-btn ativo"
-                                data-tipo="dose"
-                            >
-                                Dose
-                            </button>
+                        <button
+                            type="button"
+                            class="tipo-btn"
+                            data-tipo="unidade"
+                        >
+                            Maço
+                        </button>
                     
-                            <button
-                                type="button"
-                                class="tipo-btn"
-                                data-tipo="caixa"
-                            >
-                                Embalagem
-                            </button>
+                        <button
+                            type="button"
+                            class="tipo-btn"
+                            data-tipo="caixa"
+                        >
+                            Box
+                        </button>
                     
-                        {% elif produto.vende_por_unidade %}
+                    {% elif produto.vende_por_dose %}
                     
-                            <button
-                                type="button"
-                                class="tipo-btn ativo"
-                                data-tipo="unidade"
-                            >
-                                Unidade
-                            </button>
+                        <button
+                            type="button"
+                            class="tipo-btn ativo"
+                            data-tipo="dose"
+                        >
+                            Dose
+                        </button>
                     
-                            <button
-                                type="button"
-                                class="tipo-btn"
-                                data-tipo="caixa"
-                            >
-                                Embalagem
-                            </button>
+                        <button
+                            type="button"
+                            class="tipo-btn"
+                            data-tipo="caixa"
+                        >
+                            Embalagem
+                        </button>
                     
-                        {% else %}
+                    {% elif produto.vende_por_unidade %}
                     
-                            <button
-                                type="button"
-                                class="tipo-btn ativo"
-                                data-tipo="unidade"
-                            >
-                                Unidade
-                            </button>
+                        <button
+                            type="button"
+                            class="tipo-btn ativo"
+                            data-tipo="unidade"
+                        >
+                            Unidade
+                        </button>
                     
-                            <button
-                                type="button"
-                                class="tipo-btn"
-                                data-tipo="caixa"
-                            >
-                                Caixa
-                            </button>
+                        <button
+                            type="button"
+                            class="tipo-btn"
+                            data-tipo="caixa"
+                        >
+                            Embalagem
+                        </button>
+                    
+                    {% else %}
+                    
+                        <button
+                            type="button"
+                            class="tipo-btn ativo"
+                            data-tipo="unidade"
+                        >
+                            Unidade
+                        </button>
+                    
+                        <button
+                            type="button"
+                            class="tipo-btn"
+                            data-tipo="caixa"
+                        >
+                            Caixa
+                        </button>
+                    
                     
                         {% endif %}
                     

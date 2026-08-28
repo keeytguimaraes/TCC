@@ -54,19 +54,26 @@ def pegar_produtos_inativos():
 def cadastrar_produto_controller(
 
             nome,
-            categoria,
-            sabor,
-            tipo_embalagem,
-            volume,
-            preco_venda,
-            quantidade_por_caixa,
-            estoque_minimo,
-            vende_por_dose,
-            vende_por_unidade,
-            volume_dose_ml,
-            preco_dose,
-            preco_unidade,
-            quantidade_por_unidade,
+    categoria,
+    sabor,
+    tipo_embalagem,
+    volume,
+
+    preco_venda,
+    preco_caixa,
+
+    quantidade_por_caixa,
+    estoque_minimo,
+
+    vende_por_dose,
+    vende_por_unidade,
+
+    volume_dose_ml,
+
+    preco_dose,
+    preco_unidade,
+
+    quantidade_por_unidade,
             imagem
 ):
 
@@ -78,6 +85,7 @@ def cadastrar_produto_controller(
             tipo_embalagem,
             volume,
             preco_venda,
+            preco_caixa,
             quantidade_por_caixa,
             estoque_minimo,
             vende_por_dose,
@@ -108,7 +116,7 @@ def pegar_produto_por_id(
 # ==========================
 def editar_produto_controller(
 
-    produto_id,
+     produto_id,
 
     nome,
 
@@ -121,6 +129,8 @@ def editar_produto_controller(
     volume,
 
     preco_venda,
+
+    preco_caixa,
 
     quantidade_por_caixa,
 
@@ -152,6 +162,8 @@ def editar_produto_controller(
     volume,
 
     preco_venda,
+
+    preco_caixa,
 
     quantidade_por_caixa,
 

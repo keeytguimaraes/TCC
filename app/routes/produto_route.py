@@ -137,6 +137,10 @@ def configurar_produto_routes(app):
       preco_venda = request.form.get(
         "preco_venda"
     )
+      
+      preco_caixa = request.form.get(
+    "preco_caixa"
+)
 
       preco_dose = request.form.get(
         "preco_dose"
@@ -145,7 +149,7 @@ def configurar_produto_routes(app):
       preco_unidade = request.form.get(
         "preco_unidade"
     )
-
+      
     # --------------------------
     # ESTOQUE
     # --------------------------
@@ -206,26 +210,152 @@ def configurar_produto_routes(app):
     # --------------------------
       cadastrar_produto_controller(
 
-        nome,
-        categoria,
-        sabor,
-        tipo_embalagem,
-        volume,
-        preco_venda,
-        quantidade_por_caixa,
-        estoque_minimo,
-        vende_por_dose,
-        vende_por_unidade,
-        volume_dose_ml,
-        preco_dose,
-        preco_unidade,
-        quantidade_por_unidade,
-        nome_imagem
+          nome,
+    categoria,
+    sabor,
+    tipo_embalagem,
+    volume,
+
+    preco_venda,
+    preco_caixa,
+
+    quantidade_por_caixa,
+    estoque_minimo,
+
+    vende_por_dose,
+    vende_por_unidade,
+
+    volume_dose_ml,
+
+    preco_dose,
+    preco_unidade,
+
+    quantidade_por_unidade,
+
+    nome_imagem
     )
 
       return redirect(
         "/produto"
     )
+
+    # ==========================
+    # ROTA: EDITAR PRODUTO
+    # ==========================
+    @app.route(
+    "/produto/editar/<int:produto_id>"
+)
+    def editar_produto_page(produto_id):
+
+     produto = pegar_produto_por_id(
+        produto_id
+    )
+
+     return render_template(
+
+        "produto/editar_produto.html",
+
+        produto=produto
+    )
+
+    @app.route(
+    "/produto/atualizar/<int:produto_id>",
+    methods=["POST"]
+)
+    def atualizar_produto(produto_id):
+
+     nome = request.form.get("nome")
+
+     categoria = request.form.get("categoria")
+
+     sabor = request.form.get("sabor")
+
+     tipo_embalagem = request.form.get(
+        "tipo_embalagem"
+    )
+
+     volume = request.form.get(
+        "volume"
+    )
+
+     preco_venda = request.form.get(
+        "preco_venda"
+    )
+
+     preco_caixa = request.form.get(
+        "preco_caixa"
+    )
+
+     quantidade_por_caixa = request.form.get(
+        "quantidade_por_caixa"
+    )
+
+     vende_por_dose = (
+        request.form.get(
+            "vende_por_dose"
+        ) is not None
+    )
+
+     vende_por_unidade = (
+        request.form.get(
+            "vende_por_unidade"
+        ) is not None
+    )
+
+     volume_dose_ml = request.form.get(
+        "volume_dose_ml"
+    )
+
+     preco_dose = request.form.get(
+        "preco_dose"
+    )
+
+     preco_unidade = request.form.get(
+        "preco_unidade"
+    )
+     
+     quantidade_por_unidade = request.form.get(
+    "quantidade_por_unidade"
+)
+
+     editar_produto_controller(
+
+        produto_id,
+
+        nome,
+
+        categoria,
+
+        sabor,
+
+        tipo_embalagem,
+
+        volume,
+
+        preco_venda,
+
+        preco_caixa,
+
+        quantidade_por_caixa,
+
+        vende_por_dose,
+
+        vende_por_unidade,
+
+        volume_dose_ml,
+
+        preco_dose,
+
+        preco_unidade,
+
+        quantidade_por_unidade,
+    )
+
+     return redirect(
+        "/produto"
+    )
+
+
     # ==========================
     # ROTA: INATIVAR PRODUTO
     # ==========================

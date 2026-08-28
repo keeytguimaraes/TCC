@@ -66,6 +66,7 @@ def cadastrar_produto(
     tipo_embalagem,
     volume,
     preco_venda,
+    preco_caixa,
     quantidade_por_caixa,
     estoque_minimo,
     vende_por_dose,
@@ -92,6 +93,7 @@ def cadastrar_produto(
             tipo_embalagem,
             volume,
             preco_venda,
+            preco_caixa,
             quantidade_por_caixa,
             estoque_minimo,
             vende_por_dose,
@@ -103,7 +105,7 @@ def cadastrar_produto(
             imagem
 
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
 
     # Executa SQL
@@ -116,6 +118,7 @@ def cadastrar_produto(
     tipo_embalagem,
     volume,
     preco_venda,
+    preco_caixa,
     quantidade_por_caixa,
     estoque_minimo,
     vende_por_dose,
@@ -231,11 +234,15 @@ def editar_produto(
 
     preco_venda,
 
+    preco_caixa,
+
     quantidade_por_caixa,
 
     vende_por_dose,
 
     vende_por_unidade,
+
+    quantidade_por_unidade,
 
     volume_dose_ml,
 
@@ -303,76 +310,66 @@ def editar_produto(
     # ATUALIZA PRODUTO
     # ==========================
     sql = """
-    UPDATE produto
+UPDATE produto
 
-    SET
+SET
 
-        nome = %s,
+    nome = %s,
+    categoria = %s,
+    sabor = %s,
+    tipo_embalagem = %s,
+    volume = %s,
+    preco_venda = %s,
+    preco_caixa = %s,
+    quantidade_por_caixa = %s,
 
-        categoria = %s,
-
-        sabor = %s,
-
-        tipo_embalagem = %s,
-
-        volume = %s,
-
-        preco_venda = %s,
-
-        quantidade_por_caixa = %s,
-
-        vende_por_dose = %s,
-
-        vende_por_unidade = %s,
-
-        volume_dose_ml = %s,
-
+    vende_por_dose = %s,
     vende_por_unidade = %s,
 
     volume_dose_ml = %s,
 
     preco_dose = %s,
-
+    quantidade_por_unidade = %s,
     preco_unidade = %s
 
-    WHERE id = %s
-    """
+WHERE id = %s
+"""
 
     cursor.execute(
 
-        sql,
+    sql,
 
-        (
+    (
 
-            nome,
+        nome,
+    categoria,
+    sabor,
+    tipo_embalagem,
+    volume,
+    preco_venda,
+    preco_caixa,
+    quantidade_por_caixa,
 
-            categoria,
+    vende_por_dose,
+    vende_por_unidade,
 
-            sabor,
+    volume_dose_ml,
 
-            tipo_embalagem,
+    preco_dose,
+    preco_unidade,
 
-            volume,
+    quantidade_por_unidade,
 
-            preco_venda,
-
-            quantidade_por_caixa,
-
-            vende_por_dose,
-
-            vende_por_unidade,
-
-            volume_dose_ml,
-
-            produto_id
-        )
+    produto_id
     )
-
+)
+    
     conexao.commit()
 
     cursor.close()
 
     conexao.close()
+
 # ==========================
 # INATIVAR PRODUTO
 # ==========================
@@ -572,7 +569,15 @@ def listar_produtos_venda():
 
             )
 
-        WHERE p.ativo = TRUE
+        WHERE
+    p.ativo = TRUE
+
+    AND
+
+    COALESCE(
+        e.quantidade_atual_unidade,
+        0
+    ) > 0
 
         ORDER BY p.nome
     """

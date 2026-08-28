@@ -173,7 +173,8 @@ def configurar_venda_routes(app):
         # Tipo venda
         tipo_venda = request.form.get(
             "tipo_venda"
-        )
+        ).strip()
+
 
         # Quantidade
         quantidade = int(
@@ -258,31 +259,42 @@ def configurar_venda_routes(app):
         if tipo_venda == "dose":
 
             preco_unitario = float(
-        produto_encontrado[
-            "preco_dose"
-        ] or 0
+        produto_encontrado["preco_dose"] or 0
+    )
+
+        elif tipo_venda == "solto":
+
+            preco_unitario = float(
+        produto_encontrado["preco_unidade"] or 0
+    )
+
+        elif tipo_venda == "unidade":
+
+            preco_unitario = float(
+        produto_encontrado["preco_venda"]
     )
 
         elif tipo_venda == "caixa":
 
-            preco_unitario = float(
-        produto_encontrado[
-            "preco_venda"
-        ]
-    ) * int(
-        produto_encontrado[
-            "quantidade_por_caixa"
-        ]
-    )
+            if produto_encontrado["preco_caixa"]:
+
+                preco_unitario = float(
+            produto_encontrado["preco_caixa"]
+        )
+
+            else:
+
+                preco_unitario = (
+            float(produto_encontrado["preco_venda"])
+            * int(produto_encontrado["quantidade_por_caixa"])
+        )
 
         else:
 
             preco_unitario = float(
-        produto_encontrado[
-            "preco_venda"
-        ]
+        produto_encontrado["preco_venda"]
     )
-
+            
         # ----------------------
         # SUBTOTAL
         # ----------------------

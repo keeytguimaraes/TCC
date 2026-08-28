@@ -157,6 +157,21 @@ Editar Produto
             <div class="form-group">
 
                 <label>
+                    Preço da caixa
+                </label>
+            
+                <input
+                    type="number"
+                    step="0.01"
+                    name="preco_caixa"
+                    value="{{ produto.preco_caixa or '' }}"
+                >
+            
+            </div>
+
+            <div class="form-group">
+
+                <label>
                     Quantidade por caixa
                 </label>
 
@@ -243,6 +258,8 @@ Editar Produto
 
 </div>
 
+
+
 <div
     class="form-group"
     id="campo-preco-unidade"
@@ -263,6 +280,27 @@ Editar Produto
     >
 
 </div>
+
+<div
+    class="form-group"
+    id="campo-quantidade-unidade"
+    {% if not produto.vende_por_unidade %}
+    style="display:none;"
+    {% endif %}
+>
+
+    <label>
+        Quantidade por unidade
+    </label>
+
+    <input
+        type="number"
+        name="quantidade_por_unidade"
+        value="{{ produto.quantidade_por_unidade or '' }}"
+    >
+
+</div>
+
 
             <div class="produto-form-actions">
 
