@@ -23,6 +23,8 @@ from app.routes.relatorio_route import configurar_relatorio_routes
 from app.routes.routes import configurar_rotas
 # Importa rota dashboard
 from app.routes.dashboard_route import configurar_rotas_dashboard
+# Importa rota movimentação
+from app.routes.movimentacao_route import configurar_movimentacao_routes
 
 # Cria aplicação Flask
 app = Flask(
@@ -52,6 +54,7 @@ configurar_conta_routes(app)
 configurar_fiado_routes(app)
 configurar_relatorio_routes(app)
 configurar_rotas_dashboard(app)
+configurar_movimentacao_routes(app)
 
 # Inicia servidor
 if __name__ == "__main__":

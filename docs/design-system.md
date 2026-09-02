@@ -2,101 +2,172 @@
 
 # Design System
 
----
+--------------------------------------------------
 
 # Objetivo
 
-Este documento define o padrão visual e estrutural do sistema.
 
-Todo novo componente deverá seguir este guia para manter consistência entre as telas.
+Este documento define os padrões visuais, estruturais e organizacionais do sistema.
 
----
+Todo novo módulo deve seguir este guia para garantir consistência, manutenção e escalabilidade.
 
 # Estrutura CSS
-
 static/
+│
+├── css/
+│   ├── global/
+│   ├── components/
+│   └── pages/
 
-css/
+# Estrutura MVC
+app/
 
-global/
-
-components/
-
-pages/
-
----
+├── controllers/
+├── models/
+├── routes/
+├── templates/
+├── static/
+└── database/
 
 # Componentes
-
-## Button
+Button
 
 Arquivo:
 
 components/button.css
 
-Tipos
+Tipos:
 
-- Primary
-- Secondary
-- Success
-- Danger
-
----
-
-## Card
+button-primary
+button-secondary
+button-success
+button-danger
+button-warning
+Card
 
 Arquivo:
 
 components/card.css
 
-Estrutura
+Estrutura:
 
 .card
-
 .card-header
-
 .card-body
-
 .card-footer
+Dashboard Card
 
----
+Arquivo:
 
-## Search
+components/dashboard-card.css
+
+Usado em:
+
+Estoque Atual
+Dashboard Geral
+Relatórios
+Search
 
 Arquivo:
 
 components/search.css
 
-Recursos
+Recursos:
 
-- Pesquisa instantânea
-- Ignora acentos
-- Contador
-- Empty State
-
----
-
-## Input
+Pesquisa instantânea
+Ignora acentos
+Filtro por nome
+Empty State
+Input
 
 Arquivo:
 
 components/input.css
 
-Estrutura
+Estrutura:
 
 .form-group
-
 label
+input
+select
+textarea
+Product Card
 
-.input
+Usado em:
 
-.input-error
+Venda
+Estoque Atual
+Produtos
 
-.input-message
+Estrutura:
 
----
+.produto-card
+.produto-header
+.produto-info
+.produto-expandido
+Estoque Card
 
-# Ícones Oficiais
+Usado em:
+
+Estoque Atual
+
+Estrutura:
+
+.estoque-card
+.status-normal
+.status-minimo
+.status-baixo
+.status-sem
+.status-nunca
+Status de Estoque
+
+🟢 Normal
+
+🔵 No mínimo
+
+🟡 Baixo
+
+🔴 Sem estoque
+
+⚫ Nunca abastecido
+
+Módulos Existentes
+Cliente
+Cadastro
+Edição
+Exclusão
+Produto
+Cadastro
+Edição
+Inativação
+Histórico de Preços
+Fornecedor
+Cadastro
+Consulta
+Estoque
+Entrada
+Estoque Atual
+Movimentação
+Histórico
+Venda
+Venda por caixa
+Venda por unidade
+Venda por dose
+Venda de cigarro (solto, maço e box)
+Fiado
+Cadastro
+Pagamento
+Histórico
+Conta Pendente
+Cadastro
+Baixa
+Consulta
+Relatórios
+PDF
+Financeiro
+Estoque
+Vendas
+Ícones Oficiais
 
 Cliente
 
@@ -118,202 +189,61 @@ Estoque
 
 fa-warehouse
 
+Movimentação
+
+fa-arrow-right-arrow-left
+
 Fiado
 
 fa-book
 
+Conta Pendente
+
+fa-clock
+
 Relatórios
 
 fa-chart-column
+Ordem de Desenvolvimento
+1. Banco de Dados
+2. Model
+3. Controller
+4. Route
+5. HTML
+6. CSS
+7. JavaScript
+8. Testes
+9. Refatoração
+Roadmap Atual
 
-Dinheiro
+✅ Produtos
 
-fa-money-bill-wave
+✅ Estoque
 
-Categoria
+✅ Entrada de Estoque
 
-fa-tag
+✅ Venda
 
-Telefone
+✅ Fiado
 
-fa-phone
+✅ Conta Pendente
 
-Email
+✅ Histórico de Preços
 
-fa-envelope
+✅ Movimentação de Estoque
 
-Data
+⬜ Histórico de Vendas
 
-fa-calendar-days
+⬜ Relatórios PDF
 
----
+⬜ Dashboard Financeiro
 
-# Cores
+⬜ Select2
 
-Primária
+⬜ Fotos no Estoque
 
-#16A34A
+⬜ Ficha de Sinuca
 
-Sucesso
+⬜ Raspadinha
 
-#22C55E
-
-Perigo
-
-#DC2626
-
-Secundária
-
-#6B7280
-
-Texto
-
-#374151
-
-Borda
-
-#D1D5DB
-
-Background
-
-#F9FAFB
-
----
-
-# Espaçamentos
-
-Pequeno
-
-8px
-
-Médio
-
-16px
-
-Grande
-
-24px
-
-Extra Grande
-
-32px
-
----
-
-# Bordas
-
-Inputs
-
-10px
-
-Cards
-
-14px
-
-Botões
-
-10px
-
----
-
-# Sombras
-
-Cards
-
-Leve
-
-Hover
-
-Média
-
-Modal
-
-Forte
-
----
-
-# Tipografia
-
-Fonte
-
-Segoe UI
-
-Fallback
-
-sans-serif
-
----
-
-# Padrão HTML
-
-Card
-
-.card
-
-.card-header
-
-.card-body
-
-.card-footer
-
-Form
-
-.form-group
-
-label
-
-.input
-
-Buttons
-
-.button
-
-.button-success
-
-.button-danger
-
-.button-secondary
-
-.button-primary
-
----
-
-# Ordem de Desenvolvimento
-
-1 - Componentes
-
-2 - Página
-
-3 - Controller
-
-4 - Model
-
-5 - Testes
-
-6 - Refatoração
-
----
-
-# Próximos Componentes
-
-☐ Badge
-
-☐ Empty State
-
-☐ Alert
-
-☐ Table
-
-☐ Modal
-
-☐ Dashboard Card
-
-☐ Product Card
-
-☐ Sale Card
-
----
-
-Última atualização:
-
-03/08/2026
+Última atualização: 27/08/2026

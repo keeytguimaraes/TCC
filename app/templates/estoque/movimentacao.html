@@ -1,0 +1,97 @@
+{% extends "base/base.html" %}
+
+{% block conteudo %}
+
+<h1>Movimentação de Estoque</h1>
+
+<a
+    href="/movimentacao/historico"
+    class="button button-secondary"
+>
+
+    Histórico
+
+</a>
+
+<form
+    action="/movimentacao/cadastrar"
+    method="POST"
+>
+
+    <label>Produto</label>
+
+    <select name="produto_id">
+
+        {% for produto in produtos %}
+
+        <option value="{{ produto.id }}">
+            {{ produto.nome }}
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+    <br><br>
+
+    <label>Tipo</label>
+
+    <select name="tipo_movimentacao">
+
+        <option value="quebra">
+            Quebra
+        </option>
+
+        <option value="vencido">
+            Vencido
+        </option>
+
+        <option value="uso_interno">
+            Uso Interno
+        </option>
+
+        <option value="ajuste_manual">
+            Ajuste Manual
+        </option>
+
+    </select>
+
+    <br><br>
+
+    <label>Caixas</label>
+
+    <input
+        type="number"
+        name="quantidade_caixa"
+        value="0"
+    >
+
+    <br><br>
+
+    <label>Unidades</label>
+
+    <input
+        type="number"
+        name="quantidade_unidade"
+        value="0"
+    >
+
+    <br><br>
+
+    <label>Motivo</label>
+
+    <textarea
+        name="motivo"
+    ></textarea>
+
+    <br><br>
+
+    <button type="submit">
+
+        Salvar
+
+    </button>
+
+</form>
+
+{% endblock %}
