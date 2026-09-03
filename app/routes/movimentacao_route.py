@@ -1,10 +1,10 @@
 from flask import (
 
     render_template,
-
     request,
+    redirect,
+    flash
 
-    redirect
 )
 
 from app.controllers.movimentacao_controller import (
@@ -47,61 +47,70 @@ def configurar_movimentacao_routes(app):
     # CADASTRAR MOVIMENTAÇÃO
     # ==========================
     @app.route(
-
     "/movimentacao/cadastrar",
-
     methods=["POST"]
-
 )
     def cadastrar_movimentacao_route():
 
-        produto_id = request.form.get(
-    "produto_id"
-)
+        try:
 
-        tipo_movimentacao = request.form.get(
-    "tipo_movimentacao"
-)
+            produto_id = request.form.get(
+            "produto_id"
+        )
 
-        quantidade_caixa = int(
-    request.form.get(
-        "quantidade_caixa",
-        0
-    ) or 0
-)
+            tipo_movimentacao = request.form.get(
+            "tipo_movimentacao"
+        )
 
-        quantidade_unidade = int(
-    request.form.get(
-        "quantidade_unidade",
-        0
-    ) or 0
-)
+            quantidade_caixa = int(
+            request.form.get(
+                "quantidade_caixa",
+                0
+            ) or 0
+        )
 
-        motivo = request.form.get(
-    "motivo"
-)
-        
-        quantidade_fracionada = int(
-    request.form.get(
-        "quantidade_fracionada",
-        0
-    ) or 0
-)
-        
-        cadastrar_movimentacao_controller(
+            quantidade_unidade = int(
+            request.form.get(
+                "quantidade_unidade",
+                0
+            ) or 0
+        )
 
-    produto_id,
-    tipo_movimentacao,
-    quantidade_caixa,
-    quantidade_unidade,
-    quantidade_fracionada,
-    motivo
+            quantidade_fracionada = int(
+            request.form.get(
+                "quantidade_fracionada",
+                0
+            ) or 0
+        )
 
-)
+            motivo = request.form.get(
+            "motivo"
+        )
 
-        return redirect(
-        "/estoque"
-    )
+            cadastrar_movimentacao_controller(
+
+            produto_id,
+            tipo_movimentacao,
+            quantidade_caixa,
+            quantidade_unidade,
+            quantidade_fracionada,
+            motivo
+
+        )
+
+            flash(
+            "Movimentação registrada com sucesso!",
+            "success"
+        )
+
+        except Exception as erro:
+
+            flash(
+            str(erro),
+            "error"
+        )
+
+        return redirect("/estoque")
 
     # ==========================
     # HISTÓRICO MOVIMENTAÇÃO

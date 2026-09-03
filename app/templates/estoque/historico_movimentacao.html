@@ -6,37 +6,71 @@ Histórico de Movimentação
 
 {% block conteudo %}
 
-<div class="card">
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/components/search.css'
+    ) }}"
+>
 
-    <div class="card-header">
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/historico_movimentacao.css'
+    ) }}"
+>
 
-        <h2>
+<div class="historico-container">
 
+    <div class="historico-topo">
+
+        <a
+            href="/estoque"
+            class="button button-secondary"
+        >
+            ← Voltar
+        </a>
+
+        <h2 class="historico-titulo">
             Histórico de Movimentação
-
         </h2>
 
     </div>
 
-    <div class="card-body">
+    <!-- PESQUISA -->
 
-        <table class="table">
+<div class="estoque-pesquisa">
+
+    <div class="search-box">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+            type="text"
+            id="search-input"
+            placeholder="Pesquisar Produto..."
+        >
+
+    </div>
+
+</div>
+
+    <div class="tabela-container">
+
+        <table class="tabela-historico">
 
             <thead>
 
                 <tr>
-
                     <th>Data</th>
 
                     <th>Produto</th>
 
                     <th>Tipo</th>
 
-                    <th>Caixa</th>
-
-                    <th>Unidade</th>
-
-                    <th>Fracionado</th>
+                    <th>Quantidade</th>
 
                     <th>Motivo</th>
 
@@ -44,52 +78,56 @@ Histórico de Movimentação
 
             </thead>
 
-            <tbody>
+            <tbody id="tabelaMovimentacao">
 
                 {% for item in movimentacoes %}
 
-                <tr>
-
+                <tr class="linha-movimentacao">
                     <td>
-
-                        {{ item.data_movimentacao }}
-
+                        {{ item.data_movimentacao.strftime('%d/%m/%Y') }}
                     </td>
 
-                    <td>
-
+                    <td class="produto">
                         {{ item.nome }}
-
                     </td>
 
                     <td>
 
-                        {{ item.tipo_movimentacao }}
-
+                        <span
+                            class="tipo-movimentacao {{ item.tipo_movimentacao }}"
+                        >
+                            {{ item.tipo_movimentacao
+                                | replace("_", " ")
+                                | title
+                            }}
+                        </span>
+                    
                     </td>
 
                     <td>
 
-                        {{ item.quantidade_caixa }}
-
+                        {% if item.quantidade_caixa > 0 %}
+                    
+                            {{ item.quantidade_caixa }} Caixa(s)
+                    
+                        {% elif item.quantidade_unidade > 0 %}
+                    
+                            {{ item.quantidade_unidade }} Unidade(s)
+                    
+                        {% elif item.quantidade_fracionada > 0 %}
+                    
+                            {{ item.quantidade_fracionada }} Avulso
+                    
+                        {% else %}
+                    
+                            -
+                    
+                        {% endif %}
+                    
                     </td>
 
                     <td>
-
-                        {{ item.quantidade_unidade }}
-
-                    </td>
-
-                    <td>
-
-                        {{ item.quantidade_fracionada }}
-
-                    </td>
-
-                    <td>
-
                         {{ item.motivo }}
-
                     </td>
 
                 </tr>
@@ -103,5 +141,15 @@ Histórico de Movimentação
     </div>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/historico_movimentacao.js'
+    ) }}"
+></script>
 
 {% endblock %}

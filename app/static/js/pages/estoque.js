@@ -126,30 +126,43 @@ if (origemCompra) {
     atualizarOrigemCompra();
 }
 
-const form = document.querySelector("form");
+const form =
+    document.getElementById(
+        "form-entrada-estoque"
+    );
 
-form.addEventListener("submit", function(e){
+    if(form){
 
-    const caixas = parseInt(
-        document.querySelector(
-            '[name="quantidade_recebida_caixa"]'
-        ).value
-    ) || 0;
-
-    const unidades = parseInt(
-        document.querySelector(
-            '[name="quantidade_recebida_unidade"]'
-        ).value
-    ) || 0;
-
-    if(caixas === 0 && unidades === 0){
-
-        e.preventDefault();
-
-        alert(
-            "Informe ao menos caixas ou unidades."
+        form.addEventListener(
+            "submit",
+            function(e){
+    
+                const caixas = parseInt(
+                    document.querySelector(
+                        '[name="quantidade_recebida_caixa"]'
+                    ).value
+                ) || 0;
+    
+                const unidades = parseInt(
+                    document.querySelector(
+                        '[name="quantidade_recebida_unidade"]'
+                    ).value
+                ) || 0;
+    
+                if(
+                    caixas === 0 &&
+                    unidades === 0
+                ){
+    
+                    e.preventDefault();
+    
+                    alert(
+                        "Informe ao menos caixas ou unidades."
+                    );
+    
+                }
+    
+            }
         );
-
+    
     }
-
-});

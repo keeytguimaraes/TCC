@@ -168,13 +168,13 @@ VALUES (%s, %s, %s, %s, %s, %s)
         if movimentacao_total > quantidade_atual_unidade:
 
             raise Exception(
-            "Quantidade maior que o estoque disponível."
+            "Quantidade maior que o estoque disponível!"
         )
 
         if quantidade_fracionada > quantidade_atual_fracionada:
 
            raise Exception(
-            "Quantidade fracionada maior que o estoque."
+            "Quantidade avulsa maior que o estoque."
         )
 
     # ==========================
@@ -192,8 +192,6 @@ VALUES (%s, %s, %s, %s, %s, %s)
     (quantidade_caixa * quantidade_por_caixa)
 
     + quantidade_unidade
-
-    + quantidade_fracionada
 
 )
 
@@ -222,6 +220,10 @@ VALUES (%s, %s, %s, %s, %s, %s)
     if total_unidades < 0:
 
         total_unidades = 0
+
+    if quantidade_atual_fracionada < 0:
+
+        quantidade_atual_fracionada = 0
 
     # ==========================
     # RECALCULA CAIXAS E UNIDADES

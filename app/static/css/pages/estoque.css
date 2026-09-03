@@ -322,3 +322,17 @@
     margin:0;
 
 }
+
+#movimentacao-modal .modal-body{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+#movimentacao-modal .form-group{
+    width: 100%;
+}
+
+#movimentacao-modal textarea{
+    min-height: 45px;
+}

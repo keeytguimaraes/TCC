@@ -28,12 +28,29 @@ Estoque
 
 <div class="cards-estoque">
 
+    <!-- Movimentação -->
+    <div
+        class="nova-entrada-card"
+        data-modal="movimentacao-modal"
+    >
+
+        <div class="nova-entrada-icon">
+            <i class="fa-solid fa-right-left"></i>
+        </div>
+
+        <h3>Movimentação</h3>
+
+        <p>
+            Registrar perdas e ajustes
+        </p>
+
+    </div>
+
     <!-- Nova Entrada -->
     <div
         class="nova-entrada-card"
         data-modal="estoque-modal"
     >
-
         <div class="nova-entrada-icon">
 
             <i class="fa-solid fa-plus"></i>
@@ -72,8 +89,213 @@ Estoque
 
     </a>
 
+<a
+    href="/movimentacao/historico"
+    class="nova-entrada-card"
+>
+
+    <div class="nova-entrada-icon">
+
+        <i class="fa-solid fa-clock-rotate-left"></i>
+
+    </div>
+
+    <h3>
+        Histórico
+    </h3>
+
+    <p>
+        Consultar movimentações
+    </p>
+
+</a>
+
 </div>
-<!-- MODAL -->
+
+
+<!-- MODAL MOVIMENTAÇÃO -->
+
+<div
+    class="modal"
+    id="movimentacao-modal"
+>
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>
+                Movimentação de Estoque
+            </h2>
+
+            <button
+                class="modal-close"
+                data-close-modal
+            >
+                ×
+            </button>
+
+        </div>
+
+        <form
+    id="form-movimentacao"
+    action="/movimentacao/cadastrar"
+    method="POST"
+>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label>Produto</label>
+
+                    <select
+                        name="produto_id"
+                        id="produto_movimentacao"
+                        required
+                    >
+
+                        {% for produto in produtos %}
+
+                        <option
+    value="{{ produto.id }}"
+    data-caixa="{{ produto.quantidade_por_caixa }}"
+    data-unidade="{{ produto.vende_por_unidade }}"
+    data-dose="{{ produto.vende_por_dose }}"
+    data-categoria="{{ produto.categoria }}"
+>
+    {{ produto.nome }}
+</option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Tipo</label>
+
+                    <select
+                        name="tipo_movimentacao"
+                        required
+                    >
+
+                        <option value="quebra">
+                            Quebra
+                        </option>
+
+                        <option value="vencido">
+                            Vencido
+                        </option>
+
+                        <option value="uso_interno">
+                            Uso Interno
+                        </option>
+
+                        <option value="ajuste_manual">
+                            Ajuste Manual
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div
+    class="form-group"
+    id="grupo-caixa"
+>
+
+    <label id="label-caixa">
+        Caixas
+    </label>
+
+    <input
+        type="number"
+        name="quantidade_caixa"
+        value="0"
+    >
+
+</div>
+
+<div
+class="form-group"
+id="grupo-unidade"
+>
+
+<label id="label-unidade">
+    Unidades
+</label>
+
+<input
+    type="number"
+    name="quantidade_unidade"
+    value="0"
+>
+
+</div>
+
+<div
+class="form-group"
+id="grupo-fracionado"
+>
+
+<label id="label-fracionado">
+    Quantidade Avulsa
+</label>
+
+<input
+    type="number"
+    name="quantidade_fracionada"
+    value="0"
+>
+
+</div>
+
+                <div
+    class="form-group"
+    id="grupo-motivo"
+    style="grid-column: 1 / -1;"
+>
+
+    <label>Motivo</label>
+
+    <textarea
+    name="motivo"
+    id="motivo"
+></textarea>
+
+</div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="button button-secondary"
+                    data-close-modal
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    class="button button-success"
+                >
+                    Salvar Movimentação
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- MODAL ESTOQUE -->
 
 <div
     class="modal"
@@ -98,9 +320,10 @@ Estoque
         </div>
 
         <form
-            action="/estoque/cadastrar"
-            method="POST"
-        >
+    id="form-entrada-estoque"
+    action="/estoque/cadastrar"
+    method="POST"
+>
 
             <div class="modal-body">
 
@@ -114,7 +337,7 @@ Estoque
                     <select id="categoria">
                 
                         <option value="">
-                            Selecione a categoria
+                            Escolha a categoria
                         </option>
                 
                         {% for categoria in categorias %}
@@ -142,7 +365,7 @@ Estoque
                     >
                 
                         <option value="">
-                            Selecione um produto
+                            Escolha um produto
                         </option>
                 
                         {% for produto in produtos %}
@@ -173,7 +396,7 @@ Estoque
                     >
                 
                         <option value="">
-                            Selecione
+                            Escolha uma opção
                         </option>
                 
                         <option value="1">
@@ -221,7 +444,7 @@ Estoque
                     <select name="fornecedor_id">
                 
                         <option value="">
-                            Selecione o fornecedor
+                            Escolha o fornecedor
                         </option>
                 
                         {% for fornecedor in fornecedores %}
@@ -367,6 +590,13 @@ Estoque
     src="{{ url_for(
         'static',
         filename='js/pages/estoque.js'
+    ) }}"
+></script>
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/pages/movimentacao_modal.js'
     ) }}"
 ></script>
 

@@ -52,6 +52,10 @@
     rel="stylesheet"
     href="{{ url_for('static',filename='css/components/product-card.css') }}">
 
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static',filename='css/components/alert.css') }}">
+
     {% block css %}
     {% endblock %}
 
@@ -79,6 +83,30 @@
 
         <main class="content-main">
 
+            {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+
+        {% for categoria, mensagem in messages %}
+
+        <div class="alert alert-{{ categoria }}">
+
+            {% if categoria == "success" %}
+                <i class="fa-solid fa-circle-check"></i>
+            {% endif %}
+        
+            {% if categoria == "error" %}
+                <i class="fa-solid fa-circle-xmark"></i>
+            {% endif %}
+        
+            {{ mensagem }}
+        
+        </div>
+
+        {% endfor %}
+
+    {% endif %}
+{% endwith %}
+
             {% block conteudo %}
             {% endblock %}
         
@@ -94,6 +122,8 @@
 
     <!-- JS ESPECÍFICO -->
     <script src="{{ url_for( 'static',filename='js/components/modal.js') }}"></script>
+
+    <script src="{{ url_for( 'static',filename='js/global/alert.js') }}"></script>
 
     {% block scripts %}
     {% endblock %}
