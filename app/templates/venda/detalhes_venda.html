@@ -1,0 +1,88 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Detalhes da Venda
+{% endblock %}
+
+{% block conteudo %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/detalhes_venda.css'
+    ) }}"
+>
+
+    <div class="detalhes-container">
+
+        <a
+            href="/venda/historico"
+            class="button button-secondary"
+        >
+            ← Voltar
+        </a>
+    
+        <h2 class="detalhes-titulo">
+            Detalhes da Venda
+        </h2>
+    
+        <table class="tabela-produtos">
+
+            <thead>
+
+                <tr>
+
+                    <th>Produto</th>
+
+                    <th>Quantidade</th>
+
+                    <th>Tipo</th>
+
+                    <th>Preço Unitário</th>
+
+                    <th>Subtotal</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for produto in produtos %}
+
+                <tr>
+
+                    <td>
+                        {{ produto.nome }}
+                    </td>
+
+                    <td>
+                        {{ produto.quantidade }}
+                    </td>
+
+                    <td>
+                        {{ produto.tipo_venda }}
+                    </td>
+
+                    <td>
+                        R$ {{ produto.preco_unitario }}
+                    </td>
+
+                    <td>
+                        R$ {{ produto.subtotal }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

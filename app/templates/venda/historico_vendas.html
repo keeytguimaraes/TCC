@@ -1,0 +1,157 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Histórico de Vendas
+{% endblock %}
+
+{% block conteudo %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/components/search.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/historico_vendas.css'
+    ) }}"
+>
+
+<div class="historico-container">
+
+    <div class="historico-container">
+
+        <a
+            href="/venda/historico"
+            class="button button-secondary"
+        >
+            ← Voltar
+        </a>
+    
+        <h2 class="historico-titulo">
+            Histórico da Venda
+        </h2>
+
+    </div>
+
+    <div class="estoque-pesquisa">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Pesquisar cliente..."
+            >
+
+        </div>
+
+    </div>
+
+    <div class="tabela-container">
+
+        <table class="tabela-historico">
+
+            <thead>
+
+                <tr>
+
+                    <th>Data</th>
+
+                    <th>Cliente</th>
+
+                    <th>Total</th>
+
+                    <th>Status</th>
+
+                    <th>Detalhes</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tabelaVendas">
+
+                {% for venda in vendas %}
+
+                <tr class="linha-venda">
+
+                    <td>
+                        {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
+                    </td>
+
+                    <td>
+
+                        {% if venda.cliente_nome %}
+
+                            {{ venda.cliente_nome }}
+
+                        {% elif venda.nome_cliente_temporario %}
+
+                            {{ venda.nome_cliente_temporario }}
+
+                        {% else %}
+
+                        <span class="cliente-balcao">
+                            Venda no balcão
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        R$ {{ venda.valor_total }}
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="status-venda {{ venda.status_pagamento }}"
+                        >
+                            {{ venda.status_pagamento }}
+                        </span>
+                    
+                    </td>
+
+                    <td class="coluna-detalhes">
+                        <a
+    href="/venda/detalhes/{{ venda.id }}"
+    class="button button-danger"
+>
+    Ver
+</a>
+                    
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/search_historico_venda.js'
+    ) }}"
+></script>
+
+{% endblock %}

@@ -1,0 +1,148 @@
+.historico-container{
+
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+
+
+.historico-titulo{
+
+    flex: 1;
+
+    text-align: center;
+
+    color: #2e7d32;
+}
+
+.tabela-historico{
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    table-layout: fixed;
+}
+
+.tabela-historico th{
+
+    background: #2e7d32;
+
+    color: white;
+
+    padding: 14px;
+}
+
+.tabela-historico td{
+
+    padding: 16px 12px;
+
+    border-bottom: 1px solid #e5e5e5;
+
+    vertical-align: middle;
+}
+
+.tabela-historico th,
+.tabela-historico td{
+
+    text-align: center;
+}
+
+.tabela-historico tr:hover{
+
+    background: #f8f9fa;
+}
+
+.status-venda{
+
+        padding: 8px 16px;
+    
+        border-radius: 20px;
+    
+        font-size: 13px;
+    
+        font-weight: 600;
+}
+
+.cliente-balcao,
+.status-venda{
+
+    display: inline-block;
+
+    min-width: 120px;
+
+    text-align: center;
+}
+
+.status-venda.Pago{
+
+    background: #d4edda;
+
+    color: #155724;
+}
+
+.status-venda.Pendente{
+
+    background: #fff3cd;
+
+    color: #856404;
+}
+
+.status-venda.Fiado{
+
+    background: #dbeafe;
+
+    color: #1e40af;
+}
+.coluna-detalhes{
+
+    text-align: center;
+
+    width: 150px;
+}
+
+.cliente-balcao{
+
+    background: #e9ecef;
+
+    color: #495057;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.tabela-historico th:nth-child(1),
+.tabela-historico td:nth-child(1){
+    width: 25%;
+}
+
+.tabela-historico th:nth-child(2),
+.tabela-historico td:nth-child(2){
+    width: 25%;
+}
+
+.tabela-historico th:nth-child(3),
+.tabela-historico td:nth-child(3){
+    width: 15%;
+}
+
+.tabela-historico th:nth-child(4),
+.tabela-historico td:nth-child(4){
+    width: 15%;
+}
+
+.tabela-historico th:nth-child(5),
+.tabela-historico td:nth-child(5){
+    width: 20%;
+    text-align: center;
+}

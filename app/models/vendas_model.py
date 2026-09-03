@@ -17,11 +17,25 @@ def listar_vendas():
 
     # SQL
     sql = """
-        SELECT *
+        SELECT
 
-        FROM venda
+    v.id,
+    v.data_venda,
+    v.valor_total,
+    v.valor_recebido,
+    v.troco,
+    v.status_pagamento,
+    v.desconto_venda,
+    v.nome_cliente_temporario,
 
-        ORDER BY id DESC
+    c.nome AS cliente_nome
+
+FROM venda v
+
+LEFT JOIN cliente c
+    ON c.id = v.cliente_id
+
+ORDER BY v.data_venda DESC
     """
 
     # Executa
@@ -39,6 +53,41 @@ def listar_vendas():
     # Retorna
     return vendas
 
+# ==========================
+# HISTÓRICO DE VENDAS
+# ==========================
+def listar_historico_vendas():
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT
+
+            v.*,
+
+            c.nome AS cliente_nome
+
+        FROM venda v
+
+        LEFT JOIN cliente c
+            ON c.id = v.cliente_id
+
+        ORDER BY
+            v.data_venda DESC
+    """
+
+    cursor.execute(sql)
+
+    vendas = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return vendas
 
 # ==========================
 # CADASTRAR VENDA
@@ -304,15 +353,19 @@ def buscar_produtos_venda(
     )
 
     sql = """
-        SELECT
+       SELECT
 
-            produto.nome,
+    produto.nome,
 
-            produto_venda.quantidade,
+    produto_venda.quantidade,
 
-            produto_venda.tipo_venda
+    produto_venda.tipo_venda,
 
-        FROM produto_venda
+    produto_venda.preco_unitario,
+
+    produto_venda.subtotal
+
+FROM produto_venda
 
         INNER JOIN produto
 
@@ -335,6 +388,44 @@ def buscar_produtos_venda(
 
     cursor.close()
 
+    conexao.close()
+
+    return produtos
+
+# ==========================
+# BUSCAR DETALHES DA VENDA
+# ==========================
+def buscar_detalhes_venda(venda_id):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT
+
+            pv.*,
+
+            p.nome
+
+        FROM produto_venda pv
+
+        INNER JOIN produto p
+            ON p.id = pv.produto_id
+
+        WHERE pv.venda_id = %s
+    """
+
+    cursor.execute(
+        sql,
+        (venda_id,)
+    )
+
+    produtos = cursor.fetchall()
+
+    cursor.close()
     conexao.close()
 
     return produtos

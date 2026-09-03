@@ -19,7 +19,9 @@ from app.models.conta_model import (
 from app.controllers.vendas_controller import (
 
     pegar_vendas,
-    cadastrar_venda_controller
+    pegar_historico_vendas,
+    cadastrar_venda_controller,
+    pegar_detalhes_venda
 )
 
 # Importa controller produto
@@ -43,7 +45,6 @@ from app.controllers.estoque_controller import (
 from app.controllers.estoque_controller import (
     pegar_estoque_atual
 )
-
 
 
 # ==========================
@@ -374,3 +375,37 @@ def configurar_venda_routes(app):
 
         # Volta página
         return redirect("/venda")
+    
+    # ==========================
+    # HISTÓRICO DE VENDAS
+    # ==========================
+    @app.route("/venda/historico")
+    def historico_vendas():
+
+        vendas = pegar_historico_vendas()
+
+        return render_template(
+
+        "venda/historico_vendas.html",
+
+        vendas=vendas
+    )
+
+    # ==========================
+    # DETALHES DA VENDA
+    # ==========================
+    @app.route(
+    "/venda/detalhes/<int:venda_id>"
+)
+    def detalhes_venda(venda_id):
+
+        produtos = pegar_detalhes_venda(
+        venda_id
+    )
+
+        return render_template(
+
+        "venda/detalhes_venda.html",
+
+        produtos=produtos
+    )
