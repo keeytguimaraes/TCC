@@ -248,3 +248,29 @@ def buscar_conta_por_id(
     conexao.close()
 
     return conta
+
+def buscar_fichas_pendentes(venda_id):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT *
+        FROM sinuca_venda
+        WHERE venda_id = %s
+    """
+
+    cursor.execute(
+        sql,
+        (venda_id,)
+    )
+
+    fichas = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return fichas

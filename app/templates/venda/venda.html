@@ -84,7 +84,53 @@ Venda
     
     </div>
 
+
     <div class="produtos-grid">
+
+         <!-- CARD SINUCA -->
+
+         <div class="produto-card produto-sinuca">
+
+            <div class="produto-card-image">
+        
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='img/sinuca.png'
+                    ) }}"
+                    alt="Ficha de Sinuca"
+                >
+        
+            </div>
+        
+            <h3>
+                Ficha de Sinuca
+            </h3>
+        
+            <p>
+                R$ {{ config_sinuca.valor_ficha }}
+            </p>
+        
+            <p>
+                Fichas no carrinho:
+                {{ quantidade_fichas }}
+            </p>
+        
+            <form
+                action="/carrinho/adicionar-ficha"
+                method="POST"
+            >
+        
+                <button
+                    class="button button-success"
+                    type="submit"
+                >
+                    +
+                </button>
+        
+            </form>
+        
+        </div>
 
         {% for produto in produtos %}
 
@@ -93,9 +139,9 @@ Venda
             data-categoria="{{ produto.categoria }}"
         >
         
-            <div class="produto-card-image">
-        
-                {% if produto.imagem %}
+        <div class="produto-card-image">
+
+            {% if produto.imagem %}
         
                 <img
                     src="{{ url_for(
@@ -105,13 +151,13 @@ Venda
                     alt="{{ produto.nome }}"
                 >
         
-                {% else %}
+            {% else %}
         
                 📦
         
-                {% endif %}
+            {% endif %}
         
-            </div>
+        </div>
         
             <h3>
                 {{ produto.nome }}

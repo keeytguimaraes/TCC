@@ -301,6 +301,17 @@ def configurar_carrinho_routes(app):
 
         venda_id = cursor.lastrowid
 
+        cursor.execute(
+    "SELECT id FROM venda WHERE id = %s",
+    (venda_id,)
+)
+
+        print(
+    "VENDA ENCONTRADA:",
+    cursor.fetchone()
+)
+
+
         # ----------------------
         # ATUALIZA CONTA
         # ----------------------
@@ -320,60 +331,97 @@ def configurar_carrinho_routes(app):
         # ----------------------
         for item in carrinho:
 
+        # ======================
+        # FICHA DE SINUCA
+        # ======================
+            if item.get("tipo_item") == "sinuca":
+
+               sql_sinuca = """
+INSERT INTO sinuca_venda (
+
+    venda_id,
+    cliente_id,
+    nome_cliente_temporario,
+    quantidade_fichas,
+    valor_unitario,
+    valor_total,
+    status_pagamento
+
+)
+VALUES (
+
+    %s,
+    %s,
+    %s,
+    %s,
+    %s,
+    %s,
+    %s
+)
+"""
+               cursor.execute(
+
+                sql_sinuca,
+
+    (
+        venda_id,
+        cliente_id,
+        nome_cliente_temporario,
+        item["quantidade"],
+        item["preco_unitario"],
+        item["subtotal"],
+        status_pagamento
+    )
+)
+
+               continue
+
+    # ======================
+    # PRODUTOS NORMAIS
+    # ======================
             sql_produto_venda = """
-                INSERT INTO produto_venda (
+        INSERT INTO produto_venda (
 
-                    venda_id,
-                    produto_id,
+            venda_id,
+            produto_id,
+            quantidade,
+            tipo_venda,
+            preco_unitario,
+            subtotal
 
-                    quantidade,
-                    tipo_venda,
+        )
+        VALUES (
 
-                    preco_unitario,
-                    subtotal
-
-                )
-                VALUES (
-
-                    %s, %s,
-
-                    %s, %s,
-
-                    %s, %s
-                )
-            """
+            %s, %s,
+            %s, %s,
+            %s, %s
+        )
+    """
 
             cursor.execute(
 
-                sql_produto_venda,
+        sql_produto_venda,
 
-                (
-                    venda_id,
-
-                    item["produto_id"],
-
-                    item["quantidade"],
-
-                    item["tipo_venda"],
-
-                    item["preco_unitario"],
-
-                    item["subtotal"]
-                )
-            )
-
+        (
+            venda_id,
+            item["produto_id"],
+            item["quantidade"],
+            item["tipo_venda"],
+            item["preco_unitario"],
+            item["subtotal"]
+        )
+    )
+            
             # ----------------------
             # BAIXA ESTOQUE
             # ----------------------
+
             baixar_estoque_controller(
 
-                item["produto_id"],
-
-                item["quantidade"],
-
-                item["tipo_venda"]
-            )
-
+        item["produto_id"],
+        item["quantidade"],
+        item["tipo_venda"]
+    )
         conexao.commit()
 
         cursor.close()
@@ -407,22 +455,45 @@ def configurar_carrinho_routes(app):
 
             item = carrinho[indice]
 
-            produto = pegar_produto_por_id(
-            item["produto_id"]
-        )
+        item = carrinho[indice]
 
-            estoque = pegar_estoque_atual(
-            item["produto_id"]
-        )
+        # ----------------------
+        # FICHA DE SINUCA
+        # ----------------------
+        if item.get("tipo_item") == "sinuca":
 
-            nova_quantidade = (
-            item["quantidade"] + 1
-        )
+            item["quantidade"] += 1
+
+            item["subtotal"] = (
+        item["quantidade"]
+        * item["preco_unitario"]
+    )
+
+            session["carrinho"] = carrinho
+
+            return redirect(
+        "/carrinho"
+    )
+
+        # ----------------------
+        # PRODUTO NORMAL
+        # ----------------------
+        produto = pegar_produto_por_id(
+    item["produto_id"]
+)
+
+        estoque = pegar_estoque_atual(
+    item["produto_id"]
+)
+
+        nova_quantidade = (
+    item["quantidade"] + 1
+)
 
             # ----------------------
             # CONVERTE PARA UNIDADES
             # ----------------------
-            if item["tipo_venda"] == "caixa":
+        if item["tipo_venda"] == "caixa":
 
                 quantidade_solicitada = (
 
@@ -433,7 +504,7 @@ def configurar_carrinho_routes(app):
                 ]
             )
 
-            else:
+        else:
 
                 quantidade_solicitada = (
                 nova_quantidade
@@ -442,7 +513,7 @@ def configurar_carrinho_routes(app):
             # ----------------------
             # VERIFICA ESTOQUE
             # ----------------------
-            if (
+        if (
 
             quantidade_solicitada
 

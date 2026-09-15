@@ -1,3 +1,4 @@
+# Importa model
 from app.models.fiado_model import (
 
     listar_fiados,
@@ -12,10 +13,15 @@ from app.models.fiado_model import (
 
     buscar_recebimentos_fiado,
 
-    buscar_conta_por_cliente
+    buscar_conta_por_cliente,
+
+    buscar_fichas_fiado
 )
 
 
+# ==========================
+# LISTAR FIADOS
+# ==========================
 def pegar_fiados():
 
     fiados = listar_fiados()
@@ -41,19 +47,22 @@ def pegar_fiados():
 
             else:
 
-                agrupados[chave]["quantidade"] += produto["quantidade"]
+                agrupados[chave]["quantidade"] += (
+                    produto["quantidade"]
+                )
 
         fiado["produtos"] = list(
             agrupados.values()
         )
 
-        fiado["recebimentos"] = buscar_recebimentos_fiado(
-            fiado["id"]
+        fiado["recebimentos"] = (
+            buscar_recebimentos_fiado(
+                fiado["id"]
+            )
         )
 
     return fiados
 
-    return fiados
 
 # ==========================
 # RECEBER PAGAMENTO FIADO
@@ -80,12 +89,13 @@ def receber_pagamento_fiado(
         saldo_atual
         - float(valor_recebido)
     )
+
     registrar_recebimento_fiado(
 
-    conta_id,
+        conta_id,
 
-    valor_recebido
-)
+        valor_recebido
+    )
 
     if novo_saldo <= 0:
 
@@ -103,49 +113,89 @@ def receber_pagamento_fiado(
 
     atualizar_saldo_fiado(
 
-    conta_id,
+        conta_id,
 
-    novo_saldo,
+        novo_saldo,
 
-    status_conta
-)
+        status_conta
+    )
+
+
+# ==========================
+# DETALHES DO FIADO
+# ==========================
 def pegar_fiado_detalhes(conta_id):
 
+    # Busca dados da conta
     fiado = buscar_fiado_por_id(
         conta_id
     )
 
+    # Busca produtos
     produtos = buscar_produtos_fiado(
-    conta_id
-)
+        conta_id
+    )
 
+    # Busca fichas da sinuca
+    fichas = buscar_fichas_fiado(
+        conta_id
+    )
+
+    # Adiciona fichas junto dos produtos
+    for ficha in fichas:
+
+        produtos.append({
+
+            "nome": "Ficha",
+
+            "quantidade": ficha[
+                "quantidade_fichas"
+            ],
+
+            "tipo_venda": "Sinuca"
+        })
+
+    # Agrupa itens repetidos
     agrupados = {}
 
     for produto in produtos:
 
         chave = (
-        produto["nome"],
-        produto["tipo_venda"]
-    )
+            produto["nome"],
+            produto["tipo_venda"]
+        )
 
         if chave not in agrupados:
 
-            agrupados[chave] = produto.copy()
+            agrupados[chave] = (
+                produto.copy()
+            )
 
         else:
 
-            agrupados[chave]["quantidade"] += produto["quantidade"]
+            agrupados[chave][
+                "quantidade"
+            ] += produto[
+                "quantidade"
+            ]
 
     fiado["produtos"] = list(
-    agrupados.values()
-)
+        agrupados.values()
+    )
 
-    fiado["recebimentos"] = buscar_recebimentos_fiado(
-        conta_id
+    # Busca recebimentos
+    fiado["recebimentos"] = (
+        buscar_recebimentos_fiado(
+            conta_id
+        )
     )
 
     return fiado
 
+
+# ==========================
+# BUSCAR CONTA PELO CLIENTE
+# ==========================
 def pegar_conta_cliente(
 
     cliente_id

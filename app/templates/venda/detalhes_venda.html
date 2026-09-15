@@ -14,18 +14,20 @@ Detalhes da Venda
     ) }}"
 >
 
-    <div class="detalhes-container">
+<div class="detalhes-container">
 
-        <a
-            href="/venda/historico"
-            class="button button-secondary"
-        >
-            ← Voltar
-        </a>
-    
-        <h2 class="detalhes-titulo">
-            Detalhes da Venda
-        </h2>
+    <a
+        href="/venda/historico"
+        class="button button-secondary"
+    >
+        ← Voltar
+    </a>
+
+    <h2 class="detalhes-titulo">
+        Detalhes da Venda
+    </h2>
+
+    {% if produtos %}
     
         <table class="tabela-produtos">
 
@@ -81,6 +83,8 @@ Detalhes da Venda
 
         </table>
 
+        {% endif %}
+        
     </div>
 
 </div>

@@ -1,6 +1,18 @@
+
+.detalhes-container{
+
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
 .detalhes-topo{
 
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .detalhes-titulo{
@@ -9,22 +21,10 @@
 
     color: #2e7d32;
 
-    margin-top: 20px;
+    margin-top: -45px;
 
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
-
-.detalhes-titulo{
-
-    text-align: center;
-
-    color: #2e7d32;
-
-    margin-top: 25px;
-
-    margin-bottom: 30px;
-}
-
 .card-detalhes{
 
     margin-top: 20px;

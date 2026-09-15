@@ -1,7 +1,8 @@
 # Importa model
 from app.models.conta_model import (
     listar_contas_pendentes,
-    buscar_produtos_venda
+    buscar_produtos_venda,
+    buscar_fichas_pendentes
 )
 
 
@@ -14,11 +15,12 @@ def pegar_contas():
 
     for conta in contas:
 
-        conta["produtos"] = (
+        conta["produtos"] = buscar_produtos_venda(
+        conta["id"]
+    )
 
-            buscar_produtos_venda(
-                conta["id"]
-            )
-        )
+        conta["fichas"] = buscar_fichas_pendentes(
+        conta["id"]
+    )
 
     return contas

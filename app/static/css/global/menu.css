@@ -72,19 +72,24 @@
 .sidebar-link {
 
     display: flex;
+
     align-items: center;
 
     gap: 15px;
 
-    padding: 14px 18px;
+    min-height: 56px;
+
+    padding: 0 18px;
 
     text-decoration: none;
 
     color: var(--cor-branca);
 
-    border-radius: 8px;
+    border-radius: 12px;
 
     transition: var(--transicao);
+
+    box-sizing: border-box;
 
 }
 
@@ -95,15 +100,19 @@
 
 .sidebar-icon {
 
-    width: 22px;
+    width: 24px;
+
+    min-width: 24px;
 
     display: flex;
+
     justify-content: center;
+
     align-items: center;
 
     color: var(--cor-amarela);
 
-    font-size: 18px;
+    font-size: 20px;
 
 }
 
@@ -139,6 +148,8 @@
 .sidebar-link.active {
 
     background: var(--cor-vermelha);
+
+    color: var(--cor-branca);
 
 }
 

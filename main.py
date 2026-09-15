@@ -25,6 +25,8 @@ from app.routes.routes import configurar_rotas
 from app.routes.dashboard_route import configurar_rotas_dashboard
 # Importa rota movimentação
 from app.routes.movimentacao_route import configurar_movimentacao_routes
+# Importa rota fichas/sinuca
+from app.routes.sinuca_route import configurar_sinuca_routes
 
 # Cria aplicação Flask
 app = Flask(
@@ -55,6 +57,7 @@ configurar_fiado_routes(app)
 configurar_relatorio_routes(app)
 configurar_rotas_dashboard(app)
 configurar_movimentacao_routes(app)
+configurar_sinuca_routes(app)
 
 # Inicia servidor
 if __name__ == "__main__":

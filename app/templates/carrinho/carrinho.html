@@ -47,8 +47,18 @@ Carrinho
     
         <div class="carrinho-imagem">
     
-            {% if item.imagem %}
-    
+            {% if item.get("tipo_item") == "sinuca" %}
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='img/sinuca.png'
+                ) }}"
+                alt="Ficha de Sinuca"
+            >
+            
+            {% elif item.imagem %}
+            
             <img
                 src="{{ url_for(
                     'static',
@@ -56,11 +66,11 @@ Carrinho
                 ) }}"
                 alt="{{ item.nome }}"
             >
-    
+            
             {% else %}
-    
+            
             <i class="fa-solid fa-box fa-3x"></i>
-    
+            
             {% endif %}
     
         </div>
@@ -71,10 +81,19 @@ Carrinho
                 {{ item.nome }}
             </h3>
     
-            <p>
-                Tipo:
-                {{ item.tipo_venda }}
-            </p>
+            {% if item.get("tipo_item") == "sinuca" %}
+
+<p>
+    Tipo: Ficha de Sinuca
+</p>
+
+{% else %}
+
+<p>
+    Tipo: {{ item.tipo_venda }}
+</p>
+
+{% endif %}
     
             <div class="controle-quantidade">
 

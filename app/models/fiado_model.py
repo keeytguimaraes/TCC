@@ -329,3 +329,40 @@ def buscar_conta_por_cliente(
     conexao.close()
 
     return conta
+
+# ==========================
+# BUSCAR FICHAS POR CLIENTE
+# ==========================
+
+def buscar_fichas_fiado(conta_id):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT
+    sv.quantidade_fichas,
+    sv.valor_unitario,
+    sv.valor_total
+FROM sinuca_venda sv
+
+INNER JOIN venda v
+    ON sv.venda_id = v.id
+
+WHERE v.conta_id = %s
+    """
+
+    cursor.execute(
+        sql,
+        (conta_id,)
+    )
+
+    fichas = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return fichas

@@ -46,6 +46,13 @@ from app.controllers.estoque_controller import (
     pegar_estoque_atual
 )
 
+# Importa controller sinuca
+from app.controllers.sinuca_controller import (
+    pegar_config_sinuca,
+    adicionar_ficha_carrinho,
+    buscar_fichas_venda
+)
+
 
 # ==========================
 # CONFIGURAR ROTAS
@@ -70,6 +77,9 @@ def configurar_venda_routes(app):
         # Busca clientes
         clientes = pegar_clientes()
 
+        # Busca config de sinuca
+        config_sinuca = pegar_config_sinuca()
+
         # Carrinho
         carrinho = session.get(
             "carrinho",
@@ -84,6 +94,16 @@ def configurar_venda_routes(app):
             total_carrinho += item[
                 "subtotal"
             ]
+
+        quantidade_fichas = 0
+
+        for item in carrinho:
+
+            if item.get("tipo_item") == "sinuca":
+
+                quantidade_fichas = item["quantidade"]
+
+                break
 
         # Envia HTML
         return render_template(
@@ -100,7 +120,11 @@ def configurar_venda_routes(app):
 
         carrinho=carrinho,
 
-        total_carrinho=total_carrinho
+        total_carrinho=total_carrinho,
+
+        config_sinuca=config_sinuca,
+
+    quantidade_fichas=quantidade_fichas
 )
 
     # ==========================
@@ -316,9 +340,28 @@ def configurar_venda_routes(app):
         # ----------------------
         # VERIFICA ITEM EXISTENTE
         # ----------------------
+
         item_existente = None
 
         for item in carrinho:
+
+            # Ignora ficha de sinuca
+            if item.get("tipo_item") == "sinuca":
+
+                continue
+
+            if (
+
+                item["produto_id"] == produto_id
+
+                and
+
+                item["tipo_venda"] == tipo_venda
+    ):
+
+                item_existente = item
+
+                break
 
             if (
 
@@ -403,9 +446,47 @@ def configurar_venda_routes(app):
         venda_id
     )
 
+        fichas = buscar_fichas_venda(
+        venda_id
+    )
+
+        for ficha in fichas:
+
+            produtos.append({
+
+            "nome": "Ficha de Sinuca",
+
+            "quantidade":
+                ficha["quantidade_fichas"],
+
+            "tipo_venda":
+                "sinuca",
+
+            "preco_unitario":
+                ficha["valor_unitario"],
+
+            "subtotal":
+                ficha["valor_total"]
+
+        })
+
         return render_template(
 
         "venda/detalhes_venda.html",
 
         produtos=produtos
+    )
+    # ==========================
+    # ADICIONAR FICHA AO CARRINHO
+    # ==========================
+    @app.route(
+    "/carrinho/adicionar-ficha",
+    methods=["POST"]
+)
+    def adicionar_ficha_route():
+
+        adicionar_ficha_carrinho()
+
+        return redirect(
+        "/venda"
     )

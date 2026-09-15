@@ -81,31 +81,31 @@ Detalhes do Fiado
         <h2>
             📦 Produtos
         </h2>
-
+    
         {% if fiado.produtos %}
-
+    
             {% for produto in fiado.produtos %}
-
+    
                 <p>
-
+    
                     {{ produto.quantidade }}x
-
+    
                     {{ produto.nome }}
-
+    
                     ({{ produto.tipo_venda }})
-
+    
                 </p>
-
+    
             {% endfor %}
-
+    
         {% else %}
-
+    
             <p>
                 Nenhum produto encontrado.
             </p>
-
+    
         {% endif %}
-
+    
     </div>
 
     <!-- RECEBIMENTOS -->

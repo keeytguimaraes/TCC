@@ -1,0 +1,304 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Sinuca
+{% endblock %}
+
+{% block conteudo %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/sinuca.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/components/modal.css'
+    ) }}"
+>
+
+<div class="sinuca-container">
+
+    <h1 class="page-title">
+         Sinuca
+    </h1>
+
+    <!-- CONFIGURAÇÃO -->
+
+    {% if config %}
+
+    <div class="sinuca-card">
+
+        <h2>
+            ⚙️ Configuração Atual
+        </h2>
+
+        <div class="config-info">
+
+            <div class="config-item">
+
+                <span class="config-label">
+                    Nome
+                </span>
+
+                <span class="config-value">
+                    {{ config.nome }}
+                </span>
+
+            </div>
+
+            <div class="config-item">
+
+                <span class="config-label">
+                    Valor da Ficha
+                </span>
+
+                <span class="config-value">
+                    R$ {{ "%.2f"|format(config.valor_ficha) }}
+                </span>
+
+            </div>
+
+            <div class="config-item">
+
+                <span class="config-label">
+                    Percentual Comércio
+                </span>
+
+                <span class="config-value">
+                    {{ config.percentual_comercio|int }}%
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="sinuca-card">
+
+        <h2>
+            ⚙️ Configuração Atual
+        </h2>
+
+        <p>
+            Nenhuma configuração cadastrada.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+    <!-- RELATÓRIO -->
+
+    <div class="sinuca-card">
+
+        <h2>
+            📊 Relatório
+        </h2>
+
+        <div class="cards-relatorio">
+
+            <div class="relatorio-card">
+
+                <span>
+                    Total de Fichas
+                </span>
+
+                <strong>
+                    {{ dados.total_fichas if dados else 0 }}
+                </strong>
+
+            </div>
+
+            <div class="relatorio-card">
+
+                <span>
+                    Valor Arrecadado
+                </span>
+
+                <strong>
+                    R$ {{ "%.2f"|format(dados.valor_arrecadado if dados else 0) }}
+                </strong>
+
+            </div>
+
+            <div class="relatorio-card">
+
+                <span>
+                    Parte Comércio
+                </span>
+
+                <strong>
+                    R$ {{ "%.2f"|format(dados.valor_comercio if dados else 0) }}
+                </strong>
+
+            </div>
+
+            <div class="relatorio-card">
+
+                <span>
+                    Dono da Mesa
+                </span>
+
+                <strong>
+                    R$ {{ "%.2f"|format(dados.valor_dono if dados else 0) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- AÇÕES -->
+
+    <div class="acoes-grid">
+
+        <div
+            class="acao-card"
+            data-modal="modal-configuracao"
+        >
+
+            <div class="acao-icon">
+                <i class="fa-solid fa-gear"></i>
+            </div>
+
+            <h3>
+                Alterar Configuração
+            </h3>
+
+            <p>
+                Alterar valor da ficha e percentual
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MODAL CONFIGURAÇÃO -->
+
+<div
+    class="modal"
+    id="modal-configuracao"
+>
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2 class="modal-title">
+                Alterar Configuração
+            </h2>
+
+            <button
+                type="button"
+                class="modal-close"
+                data-close-modal
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <form
+            action="/sinuca/salvar"
+            method="POST"
+        >
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label>
+                        Nome
+                    </label>
+
+                    <input
+                        type="text"
+                        name="nome"
+                        value="{{ config.nome if config else '' }}"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Valor da Ficha
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        name="valor_ficha"
+                        value="{{ config.valor_ficha if config else '' }}"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Percentual Comércio
+                    </label>
+
+                    <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="1"
+                        name="percentual_comercio"
+                        value="{{ config.percentual_comercio|int if config else '' }}"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="button button-secondary"
+                    data-close-modal
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    class="button button-success"
+                >
+                    Salvar
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/modal.js'
+    ) }}"
+></script>
+
+{% endblock %}

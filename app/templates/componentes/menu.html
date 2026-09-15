@@ -151,6 +151,21 @@
 
         </a>
 
+       <!-- SINUCA -->
+
+<a href="{{ url_for('sinuca') }}"
+class="sidebar-link {% if request.endpoint == 'sinuca' %}active{% endif %}">
+
+ <span class="sidebar-icon">
+    <i class="fa-solid fa-trophy"></i>
+ </span>
+
+ <span class="sidebar-text">
+     Sinuca
+ </span>
+
+</a>
+
         <!-- RELATÓRIOS -->
 
         <a href="{{ url_for('relatorio') }}"

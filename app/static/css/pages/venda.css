@@ -439,3 +439,23 @@
     border-radius: 8px;
     margin-bottom: 15px;
 }
+
+.produto-sinuca .produto-card-image{
+
+    height: 180px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.produto-sinuca .produto-card-image img{
+
+    width: 120px;
+
+    height: 120px;
+
+    object-fit: contain;
+}

@@ -41,7 +41,22 @@ Contas Pendentes
                 </li>
         
                 {% endfor %}
-        
+
+                {% if conta.fichas %}
+
+    {% for ficha in conta.fichas %}
+
+    <li>
+
+        {{ ficha.quantidade_fichas }}x
+         Ficha de Sinuca
+        - R$ {{ ficha.valor_total }}
+
+    </li>
+
+    {% endfor %}
+
+{% endif %}
             </ul>
         
             Valor Total:
