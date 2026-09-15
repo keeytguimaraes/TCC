@@ -4,20 +4,45 @@
 
 .sidebar {
 
+    position: sticky;
+
+    top: 0;
+
+    height: 100vh;
+
     width: var(--largura-menu);
-    min-height: 100vh;
 
     background: var(--cor-preta);
 
     display: flex;
+
     flex-direction: column;
 
-    box-shadow: var(--sombra);
-
-    transition: var(--transicao);
+    flex-shrink: 0;
 
 }
 
+.sidebar {
+    width: var(--largura-menu);
+
+    background: var(--cor-preta);
+
+    position: sticky;
+
+    top: 0;
+
+    height: 100vh;
+
+    overflow-y: auto;
+
+    scrollbar-width: none;
+}
+
+.sidebar::-webkit-scrollbar {
+
+    display: none;
+
+}
 
 /* ======================================================
    LOGO
@@ -54,16 +79,14 @@
 .sidebar-menu {
 
     display: flex;
+
     flex-direction: column;
 
     padding: 15px;
 
     gap: 8px;
 
-    flex: 1;
-
 }
-
 
 /* ======================================================
    LINKS
