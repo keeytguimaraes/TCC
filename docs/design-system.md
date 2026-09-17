@@ -1,249 +1,647 @@
-# Sistema Integrado de Gestão Comercial
+DESIGN SYSTEM OFICIAL — SIGC
+Sistema Integrado de Gestão Comercial
 
-# Design System
+Versão Oficial 1.0
 
---------------------------------------------------
+Esta documentação define a identidade visual oficial do SIGC e deve ser considerada a única referência válida para qualquer novo desenvolvimento.
 
-# Objetivo
+1. IDENTIDADE VISUAL
+Conceito
 
+O SIGC é um sistema administrativo/comercial.
 
-Este documento define os padrões visuais, estruturais e organizacionais do sistema.
+A interface deve transmitir:
 
-Todo novo módulo deve seguir este guia para garantir consistência, manutenção e escalabilidade.
+Organização
+Confiabilidade
+Clareza
+Rapidez operacional
+Facilidade de uso
+Estilo Visual
 
-# Estrutura CSS
-static/
-│
-├── css/
-│   ├── global/
-│   ├── components/
-│   └── pages/
+O estilo oficial é:
 
-# Estrutura MVC
-app/
+Moderno + Administrativo + Comercial
 
-├── controllers/
-├── models/
-├── routes/
-├── templates/
-├── static/
-└── database/
+Inspirado em:
 
-# Componentes
-Button
+ERP's modernos
+Sistemas de gestão empresarial
+Dashboards SaaS
+PDVs contemporâneos
+Objetivos da Interface
 
-Arquivo:
+Prioridades:
 
-components/button.css
+Velocidade operacional
+Facilidade de aprendizado
+Poucos cliques
+Leitura rápida
+Consistência visual
+Responsividade
+2. PALETA DE CORES OFICIAL
+Cor Primária
+Azul SIGC
 
-Tipos:
+HEX:
 
-button-primary
-button-secondary
-button-success
-button-danger
-button-warning
-Card
+#0D6EFD
 
-Arquivo:
+RGB:
 
-components/card.css
+rgb(13, 110, 253)
+
+Uso:
+
+Botões principais
+Links
+Elementos ativos
+Destaques
+Cor Secundária
+
+HEX:
+
+#6C757D
+
+RGB:
+
+rgb(108,117,125)
+
+Uso:
+
+Botões secundários
+Textos auxiliares
+Cor de Sucesso
+
+HEX:
+
+#198754
+
+RGB:
+
+rgb(25,135,84)
+
+Uso:
+
+Confirmações
+Pagamentos
+Indicadores positivos
+Cor de Aviso
+
+HEX:
+
+#FFC107
+
+RGB:
+
+rgb(255,193,7)
+
+Uso:
+
+Alertas
+Atenção
+Estoque baixo
+Cor de Erro
+
+HEX:
+
+#DC3545
+
+RGB:
+
+rgb(220,53,69)
+
+Uso:
+
+Exclusões
+Erros
+Ações destrutivas
+Cor de Informação
+
+HEX:
+
+#0DCAF0
+
+RGB:
+
+rgb(13,202,240)
+
+Uso:
+
+Informações
+Avisos neutros
+Fundo Principal
+
+HEX:
+
+#F5F7FA
+
+Uso:
+
+Plano de fundo geral.
+
+Fundo dos Cards
+
+HEX:
+
+#FFFFFF
+
+Uso:
+
+Cards e painéis.
+
+Bordas
+
+HEX:
+
+#DEE2E6
+
+Uso:
+
+Separações sutis.
+
+Texto Principal
+
+HEX:
+
+#212529
+
+Uso:
+
+Títulos e conteúdo principal.
+
+Texto Secundário
+
+HEX:
+
+#6C757D
+
+Uso:
+
+Descrições e informações auxiliares.
+
+3. TIPOGRAFIA
+Fonte Principal
+'Inter', sans-serif
+
+Caso não esteja instalada:
+
+'Segoe UI', sans-serif
+Fontes Fallback
+Arial
+Helvetica
+sans-serif
+Pesos
+400 Regular
+500 Medium
+600 SemiBold
+700 Bold
+Hierarquia
+H1
+36px
+700
+H2
+30px
+700
+H3
+24px
+600
+Texto padrão
+16px
+400
+Texto auxiliar
+14px
+400
+4. ESPAÇAMENTO
+Sistema Base
+
+Utilizar múltiplos de:
+
+4px
+Espaçamentos Oficiais
+4px
+8px
+12px
+16px
+20px
+24px
+32px
+40px
+48px
+Padding dos Cards
+20px
+Border Radius
+
+Padrão:
+
+12px
+
+Grandes:
+
+15px
+
+Pequenos:
+
+8px
+5. COMPONENTES PADRÃO
+BOTÕES
+Primário
+background: #0D6EFD;
+color: white;
+Secundário
+background: #6C757D;
+color: white;
+Sucesso
+background: #198754;
+color: white;
+Aviso
+background: #FFC107;
+color: #212529;
+Perigo
+background: #DC3545;
+color: white;
+Hover
+
+Escurecer:
+
+10%
+Disabled
+opacity: .6;
+cursor: not-allowed;
+INPUTS
+
+Padrão:
+
+height: 48px;
+border-radius: 10px;
+border: 1px solid #CED4DA;
+Focus
+border-color: #0D6EFD;
+box-shadow:
+0 0 0 3px rgba(13,110,253,.15);
+Select2
+
+Já padronizado.
+
+Altura:
+
+60px
+
+Radius:
+
+15px
+TABELAS
+Cabeçalho
+background: #F8F9FA;
+font-weight: 600;
+Hover
+background: #F5F7FA;
+Bordas
+#DEE2E6
+CARDS
+Estrutura
+background: white;
+border-radius: 12px;
+padding: 20px;
+Sombra
+box-shadow:
+0 2px 8px rgba(0,0,0,.08);
+Hover
+transform: translateY(-3px);
+MODAIS
+Estrutura
+.modal
+.modal-content
+.modal-header
+.modal-actions
+Cabeçalho
+
+Ícone + título.
+
+Corpo
+
+Texto centralizado.
+
+Rodapé
+
+Botões alinhados à direita.
+
+6. ÍCONES
+
+Biblioteca oficial:
+
+Font Awesome
+Tamanhos
+
+Pequeno
+
+16px
+
+Médio
+
+20px
+
+Grande
+
+30px
+Regra
+
+Sempre utilizar ícones sem exagero.
+
+Ícone deve complementar a informação.
+
+Nunca substituir texto.
+
+7. DASHBOARD
+Cards KPI
 
 Estrutura:
 
-.card
-.card-header
-.card-body
-.card-footer
-Dashboard Card
+background: white;
+padding: 25px;
+border-radius: 15px;
 
-Arquivo:
+Conteúdo:
 
-components/dashboard-card.css
+Ícone
+Valor
+Descrição
 
-Usado em:
+Exemplo:
 
-Estoque Atual
-Dashboard Geral
-Relatórios
-Search
+💰
+R$ 12.350
+Faturamento do mês
+Indicadores
 
-Arquivo:
+Cores:
 
-components/search.css
+Verde
 
-Recursos:
+Positivo
 
-Pesquisa instantânea
-Ignora acentos
-Filtro por nome
-Empty State
-Input
+Vermelho
 
-Arquivo:
+Negativo
 
-components/input.css
+Azul
 
-Estrutura:
+Neutro
+8. MÓDULO DE PRODUTOS
+Cartões
 
-.form-group
-label
-input
-select
-textarea
-Product Card
+Estrutura oficial:
 
-Usado em:
+Imagem
+Nome
+Categoria
+Preço
+Estoque
+Ações
+Imagem
 
-Venda
-Estoque Atual
-Produtos
+Prioridade:
 
-Estrutura:
+Foto do produto
 
-.produto-card
-.produto-header
-.produto-info
-.produto-expandido
-Estoque Card
+Fallback:
 
-Usado em:
+Ícone da categoria
+Estoque
 
-Estoque Atual
+Verde
 
-Estrutura:
+Normal
 
-.estoque-card
-.status-normal
-.status-minimo
-.status-baixo
-.status-sem
-.status-nunca
-Status de Estoque
+Amarelo
 
-🟢 Normal
+Baixo
 
-🔵 No mínimo
+Vermelho
 
-🟡 Baixo
+Sem estoque
+9. MÓDULO DE VENDAS
+Layout
 
-🔴 Sem estoque
+Duas áreas:
 
-⚫ Nunca abastecido
-
-Módulos Existentes
-Cliente
-Cadastro
-Edição
-Exclusão
+Catálogo
++
+Carrinho
 Produto
-Cadastro
-Edição
-Inativação
-Histórico de Preços
-Fornecedor
-Cadastro
-Consulta
-Estoque
-Entrada
-Estoque Atual
-Movimentação
-Histórico
-Venda
-Venda por caixa
-Venda por unidade
-Venda por dose
-Venda de cigarro (solto, maço e box)
-Fiado
-Cadastro
-Pagamento
-Histórico
-Conta Pendente
-Cadastro
-Baixa
-Consulta
-Relatórios
-PDF
-Financeiro
-Estoque
-Vendas
-Ícones Oficiais
 
-Cliente
+Cartão clicável.
 
-fa-user
+Adicionar com um clique.
+
+Carrinho
+
+Estrutura oficial:
+
+Imagem
+
+Nome
+
+Tipo de venda
+
+Quantidade
+
+Desconto aplicado
+
+Preço original
+
+Preço aplicado
+
+Subtotal
+
+Excluir
+Confirmações
+
+Obrigatórias:
+
+Limpar carrinho
+Remover item
+Reduzir de 1 para 0
+
+Todos utilizando modal reutilizável.
+
+10. MÓDULO DE ESTOQUE
+Estrutura
+
+Mostrar:
 
 Produto
+Origem
+Quantidade recebida
+Quantidade atual
+Preço compra
+Data
+Destaques
 
-fa-box
+Entrada recente:
 
-Fornecedor
+Azul
 
-fa-truck
+Estoque baixo:
 
-Venda
+Amarelo
 
-fa-cart-shopping
+Sem estoque:
 
-Estoque
+Vermelho
 
-fa-warehouse
+11. MÓDULO DE FICHAS DE SINUCA
+Identidade
 
-Movimentação
+Cor principal:
 
-fa-arrow-right-arrow-left
+#6F42C1
 
-Fiado
+(Roxo)
 
-fa-book
+Ícone
 
-Conta Pendente
+Mesa de sinuca ou taco.
 
-fa-clock
+Indicadores
 
-Relatórios
+Mostrar:
 
-fa-chart-column
-Ordem de Desenvolvimento
-1. Banco de Dados
-2. Model
-3. Controller
-4. Route
-5. HTML
-6. CSS
-7. JavaScript
-8. Testes
-9. Refatoração
-Roadmap Atual
+Fichas disponíveis
+Fichas vendidas
+Receita
+Participação 50%
+12. RESPONSIVIDADE
+Desktop
 
-✅ Produtos
+≥ 1200px
 
-✅ Estoque
+Layout completo.
 
-✅ Entrada de Estoque
+Notebook
 
-✅ Venda
+992px–1199px
 
-✅ Fiado
+Grid reduzido.
 
-✅ Conta Pendente
+Tablet
 
-✅ Histórico de Preços
+768px–991px
 
-✅ Movimentação de Estoque
+Menu recolhível.
 
-⬜ Histórico de Vendas
+Celular
 
-⬜ Relatórios PDF
+≤ 767px
 
-⬜ Dashboard Financeiro
+Cards empilhados.
 
-⬜ Select2
+Botões largura total.
 
-⬜ Fotos no Estoque
+13. REGRAS DE UX
+Navegação
 
-⬜ Ficha de Sinuca
+Sempre previsível.
 
-⬜ Raspadinha
+Nunca mudar localização dos elementos principais.
 
-Última atualização: 27/08/2026
+Feedback
+
+Toda ação deve gerar:
+
+flash()
+Sucesso
+
+Verde.
+
+Erro
+
+Vermelho.
+
+Aviso
+
+Amarelo.
+
+Exclusões
+
+Sempre exigir confirmação.
+
+Nunca excluir diretamente.
+
+Carregamento
+
+Sempre indicar quando houver processamento demorado.
+
+14. CSS BASE
+:root{
+
+    /* CORES */
+
+    --primary:#0D6EFD;
+    --secondary:#6C757D;
+
+    --success:#198754;
+    --warning:#FFC107;
+    --danger:#DC3545;
+    --info:#0DCAF0;
+
+    --bg:#F5F7FA;
+    --card:#FFFFFF;
+
+    --border:#DEE2E6;
+
+    --text:#212529;
+    --text-muted:#6C757D;
+
+    --sinuca:#6F42C1;
+
+    /* FONTES */
+
+    --font-primary:'Inter',sans-serif;
+    --font-secondary:'Segoe UI',sans-serif;
+
+    /* TAMANHOS */
+
+    --h1:36px;
+    --h2:30px;
+    --h3:24px;
+
+    --text-size:16px;
+    --small-size:14px;
+
+    /* ESPAÇAMENTOS */
+
+    --space-1:4px;
+    --space-2:8px;
+    --space-3:12px;
+    --space-4:16px;
+    --space-5:20px;
+    --space-6:24px;
+    --space-7:32px;
+    --space-8:40px;
+
+    /* BORDAS */
+
+    --radius-sm:8px;
+    --radius-md:12px;
+    --radius-lg:15px;
+
+    /* SOMBRAS */
+
+    --shadow:
+        0 2px 8px rgba(0,0,0,.08);
+
+}
+15. REGRAS OBRIGATÓRIAS DE DESIGN
+Utilizar exclusivamente a paleta oficial.
+Todo card deve utilizar sombra padrão.
+Todo formulário deve utilizar inputs padronizados.
+Toda exclusão deve possuir confirmação.
+Toda ação deve possuir feedback visual (flash message).
+Novos módulos devem seguir o mesmo padrão de cards.
+Utilizar Font Awesome como biblioteca oficial.
+Utilizar Select2 em listas grandes.
+Nunca criar componentes visuais duplicados se já existir componente reutilizável.
+Manter consistência entre Dashboard, Produtos, Estoque, Vendas e Contas.
+Priorizar clareza operacional antes de estética.
+O sistema deve parecer um ERP comercial moderno.

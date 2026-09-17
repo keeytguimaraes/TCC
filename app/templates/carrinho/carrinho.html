@@ -23,17 +23,31 @@ Carrinho
 
 <div class="cabecalho-carrinho">
 
-    <h1>
-        Carrinho
-    </h1>
+    <h1>Carrinho</h1>
 
-    <a
-        href="/venda"
-        class="button button-secondary"
-    >
-        <i class="fa-solid fa-arrow-left"></i>
-        Voltar para Vendas
-    </a>
+    <div class="acoes-topo">
+
+        {% if carrinho %}
+
+<button
+    type="button"
+    class="button button-danger"
+    data-modal="modal-limpar-carrinho"
+>
+    <i class="fa-solid fa-trash"></i>
+    Limpar Carrinho
+</button>
+        {% endif %}
+
+        <a
+            href="/venda"
+            class="button button-secondary"
+        >
+            <i class="fa-solid fa-arrow-left"></i>
+            Voltar para Vendas
+        </a>
+
+    </div>
 
 </div>
 
@@ -83,54 +97,55 @@ Carrinho
     
             {% if item.get("tipo_item") == "sinuca" %}
 
-<p>
-    Tipo: Ficha de Sinuca
-</p>
-
-{% else %}
-
-<p>
-    Tipo: {{ item.tipo_venda }}
-</p>
-
-{% endif %}
+            <div class="tipo-venda">
+                <i class="fa-solid fa-tag"></i>
+                Ficha de Sinuca
+            </div>
+            
+            {% else %}
+            
+            <div class="tipo-venda">
+                <i class="fa-solid fa-tag"></i>
+                {{ item.tipo_venda|capitalize }}
+            </div>
+            
+            {% endif %}
     
             <div class="controle-quantidade">
 
-                <form
-                    action="/carrinho/menos/{{ loop.index0 }}"
-                    method="POST"
-                >
-            
-                    <button
-                        class="button button-secondary"
-                    >
-                        -
-                    </button>
-            
-                </form>
-            
-                <form
-    action="/carrinho/atualizar/{{ loop.index0 }}"
+                {% if item.quantidade == 1 %}
+
+<button
+    type="button"
+    class="button button-secondary"
+    data-modal="modal-remover-{{ loop.index0 }}"
+>
+    -
+</button>
+
+{% else %}
+
+<form
+    action="/carrinho/menos/{{ loop.index0 }}"
     method="POST"
 >
 
-    <input
-        type="number"
-        name="quantidade"
-        min="1"
-        value="{{ item.quantidade }}"
-        class="input-quantidade"
-    >
-
     <button
-        type="submit"
-        class="button button-primary"
+        class="button button-secondary"
     >
-        OK
+        -
     </button>
 
 </form>
+
+{% endif %}
+            
+                <input
+    type="number"
+    value="{{ item.quantidade }}"
+    class="input-quantidade"
+    readonly
+>
                 <form
                     action="/carrinho/mais/{{ loop.index0 }}"
                     method="POST"
@@ -176,10 +191,11 @@ Carrinho
 <form
     action="/carrinho/preco/{{ loop.index0 }}"
     method="POST"
+    class="form-preco"
 >
 
     <label>
-        Preço aplicado:
+        Desconto aplicado:
     </label>
 
     <input
@@ -211,22 +227,68 @@ Carrinho
     
             </div>
     
-            <form
-                action="/carrinho/remover/{{ loop.index0 }}"
-                method="POST"
+            <button
+    type="button"
+    class="button button-danger"
+    data-modal="modal-remover-{{ loop.index0 }}"
+>
+    <i class="fa-solid fa-trash"></i>
+    Excluir
+</button>
+<div
+    class="modal"
+    id="modal-remover-{{ loop.index0 }}"
+>
+
+<div class="modal-content">
+
+    <div class="modal-header">
+
+        <i class="fa-solid fa-triangle-exclamation"></i>
+
+        <h3>
+            Remover Produto
+        </h3>
+
+    </div>
+
+    <p class="modal-texto">
+
+        Deseja remover
+
+        <strong>{{ item.nome }}</strong>
+
+        do carrinho?
+
+    </p>
+
+    <div class="modal-actions">
+
+        <button
+            class="button button-secondary"
+            data-close-modal
+        >
+            Cancelar
+        </button>
+
+        <form
+            action="/carrinho/remover/{{ loop.index0 }}"
+            method="POST"
+        >
+
+            <button
+                class="button button-danger"
             >
-    
-                <button
-                    class="button button-danger"
-                >
-    
-                    <i class="fa-solid fa-trash"></i>
-    
-                    Excluir
-    
-                </button>
-    
-            </form>
+                Remover
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</div>
     
         </div>
     
@@ -272,7 +334,7 @@ Carrinho
 <div class="desconto-geral">
 
     <label>
-        Desconto da venda (R$)
+        Desconto (R$)
     </label>
 
     <input
@@ -284,21 +346,6 @@ Carrinho
     >
 
 </div>
-
-<form
-    action="/carrinho/limpar"
-    method="POST"
->
-
-    <button
-        type="submit"
-        class="button button-danger"
-    >
-        <i class="fa-solid fa-trash"></i>
-        Limpar Carrinho
-    </button>
-
-</form>
 
 <h2 class="titulo-finalizar">
     Finalizar venda
@@ -504,11 +551,79 @@ Carrinho
 
 {% else %}
 
-<p>
-    Carrinho vazio
-</p>
+<div class="carrinho-vazio">
+
+    <i class="fa-solid fa-cart-shopping"></i>
+
+    <h2>Carrinho vazio</h2>
+
+    <p>
+        Nenhum produto foi adicionado à venda.
+    </p>
+
+</div>
 
 {% endif %}
+
+<div
+class="modal"
+id="modal-limpar-carrinho"
+>
+
+<div class="modal-content">
+
+    <div class="modal-header">
+
+        <i class="fa-solid fa-triangle-exclamation"></i>
+
+        <h3>
+            Limpar Carrinho
+        </h3>
+
+    </div>
+
+    <p class="modal-texto">
+
+        Todos os itens serão removidos da venda.
+
+        <br><br>
+
+        <strong>
+            Esta ação não pode ser desfeita.
+        </strong>
+
+    </p>
+
+    <div class="modal-actions">
+
+        <button
+            class="button button-secondary"
+            data-close-modal
+        >
+            Cancelar
+        </button>
+
+        <form
+            action="/carrinho/limpar"
+            method="POST"
+        >
+
+            <button
+                class="button button-danger"
+                type="submit"
+            >
+                Limpar
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</div>
+
+</div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
