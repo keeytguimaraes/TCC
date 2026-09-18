@@ -14,34 +14,39 @@ def listar_contas_pendentes():
     )
 
     sql = """
-    SELECT
+        SELECT
 
-        venda.id,
+            cp.id,
+            cp.nome_cliente_temporario,
+            cp.data_abertura,
 
-        venda.nome_cliente_temporario,
+            COALESCE(
+                SUM(v.valor_total),
+                0
+            ) AS valor_total
 
-        venda.valor_total,
+        FROM conta_pendente cp
 
-        venda.data_venda
+        LEFT JOIN venda v
 
-    FROM venda
+            ON v.conta_pendente_id = cp.id
 
-    WHERE
+        WHERE cp.status = 'Aberta'
 
-        venda.status_pagamento = 'Pendente'
+        GROUP BY
 
-        AND
+            cp.id,
+            cp.nome_cliente_temporario,
+            cp.data_abertura
 
-        venda.nome_cliente_temporario IS NOT NULL
+        ORDER BY cp.id DESC
+    """
 
-    ORDER BY venda.id DESC
-"""
     cursor.execute(sql)
 
     contas = cursor.fetchall()
 
     cursor.close()
-
     conexao.close()
 
     return contas
@@ -274,3 +279,142 @@ def buscar_fichas_pendentes(venda_id):
     conexao.close()
 
     return fichas
+
+# ==========================
+# BUSCAR CONTA PENDENTE ABERTA
+# ==========================
+def buscar_conta_pendente_aberta(nome_cliente):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT *
+
+        FROM conta_pendente
+
+        WHERE nome_cliente_temporario = %s
+
+        AND status = 'Aberta'
+
+        LIMIT 1
+    """
+
+    cursor.execute(
+        sql,
+        (nome_cliente,)
+    )
+
+    conta = cursor.fetchone()
+
+    cursor.close()
+    conexao.close()
+
+    return conta
+
+
+# ==========================
+# CRIAR CONTA PENDENTE
+# ==========================
+def criar_conta_pendente(nome_cliente):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor()
+
+    sql = """
+        INSERT INTO conta_pendente (
+
+            nome_cliente_temporario,
+            status
+
+        )
+
+        VALUES (
+
+            %s,
+            'Aberta'
+
+        )
+    """
+
+    cursor.execute(
+        sql,
+        (nome_cliente,)
+    )
+
+    conexao.commit()
+
+    conta_id = cursor.lastrowid
+
+    cursor.close()
+    conexao.close()
+
+    return conta_id
+
+# ==========================
+# BUSCAR CONTA PENDENTE
+# ==========================
+def buscar_conta_pendente_por_id(conta_id):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT *
+
+        FROM conta_pendente
+
+        WHERE id = %s
+    """
+
+    cursor.execute(
+        sql,
+        (conta_id,)
+    )
+
+    conta = cursor.fetchone()
+
+    cursor.close()
+    conexao.close()
+
+    return conta
+
+# ==========================
+# BUSCAR VENDAS DA CONTA
+# ==========================
+def buscar_vendas_conta_pendente(conta_id):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT *
+
+        FROM venda
+
+        WHERE conta_pendente_id = %s
+
+        ORDER BY data_venda ASC
+    """
+
+    cursor.execute(
+        sql,
+        (conta_id,)
+    )
+
+    vendas = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return vendas

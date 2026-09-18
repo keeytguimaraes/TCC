@@ -22,7 +22,10 @@ from app.models.conta_model import (
 
     buscar_conta_aberta,
     criar_conta,
-    atualizar_saldo_conta
+    atualizar_saldo_conta,
+
+    buscar_conta_pendente_aberta,
+    criar_conta_pendente
 )
 
 
@@ -32,6 +35,11 @@ from app.controllers.estoque_controller import (
 
 from app.controllers.produto_controller import (
     pegar_produto_por_id
+)
+
+from app.controllers.conta_controller import (
+    pegar_contas,
+    pegar_detalhes_conta
 )
 
 # ==========================
@@ -172,6 +180,8 @@ def configurar_carrinho_routes(app):
 
         conta_id = None
 
+        conta_pendente_id = None
+
         # Venda fiado
         if tipo_finalizacao == "fiado":
 
@@ -195,6 +205,26 @@ def configurar_carrinho_routes(app):
         elif tipo_finalizacao == "pendente":
 
             status_pagamento = "Pendente"
+
+            conta_pendente = (
+        buscar_conta_pendente_aberta(
+            nome_cliente_temporario
+        )
+    )
+
+            if conta_pendente:
+
+                conta_pendente_id = (
+            conta_pendente["id"]
+        )
+
+            else:
+
+                conta_pendente_id = (
+            criar_conta_pendente(
+                nome_cliente_temporario
+            )
+        )
 
         # Pagamento normal
         else:
@@ -273,7 +303,7 @@ def configurar_carrinho_routes(app):
                 cliente_id,
                 status_pagamento,
                 conta_id,
-                nome_cliente_temporario,
+                conta_pendente_id,
                 saldo_devedor
 
             )
@@ -294,7 +324,7 @@ def configurar_carrinho_routes(app):
                 cliente_id,
                 status_pagamento,
                 conta_id,
-                nome_cliente_temporario,
+                conta_pendente_id,
                 saldo_devedor
             )
         )
@@ -341,7 +371,6 @@ INSERT INTO sinuca_venda (
 
     venda_id,
     cliente_id,
-    nome_cliente_temporario,
     quantidade_fichas,
     valor_unitario,
     valor_total,
@@ -350,7 +379,6 @@ INSERT INTO sinuca_venda (
 )
 VALUES (
 
-    %s,
     %s,
     %s,
     %s,
@@ -366,7 +394,6 @@ VALUES (
     (
         venda_id,
         cliente_id,
-        nome_cliente_temporario,
         item["quantidade"],
         item["preco_unitario"],
         item["subtotal"],
@@ -687,4 +714,23 @@ VALUES (
 
         return redirect(
         "/carrinho"
+    )
+
+    # ==========================
+    # DETALHES
+    # ==========================
+    @app.route(
+    "/conta/conta_pendente_detalhes/<int:conta_id>"
+)
+    def detalhes_conta(conta_id):
+
+        conta = pegar_detalhes_conta(
+        conta_id
+    )
+
+        return render_template(
+
+        "conta/conta_pendente_detalhes.html",
+
+        conta=conta
     )

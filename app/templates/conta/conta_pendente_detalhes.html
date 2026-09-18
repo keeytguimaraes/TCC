@@ -1,0 +1,173 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Detalhes da Conta
+{% endblock %}
+
+{% block conteudo %}
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/detalhes_fiado.css'
+    ) }}"
+>
+
+{% endblock %}
+
+<div class="page-header">
+
+    <h1>
+        Detalhes da Conta
+    </h1>
+
+    <a
+        href="/conta"
+        class="button button-secondary"
+    >
+        <i class="fa-solid fa-arrow-left"></i>
+        Voltar
+    </a>
+
+</div>
+
+<div class="detalhes-grid">
+
+    <!-- CLIENTE -->
+
+    <div class="detalhe-card cliente-card">
+
+        <h2>
+            👤 {{ conta.nome_cliente_temporario }}
+        </h2>
+
+        <p>
+            <strong>Status:</strong>
+            {{ conta.status }}
+        </p>
+
+        <p>
+            <strong>Aberta em:</strong>
+
+            {{ conta.data_abertura.strftime('%d/%m/%Y %H:%M') }}
+        </p>
+
+    </div>
+
+    <!-- FINANCEIRO -->
+
+    <div class="detalhe-card financeiro-card">
+
+        <h2>
+            💰 Financeiro
+        </h2>
+
+        <p>
+
+            <strong>
+                Total da Conta:
+            </strong>
+
+            R$ {{ conta.valor_total }}
+
+        </p>
+
+        <p>
+
+            <strong>
+                Vendas:
+            </strong>
+
+            {{ conta.vendas|length }}
+
+        </p>
+
+    </div>
+
+    <!-- PRODUTOS -->
+
+    <div class="detalhe-card produtos-card">
+
+        <h2>
+            📦 Produtos
+        </h2>
+
+        {% for venda in conta.vendas %}
+
+            {% for produto in venda.produtos %}
+
+                <p>
+
+                    {{ produto.quantidade }}x
+
+                    {{ produto.nome }}
+
+                    ({{ produto.tipo_venda }})
+
+                </p>
+
+            {% endfor %}
+
+            {% for ficha in venda.fichas %}
+
+                <p>
+
+                    {{ ficha.quantidade_fichas }}x
+
+                    Ficha (Sinuca)
+
+                </p>
+
+            {% endfor %}
+
+        {% endfor %}
+
+    </div>
+
+    <!-- RECEBIMENTOS -->
+
+    <div class="detalhe-card recebimentos-card">
+
+        <h2>
+            💵 Recebimentos
+        </h2>
+
+        <p>
+            Nenhum recebimento registrado.
+        </p>
+
+    </div>
+
+</div>
+
+<!-- PAGAMENTO -->
+
+<div class="detalhe-card pagamento-card">
+
+    <h2>
+        💵 Receber Pagamento
+    </h2>
+
+    <form
+        action="/conta/pagar/{{ conta.id }}"
+        method="POST"
+    >
+
+        <button
+            type="submit"
+            class="button button-success"
+        >
+
+            <i class="fa-solid fa-money-bill-wave"></i>
+
+            Quitar Conta
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

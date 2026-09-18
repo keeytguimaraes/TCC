@@ -4,89 +4,113 @@
 Contas Pendentes
 {% endblock %}
 
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/conta.css'
+    ) }}"
+>
+
+{% endblock %}
+
 {% block conteudo %}
 
-    <h1>
+<div class="conta-container">
+
+    <h1 class="pagina-titulo">
         Contas Pendentes
     </h1>
 
-    <ul>
+    <!-- PESQUISA -->
+
+    <div class="conta-pesquisa">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Pesquisar cliente..."
+            >
+
+        </div>
+
+    </div>
+
+    <!-- CONTADOR -->
+
+    <p
+        id="search-count"
+        class="total-contas"
+    >
+        {{ contas|length }} conta(s) pendente(s)
+    </p>
+
+    <!-- GRID -->
+
+    <div class="contas-grid">
 
         {% for conta in contas %}
-        
-        <li>
 
-            <strong>
-        
+        <div class="conta-card">
+
+            <h3 class="cliente-nome">
                 {{ conta.nome_cliente_temporario }}
-        
-            </strong>
-        
-            <br><br>
-        
-            Produtos:
-        
-            <ul>
-        
-                {% for produto in conta.produtos %}
-        
-                <li>
-        
-                    {{ produto.quantidade }}x
-        
-                    {{ produto.nome }}
-        
-                    ({{ produto.tipo_venda }})
-        
-                </li>
-        
-                {% endfor %}
+            </h3>
 
-                {% if conta.fichas %}
+            <p>
 
-    {% for ficha in conta.fichas %}
+                <strong>
+                    Saldo Atual:
+                </strong>
 
-    <li>
+                R$ {{ "%.2f"|format(conta.valor_total) }}
 
-        {{ ficha.quantidade_fichas }}x
-         Ficha de Sinuca
-        - R$ {{ ficha.valor_total }}
+            </p>
 
-    </li>
+            <p>
 
-    {% endfor %}
+                <strong>
+                    Aberta em:
+                </strong>
 
-{% endif %}
-            </ul>
-        
-            Valor Total:
-        
-            R$ {{ conta.valor_total }}
-        
-            <br><br>
-        
-            Data:
-            {{ conta.data_venda.strftime('%d/%m/%Y %H:%M') }}
+                {{ conta.data_abertura.strftime('%d/%m/%Y') }}
 
-            <br><br>
+            </p>
 
-<form
-    action="/conta/pagar/{{ conta.id }}"
-    method="POST"
->
+            <a
+                href="/conta/conta_pendente_detalhes/{{ conta.id }}"
+                class="button button-secondary"
+            >
 
-<button class="button button-success">
-    <i class="fa-solid fa-money-bill-wave"></i>
-    Receber Pagamento
-</button>
-</form>
-        
-            <hr>
-        
-        </li>
-        
+                <i class="fa-solid fa-eye"></i>
+
+                Detalhes
+
+            </a>
+
+        </div>
+
         {% endfor %}
-        
-        </ul>
 
-        {% endblock %}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/search_conta.js'
+    ) }}"
+></script>
+
+{% endblock %}

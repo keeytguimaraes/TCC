@@ -33,45 +33,56 @@ def configurar_conta_routes(app):
     # RECEBER PAGAMENTO
     # ==========================
     @app.route(
-        "/conta/pagar/<int:venda_id>",
-        methods=["POST"]
-    )
-    def pagar_conta(
-
-        venda_id
-    ):
+    "/conta/pagar/<int:conta_id>",
+    methods=["POST"]
+)
+    def pagar_conta(conta_id):
 
         from app.database.conexao import (
-            conectar
-        )
+        conectar
+    )
 
         conexao = conectar()
 
         cursor = conexao.cursor()
 
-        sql = """
-        UPDATE venda
+        # ----------------------
+        # FECHA CONTA
+        # ----------------------
+        sql_conta = """
+        UPDATE conta_pendente
 
-        SET status_pagamento = 'Pago'
+        SET status = 'Fechada'
 
         WHERE id = %s
     """
 
         cursor.execute(
+        sql_conta,
+        (conta_id,)
+    )
 
-            sql,
+        # ----------------------
+        # MARCA VENDAS COMO PAGAS
+        # ----------------------
+        sql_vendas = """
+        UPDATE venda
 
-            (
-                venda_id,
-            )
-        )
+        SET status_pagamento = 'Pago'
+
+        WHERE conta_pendente_id = %s
+    """
+
+        cursor.execute(
+        sql_vendas,
+        (conta_id,)
+    )
 
         conexao.commit()
 
         cursor.close()
-
         conexao.close()
 
         return redirect(
-            "/conta"
-        )
+        "/conta"
+    )

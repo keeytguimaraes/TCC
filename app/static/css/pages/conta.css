@@ -1,0 +1,147 @@
+/* ==========================
+   HEADER
+========================== */
+
+.page-header {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+
+    margin: 0;
+}
+
+/* ==========================
+   CONTADOR
+========================== */
+
+.contador {
+
+    margin-bottom: 25px;
+
+    color: #667085;
+    font-size: 18px;
+}
+
+/* ==========================
+   GRID
+========================== */
+
+.contas-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(320px, 1fr)
+        );
+
+    gap: 25px;
+}
+
+/* ==========================
+   CARD
+========================== */
+
+.conta-card {
+
+    background: white;
+
+    border-radius: 24px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 4px 16px
+        rgba(0,0,0,0.08);
+
+    border-left: 8px solid #f4b400;
+}
+
+.conta-card:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 30px
+        rgba(0,0,0,0.12);
+}
+
+/* ==========================
+   NOME CLIENTE
+========================== */
+
+.cliente-nome {
+
+    color: #1f2937;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    margin-bottom: 30px;
+}
+
+/* ==========================
+   TEXTOS
+========================== */
+
+.conta-card p {
+
+    margin-bottom: 18px;
+
+    font-size: 16px;
+
+    color: #374151;
+}
+
+.conta-card strong {
+
+    color: #1f2937;
+}
+
+/* ==========================
+   RESPONSIVO
+========================== */
+
+@media (max-width: 768px) {
+
+    .contas-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .conta-card {
+
+        padding: 25px;
+    }
+}
+
+.conta-container {
+
+    width: 100%;
+}
+
+.pagina-titulo {
+
+    margin-bottom: 30px;
+}
+
+.conta-pesquisa {
+
+    margin-bottom: 40px;
+}
+
+.total-contas {
+
+    margin-bottom: 30px;
+
+    color: #667085;
+    font-size: 18px;
+}
