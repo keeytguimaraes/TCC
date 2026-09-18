@@ -19,153 +19,115 @@ Estoque
 {% block conteudo %}
 
 <div class="page-title">
-
-    <h1>
-        Estoque
-    </h1>
-
+    <h1>Estoque</h1>
+    <p class="page-subtitle">Gerencie entradas, ajustes e consulte a disponibilidade dos seus produtos</p>
 </div>
 
 <div class="cards-estoque">
 
     <!-- Movimentação -->
     <div
-        class="nova-entrada-card"
+        class="nova-entrada-card nova-entrada-card--warning"
         data-modal="movimentacao-modal"
+        role="button"
+        tabindex="0"
+        aria-label="Abrir formulário de movimentação de estoque"
     >
-
         <div class="nova-entrada-icon">
-            <i class="fa-solid fa-right-left"></i>
+            <i class="fa-solid fa-right-left" aria-hidden="true"></i>
         </div>
 
-        <h3>Movimentação</h3>
+        <div class="nova-entrada-card__body">
+            <h3>Movimentação</h3>
+            <p>Registrar perdas e ajustes</p>
+        </div>
 
-        <p>
-            Registrar perdas e ajustes
-        </p>
-
+        <i class="fa-solid fa-chevron-right nova-entrada-card__arrow" aria-hidden="true"></i>
     </div>
 
     <!-- Nova Entrada -->
     <div
-        class="nova-entrada-card"
+        class="nova-entrada-card nova-entrada-card--primary"
         data-modal="estoque-modal"
+        role="button"
+        tabindex="0"
+        aria-label="Abrir formulário de nova entrada de estoque"
     >
         <div class="nova-entrada-icon">
-
-            <i class="fa-solid fa-plus"></i>
-
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
         </div>
 
-        <h3>
-            Nova Entrada
-        </h3>
+        <div class="nova-entrada-card__body">
+            <h3>Nova Entrada</h3>
+            <p>Registrar entrada de produtos</p>
+        </div>
 
-        <p>
-            Registrar entrada de produtos
-        </p>
-
+        <i class="fa-solid fa-chevron-right nova-entrada-card__arrow" aria-hidden="true"></i>
     </div>
 
     <!-- Estoque Atual -->
-    <a
-        href="/estoque/atual"
-        class="nova-entrada-card"
-    >
-
+    <a href="/estoque/atual" class="nova-entrada-card nova-entrada-card--info">
         <div class="nova-entrada-icon">
-
-            <i class="fa-solid fa-boxes-stacked"></i>
-
+            <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
         </div>
 
-        <h3>
-            Estoque Atual
-        </h3>
+        <div class="nova-entrada-card__body">
+            <h3>Estoque Atual</h3>
+            <p>Consultar quantidade disponível</p>
+        </div>
 
-        <p>
-            Consultar quantidade disponível
-        </p>
-
+        <i class="fa-solid fa-chevron-right nova-entrada-card__arrow" aria-hidden="true"></i>
     </a>
 
-<a
-    href="/movimentacao/historico"
-    class="nova-entrada-card"
->
+    <!-- Histórico -->
+    <a href="/movimentacao/historico" class="nova-entrada-card nova-entrada-card--neutral">
+        <div class="nova-entrada-icon">
+            <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+        </div>
 
-    <div class="nova-entrada-icon">
+        <div class="nova-entrada-card__body">
+            <h3>Histórico</h3>
+            <p>Consultar movimentações</p>
+        </div>
 
-        <i class="fa-solid fa-clock-rotate-left"></i>
-
-    </div>
-
-    <h3>
-        Histórico
-    </h3>
-
-    <p>
-        Consultar movimentações
-    </p>
-
-</a>
+        <i class="fa-solid fa-chevron-right nova-entrada-card__arrow" aria-hidden="true"></i>
+    </a>
 
 </div>
 
 
 <!-- MODAL MOVIMENTAÇÃO -->
 
-<div
-    class="modal"
-    id="movimentacao-modal"
->
+<div class="modal" id="movimentacao-modal">
 
     <div class="modal-content">
 
         <div class="modal-header">
-
-            <h2>
-                Movimentação de Estoque
-            </h2>
-
-            <button
-                class="modal-close"
-                data-close-modal
-            >
-                ×
-            </button>
-
+            <h2>Movimentação de Estoque</h2>
+            <button class="modal-close" data-close-modal>×</button>
         </div>
 
-        <form
-    id="form-movimentacao"
-    action="/movimentacao/cadastrar"
-    method="POST"
->
+        <form id="form-movimentacao" action="/movimentacao/cadastrar" method="POST">
 
             <div class="modal-body">
 
                 <div class="form-group">
 
-                    <label>Produto</label>
+                    <label for="produto_movimentacao">Produto</label>
 
-                    <select
-                        name="produto_id"
-                        id="produto_movimentacao"
-                        required
-                    >
+                    <select name="produto_id" id="produto_movimentacao" required>
 
                         {% for produto in produtos %}
 
                         <option
-    value="{{ produto.id }}"
-    data-caixa="{{ produto.quantidade_por_caixa }}"
-    data-unidade="{{ produto.vende_por_unidade }}"
-    data-dose="{{ produto.vende_por_dose }}"
-    data-categoria="{{ produto.categoria }}"
->
-    {{ produto.nome }}
-</option>
+                            value="{{ produto.id }}"
+                            data-caixa="{{ produto.quantidade_por_caixa }}"
+                            data-unidade="{{ produto.vende_por_unidade }}"
+                            data-dose="{{ produto.vende_por_dose }}"
+                            data-categoria="{{ produto.categoria }}"
+                        >
+                            {{ produto.nome }}
+                        </option>
 
                         {% endfor %}
 
@@ -177,116 +139,40 @@ Estoque
 
                     <label>Tipo</label>
 
-                    <select
-                        name="tipo_movimentacao"
-                        required
-                    >
-
-                        <option value="quebra">
-                            Quebra
-                        </option>
-
-                        <option value="vencido">
-                            Vencido
-                        </option>
-
-                        <option value="uso_interno">
-                            Uso Interno
-                        </option>
-
-                        <option value="ajuste_manual">
-                            Ajuste Manual
-                        </option>
-
+                    <select name="tipo_movimentacao" required>
+                        <option value="quebra">Quebra</option>
+                        <option value="vencido">Vencido</option>
+                        <option value="uso_interno">Uso Interno</option>
+                        <option value="ajuste_manual">Ajuste Manual</option>
                     </select>
 
                 </div>
 
-                <div
-    class="form-group"
-    id="grupo-caixa"
->
+                <div class="form-group" id="grupo-caixa">
+                    <label id="label-caixa">Caixas</label>
+                    <input type="number" name="quantidade_caixa" value="0">
+                </div>
 
-    <label id="label-caixa">
-        Caixas
-    </label>
+                <div class="form-group" id="grupo-unidade">
+                    <label id="label-unidade">Unidades</label>
+                    <input type="number" name="quantidade_unidade" value="0">
+                </div>
 
-    <input
-        type="number"
-        name="quantidade_caixa"
-        value="0"
-    >
+                <div class="form-group" id="grupo-fracionado">
+                    <label id="label-fracionado">Quantidade Avulsa</label>
+                    <input type="number" name="quantidade_fracionada" value="0">
+                </div>
 
-</div>
-
-<div
-class="form-group"
-id="grupo-unidade"
->
-
-<label id="label-unidade">
-    Unidades
-</label>
-
-<input
-    type="number"
-    name="quantidade_unidade"
-    value="0"
->
-
-</div>
-
-<div
-class="form-group"
-id="grupo-fracionado"
->
-
-<label id="label-fracionado">
-    Quantidade Avulsa
-</label>
-
-<input
-    type="number"
-    name="quantidade_fracionada"
-    value="0"
->
-
-</div>
-
-                <div
-    class="form-group"
-    id="grupo-motivo"
-    style="grid-column: 1 / -1;"
->
-
-    <label>Motivo</label>
-
-    <textarea
-    name="motivo"
-    id="motivo"
-></textarea>
-
-</div>
+                <div class="form-group form-group--full" id="grupo-motivo">
+                    <label>Motivo</label>
+                    <textarea name="motivo" id="motivo"></textarea>
+                </div>
 
             </div>
 
             <div class="modal-footer">
-
-                <button
-                    type="button"
-                    class="button button-secondary"
-                    data-close-modal
-                >
-                    Cancelar
-                </button>
-
-                <button
-                    type="submit"
-                    class="button button-success"
-                >
-                    Salvar Movimentação
-                </button>
-
+                <button type="button" class="button button-secondary" data-close-modal>Cancelar</button>
+                <button type="submit" class="button button-success">Salvar Movimentação</button>
             </div>
 
         </form>
@@ -297,275 +183,121 @@ id="grupo-fracionado"
 
 <!-- MODAL ESTOQUE -->
 
-<div
-    class="modal"
-    id="estoque-modal"
->
+<div class="modal" id="estoque-modal">
 
     <div class="modal-content large">
 
         <div class="modal-header">
-
-            <h2>
-                Nova Entrada de Estoque
-            </h2>
-
-            <button
-                class="modal-close"
-                data-close-modal
-            >
-                ×
-            </button>
-
+            <h2>Nova Entrada de Estoque</h2>
+            <button class="modal-close" data-close-modal>×</button>
         </div>
 
-        <form
-    id="form-entrada-estoque"
-    action="/estoque/cadastrar"
-    method="POST"
->
+        <form id="form-entrada-estoque" action="/estoque/cadastrar" method="POST">
 
             <div class="modal-body">
 
                 <!-- Categoria -->
                 <div class="form-group">
 
-                    <label>
-                        Categoria
-                    </label>
-                
+                    <label for="categoria">Categoria</label>
+
                     <select id="categoria">
-                
-                        <option value="">
-                            Escolha a categoria
-                        </option>
-                
+
+                        <option value="">Escolha a categoria</option>
+
                         {% for categoria in categorias %}
-                
-                        <option value="{{ categoria.categoria }}">
-                            {{ categoria.categoria }}
-                        </option>
-                
+                        <option value="{{ categoria.categoria }}">{{ categoria.categoria }}</option>
                         {% endfor %}
-                
+
                     </select>
-                
+
                 </div>
-                
+
                 <div class="form-group">
-                
-                    <label>
-                        Produto
-                    </label>
-                
-                    <select
-                        name="produto_id"
-                        id="produto"
-                        required
-                    >
-                
-                        <option value="">
-                            Escolha um produto
-                        </option>
-                
+
+                    <label for="produto">Produto</label>
+
+                    <select name="produto_id" id="produto" required>
+
+                        <option value="">Escolha um produto</option>
+
                         {% for produto in produtos %}
-                
-                        <option
-                            value="{{ produto.id }}"
-                            data-categoria="{{ produto.categoria }}"
-                        >
+                        <option value="{{ produto.id }}" data-categoria="{{ produto.categoria }}">
                             {{ produto.nome }}
                         </option>
-                
                         {% endfor %}
-                
+
                     </select>
-                
+
                 </div>
-                
+
                 <div class="form-group">
-                
-                    <label>
-                        Origem da compra
-                    </label>
-                
-                    <select
-                        id="origem_compra"
-                        name="origem_compra_id"
-                        required
-                    >
-                
-                        <option value="">
-                            Escolha uma opção
-                        </option>
-                
-                        <option value="1">
-                            Fornecedor
-                        </option>
-                
-                        <option value="2">
-                            Mercado
-                        </option>
-                
-                        <option value="3">
-                            Compra Avulsa
-                        </option>
-                
+
+                    <label for="origem_compra">Origem da compra</label>
+
+                    <select id="origem_compra" name="origem_compra_id" required>
+                        <option value="">Escolha uma opção</option>
+                        <option value="1">Fornecedor</option>
+                        <option value="2">Mercado</option>
+                        <option value="3">Compra Avulsa</option>
                     </select>
-                
+
                 </div>
-                
-                <div
-                    class="form-group"
-                    id="local-group"
-                >
-                
-                    <label>
-                        Nome do local
-                    </label>
-                
-                    <input
-                        type="text"
-                        name="nome_origem"
-                        placeholder="Ex: Atacadão"
-                    >
-                
+
+                <div class="form-group" id="local-group">
+                    <label>Nome do local</label>
+                    <input type="text" name="nome_origem" placeholder="Ex: Atacadão">
                 </div>
-                
-                <div
-                    class="form-group"
-                    id="fornecedor-group"
-                >
-                
-                    <label>
-                        Fornecedor
-                    </label>
-                
+
+                <div class="form-group" id="fornecedor-group">
+
+                    <label>Fornecedor</label>
+
                     <select name="fornecedor_id">
-                
-                        <option value="">
-                            Escolha o fornecedor
-                        </option>
-                
+                        <option value="">Escolha o fornecedor</option>
                         {% for fornecedor in fornecedores %}
-                
-                        <option value="{{ fornecedor.id }}">
-                            {{ fornecedor.nome }}
-                        </option>
-                
+                        <option value="{{ fornecedor.id }}">{{ fornecedor.nome }}</option>
                         {% endfor %}
-                
                     </select>
-                
+
                 </div>
-                
+
                 <div class="form-group">
-                
-                    <label>
-                        Tipo de entrada
-                    </label>
-                
-                    <select
-                        id="tipo_entrada"
-                        name="tipo_entrada"
-                        required
-                    >
-                
-                        <option value="compra">
-                            Compra
-                        </option>
-                
-                        <option value="bonificacao">
-                            Bonificação
-                        </option>
-                
+
+                    <label>Tipo de entrada</label>
+
+                    <select id="tipo_entrada" name="tipo_entrada" required>
+                        <option value="compra">Compra</option>
+                        <option value="bonificacao">Bonificação</option>
                     </select>
-                
+
                 </div>
-                
+
                 <div class="form-group">
-                
-                    <label>
-                        Quantidade recebida (CAIXA)
-                    </label>
-                
-                    <input
-                        type="number"
-                        name="quantidade_recebida_caixa"
-                        value="0"
-                    >
-                
+                    <label>Quantidade recebida (CAIXA)</label>
+                    <input type="number" name="quantidade_recebida_caixa" value="0">
                 </div>
-                
+
                 <div class="form-group">
-                
-                    <label>
-                        Quantidade recebida (UNIDADE)
-                    </label>
-                
-                    <input
-                        type="number"
-                        name="quantidade_recebida_unidade"
-                        value="0"
-                    >
-                
+                    <label>Quantidade recebida (UNIDADE)</label>
+                    <input type="number" name="quantidade_recebida_unidade" value="0">
                 </div>
-                
-                <div
-                    class="form-group"
-                    id="preco-group"
-                >
-                
-                    <label>
-                        Preço total pago
-                    </label>
-                
-                    <input
-                        type="number"
-                        step="0.01"
-                        name="preco_total_compra"
-                        value="0"
-                    >
-                
+
+                <div class="form-group" id="preco-group">
+                    <label>Preço total pago</label>
+                    <input type="number" step="0.01" name="preco_total_compra" value="0">
                 </div>
-                
+
                 <div class="form-group">
-                
-                    <label>
-                        Data da entrada
-                    </label>
-                
-                    <input
-                        type="date"
-                        name="data_entrada"
-                        required
-                    >
-                
+                    <label>Data da entrada</label>
+                    <input type="date" name="data_entrada" required>
                 </div>
 
             </div>
 
             <div class="modal-footer">
-
-                <button
-                    type="button"
-                    class="button button-secondary"
-                    data-close-modal
-                >
-
-                    Cancelar
-
-                </button>
-
-                <button
-                    type="submit"
-                    class="button button-success"
-                >
-
-                    Salvar Entrada
-
-                </button>
-
+                <button type="button" class="button button-secondary" data-close-modal>Cancelar</button>
+                <button type="submit" class="button button-success">Salvar Entrada</button>
             </div>
 
         </form>
@@ -579,25 +311,9 @@ id="grupo-fracionado"
 
 {% block scripts %}
 
-<script
-    src="{{ url_for(
-        'static',
-        filename='js/components/modal.js'
-    ) }}"
-></script>
-
-<script
-    src="{{ url_for(
-        'static',
-        filename='js/pages/estoque.js'
-    ) }}"
-></script>
-
-<script
-    src="{{ url_for(
-        'static',
-        filename='js/pages/movimentacao_modal.js'
-    ) }}"
-></script>
+<script src="{{ url_for('static', filename='js/components/modal.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/estoque.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/movimentacao_modal.js') }}"></script>
+<script src="{{ url_for('static', filename='js/components/estoque_ui.js') }}"></script>
 
 {% endblock %}
