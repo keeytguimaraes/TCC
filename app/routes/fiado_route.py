@@ -1,7 +1,8 @@
 from flask import (
     render_template,
     request,
-    redirect
+    redirect,
+    flash
 )
 
 from app.controllers.fiado_controller import (
@@ -69,6 +70,11 @@ def configurar_fiado_routes(app):
 
             valor_recebido
         )
+
+        flash(
+    "Pagamento recebido com sucesso!",
+    "success"
+)
 
         return redirect(
     f"/fiado/detalhes/{conta_id}"

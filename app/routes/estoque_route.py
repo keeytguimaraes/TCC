@@ -2,7 +2,8 @@
 from flask import (
     render_template,
     request,
-    redirect
+    redirect,
+    flash
 )
 
 # Importa controller do estoque
@@ -135,6 +136,11 @@ def configurar_estoque_routes(app):
             preco_total_compra,
             data_entrada
         )
+
+        flash(
+    "Entrada de estoque registrada com sucesso!",
+    "success"
+)
 
         # Atualiza página
         return redirect("/estoque")

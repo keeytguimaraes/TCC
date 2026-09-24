@@ -20,6 +20,11 @@ def listar_contas_pendentes():
             cp.nome_cliente_temporario,
             cp.data_abertura,
 
+            DATEDIFF(
+        NOW(),
+        cp.data_abertura
+    ) AS dias_pendente,
+
             COALESCE(
                 SUM(v.valor_total),
                 0
@@ -418,3 +423,166 @@ def buscar_vendas_conta_pendente(conta_id):
     conexao.close()
 
     return vendas
+
+# ==========================
+# TRANSFERIR PARA FIADO
+# ==========================
+def transferir_para_fiado(
+    conta_pendente_id,
+    cliente_id
+):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    # ----------------------
+    # BUSCA CONTA FIADO
+    # ----------------------
+    sql = """
+        SELECT *
+
+        FROM conta
+
+        WHERE cliente_id = %s
+
+        AND status_conta = 'aberta'
+
+        LIMIT 1
+    """
+
+    cursor.execute(
+        sql,
+        (cliente_id,)
+    )
+
+    conta = cursor.fetchone()
+
+    # ----------------------
+    # CRIA SE NÃO EXISTIR
+    # ----------------------
+    if conta:
+
+        conta_id = conta["id"]
+
+    else:
+
+        sql = """
+            INSERT INTO conta (
+
+                cliente_id,
+                status_conta,
+                saldo_devedor
+
+            )
+
+            VALUES (
+
+                %s,
+                'aberta',
+                0
+            )
+        """
+
+        cursor.execute(
+            sql,
+            (cliente_id,)
+        )
+
+        conta_id = cursor.lastrowid
+
+    # ----------------------
+    # SOMA TOTAL DAS VENDAS
+    # ----------------------
+    sql = """
+        SELECT
+
+            COALESCE(
+                SUM(saldo_devedor),
+                0
+            ) AS total
+
+        FROM venda
+
+        WHERE conta_pendente_id = %s
+    """
+
+    cursor.execute(
+        sql,
+        (conta_pendente_id,)
+    )
+
+    total = cursor.fetchone()
+
+    saldo = total["total"]
+
+    # ----------------------
+    # ATUALIZA SALDO FIADO
+    # ----------------------
+    sql = """
+        UPDATE conta
+
+        SET saldo_devedor =
+            saldo_devedor + %s
+
+        WHERE id = %s
+    """
+
+    cursor.execute(
+        sql,
+        (
+            saldo,
+            conta_id
+        )
+    )
+
+    # ----------------------
+    # MOVE VENDAS
+    # ----------------------
+    sql = """
+        UPDATE venda
+
+        SET
+
+            conta_id = %s,
+
+            cliente_id = %s,
+
+            conta_pendente_id = NULL
+
+        WHERE conta_pendente_id = %s
+    """
+
+    cursor.execute(
+
+        sql,
+
+        (
+            conta_id,
+            cliente_id,
+            conta_pendente_id
+        )
+    )
+
+    # ----------------------
+    # FECHA CONTA PENDENTE
+    # ----------------------
+    sql = """
+        UPDATE conta_pendente
+
+        SET status = 'Transferida'
+
+        WHERE id = %s
+    """
+
+    cursor.execute(
+        sql,
+        (conta_pendente_id,)
+    )
+
+    conexao.commit()
+
+    cursor.close()
+    conexao.close()

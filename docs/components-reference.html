@@ -1,0 +1,515 @@
+<!--
+============================================================
+SIGC — BIBLIOTECA DE REFERÊNCIA DE COMPONENTES
+============================================================
+Este arquivo NÃO é uma página do sistema. É uma referência de
+marcação: mostra o HTML/Jinja exato que cada componente global
+espera para funcionar com design-system.css + components.css.
+
+Copie o bloco necessário para dentro do seu template real
+(base.html, estoque.html, etc.) e ajuste o conteúdo (texto,
+variáveis Jinja, links) mantendo as classes como estão.
+
+Ordem dos componentes:
+1. Header
+2. Sidebar
+3. Cards KPI
+4. Cards de menu
+5. Botões
+6. Inputs
+7. Select2
+8. Tabelas
+9. Modais
+10. Paginação
+============================================================
+-->
+
+
+<!-- ============================================================
+     1. HEADER
+     Uso: dentro de base.html, envolvendo header + sidebar + main.
+============================================================ -->
+
+<div class="app-shell">
+
+    <!-- Overlay que fecha a sidebar ao clicar fora (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Ver bloco 2 (Sidebar) para o <aside class="app-sidebar"> -->
+
+    <div class="app-main">
+
+        <header class="app-header">
+
+            <div class="app-header__left">
+
+                <button class="app-header__menu-toggle" id="sidebar-toggle" aria-label="Abrir menu">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+
+                <span class="app-header__title">
+                    {% block titulo %}{% endblock %}
+                </span>
+
+            </div>
+
+            <div class="app-header__right">
+
+                <button class="header-icon-btn" aria-label="Notificações">
+                    <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                    <span class="header-icon-btn__badge"></span>
+                </button>
+
+                <div class="user-menu" role="button" tabindex="0" aria-label="Menu do usuário">
+
+                    <div class="user-menu__avatar">A</div>
+
+                    <div class="user-menu__info">
+                        <span class="user-menu__name">Administrador</span>
+                        <span class="user-menu__role">Administrador</span>
+                    </div>
+
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <main class="app-content">
+            {% block conteudo %}{% endblock %}
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     2. SIDEBAR
+     Uso: dentro de base.html, como primeiro filho de .app-shell,
+     antes de .app-main.
+============================================================ -->
+
+<aside class="app-sidebar" id="app-sidebar">
+
+    <div class="app-sidebar__brand">
+        <div class="app-sidebar__brand-mark">S</div>
+        <span class="app-sidebar__brand-name">SIGC</span>
+    </div>
+
+    <nav class="app-sidebar__nav">
+
+        <div class="sidebar-group">
+            <div class="sidebar-group__label">Principal</div>
+
+            <a href="/dashboard" class="sidebar-link is-active">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                Dashboard
+            </a>
+        </div>
+
+        <div class="sidebar-group">
+            <div class="sidebar-group__label">Operação</div>
+
+            <a href="/estoque" class="sidebar-link">
+                <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+                Estoque
+            </a>
+
+            <a href="/vendas" class="sidebar-link">
+                <i class="fa-solid fa-cash-register" aria-hidden="true"></i>
+                Vendas
+            </a>
+
+            <a href="/clientes" class="sidebar-link">
+                <i class="fa-solid fa-users" aria-hidden="true"></i>
+                Clientes
+            </a>
+        </div>
+
+        <div class="sidebar-group">
+            <div class="sidebar-group__label">Gestão</div>
+
+            <a href="/financeiro" class="sidebar-link">
+                <i class="fa-solid fa-sack-dollar" aria-hidden="true"></i>
+                Financeiro
+                <span class="sidebar-link__badge badge badge--danger">3</span>
+            </a>
+
+            <a href="/relatorios" class="sidebar-link">
+                <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+                Relatórios
+            </a>
+        </div>
+
+    </nav>
+
+    <div class="app-sidebar__footer">
+        <a href="/configuracoes" class="sidebar-link">
+            <i class="fa-solid fa-gear" aria-hidden="true"></i>
+            Configurações
+        </a>
+    </div>
+
+</aside>
+
+<script>
+    // Comportamento mínimo de abrir/fechar sidebar em mobile.
+    // Pode ser movido para um arquivo JS de componente próprio.
+    document.addEventListener('DOMContentLoaded', function () {
+        var toggle  = document.getElementById('sidebar-toggle');
+        var sidebar = document.getElementById('app-sidebar');
+        var overlay = document.getElementById('sidebar-overlay');
+
+        function fechar() {
+            sidebar.classList.remove('is-open');
+            overlay.classList.remove('is-visible');
+        }
+
+        if (toggle) {
+            toggle.addEventListener('click', function () {
+                sidebar.classList.toggle('is-open');
+                overlay.classList.toggle('is-visible');
+            });
+        }
+        if (overlay) {
+            overlay.addEventListener('click', fechar);
+        }
+    });
+</script>
+
+
+<!-- ============================================================
+     3. CARDS KPI
+     Uso: topo de telas de visão geral (Dashboard, Vendas,
+     Financeiro). Para Estoque Atual, continue usando
+     .dashboard-cards (já em design-system.css) — são números
+     simples em grade, sem ícone.
+============================================================ -->
+
+<div class="kpi-cards">
+
+    <div class="kpi-card">
+        <div class="kpi-card__content">
+            <span class="kpi-card__label">Faturamento hoje</span>
+            <div class="kpi-card__value">R$ {{ faturamento_hoje }}</div>
+            <span class="kpi-card__trend is-up">
+                <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+                12%
+                <span class="kpi-card__trend-period">vs. ontem</span>
+            </span>
+        </div>
+        <div class="kpi-card__icon is-primary">
+            <i class="fa-solid fa-sack-dollar" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-card__content">
+            <span class="kpi-card__label">Vendas hoje</span>
+            <div class="kpi-card__value">{{ total_vendas_hoje }}</div>
+        </div>
+        <div class="kpi-card__icon is-info">
+            <i class="fa-solid fa-cash-register" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-card__content">
+            <span class="kpi-card__label">Produtos sem estoque</span>
+            <div class="kpi-card__value">{{ total_sem_estoque }}</div>
+        </div>
+        <div class="kpi-card__icon is-danger">
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-card__content">
+            <span class="kpi-card__label">Novos clientes</span>
+            <div class="kpi-card__value">{{ total_novos_clientes }}</div>
+            <span class="kpi-card__trend is-down">
+                <i class="fa-solid fa-arrow-down" aria-hidden="true"></i>
+                4%
+                <span class="kpi-card__trend-period">vs. semana passada</span>
+            </span>
+        </div>
+        <div class="kpi-card__icon is-success">
+            <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     4. CARDS DE MENU
+     Uso: hub de módulo (ex: tela /estoque, /vendas). Mesmo
+     padrão já aplicado na tela de Estoque, generalizado aqui.
+============================================================ -->
+
+<div class="menu-cards">
+
+    <!-- Ação primária do hub -->
+    <div class="menu-card menu-card--primary" data-modal="algum-modal" role="button" tabindex="0" aria-label="Nova ação">
+        <div class="menu-card__icon">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        </div>
+        <div class="menu-card__body">
+            <div class="menu-card__title">Nova Entrada</div>
+            <div class="menu-card__desc">Registrar entrada de produtos</div>
+        </div>
+        <i class="fa-solid fa-chevron-right menu-card__arrow" aria-hidden="true"></i>
+    </div>
+
+    <!-- Ação secundária -->
+    <div class="menu-card" data-modal="outro-modal" role="button" tabindex="0" aria-label="Movimentação">
+        <div class="menu-card__icon is-warning">
+            <i class="fa-solid fa-right-left" aria-hidden="true"></i>
+        </div>
+        <div class="menu-card__body">
+            <div class="menu-card__title">Movimentação</div>
+            <div class="menu-card__desc">Registrar perdas e ajustes</div>
+        </div>
+        <i class="fa-solid fa-chevron-right menu-card__arrow" aria-hidden="true"></i>
+    </div>
+
+    <!-- Navegação (link real) -->
+    <a href="/estoque/atual" class="menu-card">
+        <div class="menu-card__icon is-info">
+            <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+        </div>
+        <div class="menu-card__body">
+            <div class="menu-card__title">Estoque Atual</div>
+            <div class="menu-card__desc">Consultar quantidade disponível</div>
+        </div>
+        <i class="fa-solid fa-chevron-right menu-card__arrow" aria-hidden="true"></i>
+    </a>
+
+</div>
+
+
+<!-- ============================================================
+     5. BOTÕES
+     (classes já definidas em design-system.css — aqui só os
+     exemplos de uso combinando variantes e tamanhos)
+============================================================ -->
+
+<button class="button button-primary">Salvar Entrada</button>
+<button class="button button-secondary">Cancelar</button>
+<button class="button button-danger">Excluir</button>
+<button class="button button-ghost">Ver detalhes</button>
+
+<button class="button button-primary button--sm">Pequeno</button>
+<button class="button button-primary button--lg">Grande</button>
+
+<button class="button button-secondary button--icon" aria-label="Filtrar">
+    <i class="fa-solid fa-filter" aria-hidden="true"></i>
+</button>
+
+<button class="button button-primary" disabled>Processando…</button>
+
+
+<!-- ============================================================
+     6. INPUTS
+     (classes já definidas em design-system.css)
+============================================================ -->
+
+<div class="field">
+    <label for="nome_produto">Nome do produto</label>
+    <input type="text" id="nome_produto" name="nome_produto" class="input" placeholder="Ex: Coca-Cola 2L">
+</div>
+
+<div class="field">
+    <label for="categoria_input">Categoria</label>
+    <select id="categoria_input" name="categoria" class="select">
+        <option value="">Escolha a categoria</option>
+        <option value="bebida">Bebida</option>
+    </select>
+</div>
+
+<div class="field">
+    <label for="observacao">Observação</label>
+    <textarea id="observacao" name="observacao" class="textarea"></textarea>
+</div>
+
+<!-- Campo com erro -->
+<div class="field">
+    <label for="preco">Preço</label>
+    <input type="number" id="preco" name="preco" class="input is-invalid">
+    <span class="field-error">Informe um valor válido.</span>
+</div>
+
+<!-- Campo com dica -->
+<div class="field">
+    <label for="sku">SKU</label>
+    <input type="text" id="sku" name="sku" class="input">
+    <span class="field-hint">Código interno usado no controle de estoque.</span>
+</div>
+
+<!-- Busca com ícone -->
+<div class="input-icon">
+    <label for="search-input" class="sr-only">Pesquisar produto</label>
+    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+    <input type="text" id="search-input" class="input" placeholder="Pesquisar Produto...">
+</div>
+
+
+<!-- ============================================================
+     7. SELECT2
+     Requer jQuery + plugin Select2 carregados na página, e a
+     inicialização abaixo. O CSS de tema já está em components.css.
+============================================================ -->
+
+<div class="field">
+    <label for="produto_select2">Produto</label>
+    <select id="produto_select2" name="produto_id" class="js-select2">
+        <option value="">Escolha um produto</option>
+        {% for produto in produtos %}
+        <option value="{{ produto.id }}">{{ produto.nome }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<script>
+    // Inicialização padrão do Select2 no projeto.
+    // Qualquer <select> com a classe js-select2 recebe o tema do
+    // Design System automaticamente.
+    $(document).ready(function () {
+        $('.js-select2').select2({
+            width: '100%',
+            placeholder: 'Selecione uma opção',
+            language: {
+                noResults: function () { return "Nenhum resultado encontrado"; },
+                searching: function () { return "Buscando…"; }
+            }
+        });
+    });
+</script>
+
+
+<!-- ============================================================
+     8. TABELAS
+     (classes já definidas em design-system.css)
+============================================================ -->
+
+<div class="table-wrap">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Categoria</th>
+                <th>Status</th>
+                <th class="cell-numeric">Quantidade</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in estoque %}
+            <tr class="is-clickable" onclick="window.location.href='/estoque/produto/{{ item.id }}'">
+                <td>{{ item.nome }}</td>
+                <td class="cell-muted">{{ item.categoria or "—" }}</td>
+                <td>
+                    <span class="badge badge--success">
+                        <span class="badge-dot"></span>
+                        Em estoque
+                    </span>
+                </td>
+                <td class="cell-numeric">{{ item.quantidade_atual_unidade or 0 }}</td>
+                <td>
+                    <button class="button button-ghost button--sm">
+                        <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Estado vazio (usar quando a lista/filtro não retornar nada) -->
+    <!--
+    <div class="table-empty">
+        <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+        Nenhum produto encontrado.
+    </div>
+    -->
+</div>
+
+
+<!-- ============================================================
+     9. MODAIS
+     (estrutura já usada em estoque.html — reaproveitando as
+     classes de design-system.css)
+============================================================ -->
+
+<div class="modal" id="exemplo-modal">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Título do Modal</h2>
+            <button class="modal-close" data-close-modal>×</button>
+        </div>
+
+        <form>
+            <div class="modal-body">
+                <div class="field">
+                    <label for="campo_exemplo">Campo</label>
+                    <input type="text" id="campo_exemplo" class="input">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="button button-secondary" data-close-modal>Cancelar</button>
+                <button type="submit" class="button button-primary">Salvar</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- Variante larga, para formulários com mais campos -->
+<div class="modal" id="exemplo-modal-grande">
+    <div class="modal-content large">
+        <!-- mesma estrutura acima -->
+    </div>
+</div>
+
+
+<!-- ============================================================
+     10. PAGINAÇÃO
+     Uso: rodapé de listagens (tabelas ou grids) com muitos itens.
+============================================================ -->
+
+<div class="pagination">
+
+    <span class="pagination__info">
+        Mostrando <strong>1–20</strong> de <strong>{{ total_produtos }}</strong> produtos
+    </span>
+
+    <ul class="pagination__list">
+
+        <li>
+            <a href="?page=1" class="pagination__item is-disabled" aria-label="Página anterior">
+                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+            </a>
+        </li>
+
+        <li><a href="?page=1" class="pagination__item is-active">1</a></li>
+        <li><a href="?page=2" class="pagination__item">2</a></li>
+        <li><a href="?page=3" class="pagination__item">3</a></li>
+
+        <li><span class="pagination__ellipsis">…</span></li>
+
+        <li><a href="?page=10" class="pagination__item">10</a></li>
+
+        <li>
+            <a href="?page=2" class="pagination__item" aria-label="Próxima página">
+                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+            </a>
+        </li>
+
+    </ul>
+
+</div>

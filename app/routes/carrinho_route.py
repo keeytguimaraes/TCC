@@ -4,7 +4,8 @@ from flask import (
     render_template,
     request,
     redirect,
-    session
+    session,
+    flash
 )
 
 # Importa controller cliente
@@ -454,6 +455,30 @@ VALUES (
         cursor.close()
 
         conexao.close()
+
+        # ----------------------
+        # FLASH
+        # ----------------------
+        if tipo_finalizacao == "normal":
+
+            flash(
+        "Venda concluída com sucesso!",
+        "success"
+    )
+
+        elif tipo_finalizacao == "fiado":
+
+            flash(
+        "Venda registrada no fiado com sucesso!",
+        "success"
+    )
+
+        elif tipo_finalizacao == "pendente":
+
+            flash(
+        "Conta pendente registrada com sucesso!",
+        "success"
+    )
 
         # ----------------------
         # LIMPA CARRINHO

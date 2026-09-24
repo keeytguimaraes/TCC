@@ -2,7 +2,8 @@
 from flask import (
     render_template,
     request,
-    redirect
+    redirect,
+    flash
 )
 
 # Importa controllers
@@ -49,6 +50,11 @@ def configurar_cliente_routes(app):
         # Salva no banco
         cadastrar_cliente_controller(nome)
 
+        flash(
+    "Cliente cadastrado com sucesso!",
+    "success"
+)
+
         # Atualiza tela
         return redirect("/cliente")
 
@@ -65,6 +71,11 @@ def configurar_cliente_routes(app):
         excluir_cliente_controller(
             id_cliente
         )
+
+        flash(
+    "Cliente excluído com sucesso!",
+    "success"
+)
 
         # Atualiza tela
         return redirect("/cliente")
@@ -109,6 +120,11 @@ def configurar_cliente_routes(app):
             id_cliente,
             nome
         )
+
+        flash(
+    "Cliente atualizado com sucesso!",
+    "success"
+)
 
         # Volta para lista
         return redirect("/cliente")

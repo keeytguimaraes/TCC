@@ -2,7 +2,8 @@
 from flask import (
     render_template,
     request,
-    redirect
+    redirect,
+    flash
 )
 
 # Importa controllers
@@ -234,6 +235,11 @@ def configurar_produto_routes(app):
 
     nome_imagem
     )
+      
+      flash(
+    "Produto cadastrado com sucesso!",
+    "success"
+)
 
       return redirect(
         "/produto"
@@ -350,6 +356,11 @@ def configurar_produto_routes(app):
 
         quantidade_por_unidade,
     )
+     
+     flash(
+    "Produto atualizado com sucesso!",
+    "success"
+)
 
      return redirect(
         "/produto"
@@ -368,6 +379,12 @@ def configurar_produto_routes(app):
         inativar_produto_controller(
         produto_id
     )
+        
+        flash(
+        "Produto inativado com sucesso!",
+        "success"
+    )
+
 
         return redirect("/produto")
 
@@ -383,6 +400,11 @@ def configurar_produto_routes(app):
 
         ativar_produto_controller(
         produto_id
+    )
+        
+        flash(
+        "Produto ativado com sucesso!",
+        "success"
     )
 
         return redirect("/produto")

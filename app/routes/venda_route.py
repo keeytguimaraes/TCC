@@ -269,7 +269,7 @@ def configurar_venda_routes(app):
 
                 flash(
         "Estoque insuficiente para essa venda!",
-        "danger"
+        "error"
     )
 
                 return redirect(

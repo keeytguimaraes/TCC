@@ -3,7 +3,8 @@ from flask import (
 
     render_template,
     request,
-    redirect
+    redirect,
+    flash
 )
 
 # Importa controller
@@ -71,6 +72,11 @@ def configurar_fornecedor_routes(app):
             observacao
         )
 
+        flash(
+    "Fornecedor cadastrado com sucesso!",
+    "success"
+)
+
         # Atualiza página
         return redirect(
             "/fornecedor"
@@ -118,6 +124,11 @@ def configurar_fornecedor_routes(app):
                 telefone,
                 observacao
             )
+
+            flash(
+    "Fornecedor atualizado com sucesso!",
+    "success"
+)
 
             # Volta página
             return redirect(

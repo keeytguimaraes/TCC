@@ -17,21 +17,6 @@ Venda
     <h1>
         Venda 
     </h1>
-    {% with mensagens = get_flashed_messages(with_categories=true) %}
-
-    {% if mensagens %}
-
-        {% for categoria, mensagem in mensagens %}
-
-            <div class="alert alert-{{ categoria }}">
-                {{ mensagem }}
-            </div>
-
-        {% endfor %}
-
-    {% endif %}
-
-{% endwith %}
 
     <div class="venda-topo">
 

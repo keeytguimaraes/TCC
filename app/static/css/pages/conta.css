@@ -145,3 +145,117 @@
     color: #667085;
     font-size: 18px;
 }
+.alerta-transferencia {
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-top: 25px;
+    margin-bottom: 20px;
+
+    padding: 14px 18px;
+
+    background: rgba(220, 53, 69, 0.10);
+
+    border: 1px solid rgba(220, 53, 69, 0.25);
+
+    border-radius: 14px;
+
+    color: #DC3545;
+
+    font-weight: 600;
+}
+.conta-card.atrasada {
+
+    border-left: 8px solid #DC3545;
+
+    box-shadow:
+        0 4px 16px rgba(220, 53, 69, 0.15);
+}
+
+.acoes-conta {
+
+    display: flex;
+    gap: 12px;
+
+    margin-top: 10px;
+
+    flex-wrap: wrap;
+}
+.modal-overlay {
+
+    display: none;
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background:
+        rgba(0,0,0,0.5);
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;
+}
+
+.modal-container {
+
+    width: 700px;
+    max-width: 95%;
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 30px;
+}
+
+.modal-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.modal-header button {
+
+    border: none;
+
+    background: none;
+
+    font-size: 24px;
+
+    cursor: pointer;
+}
+
+.modal-container select {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border: 1px solid #dcdcdc;
+
+    border-radius: 12px;
+
+    margin-top: 10px;
+}
+
+.modal-actions {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 25px;
+}

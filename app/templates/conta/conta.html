@@ -57,7 +57,7 @@ Contas Pendentes
 
         {% for conta in contas %}
 
-        <div class="conta-card">
+        <div class="conta-card {% if conta.dias_pendente >= 5 %}atrasada{% endif %}">
 
             <h3 class="cliente-nome">
                 {{ conta.nome_cliente_temporario }}
@@ -83,6 +83,50 @@ Contas Pendentes
 
             </p>
 
+            {% if conta.dias_pendente >= 5 %}
+
+            <div class="alerta-transferencia">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <span>
+
+                    Conta pendente há
+                    <strong>{{ conta.dias_pendente }} dias</strong>
+
+                </span>
+
+            </div>
+
+            <div class="acoes-conta">
+
+                <button
+                    type="button"
+                    class="button button-success"
+                    onclick="abrirModalTransferir({{ conta.id }})"
+                >
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                    Transferir para Fiado
+
+                </button>
+
+                <a
+                    href="/conta/conta_pendente_detalhes/{{ conta.id }}"
+                    class="button button-secondary"
+                >
+
+                    <i class="fa-solid fa-eye"></i>
+
+                    Detalhes
+
+                </a>
+
+            </div>
+
+            {% else %}
+
             <a
                 href="/conta/conta_pendente_detalhes/{{ conta.id }}"
                 class="button button-secondary"
@@ -94,9 +138,100 @@ Contas Pendentes
 
             </a>
 
+            {% endif %}
+
         </div>
 
         {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- ==========================
+     MODAL TRANSFERIR FIADO
+========================== -->
+
+<div
+    id="modal-transferir"
+    class="modal-overlay"
+>
+
+    <div class="modal-container">
+
+        <div class="modal-header">
+
+            <h2>
+                Transferir para Fiado
+            </h2>
+
+            <button
+                type="button"
+                class="modal-close"
+                onclick="fecharModalTransferir()"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <form
+            id="form-transferir"
+            method="POST"
+        >
+
+            <div class="form-group">
+
+                <label>
+                    Cliente
+                </label>
+
+                <select
+                    name="cliente_id"
+                    required
+                >
+
+                    <option value="">
+                        Selecione...
+                    </option>
+
+                    {% for cliente in clientes %}
+
+                    <option value="{{ cliente.id }}">
+                        {{ cliente.nome }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <a
+                    href="/cliente"
+                    class="button button-success"
+                >
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                    Cadastrar Novo Cliente
+
+                </a>
+
+                <button
+                    type="submit"
+                    class="button button-primary"
+                >
+
+                    Transferir para Fiado
+
+                </button>
+
+            </div>
+
+        </form>
 
     </div>
 
@@ -110,6 +245,13 @@ Contas Pendentes
     src="{{ url_for(
         'static',
         filename='js/components/search_conta.js'
+    ) }}"
+></script>
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/pages/conta.js'
     ) }}"
 ></script>
 

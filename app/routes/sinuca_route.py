@@ -4,7 +4,9 @@ from flask import (
 
     request,
 
-    redirect
+    redirect,
+
+    flash
 )
 
 from app.controllers.sinuca_controller import (
@@ -70,6 +72,11 @@ def configurar_sinuca_routes(app):
             percentual_comercio,
 
         )
+
+        flash(
+    "Configuração da sinuca atualizada com sucesso!",
+    "success"
+)
 
         return redirect(
             "/sinuca"
