@@ -91,7 +91,7 @@ def configurar_conta_routes(app):
         conexao.close()
 
         flash(
-    "Conta pendente quitada com sucesso!",
+    "Conta quitada com sucesso!",
     "success"
 )
 
@@ -149,7 +149,7 @@ def configurar_conta_routes(app):
     )
         
         flash(
-    "Conta pendente transferida para o fiado com sucesso!",
+    "Conta transferida com sucesso!",
     "success"
 )
 

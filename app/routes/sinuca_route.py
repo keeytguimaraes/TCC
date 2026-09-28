@@ -74,7 +74,7 @@ def configurar_sinuca_routes(app):
         )
 
         flash(
-    "Configuração da sinuca atualizada com sucesso!",
+    "Configuração atualizada com sucesso!",
     "success"
 )
 

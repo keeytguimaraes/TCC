@@ -188,8 +188,6 @@ def configurar_venda_routes(app):
         methods=["POST"]
     )
     def adicionar_carrinho():
-        
-
         # Produto
         produto_id = request.form.get(
             "produto_id"
@@ -416,6 +414,11 @@ def configurar_venda_routes(app):
         # Atualiza session
         session["carrinho"] = carrinho
 
+        flash(
+    f"{produto_encontrado['nome']} adicionado ao carrinho!",
+    "success"
+)
+
         # Volta página
         return redirect("/venda")
     
@@ -486,6 +489,11 @@ def configurar_venda_routes(app):
     def adicionar_ficha_route():
 
         adicionar_ficha_carrinho()
+
+        flash(
+        "Ficha de sinuca adicionada ao carrinho!",
+        "success"
+    )
 
         return redirect(
         "/venda"

@@ -459,7 +459,7 @@ VALUES (
         # ----------------------
         # FLASH
         # ----------------------
-        if tipo_finalizacao == "normal":
+        if tipo_finalizacao == "pago":
 
             flash(
         "Venda concluída com sucesso!",
@@ -476,7 +476,7 @@ VALUES (
         elif tipo_finalizacao == "pendente":
 
             flash(
-        "Conta pendente registrada com sucesso!",
+        "Conta registrada com sucesso!",
         "success"
     )
 
