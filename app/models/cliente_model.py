@@ -13,7 +13,11 @@ def listar_clientes():
     cursor = conexao.cursor(dictionary=True)
 
     # Executa SQL
-    cursor.execute("SELECT * FROM cliente")
+    cursor.execute("""
+    SELECT *
+    FROM cliente
+    WHERE ativo = 1
+""")
 
     # Guarda todos os resultados
     clientes = cursor.fetchall()
@@ -56,79 +60,161 @@ def cadastrar_cliente(nome):
 
     # Retorna mensagem de sucesso
     return "Cliente cadastrado com sucesso!"
-# Função responsável por excluir cliente
-def excluir_cliente(id_cliente):
 
-    # Conecta no banco
+# ==========================================
+# DESATIVAR CLIENTE
+# ==========================================
+def desativar_cliente(id_cliente):
+
     conexao = conectar()
 
-    # Cria cursor
     cursor = conexao.cursor()
 
-    # Comando SQL
-    sql = "DELETE FROM cliente WHERE id = %s"
+    sql = """
+        UPDATE cliente
+        SET ativo = 0
+        WHERE id = %s
+    """
 
-    # Executa SQL
-    cursor.execute(sql, (id_cliente,))
+    cursor.execute(
+        sql,
+        (id_cliente,)
+    )
 
-    # Salva alteração
     conexao.commit()
 
-    # Fecha cursor
     cursor.close()
-
-    # Fecha conexão
     conexao.close()
-    # Função responsável por editar cliente
+
+    # ==========================================
+# EDITAR CLIENTE
+# ==========================================
 def editar_cliente(id_cliente, nome):
 
-    # Conecta no banco
     conexao = conectar()
 
-    # Cria cursor
     cursor = conexao.cursor()
 
-    # Comando SQL
     sql = """
         UPDATE cliente
         SET nome = %s
         WHERE id = %s
     """
 
-    # Executa SQL
-    cursor.execute(sql, (nome, id_cliente))
+    cursor.execute(
+        sql,
+        (nome, id_cliente)
+    )
 
-    # Salva alteração
     conexao.commit()
 
-    # Fecha cursor
     cursor.close()
-
-    # Fecha conexão
     conexao.close()
-    # Função responsável por buscar um cliente pelo ID
+
+
+# ==========================================
+# BUSCAR CLIENTE POR ID
+# ==========================================
 def buscar_cliente_por_id(id_cliente):
 
-    # Conecta no banco
     conexao = conectar()
 
-    # Cursor em formato dicionário
-    cursor = conexao.cursor(dictionary=True)
+    cursor = conexao.cursor(
+        dictionary=True
+    )
 
-    # SQL
-    sql = "SELECT * FROM cliente WHERE id = %s"
+    sql = """
+        SELECT *
+        FROM cliente
+        WHERE id = %s
+    """
 
-    # Executa
-    cursor.execute(sql, (id_cliente,))
+    cursor.execute(
+        sql,
+        (id_cliente,)
+    )
 
-    # Busca um único cliente
     cliente = cursor.fetchone()
 
-    # Fecha cursor
     cursor.close()
-
-    # Fecha conexão
     conexao.close()
 
-    # Retorna cliente
     return cliente
+
+
+# ==========================================
+# VERIFICAR CONTA ABERTA
+# ==========================================
+def cliente_tem_conta_aberta(cliente_id):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    sql = """
+        SELECT saldo_devedor
+        FROM conta
+        WHERE cliente_id = %s
+        AND status_conta = 'aberta'
+        LIMIT 1
+    """
+
+    cursor.execute(
+        sql,
+        (cliente_id,)
+    )
+
+    resultado = cursor.fetchone()
+
+    cursor.close()
+    conexao.close()
+
+    return resultado
+
+# ==========================================
+# LISTAR CLIENTES INATIVOS
+# ==========================================
+
+def listar_clientes_inativos():
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        dictionary=True
+    )
+
+    cursor.execute("""
+        SELECT *
+        FROM cliente
+        WHERE ativo = 0
+    """)
+
+    clientes = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return clientes
+
+
+# ==========================================
+# REATIVAR CLIENTES
+# ==========================================
+def reativar_cliente(id_cliente):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        UPDATE cliente
+        SET ativo = 1
+        WHERE id = %s
+    """, (id_cliente,))
+
+    conexao.commit()
+
+    cursor.close()
+    conexao.close()

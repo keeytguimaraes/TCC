@@ -10,9 +10,11 @@ from flask import (
 from app.controllers.cliente_controller import (
     pegar_clientes,
     cadastrar_cliente_controller,
-    excluir_cliente_controller,
+    desativar_cliente_controller,
     buscar_cliente_controller,
-    editar_cliente_controller
+    editar_cliente_controller,
+    listar_clientes_inativos_controller,
+    reativar_cliente_controller
 )
 
 
@@ -57,29 +59,6 @@ def configurar_cliente_routes(app):
 
         # Atualiza tela
         return redirect("/cliente")
-
-
-    # ==========================
-    # ROTA: EXCLUIR CLIENTE
-    # ==========================
-    @app.route(
-        "/cliente/excluir/<int:id_cliente>"
-    )
-    def excluir_cliente(id_cliente):
-
-        # Exclui cliente
-        excluir_cliente_controller(
-            id_cliente
-        )
-
-        flash(
-    "Cliente excluído com sucesso!",
-    "success"
-)
-
-        # Atualiza tela
-        return redirect("/cliente")
-
 
     # ==========================
     # ROTA: ABRIR TELA EDITAR
@@ -128,3 +107,47 @@ def configurar_cliente_routes(app):
 
         # Volta para lista
         return redirect("/cliente")
+    
+# =========================
+# ROTA DE DESATIVAR CLIENTE
+# =========================
+    @app.route(
+    "/cliente/desativar/<int:cliente_id>",
+    methods=["POST"]
+)
+    def desativar_cliente(cliente_id):
+
+        desativar_cliente_controller(
+        cliente_id
+    )
+
+        return redirect("/cliente")
+    
+# =========================
+# ROTA DE LISTAR CLIENTES INATIVOS
+# =========================
+    @app.route("/cliente/inativos")
+    def clientes_inativos():
+
+        dados = listar_clientes_inativos_controller()
+
+        return render_template(
+        "cliente/clientes_inativos.html",
+        clientes=dados
+    )
+# =========================
+# REATIVAR CLIENTE
+# =========================
+    @app.route(
+    "/cliente/reativar/<int:cliente_id>",
+    methods=["POST"]
+)
+    def reativar_cliente(cliente_id):
+
+        reativar_cliente_controller(
+        cliente_id
+    )
+
+        return redirect(
+        "/cliente/inativos"
+    )

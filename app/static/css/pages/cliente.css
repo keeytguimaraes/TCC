@@ -373,3 +373,152 @@
     gap:12px;
 
 }
+/* =================================
+   OVERLAY DO MODAL
+================================= */
+
+.modal-overlay-cliente{
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0,0,0,.55);
+
+    display: none;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 9999;
+
+}
+
+.modal-overlay-cliente.ativo{
+
+    display: flex;
+
+}
+
+
+/* =================================
+   CAIXA DO MODAL
+================================= */
+
+.modal-cliente{
+
+    background: #ffffff;
+
+    width: 550px;
+
+    max-width: 90%;
+
+    padding: 30px;
+
+    border-radius: 16px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+
+    animation: abrirModal .2s ease;
+
+}
+
+
+/* =================================
+   TÍTULO
+================================= */
+
+.modal-cliente h2{
+
+    margin: 0 0 15px;
+
+    text-align: center;
+
+}
+
+
+/* =================================
+   CONTEÚDO
+================================= */
+
+#conteudo-modal{
+
+    margin-top: 20px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =================================
+   AVISO
+================================= */
+
+.alerta-conta-aberta{
+
+    text-align: left;
+
+}
+
+.alerta-conta-aberta h3{
+
+    color: #dc3545;
+
+    margin-bottom: 15px;
+
+}
+
+.texto-aviso{
+
+    margin-top: 15px;
+
+    font-weight: 600;
+
+}
+
+
+/* =================================
+   BOTÕES
+================================= */
+
+.modal-botoes{
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    margin-top: 25px;
+
+}
+
+
+/* =================================
+   ANIMAÇÃO
+================================= */
+
+@keyframes abrirModal{
+
+    from{
+
+        opacity: 0;
+
+        transform: translateY(-10px);
+
+    }
+
+    to{
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}

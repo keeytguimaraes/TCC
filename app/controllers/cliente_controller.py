@@ -1,45 +1,131 @@
-# Importa função do model
+# Importa flash
+from flask import flash
+
+# Importa funções do model cliente
 from app.models.cliente_model import (
     listar_clientes,
+    listar_clientes_inativos,
     cadastrar_cliente,
-    excluir_cliente,
+    desativar_cliente,
+    reativar_cliente,
     editar_cliente,
-    buscar_cliente_por_id
+    buscar_cliente_por_id,
+    cliente_tem_conta_aberta,
+    reativar_cliente
 )
 
-
-# Controller responsável pelos clientes
+# ==========================
+# LISTAR CLIENTES
+# ==========================
 def pegar_clientes():
 
-    # Retorna lista de clientes do model
-    return listar_clientes()
-# Importa função de cadastro do model
-from app.models.cliente_model import cadastrar_cliente
+    clientes = listar_clientes()
 
+    for cliente in clientes:
 
-# Controller responsável por cadastrar cliente
+        conta = cliente_tem_conta_aberta(
+            cliente["id"]
+        )
+
+        if conta:
+
+            cliente["conta_aberta"] = True
+
+            cliente["saldo_devedor"] = (
+                conta["saldo_devedor"]
+            )
+
+        else:
+
+            cliente["conta_aberta"] = False
+
+            cliente["saldo_devedor"] = 0
+
+    return clientes
+
+# ==========================
+# CADASTRAR CLIENTE
+# ==========================
 def cadastrar_cliente_controller(nome):
 
-    # Envia nome para o model
     return cadastrar_cliente(nome)
-# Importa função de excluir
-from app.models.cliente_model import excluir_cliente
 
 
-# Controller responsável por excluir cliente
-def excluir_cliente_controller(id_cliente):
-
-    # Envia id para model
-    excluir_cliente(id_cliente)
-    # Controller responsável por buscar cliente
+# ==========================
+# BUSCAR CLIENTE
+# ==========================
 def buscar_cliente_controller(id_cliente):
 
-    # Busca cliente
-    return buscar_cliente_por_id(id_cliente)
+    return buscar_cliente_por_id(
+        id_cliente
+    )
 
 
-# Controller responsável por editar cliente
-def editar_cliente_controller(id_cliente, nome):
+# ==========================
+# EDITAR CLIENTE
+# ==========================
+def editar_cliente_controller(
 
-    # Envia dados para model
-    editar_cliente(id_cliente, nome)
+    id_cliente,
+    nome
+
+):
+
+    editar_cliente(
+
+        id_cliente,
+        nome
+    )
+
+
+# ==========================
+# DESATIVAR CLIENTE
+# ==========================
+def desativar_cliente_controller(
+    id_cliente
+):
+
+    conta = cliente_tem_conta_aberta(
+        id_cliente
+    )
+
+    # Se possuir conta aberta
+    if conta:
+
+        saldo = conta[
+            "saldo_devedor"
+        ]
+
+        flash(
+            f"Não é possível desativar o cliente. Saldo devedor atual: R$ {saldo:.2f}",
+            "error"
+        )
+
+        return False
+
+    # desativa cliente
+    desativar_cliente(id_cliente)
+
+    flash(
+        "Cliente desativado com sucesso!",
+        "success"
+    )
+
+    return True
+def reativar_cliente_controller(
+    id_cliente
+):
+
+    reativar_cliente(id_cliente)
+
+    flash(
+        "Cliente reativado com sucesso!",
+        "success"
+    )
+
+# ==========================
+# LISTAR CLIENTES INATIVOS
+# ==========================
+def listar_clientes_inativos_controller():
+
+    return listar_clientes_inativos()

@@ -1,0 +1,122 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Clientes Inativos
+{% endblock %}
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/pages/cliente.css') }}"
+>
+
+{% endblock %}
+
+{% block conteudo %}
+
+<h1>Clientes Inativos</h1>
+
+<a
+    href="/cliente"
+    class="button button-secondary"
+>
+    <i class="fa-solid fa-arrow-left"></i>
+    Voltar
+</a>
+
+<br><br>
+
+<div class="cliente-pesquisa">
+
+    <div class="search-box">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+            type="text"
+            id="search-input"
+            placeholder="Pesquisar cliente..."
+        >
+
+    </div>
+
+    <div class="search-info">
+
+        <span id="search-count">
+
+            {{ clientes|length }} cliente(s)
+
+        </span>
+
+    </div>
+
+</div>
+
+<div
+    class="card search-empty search-hidden"
+    id="search-empty"
+>
+
+    <div class="card-body">
+
+        <i class="fa-solid fa-user-slash"></i>
+
+        <h3>Nenhum cliente encontrado</h3>
+
+        <p>
+            Nenhum cliente corresponde à pesquisa.
+        </p>
+
+    </div>
+
+</div>
+
+<ul class="cliente-lista">
+
+    {% for cliente in clientes %}
+
+    <li class="search-item">
+
+        <strong class="search-text">
+
+            {{ cliente.nome }}
+
+        </strong>
+
+        <form
+            action="/cliente/reativar/{{ cliente.id }}"
+            method="POST"
+        >
+
+            <button
+                type="submit"
+                class="button button-success"
+            >
+
+                <i class="fa-solid fa-rotate-left"></i>
+
+                Reativar
+
+            </button>
+
+        </form>
+
+    </li>
+
+    {% endfor %}
+
+</ul>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/search_cliente.js'
+    ) }}"
+></script>
+
+{% endblock %}

@@ -17,6 +17,7 @@ Clientes
 
 <h1>Clientes</h1>
 
+
 <div class="cliente-pesquisa">
 
     <div class="search-box">
@@ -30,6 +31,15 @@ Clientes
         >
 
     </div>
+
+    <a
+        href="/cliente/inativos"
+        class="button button-secondary"
+    >
+        <i class="fa-solid fa-user-slash"></i>
+        Clientes Inativos
+    </a>
+    
     <div class="search-info">
 
         <span id="search-count">
@@ -162,25 +172,76 @@ id="card-cadastro">
 
             </a>
 
-            <a
-                href="{{ url_for('excluir_cliente', id_cliente=cliente.id) }}"
-                class="button button-danger"
-                onclick="return confirm('Deseja realmente excluir este cliente?')"
-            >
+            <button
+            type="button"
+            class="button button-danger"
+            onclick="abrirModalDesativar(
+                '{{ cliente.id }}',
+                '{{ cliente.nome }}',
+                '{{ cliente.conta_aberta }}',
+                '{{ cliente.saldo_devedor }}'
+            )"
+        >
+        <i class="fa-solid fa-user-lock"></i>
+            Desativar
+        </button>
 
-                <i class="fa-solid fa-trash"></i>
-
-                Excluir
-
-            </a>
-
-        </div>
+    </div>
 
     </li>
 
     {% endfor %}
 
 </ul>
+
+<div class="modal-overlay-cliente" id="modalDesativar">
+
+    <div class="modal-cliente">
+
+        <h2 id="titulo-modal">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+            Desativar Cliente
+
+        </h2>
+
+        <hr>
+
+        <div id="conteudo-modal">
+
+        </div>
+
+        <div class="modal-botoes">
+
+            <button
+    type="button"
+    class="button button-secondary"
+    onclick="fecharModalDesativar()"
+>
+    Cancelar
+</button>
+
+            <form
+            id="formDesativarCliente"
+                method="POST"
+            >
+
+                <button
+                id="btnDesativarCliente"
+                    type="submit"
+                    class="button button-danger"
+                >
+                Desativar
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}
 
@@ -190,6 +251,13 @@ id="card-cadastro">
     src="{{ url_for(
         'static',
         filename='js/components/search_cliente.js'
+    ) }}"
+></script>
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/pages/cliente.js'
     ) }}"
 ></script>
 
