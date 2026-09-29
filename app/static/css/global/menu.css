@@ -181,4 +181,30 @@
    RESPONSIVIDADE
 ====================================================== */
 
-/* Será implementada futuramente */
+/* ==========================
+   MENU RECOLHIDO
+========================== */
+
+.sidebar.recolhido{
+
+    width: 80px;
+
+}
+
+.sidebar.recolhido .sidebar-text{
+
+    display:none;
+
+}
+
+.sidebar.recolhido .sidebar-link{
+
+    justify-content:center;
+
+}
+
+.sidebar.recolhido .sidebar-logo span{
+
+    display:none;
+
+}
