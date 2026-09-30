@@ -66,6 +66,7 @@ Estoque
     </div>
 
     <!-- Estoque Atual -->
+    {% if session["perfil"] in ["Administrador", "Gerente"] %}
     <a href="/estoque/atual" class="nova-entrada-card nova-entrada-card--info">
         <div class="nova-entrada-icon">
             <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
@@ -78,8 +79,10 @@ Estoque
 
         <i class="fa-solid fa-chevron-right nova-entrada-card__arrow" aria-hidden="true"></i>
     </a>
+    {% endif %}
 
     <!-- Histórico -->
+    {% if session["perfil"] in ["Administrador", "Gerente"] %}
     <a href="/movimentacao/historico" class="nova-entrada-card nova-entrada-card--neutral">
         <div class="nova-entrada-icon">
             <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
@@ -92,6 +95,7 @@ Estoque
 
         <i class="fa-solid fa-chevron-right nova-entrada-card__arrow" aria-hidden="true"></i>
     </a>
+    {% endif %}
 
 </div>
 

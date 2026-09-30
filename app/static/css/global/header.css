@@ -89,3 +89,25 @@
     font-size: 28px;
 
 }
+
+.header-user-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.header-user-name{
+
+    font-weight:600;
+
+}
+
+.header-user-role{
+
+    opacity:.7;
+
+    font-size:12px;
+
+}

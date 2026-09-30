@@ -27,6 +27,10 @@ from app.routes.dashboard_route import configurar_rotas_dashboard
 from app.routes.movimentacao_route import configurar_movimentacao_routes
 # Importa rota fichas/sinuca
 from app.routes.sinuca_route import configurar_sinuca_routes
+# Importa rota de login
+from app.routes.auth_route import configurar_auth_routes
+# Importa rota de usuarios
+from app.routes.usuario_route import configurar_usuario_routes
 
 # Cria aplicação Flask
 app = Flask(
@@ -43,6 +47,28 @@ app = Flask(
 # SECRET KEY
 app.secret_key = "tcc_bar"
 
+from flask import (
+    session,
+    redirect,
+    request
+)
+
+@app.before_request
+def verificar_login():
+
+    rotas_livres = [
+        "login",
+        "static"
+    ]
+
+    if request.endpoint in rotas_livres:
+
+        return
+
+    if "usuario_id" not in session:
+
+        return redirect("/login")
+
 
 # Registra rotas
 configurar_rotas(app)
@@ -58,6 +84,8 @@ configurar_relatorio_routes(app)
 configurar_rotas_dashboard(app)
 configurar_movimentacao_routes(app)
 configurar_sinuca_routes(app)
+configurar_auth_routes(app)
+configurar_usuario_routes(app)
 
 # Inicia servidor
 if __name__ == "__main__":

@@ -1,0 +1,85 @@
+{% extends "base/base.html" %}
+
+{% block conteudo %}
+
+<h1>
+
+    Alterar Senha
+
+</h1>
+
+<h3>
+
+    {{ usuario.nome }}
+
+</h3>
+
+<form method="POST">
+
+    <div class="campo-senha">
+
+        <input
+            type="password"
+            id="senha"
+            name="senha"
+            placeholder="Nova senha"
+            required
+        >
+
+        <button
+            type="button"
+            id="toggle-senha"
+        >
+
+            <i class="fa-solid fa-eye"></i>
+
+        </button>
+
+    </div>
+
+    <div class="campo-senha">
+
+        <input
+            type="password"
+            id="confirmar_senha"
+            name="confirmar_senha"
+            placeholder="Confirmar senha"
+            required
+        >
+
+        <button
+            type="button"
+            id="toggle-confirmar"
+        >
+
+            <i class="fa-solid fa-eye"></i>
+
+        </button>
+
+    </div>
+
+    <br>
+
+    <a
+        href="{{ url_for('usuario') }}"
+        class="button button-secondary"
+    >
+
+        Voltar
+
+    </a>
+
+    <button
+        type="submit"
+        class="button button-primary"
+    >
+
+        Salvar
+
+    </button>
+
+</form>
+
+<script src="{{ url_for('static', filename='js/global/senha.js') }}"></script>
+
+{% endblock %}

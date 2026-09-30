@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Login SIGC</title>
+
+</head>
+
+<body>
+
+    <h1>Login</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+
+    {% for categoria, mensagem in messages %}
+
+        <div class="alert alert-{{ categoria }}">
+            {{ mensagem }}
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+{% endwith %}
+
+    <form method="POST">
+
+        <input
+            type="text"
+            name="usuario"
+            placeholder="Usuário"
+            required
+        >
+
+        <div class="campo-senha">
+
+            <input
+            type="password"
+            id="senha"
+            name="senha"
+            placeholder="Senha"
+            required
+        >
+        
+            <button
+            type="button"
+            id="toggle-confirmar"
+        >
+            <i class="fa-solid fa-eye"></i>
+        </button>
+        
+        </div>
+
+        <button type="submit">
+
+            Entrar
+
+        </button>
+
+    </form>
+
+    
+<script src="{{ url_for('static', filename='js/global/senha.js') }}"></script>
+
+</body>
+
+</html>

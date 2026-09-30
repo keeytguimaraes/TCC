@@ -1,3 +1,7 @@
+from app.utils.auth import (
+    login_obrigatorio,
+    perfil_obrigatorio
+)
 # Importa Flask
 from flask import (
 
@@ -27,6 +31,11 @@ def configurar_fornecedor_routes(app):
     # LISTAR FORNECEDORES
     # ==========================
     @app.route("/fornecedor")
+    @login_obrigatorio
+    @perfil_obrigatorio(
+    "Administrador",
+    "Gerente"
+)
     def fornecedor():
 
         # Busca fornecedores

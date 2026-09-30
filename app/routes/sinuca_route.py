@@ -1,20 +1,17 @@
+from app.utils.auth import (
+    login_obrigatorio,
+    perfil_obrigatorio
+)
 from flask import (
-
     render_template,
-
     request,
-
     redirect,
-
     flash
 )
 
 from app.controllers.sinuca_controller import (
-
     pegar_config_sinuca,
-
     salvar_config_sinuca,
-
     pegar_dados_relatorio_sinuca
 )
 
@@ -25,6 +22,11 @@ def configurar_sinuca_routes(app):
     # TELA DA SINUCA
     # ==========================
     @app.route("/sinuca")
+    @login_obrigatorio
+    @perfil_obrigatorio(
+    "Administrador",
+    "Gerente"
+)
     def sinuca():
 
         config = pegar_config_sinuca()

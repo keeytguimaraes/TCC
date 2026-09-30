@@ -1,3 +1,7 @@
+from app.utils.auth import (
+    login_obrigatorio,
+    perfil_obrigatorio
+)
 # Importa Flask
 from flask import (
 
@@ -63,6 +67,7 @@ def configurar_venda_routes(app):
     # LISTAR VENDAS
     # ==========================
     @app.route("/venda")
+    @login_obrigatorio
     def venda():
 
         # Busca vendas
@@ -426,6 +431,11 @@ def configurar_venda_routes(app):
     # HISTÓRICO DE VENDAS
     # ==========================
     @app.route("/venda/historico")
+    @login_obrigatorio
+    @perfil_obrigatorio(
+    "Administrador",
+    "Gerente"
+)
     def historico_vendas():
 
         vendas = pegar_historico_vendas()

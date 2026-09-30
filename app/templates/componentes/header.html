@@ -22,9 +22,27 @@
     <div class="header-user">
 
         <i class="fa-solid fa-circle-user"></i>
+    
+        <div class="header-user-info">
+    
+            <span class="header-user-name">
+                {{ session["nome"] }}
+            </span>
+    
+            <small class="header-user-role">
+                {{ session["perfil"]|capitalize }}
+            </small>
+    
+        </div>
 
-        <span>Administrador</span>
-
+        <a
+        href="/logout"
+        class="button button-danger"
+    >
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Sair
+    </a>
+    
     </div>
 
 </header>

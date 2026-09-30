@@ -1,3 +1,6 @@
+from app.utils.auth import (
+    login_obrigatorio
+)
 # Importa Flask
 from flask import (
     render_template,
@@ -22,6 +25,7 @@ def configurar_conta_routes(app):
     # LISTAR CONTAS
     # ==========================
     @app.route("/conta")
+    @login_obrigatorio
     def conta():
 
         contas = pegar_contas()

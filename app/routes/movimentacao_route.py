@@ -1,25 +1,22 @@
+from app.utils.auth import (
+    login_obrigatorio,
+    perfil_obrigatorio
+)
 from flask import (
-
     render_template,
     request,
     redirect,
     flash
-
 )
 
 from app.controllers.movimentacao_controller import (
-
     pegar_produtos_movimentacao,
-
     cadastrar_movimentacao_controller
 )
 
 from app.controllers.movimentacao_controller import (
-
     pegar_produtos_movimentacao,
-
     cadastrar_movimentacao_controller,
-
     pegar_movimentacoes
 )
 
@@ -30,7 +27,7 @@ def configurar_movimentacao_routes(app):
     # TELA
     # ==========================
     @app.route("/movimentacao")
-
+    @login_obrigatorio
     def movimentacao():
 
         produtos = pegar_produtos_movimentacao()
@@ -117,6 +114,11 @@ def configurar_movimentacao_routes(app):
     # ==========================
     @app.route(
     "/movimentacao/historico"
+)
+    @login_obrigatorio
+    @perfil_obrigatorio(
+    "Administrador",
+    "Gerente"
 )
     def historico_movimentacao():
 

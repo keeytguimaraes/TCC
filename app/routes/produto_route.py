@@ -1,3 +1,7 @@
+from app.utils.auth import (
+    login_obrigatorio,
+    perfil_obrigatorio
+)
 # Importa funções do Flask
 from flask import (
     render_template,
@@ -30,6 +34,11 @@ def configurar_produto_routes(app):
     # ROTA: LISTAR PRODUTOS
     # ==========================
     @app.route("/produto")
+    @login_obrigatorio
+    @perfil_obrigatorio(
+    "Administrador",
+    "Gerente"
+)
     def produto():
 
         # Busca produtos

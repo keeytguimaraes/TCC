@@ -1,0 +1,109 @@
+{% extends "base/base.html" %}
+
+{% block conteudo %}
+
+<h1>Cadastrar Usuário</h1>
+
+<form
+    method="POST"
+    action="/usuario/cadastrar"
+>
+
+    <input
+        type="text"
+        name="nome"
+        placeholder="Nome completo"
+        required
+    >
+
+    <input
+        type="text"
+        name="usuario"
+        placeholder="Usuário"
+        required
+    >
+
+    <div class="campo-senha">
+
+        <input
+            type="password"
+            id="senha"
+            name="senha"
+            placeholder="Senha"
+            required
+        >
+    
+        <button
+            type="button"
+            id="toggle-senha"
+        >
+            <i class="fa-solid fa-eye"></i>
+        </button>
+    
+    </div>
+    
+    <div class="campo-senha">
+    
+        <input
+            type="password"
+            id="confirmar_senha"
+            name="confirmar_senha"
+            placeholder="Confirmar senha"
+            required
+        >
+    
+        <button
+            type="button"
+            id="toggle-confirmar"
+        >
+            <i class="fa-solid fa-eye"></i>
+        </button>
+    
+    </div>
+
+    <select
+        name="perfil"
+        required
+    >
+
+        <option value="Administrador">
+            Administrador
+        </option>
+
+        <option value="Gerente">
+            Gerente
+        </option>
+
+        <option value="Funcionario">
+            Funcionário
+        </option>
+
+    </select>
+
+    <div class="acoes-formulario">
+
+        <a
+            href="/usuario"
+            class="btn btn-secundario"
+        >
+            Voltar
+        </a>
+    
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Salvar
+        </button>
+    
+    </div>
+
+</form>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/global/senha.js') }}"></script>
+
+{% endblock %}

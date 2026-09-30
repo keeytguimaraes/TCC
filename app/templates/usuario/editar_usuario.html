@@ -1,0 +1,73 @@
+{% extends "base/base.html" %}
+
+{% block conteudo %}
+
+<h1>Editar Usuário</h1>
+
+<form method="POST">
+
+    <input
+        type="text"
+        name="nome"
+        value="{{ usuario.nome }}"
+        required
+    >
+
+    <input
+        type="text"
+        name="usuario"
+        value="{{ usuario.usuario }}"
+        required
+    >
+
+    <select
+        name="perfil"
+        required
+    >
+
+        <option
+            value="Administrador"
+            {% if usuario.perfil == "Administrador" %}
+            selected
+            {% endif %}
+        >
+            Administrador
+        </option>
+
+        <option
+            value="Gerente"
+            {% if usuario.perfil == "Gerente" %}
+            selected
+            {% endif %}
+        >
+            Gerente
+        </option>
+
+        <option
+            value="Funcionario"
+            {% if usuario.perfil == "Funcionario" %}
+            selected
+            {% endif %}
+        >
+            Funcionário
+        </option>
+
+    </select>
+
+    <a
+        href="/usuario"
+        class="button button-secondary"
+    >
+        Voltar
+    </a>
+
+    <button
+        type="submit"
+        class="button button-primary"
+    >
+        Salvar
+    </button>
+
+</form>
+
+{% endblock %}

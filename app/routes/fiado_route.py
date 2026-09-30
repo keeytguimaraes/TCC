@@ -1,3 +1,6 @@
+from app.utils.auth import (
+    login_obrigatorio
+)
 from flask import (
     render_template,
     request,
@@ -19,6 +22,7 @@ def configurar_fiado_routes(app):
     # LISTAR FIADOS
     # ==========================
     @app.route("/fiado")
+    @login_obrigatorio
     def fiado():
 
         fiados = pegar_fiados()

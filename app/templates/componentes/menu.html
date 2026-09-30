@@ -32,50 +32,84 @@
 
         </a>
 
-        <!-- CLIENTES -->
 
-        <a href="{{ url_for('cliente') }}"
-           class="sidebar-link {% if request.endpoint == 'cliente' %}active{% endif %}">
+        <!-- usuarios -->
 
-            <span class="sidebar-icon">
-                <i class="fa-solid fa-users"></i>
-            </span>
+        {% if session["perfil"] == "Administrador" %}
 
-            <span class="sidebar-text">
-                Clientes
-            </span>
+<a href="{{ url_for('usuario') }}"
+   class="sidebar-link {% if request.endpoint == 'usuario' %}active{% endif %}">
 
-        </a>
+    <span class="sidebar-icon">
+        <i class="fa-solid fa-users-gear"></i>
+    </span>
+
+    <span class="sidebar-text">
+        Usuários
+    </span>
+
+</a>
+
+{% endif %}
+
+        
+<!-- CLIENTES -->
+
+        {% if session["perfil"] in ["Administrador", "Gerente"] %}
+
+<a href="{{ url_for('cliente') }}"
+   class="sidebar-link {% if request.endpoint == 'cliente' %}active{% endif %}">
+
+    <span class="sidebar-icon">
+        <i class="fa-solid fa-users"></i>
+    </span>
+
+    <span class="sidebar-text">
+        Clientes
+    </span>
+
+</a>
+
+{% endif %}
 
         <!-- PRODUTOS -->
 
-        <a href="{{ url_for('produto') }}"
-           class="sidebar-link {% if request.endpoint == 'produto' %}active{% endif %}">
+        {% if session["perfil"] in ["Administrador", "Gerente"] %}
 
-            <span class="sidebar-icon">
-                <i class="fa-solid fa-box"></i>
-            </span>
+<a href="{{ url_for('produto') }}"
+   class="sidebar-link {% if request.endpoint == 'produto' %}active{% endif %}">
 
-            <span class="sidebar-text">
-                Produtos
-            </span>
+    <span class="sidebar-icon">
+        <i class="fa-solid fa-box"></i>
+    </span>
 
-        </a>
+    <span class="sidebar-text">
+        Produtos
+    </span>
 
-        <!-- FORNECEDORES -->
+</a>
 
-        <a href="{{ url_for('fornecedor') }}"
-           class="sidebar-link {% if request.endpoint == 'fornecedor' %}active{% endif %}">
+{% endif %}
 
-            <span class="sidebar-icon">
-                <i class="fa-solid fa-truck"></i>
-            </span>
 
-            <span class="sidebar-text">
-                Fornecedores
-            </span>
+<!-- FORNECEDORES -->
 
-        </a>
+{% if session["perfil"] in ["Administrador", "Gerente"] %}
+
+<a href="{{ url_for('fornecedor') }}"
+   class="sidebar-link {% if request.endpoint == 'fornecedor' %}active{% endif %}">
+
+    <span class="sidebar-icon">
+        <i class="fa-solid fa-truck"></i>
+    </span>
+
+    <span class="sidebar-text">
+        Fornecedores
+    </span>
+
+</a>
+
+{% endif %}
 
         <!-- ESTOQUE -->
 
@@ -106,20 +140,26 @@
             </span>
 
         </a>
+
+
+          <!-- HISTÓRICO VENDAS -->
   
-        <!-- HISTÓRICO VENDAS -->
+        {% if session["perfil"] in ["Administrador", "Gerente"] %}
+        
         <a href="{{ url_for('historico_vendas') }}"
-   class="sidebar-link {% if request.endpoint == 'historico_vendas' %}active{% endif %}">
-
-    <span class="sidebar-icon">
-        <i class="fa-solid fa-clock-rotate-left"></i>
-    </span>
-
-    <span class="sidebar-text">
-        Histórico de Vendas
-    </span>
-
-</a>
+           class="sidebar-link {% if request.endpoint == 'historico_vendas' %}active{% endif %}">
+        
+            <span class="sidebar-icon">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            </span>
+        
+            <span class="sidebar-text">
+                Histórico de Vendas
+            </span>
+        
+        </a>
+        
+        {% endif %}
 
         <!-- FIADO -->
 
@@ -151,35 +191,45 @@
 
         </a>
 
-       <!-- SINUCA -->
+
+        <!-- SINUCA -->
+
+       {% if session["perfil"] in ["Administrador", "Gerente"] %}
 
 <a href="{{ url_for('sinuca') }}"
-class="sidebar-link {% if request.endpoint == 'sinuca' %}active{% endif %}">
+   class="sidebar-link {% if request.endpoint == 'sinuca' %}active{% endif %}">
 
- <span class="sidebar-icon">
-    <i class="fa-solid fa-trophy"></i>
- </span>
+    <span class="sidebar-icon">
+        <i class="fa-solid fa-trophy"></i>
+    </span>
 
- <span class="sidebar-text">
-     Sinuca
- </span>
+    <span class="sidebar-text">
+        Sinuca
+    </span>
 
 </a>
 
-        <!-- RELATÓRIOS -->
+{% endif %}
 
-        <a href="{{ url_for('relatorio') }}"
-           class="sidebar-link {% if request.endpoint == 'relatorio' %}active{% endif %}">
 
-            <span class="sidebar-icon">
-                <i class="fa-solid fa-chart-column"></i>
-            </span>
+<!-- RELATÓRIOS -->
 
-            <span class="sidebar-text">
-                Relatórios
-            </span>
+{% if session["perfil"] in ["Administrador", "Gerente"] %}
 
-        </a>
+<a href="{{ url_for('relatorio') }}"
+   class="sidebar-link {% if request.endpoint == 'relatorio' %}active{% endif %}">
+
+    <span class="sidebar-icon">
+        <i class="fa-solid fa-chart-column"></i>
+    </span>
+
+    <span class="sidebar-text">
+        Relatórios
+    </span>
+
+</a>
+
+{% endif %}
 
     </nav>
 

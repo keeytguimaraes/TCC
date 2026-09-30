@@ -1,3 +1,7 @@
+from app.utils.auth import (
+    login_obrigatorio,
+    perfil_obrigatorio
+)
 # Importa funções do Flask
 from flask import (
     render_template,
@@ -17,7 +21,6 @@ from app.controllers.cliente_controller import (
     reativar_cliente_controller
 )
 
-
 # Função responsável por registrar as rotas
 def configurar_cliente_routes(app):
 
@@ -25,16 +28,19 @@ def configurar_cliente_routes(app):
     # ROTA: LISTAR CLIENTES
     # ==========================
     @app.route("/cliente")
+    @login_obrigatorio
+    @perfil_obrigatorio(
+    "Administrador",
+    "Gerente"
+)
     def cliente():
 
-        # Busca clientes do banco
         dados = pegar_clientes()
 
-        # Envia dados para HTML
         return render_template(
-            "cliente/cliente.html",
-            clientes=dados
-        )
+        "cliente/cliente.html",
+        clientes=dados
+    )
 
 
     # ==========================

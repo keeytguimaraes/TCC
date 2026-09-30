@@ -1,3 +1,6 @@
+from app.utils.auth import (
+    login_obrigatorio
+)
 # Importa Flask
 from flask import (
 
@@ -53,6 +56,7 @@ def configurar_carrinho_routes(app):
     # TELA CARRINHO
     # ==========================
     @app.route("/carrinho")
+    @login_obrigatorio
     def carrinho():
 
         carrinho = session.get(

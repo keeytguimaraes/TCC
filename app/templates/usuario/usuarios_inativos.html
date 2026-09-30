@@ -1,0 +1,40 @@
+{% extends "base/base.html" %}
+
+{% block conteudo %}
+
+<h1>Usuários Inativos</h1>
+
+{% for usuario in usuarios %}
+
+<div>
+
+    {{ usuario.nome }}
+    -
+    {{ usuario.usuario }}
+    -
+    {{ usuario.perfil }}
+
+    <form
+        method="POST"
+        action="/usuario/reativar/{{ usuario.id }}"
+    >
+
+        <button
+            type="submit"
+        >
+            Reativar
+        </button>
+
+    </form>
+
+</div>
+
+{% endfor %}
+
+<a href="/usuario">
+
+    Voltar
+
+</a>
+
+{% endblock %}

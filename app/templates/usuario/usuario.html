@@ -1,0 +1,69 @@
+{% extends "base/base.html" %}
+
+{% block conteudo %}
+
+<h1>Usuários</h1>
+
+<a href="/usuario/inativos">
+
+    Usuários Inativos
+
+</a>
+
+<a href="/usuario/cadastrar">
+
+    Novo Usuário
+
+</a>
+
+<ul>
+
+{% for usuario in usuarios %}
+
+<li>
+
+    {{ usuario.nome }}
+    -
+    {{ usuario.usuario }}
+    -
+    {{ usuario.perfil }}
+
+</li>
+
+<a
+    href="/usuario/editar/{{ usuario.id }}"
+    class="button button-primary"
+>
+    Editar
+</a>
+
+<a
+    href="/usuario/senha/{{ usuario.id }}"
+    class="button button-warning"
+>
+    Alterar Senha
+</a>
+
+{% if usuario.id != session["usuario_id"] %}
+
+<form
+    method="POST"
+    action="/usuario/desativar/{{ usuario.id }}"
+    style="display:inline;"
+>
+
+    <button
+        type="submit"
+    >
+        Desativar
+    </button>
+
+</form>
+
+{% endif %}
+
+{% endfor %}
+
+</ul>
+
+{% endblock %}
