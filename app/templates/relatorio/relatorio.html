@@ -6,48 +6,188 @@ Relatórios
 
 {% block conteudo %}
 
-    <h1>
-        Relatórios
-    </h1>
+<h1>
+    Relatórios
+</h1>
 
-    <hr>
+<p>
+    Visualize indicadores e gere relatórios do sistema.
+</p>
 
-    <h2>
+<hr>
+
+<!-- INDICADORES -->
+
+<h2>
+    Indicadores
+</h2>
+
+<div>
+
+    <h3>
         Total vendido hoje
-    </h2>
+    </h3>
 
     <p>
         R$ {{ dados.vendido_hoje }}
     </p>
 
-    <hr>
-
-    <h2>
+    <h3>
         Total vendido no mês
-    </h2>
+    </h3>
 
     <p>
         R$ {{ dados.vendido_mes }}
     </p>
 
-    <hr>
-
-    <h2>
+    <h3>
         Total em fiados
-    </h2>
+    </h3>
 
     <p>
         R$ {{ dados.fiados }}
     </p>
 
-    <hr>
-
-    <h2>
+    <h3>
         Total em pendências
-    </h2>
+    </h3>
 
     <p>
         R$ {{ dados.pendencias }}
     </p>
 
-    {% endblock %}
+</div>
+
+<hr>
+
+<!-- RELATÓRIOS -->
+
+<h2>
+    Relatórios Disponíveis
+</h2>
+
+<div>
+
+    <h3>
+        Relatório de Vendas
+    </h3>
+
+    <p>
+        Resumo completo das vendas por período.
+    </p>
+
+    <a href="/relatorio/vendas">
+        Gerar Relatório
+    </a>
+
+</div>
+
+<hr>
+
+<div>
+
+    <h3>
+        Fechamento Diário
+    </h3>
+
+    <p>
+        Resumo financeiro de um dia específico.
+    </p>
+
+    <button disabled>
+        Em breve
+    </button>
+
+</div>
+
+<hr>
+
+<div>
+
+    <h3>
+        Produtos Mais Vendidos
+    </h3>
+
+    <p>
+        Ranking dos produtos com maior saída.
+    </p>
+
+    <button disabled>
+        Em breve
+    </button>
+
+</div>
+
+<hr>
+
+<div>
+
+    <h3>
+        Produtos Menos Vendidos
+    </h3>
+
+    <p>
+        Ranking dos produtos com menor saída.
+    </p>
+
+    <button disabled>
+        Em breve
+    </button>
+
+</div>
+
+<hr>
+
+<div>
+
+    <h3>
+        Relatório Financeiro de Fiados
+    </h3>
+
+    <p>
+        Valores em aberto e recebidos.
+    </p>
+
+    <button disabled>
+        Em breve
+    </button>
+
+</div>
+
+<hr>
+
+<div>
+
+    <h3>
+        Relatório Financeiro de Contas Pendentes
+    </h3>
+
+    <p>
+        Pendências sem cliente cadastrado.
+    </p>
+
+    <button disabled>
+        Em breve
+    </button>
+
+</div>
+
+<hr>
+
+<div>
+
+    <h3>
+        Desempenho de Funcionários
+    </h3>
+
+    <p>
+        Vendas realizadas por cada usuário.
+    </p>
+
+    <button disabled>
+        Em breve
+    </button>
+
+</div>
+
+{% endblock %}

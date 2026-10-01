@@ -1,0 +1,79 @@
+{% extends "base/base.html" %}
+
+{% block conteudo %}
+
+<h1>
+
+    Relatório de Vendas
+
+</h1>
+
+<form
+    method="POST"
+    action="/relatorio/vendas/pdf"
+>
+
+    <label>
+
+        Data Inicial
+
+    </label>
+
+    <br>
+
+    <input
+        type="date"
+        name="data_inicial"
+        required
+    >
+    <label>
+        Tipo de Vendas
+    </label>
+    
+    <select
+        name="tipo_vendas"
+        required
+    >
+    
+        <option value="todas">
+            Todas
+        </option>
+    
+        <option value="pagas">
+            Apenas Pagas
+        </option>
+    
+        <option value="pendentes">
+            Apenas Pendentes
+        </option>
+    
+    </select>
+
+    <label>
+
+        Data Final
+
+    </label>
+
+    <br>
+
+    <input
+        type="date"
+        name="data_final"
+        required
+    >
+    <a href="/relatorio">
+
+        Voltar
+
+    </a>
+
+    <button type="submit">
+
+        Gerar PDF
+
+    </button>
+
+</form>
+
+{% endblock %}
