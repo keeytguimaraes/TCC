@@ -181,7 +181,7 @@ def configurar_carrinho_routes(app):
         # ----------------------
         # DEFINE PAGAMENTO
         # ----------------------
-        status_pagamento = "Pago"
+        status_pagamento = "pago"
 
         conta_id = None
 
@@ -190,7 +190,7 @@ def configurar_carrinho_routes(app):
         # Venda fiado
         if tipo_finalizacao == "fiado":
 
-            status_pagamento = "Pendente"
+            status_pagamento = "pendente"
 
             conta = buscar_conta_aberta(
                 cliente_id
@@ -209,7 +209,7 @@ def configurar_carrinho_routes(app):
         # Conta pendente
         elif tipo_finalizacao == "pendente":
 
-            status_pagamento = "Pendente"
+            status_pagamento = "pendente"
 
             conta_pendente = (
         buscar_conta_pendente_aberta(
@@ -316,6 +316,8 @@ def configurar_carrinho_routes(app):
                 %s, %s, %s, %s,
                 %s, %s, %s, %s
             )
+
+            RETURNING id
         """
 
         cursor.execute(
@@ -334,7 +336,7 @@ def configurar_carrinho_routes(app):
             )
         )
 
-        venda_id = cursor.lastrowid
+        venda_id = cursor.fetchone()[0]
 
         cursor.execute(
     "SELECT id FROM venda WHERE id = %s",

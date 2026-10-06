@@ -79,7 +79,7 @@ def configurar_conta_routes(app):
         sql_vendas = """
         UPDATE venda
 
-        SET status_pagamento = 'Pago'
+        SET status_pagamento = 'pago'
 
         WHERE conta_pendente_id = %s
     """

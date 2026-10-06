@@ -1,6 +1,6 @@
 # Importa conexão
 from app.database.conexao import conectar
-
+from psycopg2.extras import RealDictCursor
 
 # ==========================
 # LISTAR FORNECEDORES
@@ -12,7 +12,7 @@ def listar_fornecedores():
 
     # Cursor dicionário
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     # SQL
@@ -100,7 +100,7 @@ def buscar_fornecedor_por_id(
 
     # Cursor dicionário
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     # SQL

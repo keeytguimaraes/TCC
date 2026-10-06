@@ -1,5 +1,6 @@
 # Importa função de conexão
 from app.database.conexao import conectar
+from psycopg2.extras import RealDictCursor
 
 
 # Função para buscar todos os clientes
@@ -9,8 +10,8 @@ def listar_clientes():
     conexao = conectar()
 
     # Cria cursor
-    # dictionary=True transforma os dados em formato de dicionário
-    cursor = conexao.cursor(dictionary=True)
+    # cursor_factory=RealDictCursor transforma os dados em formato de dicionário
+    cursor = conexao.cursor(cursor_factory=RealDictCursor)
 
     # Executa SQL
     cursor.execute("""
@@ -120,7 +121,7 @@ def buscar_cliente_por_id(id_cliente):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -150,7 +151,7 @@ def cliente_tem_conta_aberta(cliente_id):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -182,7 +183,7 @@ def listar_clientes_inativos():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     cursor.execute("""

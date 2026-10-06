@@ -1,6 +1,6 @@
 # Importa conexão banco
 from app.database.conexao import conectar
-
+from psycopg2.extras import RealDictCursor
 
 # ==========================
 # LISTAR ESTOQUE
@@ -12,7 +12,7 @@ def listar_estoque():
 
     # Cursor dicionário
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     # SQL
@@ -603,7 +603,7 @@ def buscar_estoque_atual(
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -649,7 +649,7 @@ def listar_estoque_atual():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -731,7 +731,7 @@ def buscar_detalhes_produto(produto_id):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """

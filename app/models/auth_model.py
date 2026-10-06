@@ -1,4 +1,5 @@
 from app.database.conexao import conectar
+from psycopg2.extras import RealDictCursor
 
 
 def buscar_usuario_por_login(usuario):
@@ -6,7 +7,7 @@ def buscar_usuario_por_login(usuario):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     cursor.execute(

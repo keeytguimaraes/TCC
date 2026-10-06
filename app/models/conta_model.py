@@ -1,5 +1,6 @@
 # Importa conexão
 from app.database.conexao import conectar
+from psycopg2.extras import RealDictCursor
 
 
 # ==========================
@@ -10,7 +11,7 @@ def listar_contas_pendentes():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -20,10 +21,10 @@ def listar_contas_pendentes():
             cp.nome_cliente_temporario,
             cp.data_abertura,
 
-            DATEDIFF(
-        NOW(),
-        cp.data_abertura
-    ) AS dias_pendente,
+            (
+    CURRENT_DATE -
+    DATE(cp.data_abertura)
+) AS dias_pendente,
 
             COALESCE(
                 SUM(v.valor_total),
@@ -36,7 +37,7 @@ def listar_contas_pendentes():
 
             ON v.conta_pendente_id = cp.id
 
-        WHERE cp.status = 'Aberta'
+        WHERE cp.status = 'aberta'
 
         GROUP BY
 
@@ -66,7 +67,7 @@ def buscar_produtos_venda(
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -113,7 +114,7 @@ def buscar_conta_aberta(cliente_id):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -156,41 +157,35 @@ def criar_conta(cliente_id):
     cursor = conexao.cursor()
 
     sql = """
-        INSERT INTO conta (
+    INSERT INTO conta (
 
-            cliente_id,
+        cliente_id,
+        status_conta,
+        saldo_devedor
 
-            status_conta,
+    )
 
-            saldo_devedor
+    VALUES (
 
-        )
+        %s,
+        'aberta',
+        0
 
-        VALUES (
+    )
 
-            %s,
-
-            'aberta',
-
-            0
-        )
-    """
+    RETURNING id
+"""
 
     cursor.execute(
+    sql,
+    (cliente_id,)
+)
 
-        sql,
-
-        (
-            cliente_id,
-        )
-    )
+    conta_id = cursor.fetchone()[0]
 
     conexao.commit()
 
-    conta_id = cursor.lastrowid
-
     cursor.close()
-
     conexao.close()
 
     return conta_id
@@ -231,7 +226,7 @@ def buscar_conta_por_id(
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -264,7 +259,7 @@ def buscar_fichas_pendentes(venda_id):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -293,7 +288,7 @@ def buscar_conta_pendente_aberta(nome_cliente):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -303,7 +298,7 @@ def buscar_conta_pendente_aberta(nome_cliente):
 
         WHERE nome_cliente_temporario = %s
 
-        AND status = 'Aberta'
+        AND status = 'aberta'
 
         LIMIT 1
     """
@@ -341,9 +336,11 @@ def criar_conta_pendente(nome_cliente):
         VALUES (
 
             %s,
-            'Aberta'
+            'aberta'
 
         )
+
+        RETURNING id
     """
 
     cursor.execute(
@@ -351,14 +348,15 @@ def criar_conta_pendente(nome_cliente):
         (nome_cliente,)
     )
 
-    conexao.commit()
+    conta_id = cursor.fetchone()[0]
 
-    conta_id = cursor.lastrowid
+    conexao.commit()
 
     cursor.close()
     conexao.close()
 
     return conta_id
+
 
 # ==========================
 # BUSCAR CONTA PENDENTE
@@ -368,7 +366,7 @@ def buscar_conta_pendente_por_id(conta_id):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -399,7 +397,7 @@ def buscar_vendas_conta_pendente(conta_id):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -435,7 +433,7 @@ def transferir_para_fiado(
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     # ----------------------
@@ -484,6 +482,8 @@ def transferir_para_fiado(
                 'aberta',
                 0
             )
+
+            RETURNING id
         """
 
         cursor.execute(
@@ -491,7 +491,7 @@ def transferir_para_fiado(
             (cliente_id,)
         )
 
-        conta_id = cursor.lastrowid
+        conta_id = cursor.fetchone()[0]
 
     # ----------------------
     # SOMA TOTAL DAS VENDAS
@@ -572,7 +572,7 @@ def transferir_para_fiado(
     sql = """
         UPDATE conta_pendente
 
-        SET status = 'Transferida'
+        SET status = 'fechada'
 
         WHERE id = %s
     """

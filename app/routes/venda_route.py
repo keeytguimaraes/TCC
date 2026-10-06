@@ -71,7 +71,7 @@ def configurar_venda_routes(app):
     def venda():
 
         # Busca vendas
-        vendas = pegar_vendas()
+        vendas = []
 
         # Busca produtos
         produtos = pegar_produtos_venda()

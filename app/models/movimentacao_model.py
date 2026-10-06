@@ -1,4 +1,5 @@
 from app.database.conexao import conectar
+from psycopg2.extras import RealDictCursor
 
 # ==========================
 # LISTAR PRODUTOS
@@ -8,7 +9,7 @@ def listar_produtos_movimentacao():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -16,7 +17,7 @@ def listar_produtos_movimentacao():
             id,
             nome
         FROM produto
-        WHERE ativo = TRUE
+        WHERE ativo = 1
         ORDER BY nome
     """
 
@@ -285,7 +286,7 @@ def listar_movimentacoes():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """

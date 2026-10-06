@@ -1,11 +1,12 @@
 from app.database.conexao import conectar
+from psycopg2.extras import RealDictCursor
 
 def listar_usuarios():
 
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     cursor.execute("""
@@ -76,7 +77,7 @@ def buscar_usuario_por_nome_usuario(
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     cursor.execute(
@@ -100,7 +101,7 @@ def buscar_usuario_por_id(id_usuario):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     cursor.execute(
@@ -179,7 +180,7 @@ def listar_usuarios_inativos():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     cursor.execute(

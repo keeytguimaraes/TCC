@@ -5,7 +5,7 @@ from flask import Flask
 from app.routes.cliente_route import configurar_cliente_routes
 # Importa rota produto
 from app.routes.produto_route import configurar_produto_routes
-# Importa rota estoque
+# Importa rota estoques
 from app.routes.estoque_route import configurar_estoque_routes
 # Importa rota fornecedor
 from app.routes.fornecedor_route import configurar_fornecedor_routes

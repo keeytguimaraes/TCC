@@ -1,6 +1,6 @@
 # Importa conexão com banco
 from app.database.conexao import conectar
-
+from psycopg2.extras import RealDictCursor
 
 # ==========================
 # LISTAR PRODUTOS
@@ -10,7 +10,7 @@ def listar_produtos():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -151,7 +151,7 @@ def listar_categorias():
 
     # Cursor dicionário
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     # SQL
@@ -188,7 +188,7 @@ def buscar_produto_por_id(
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -385,7 +385,7 @@ def inativar_produto(
     sql = """
         UPDATE produto
 
-        SET ativo = FALSE
+        SET ativo = 0
 
         WHERE id = %s
     """
@@ -417,7 +417,7 @@ def ativar_produto(
     sql = """
         UPDATE produto
 
-        SET ativo = TRUE
+        SET ativo 1
 
         WHERE id = %s
     """
@@ -445,7 +445,7 @@ def listar_produtos_ativos():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -471,7 +471,7 @@ def listar_produtos_ativos():
         LEFT JOIN estoque e
             ON p.id = e.produto_id
 
-        WHERE p.ativo = TRUE
+        WHERE p.ativo = 1
 
         GROUP BY p.id
     """
@@ -494,7 +494,7 @@ def listar_produtos_inativos():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -520,7 +520,7 @@ def listar_produtos_inativos():
     LEFT JOIN estoque e
         ON p.id = e.produto_id
 
-    WHERE p.ativo = FALSE
+    WHERE p.ativo = 0
 
     GROUP BY p.id
 """
@@ -542,7 +542,7 @@ def listar_produtos_venda():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -570,7 +570,7 @@ def listar_produtos_venda():
             )
 
         WHERE
-    p.ativo = TRUE
+    p.ativo = 1
 
     AND
 
@@ -599,7 +599,7 @@ def buscar_historico_preco(produto_id):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """

@@ -1,23 +1,12 @@
-# Importa biblioteca que permite Python conversar com MySQL
-import mysql.connector
+import os
+import psycopg2
 
+from dotenv import load_dotenv
 
-# Função responsável por conectar no banco
+load_dotenv()
+
 def conectar():
 
-    # Cria e retorna a conexão com o banco de dados
-    return mysql.connector.connect(
-
-        # Endereço do banco (localhost = seu computador)
-        host="localhost",
-
-        # Usuário padrão do XAMPP/MySQL
-        user="root",
-
-        # Senha do MySQL
-        # No XAMPP normalmente fica vazio
-        password="",
-
-        # Nome do banco criado no phpMyAdmin
-        database="tcc"
+    return psycopg2.connect(
+        os.getenv("DATABASE_URL")
     )

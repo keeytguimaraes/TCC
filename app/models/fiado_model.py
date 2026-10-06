@@ -1,6 +1,6 @@
 # Importa conexão
 from app.database.conexao import conectar
-
+from psycopg2.extras import RealDictCursor
 
 # ==========================
 # LISTAR FIADOS
@@ -10,7 +10,7 @@ def listar_fiados():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -61,7 +61,7 @@ def buscar_produtos_fiado(
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -113,7 +113,7 @@ def buscar_fiado_por_id(conta_id):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -251,7 +251,7 @@ def buscar_recebimentos_fiado(
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -298,7 +298,7 @@ def buscar_conta_por_cliente(
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -339,7 +339,7 @@ def buscar_fichas_fiado(conta_id):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """

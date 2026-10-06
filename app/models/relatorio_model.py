@@ -1,5 +1,5 @@
 from app.database.conexao import conectar
-
+from psycopg2.extras import RealDictCursor
 
 # ==========================
 # TOTAL VENDIDO HOJE
@@ -9,7 +9,7 @@ def total_vendido_hoje():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -23,10 +23,10 @@ def total_vendido_hoje():
         FROM venda
 
         WHERE DATE(data_venda) =
-        CURDATE()
+CURRENT_DATE
 
         AND status_pagamento =
-        'Pago'
+        'pago'
     """
 
     cursor.execute(sql)
@@ -48,7 +48,7 @@ def total_vendido_mes():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -61,14 +61,20 @@ def total_vendido_mes():
 
         FROM venda
 
-        WHERE MONTH(data_venda) =
-        MONTH(CURDATE())
+        WHERE EXTRACT(
+    MONTH FROM data_venda
+) = EXTRACT(
+    MONTH FROM CURRENT_DATE
+)
 
-        AND YEAR(data_venda) =
-        YEAR(CURDATE())
+AND EXTRACT(
+    YEAR FROM data_venda
+) = EXTRACT(
+    YEAR FROM CURRENT_DATE
+)
 
         AND status_pagamento =
-        'Pago'
+        'pago'
     """
 
     cursor.execute(sql)
@@ -90,7 +96,7 @@ def total_fiados():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -127,7 +133,7 @@ def total_pendencias():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -159,7 +165,7 @@ def grafico_fiados_quantidade():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -193,7 +199,7 @@ def grafico_fiados_valor():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """

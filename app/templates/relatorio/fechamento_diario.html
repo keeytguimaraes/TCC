@@ -1,0 +1,32 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Fechamento Diário
+{% endblock %}
+
+{% block conteudo %}
+
+<h1>Fechamento Diário</h1>
+
+<form
+    method="POST"
+    action="/relatorio/fechamento/pdf"
+>
+
+    <label>
+        Data
+    </label>
+
+    <input
+        type="date"
+        name="data"
+        required
+    >
+
+    <button type="submit">
+        Gerar PDF
+    </button>
+
+</form>
+
+{% endblock %}

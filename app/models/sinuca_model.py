@@ -1,5 +1,5 @@
 from app.database.conexao import conectar
-
+from psycopg2.extras import RealDictCursor
 
 # ==========================
 # BUSCAR CONFIGURAÇÃO DA SINUCA
@@ -9,7 +9,7 @@ def buscar_config_sinuca():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -85,7 +85,7 @@ def pegar_fichas_venda(venda_id):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -114,7 +114,7 @@ def pegar_relatorio_sinuca():
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -128,7 +128,7 @@ def pegar_relatorio_sinuca():
 
         FROM sinuca_venda
 
-        WHERE status_pagamento = 'Pago'
+        WHERE status_pagamento = 'pago'
     """
 
     cursor.execute(sql)

@@ -1,5 +1,5 @@
 from app.database.conexao import conectar
-
+from psycopg2.extras import RealDictCursor
 
 # ==========================
 # BUSCAR CONTA ABERTA
@@ -9,7 +9,7 @@ def buscar_conta_pendente_aberta(nome):
     conexao = conectar()
 
     cursor = conexao.cursor(
-        dictionary=True
+        cursor_factory=RealDictCursor
     )
 
     sql = """
@@ -19,7 +19,7 @@ def buscar_conta_pendente_aberta(nome):
 
         WHERE nome_cliente_temporario = %s
 
-        AND status = 'Aberta'
+        AND status = 'aberta'
 
         LIMIT 1
     """
@@ -47,23 +47,31 @@ def criar_conta_pendente(nome):
     cursor = conexao.cursor()
 
     sql = """
-        INSERT INTO conta_pendente (
+    INSERT INTO conta_pendente (
 
-            nome_cliente_temporario
+        nome_cliente_temporario,
+        status
 
-        )
-
-        VALUES (%s)
-    """
-
-    cursor.execute(
-        sql,
-        (nome,)
     )
 
-    conexao.commit()
+    VALUES (
 
-    conta_id = cursor.lastrowid
+        %s,
+        'aberta'
+
+    )
+
+    RETURNING id
+"""
+
+    cursor.execute(
+    sql,
+    (nome,)
+)
+
+    conta_id = cursor.fetchone()[0]
+
+    conexao.commit()
 
     cursor.close()
     conexao.close()

@@ -6,7 +6,9 @@ from app.models.relatorio_pdf_model import (
     quantidade_pagas_periodo,
     quantidade_pendentes_periodo,
     total_recebido_periodo,
-    total_pendente_periodo
+    total_pendente_periodo,
+    buscar_vendas_dia,
+    resumo_fechamento_dia
 )
 
 def pegar_vendas_periodo(
@@ -78,3 +80,19 @@ def pegar_resumo_periodo(
         tipo_vendas
     )
 }
+
+def pegar_fechamento_dia(
+    data
+):
+
+    return buscar_vendas_dia(
+        data
+    )
+
+def pegar_resumo_fechamento(
+    data
+):
+
+    return resumo_fechamento_dia(
+        data
+    )
