@@ -24,8 +24,8 @@ def configurar_sinuca_routes(app):
     @app.route("/sinuca")
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def sinuca():
 

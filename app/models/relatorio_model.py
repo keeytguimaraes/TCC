@@ -144,7 +144,7 @@ def total_pendencias():
         ) AS total
     FROM venda
     WHERE cliente_id IS NULL
-    AND status_pagamento = 'Pendente'
+    AND status_pagamento = 'pendente'
     AND saldo_devedor > 0
     """
 

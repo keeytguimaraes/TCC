@@ -10,8 +10,7 @@ from app.models.cliente_model import (
     reativar_cliente,
     editar_cliente,
     buscar_cliente_por_id,
-    cliente_tem_conta_aberta,
-    reativar_cliente
+    cliente_tem_conta_aberta
 )
 
 # ==========================
@@ -19,29 +18,7 @@ from app.models.cliente_model import (
 # ==========================
 def pegar_clientes():
 
-    clientes = listar_clientes()
-
-    for cliente in clientes:
-
-        conta = cliente_tem_conta_aberta(
-            cliente["id"]
-        )
-
-        if conta:
-
-            cliente["conta_aberta"] = True
-
-            cliente["saldo_devedor"] = (
-                conta["saldo_devedor"]
-            )
-
-        else:
-
-            cliente["conta_aberta"] = False
-
-            cliente["saldo_devedor"] = 0
-
-    return clientes
+    return listar_clientes()
 
 # ==========================
 # CADASTRAR CLIENTE
@@ -49,7 +26,6 @@ def pegar_clientes():
 def cadastrar_cliente_controller(nome):
 
     return cadastrar_cliente(nome)
-
 
 # ==========================
 # BUSCAR CLIENTE
@@ -60,23 +36,18 @@ def buscar_cliente_controller(id_cliente):
         id_cliente
     )
 
-
 # ==========================
 # EDITAR CLIENTE
 # ==========================
 def editar_cliente_controller(
-
     id_cliente,
     nome
-
 ):
 
     editar_cliente(
-
         id_cliente,
         nome
     )
-
 
 # ==========================
 # DESATIVAR CLIENTE
@@ -89,12 +60,9 @@ def desativar_cliente_controller(
         id_cliente
     )
 
-    # Se possuir conta aberta
     if conta:
 
-        saldo = conta[
-            "saldo_devedor"
-        ]
+        saldo = conta["saldo_devedor"]
 
         flash(
             f"Não é possível desativar o cliente. Saldo devedor atual: R$ {saldo:.2f}",
@@ -103,7 +71,6 @@ def desativar_cliente_controller(
 
         return False
 
-    # desativa cliente
     desativar_cliente(id_cliente)
 
     flash(
@@ -112,6 +79,10 @@ def desativar_cliente_controller(
     )
 
     return True
+
+# ==========================
+# REATIVAR CLIENTE
+# ==========================
 def reativar_cliente_controller(
     id_cliente
 ):

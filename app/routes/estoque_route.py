@@ -155,8 +155,8 @@ def configurar_estoque_routes(app):
     @app.route("/estoque/atual")
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def estoque_atual():
 

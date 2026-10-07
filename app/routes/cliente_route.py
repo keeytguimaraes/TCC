@@ -30,8 +30,8 @@ def configurar_cliente_routes(app):
     @app.route("/cliente")
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def cliente():
 

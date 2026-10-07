@@ -57,7 +57,6 @@ from app.controllers.sinuca_controller import (
     buscar_fichas_venda
 )
 
-
 # ==========================
 # CONFIGURAR ROTAS
 # ==========================
@@ -433,8 +432,8 @@ def configurar_venda_routes(app):
     @app.route("/venda/historico")
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def historico_vendas():
 

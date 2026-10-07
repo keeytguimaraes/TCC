@@ -117,8 +117,8 @@ def configurar_movimentacao_routes(app):
 )
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def historico_movimentacao():
 

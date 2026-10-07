@@ -695,66 +695,58 @@ def gerar_fechamento_diario_pdf(
     )
 
     pdf.drawString(
-        50,
-        y,
-        f"Total de vendas: {resumo['total_vendas']}"
-    )
+    50,
+    y,
+    f"Quantidade de vendas: {resumo['total_vendas']}"
+)
 
     y -= 20
 
     pdf.drawString(
-        50,
-        y,
-        f"Pagas: {resumo['pagas']}"
-    )
+    50,
+    y,
+    f"Total vendido: {moeda(resumo['total_vendido'])}"
+)
 
     y -= 20
 
     pdf.drawString(
-        50,
-        y,
-        f"Pendentes: {resumo['pendentes']}"
-    )
+    50,
+    y,
+    f"Entrou no caixa: {moeda(resumo['total_pago'])}"
+)
 
     y -= 20
 
     pdf.drawString(
-        50,
-        y,
-        f"Total vendido: {moeda(resumo['total_vendido'])}"
-    )
+    50,
+    y,
+    f"Fiados: {moeda(resumo['total_fiado'])}"
+)
 
     y -= 20
 
     pdf.drawString(
-        50,
-        y,
-        f"Total recebido: {moeda(resumo['total_recebido'])}"
-    )
+    50,
+    y,
+    f"Contas pendentes: {moeda(resumo['total_conta_pendente'])}"
+)
 
     y -= 20
 
     pdf.drawString(
-        50,
-        y,
-        f"Total em aberto: {moeda(resumo['total_pendente'])}"
-    )
+    50,
+    y,
+    f"Troco concedido: {moeda(resumo['total_troco'])}"
+)
 
     y -= 20
 
     pdf.drawString(
-        50,
-        y,
-        f"Troco concedido: {moeda(resumo['total_troco'])}"
-    )
-
-    y -= 20
-
-    pdf.drawString(
-        50,
-        y,
-        f"Ticket medio: {moeda(resumo['ticket_medio'])}"
-    )
+    50,
+    y,
+    f"Ticket médio: {moeda(resumo['ticket_medio'])}"
+)
 
     y -= 40
 

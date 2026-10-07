@@ -36,8 +36,8 @@ def configurar_produto_routes(app):
     @app.route("/produto")
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def produto():
 

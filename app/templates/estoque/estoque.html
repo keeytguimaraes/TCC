@@ -66,7 +66,7 @@ Estoque
     </div>
 
     <!-- Estoque Atual -->
-    {% if session["perfil"] in ["Administrador", "Gerente"] %}
+    {% if session["perfil"] in ["administrador", "gerente"] %}
     <a href="/estoque/atual" class="nova-entrada-card nova-entrada-card--info">
         <div class="nova-entrada-icon">
             <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
@@ -82,7 +82,7 @@ Estoque
     {% endif %}
 
     <!-- Histórico -->
-    {% if session["perfil"] in ["Administrador", "Gerente"] %}
+    {% if session["perfil"] in ["administrador", "gerente"] %}
     <a href="/movimentacao/historico" class="nova-entrada-card nova-entrada-card--neutral">
         <div class="nova-entrada-icon">
             <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>

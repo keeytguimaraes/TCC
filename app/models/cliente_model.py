@@ -6,20 +6,36 @@ from psycopg2.extras import RealDictCursor
 # Função para buscar todos os clientes
 def listar_clientes():
 
-    # Faz conexão com banco
     conexao = conectar()
 
-    # Cria cursor
-    # cursor_factory=RealDictCursor transforma os dados em formato de dicionário
-    cursor = conexao.cursor(cursor_factory=RealDictCursor)
+    cursor = conexao.cursor(
+        cursor_factory=RealDictCursor
+    )
 
-    # Executa SQL
     cursor.execute("""
-    SELECT *
-    FROM cliente
-    WHERE ativo = 1
-""")
+        SELECT
 
+            c.*,
+
+            CASE
+                WHEN ct.id IS NOT NULL
+                THEN TRUE
+                ELSE FALSE
+            END AS conta_aberta,
+
+            COALESCE(
+                ct.saldo_devedor,
+                0
+            ) AS saldo_devedor
+
+        FROM cliente c
+
+        LEFT JOIN conta ct
+            ON ct.cliente_id = c.id
+            AND ct.status_conta = 'aberta'
+
+        WHERE c.ativo = 1
+    """)
     # Guarda todos os resultados
     clientes = cursor.fetchall()
 
@@ -147,6 +163,10 @@ def buscar_cliente_por_id(id_cliente):
 # VERIFICAR CONTA ABERTA
 # ==========================================
 def cliente_tem_conta_aberta(cliente_id):
+
+    import time
+
+    inicio = time.time()
 
     conexao = conectar()
 

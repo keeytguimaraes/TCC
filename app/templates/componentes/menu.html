@@ -35,7 +35,7 @@
 
         <!-- usuarios -->
 
-        {% if session["perfil"] == "Administrador" %}
+        {% if session["perfil"] == "administrador" %}
 
 <a href="{{ url_for('usuario') }}"
    class="sidebar-link {% if request.endpoint == 'usuario' %}active{% endif %}">
@@ -55,7 +55,7 @@
         
 <!-- CLIENTES -->
 
-        {% if session["perfil"] in ["Administrador", "Gerente"] %}
+        {% if session["perfil"] in ["administrador", "gerente"] %}
 
 <a href="{{ url_for('cliente') }}"
    class="sidebar-link {% if request.endpoint == 'cliente' %}active{% endif %}">
@@ -74,7 +74,7 @@
 
         <!-- PRODUTOS -->
 
-        {% if session["perfil"] in ["Administrador", "Gerente"] %}
+        {% if session["perfil"] in ["administrador", "gerente"] %}
 
 <a href="{{ url_for('produto') }}"
    class="sidebar-link {% if request.endpoint == 'produto' %}active{% endif %}">
@@ -94,7 +94,7 @@
 
 <!-- FORNECEDORES -->
 
-{% if session["perfil"] in ["Administrador", "Gerente"] %}
+{% if session["perfil"] in ["administrador", "gerente"] %}
 
 <a href="{{ url_for('fornecedor') }}"
    class="sidebar-link {% if request.endpoint == 'fornecedor' %}active{% endif %}">
@@ -144,7 +144,7 @@
 
           <!-- HISTÓRICO VENDAS -->
   
-        {% if session["perfil"] in ["Administrador", "Gerente"] %}
+        {% if session["perfil"] in ["administrador", "gerente"] %}
         
         <a href="{{ url_for('historico_vendas') }}"
            class="sidebar-link {% if request.endpoint == 'historico_vendas' %}active{% endif %}">
@@ -194,7 +194,7 @@
 
         <!-- SINUCA -->
 
-       {% if session["perfil"] in ["Administrador", "Gerente"] %}
+       {% if session["perfil"] in ["administrador", "gerente"] %}
 
 <a href="{{ url_for('sinuca') }}"
    class="sidebar-link {% if request.endpoint == 'sinuca' %}active{% endif %}">
@@ -214,7 +214,7 @@
 
 <!-- RELATÓRIOS -->
 
-{% if session["perfil"] in ["Administrador", "Gerente"] %}
+{% if session["perfil"] in ["administrador", "gerente"] %}
 
 <a href="{{ url_for('relatorio') }}"
    class="sidebar-link {% if request.endpoint == 'relatorio' %}active{% endif %}">

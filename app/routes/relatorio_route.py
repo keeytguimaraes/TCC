@@ -35,8 +35,8 @@ def configurar_relatorio_routes(app):
     @app.route("/relatorio")
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def relatorio():
 
@@ -52,8 +52,8 @@ def configurar_relatorio_routes(app):
     @app.route("/relatorio/vendas")
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def tela_relatorio_vendas():
 
@@ -67,8 +67,8 @@ def configurar_relatorio_routes(app):
 )
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def gerar_relatorio_vendas():
 
@@ -127,8 +127,8 @@ def configurar_relatorio_routes(app):
 )
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def tela_fechamento_diario():
 
@@ -142,8 +142,8 @@ def configurar_relatorio_routes(app):
 )
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def gerar_fechamento_diario():
 

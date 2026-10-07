@@ -1,1 +1,479 @@
-listar_vendas
+# Importa conexão
+from app.database.conexao import conectar
+from psycopg2.extras import RealDictCursor
+
+# ==========================
+# LISTAR VENDAS
+# ==========================
+def listar_vendas():
+
+    # Conecta banco
+    conexao = conectar()
+
+    # Cursor dicionário
+    cursor = conexao.cursor(
+        cursor_factory=RealDictCursor
+    )
+
+    # SQL
+    sql = """
+        SELECT
+
+    v.id,
+    v.data_venda,
+    v.valor_total,
+    v.valor_recebido,
+    v.troco,
+    v.status_pagamento,
+    v.desconto_venda,
+
+    c.nome AS cliente_nome,
+
+    cp.nome_cliente_temporario
+
+FROM venda v
+
+LEFT JOIN cliente c
+    ON c.id = v.cliente_id
+
+LEFT JOIN conta_pendente cp
+    ON cp.id = v.conta_pendente_id
+
+ORDER BY v.data_venda DESC
+    """
+
+    # Executa
+    cursor.execute(sql)
+
+    # Busca vendas
+    vendas = cursor.fetchall()
+
+    # Fecha cursor
+    cursor.close()
+
+    # Fecha conexão
+    conexao.close()
+
+    # Retorna
+    return vendas
+
+# ==========================
+# HISTÓRICO DE VENDAS
+# ==========================
+def listar_historico_vendas():
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        cursor_factory=RealDictCursor
+    )
+
+    sql = """
+        SELECT
+
+    v.*,
+
+    c.nome AS cliente_nome,
+
+    cp.nome_cliente_temporario
+
+FROM venda v
+
+LEFT JOIN cliente c
+    ON c.id = v.cliente_id
+
+LEFT JOIN conta_pendente cp
+    ON cp.id = v.conta_pendente_id
+
+ORDER BY v.data_venda DESC
+    """
+
+    cursor.execute(sql)
+
+    vendas = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return vendas
+
+# ==========================
+# CADASTRAR VENDA
+# ==========================
+def cadastrar_venda(
+
+    produto_id,
+
+    quantidade,
+
+    tipo_venda,
+
+    valor_recebido,
+
+    status_pagamento
+):
+
+    # Conecta banco
+    conexao = conectar()
+
+    # Cursor dicionário
+    cursor = conexao.cursor(
+        cursor_factory=RealDictCursor
+    )
+
+    # ----------------------
+    # BUSCA PRODUTO
+    # ----------------------
+    sql_produto = """
+        SELECT *
+
+        FROM produto
+
+        WHERE id = %s
+    """
+
+    # Executa
+    cursor.execute(
+        sql_produto,
+        (produto_id,)
+    )
+
+    # Busca produto
+    produto = cursor.fetchone()
+
+    # ----------------------
+    # PREÇO UNITÁRIO
+    # ----------------------
+    preco_unitario = (
+        float(
+            produto["preco_venda"]
+        )
+    )
+
+    # ----------------------
+    # SE FOR CAIXA
+    # ----------------------
+    if tipo_venda == "caixa":
+
+        preco_unitario = (
+            preco_unitario
+            *
+            produto[
+                "quantidade_por_caixa"
+            ]
+        )
+
+    # ----------------------
+    # SUBTOTAL
+    # ----------------------
+    subtotal = (
+        preco_unitario
+        * int(quantidade)
+    )
+
+    # ----------------------
+    # TROCO
+    # ----------------------
+    troco = (
+        float(valor_recebido)
+        - subtotal
+    )
+
+    # ----------------------
+    # INSERT VENDA
+    # ----------------------
+    sql_venda = """
+    INSERT INTO venda (
+
+        valor_total,
+        valor_recebido,
+        troco,
+        status_pagamento
+
+    )
+
+    VALUES (%s, %s, %s, %s)
+
+    RETURNING id
+"""
+
+    # Executa
+    cursor.execute(
+    sql_venda,
+    (
+        subtotal,
+        valor_recebido,
+        troco,
+        status_pagamento
+    )
+)
+
+    venda_id = cursor.fetchone()[0]
+
+    # ----------------------
+    # INSERT PRODUTO_VENDA
+    # ----------------------
+    sql_produto_venda = """
+        INSERT INTO produto_venda (
+
+            venda_id,
+            produto_id,
+
+            quantidade,
+            tipo_venda,
+
+            preco_unitario,
+            subtotal
+
+        )
+        VALUES (
+            %s, %s,
+            %s, %s,
+            %s, %s
+        )
+    """
+
+    # Executa
+    cursor.execute(
+        sql_produto_venda,
+        (
+            venda_id,
+            produto_id,
+
+            quantidade,
+            tipo_venda,
+
+            preco_unitario,
+            subtotal
+        )
+    )
+
+    # ----------------------
+    # BAIXA ESTOQUE
+    # ----------------------
+    sql_estoque = """
+        SELECT *
+
+        FROM estoque
+
+        WHERE produto_id = %s
+
+        ORDER BY id DESC
+
+        LIMIT 1
+    """
+
+    # Executa
+    cursor.execute(
+        sql_estoque,
+        (produto_id,)
+    )
+
+    # Busca estoque
+    estoque = cursor.fetchone()
+
+    # Quantidade atual
+    atual_unidade = (
+        estoque[
+            "quantidade_atual_unidade"
+        ]
+    )
+
+    atual_caixa = (
+        estoque[
+            "quantidade_atual_caixa"
+        ]
+    )
+
+    # ----------------------
+    # VENDA UNIDADE
+    # ----------------------
+    if tipo_venda == "unidade":
+
+        novo_estoque = (
+            atual_unidade
+            - int(quantidade)
+        )
+
+        sql_update = """
+            UPDATE estoque
+
+            SET
+                quantidade_atual_unidade = %s
+
+            WHERE id = %s
+        """
+
+        cursor.execute(
+            sql_update,
+            (
+                novo_estoque,
+                estoque["id"]
+            )
+        )
+
+    # ----------------------
+    # VENDA CAIXA
+    # ----------------------
+    else:
+
+        novo_estoque = (
+            atual_caixa
+            - int(quantidade)
+        )
+
+        sql_update = """
+            UPDATE estoque
+
+            SET
+                quantidade_atual_caixa = %s
+
+            WHERE id = %s
+        """
+
+        cursor.execute(
+            sql_update,
+            (
+                novo_estoque,
+                estoque["id"]
+            )
+        )
+
+    # Salva banco
+    conexao.commit()
+
+    # Fecha cursor
+    cursor.close()
+
+    # Fecha conexão
+    conexao.close()
+
+# ==========================
+# BUSCAR PRODUTOS DA VENDA
+# ==========================
+def buscar_produtos_venda(
+
+    venda_id
+):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+         cursor_factory=RealDictCursor
+    )
+
+    sql = """
+       SELECT
+
+    produto.nome,
+
+    produto_venda.quantidade,
+
+    produto_venda.tipo_venda,
+
+    produto_venda.preco_unitario,
+
+    produto_venda.subtotal
+
+FROM produto_venda
+
+        INNER JOIN produto
+
+            ON produto.id =
+            produto_venda.produto_id
+
+        WHERE produto_venda.venda_id = %s
+    """
+
+    cursor.execute(
+
+        sql,
+
+         (
+            venda_id,
+        )
+     )
+
+    produtos = cursor.fetchall()
+
+    cursor.close()
+
+    conexao.close()
+
+    return produtos
+
+# ==========================
+# BUSCAR DETALHES DA VENDA
+# ==========================
+def buscar_detalhes_venda(venda_id):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        cursor_factory=RealDictCursor
+    )
+
+    sql = """
+        SELECT
+
+            pv.*,
+
+            p.nome
+
+        FROM produto_venda pv
+
+        INNER JOIN produto p
+            ON p.id = pv.produto_id
+
+        WHERE pv.venda_id = %s
+    """
+
+    cursor.execute(
+        sql,
+        (venda_id,)
+    )
+
+    produtos = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return produtos
+
+def buscar_produtos_todas_vendas():
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        cursor_factory=RealDictCursor
+    )
+
+    sql = """
+        SELECT
+
+            pv.venda_id,
+
+            p.nome,
+
+            pv.quantidade,
+
+            pv.tipo_venda,
+
+            pv.preco_unitario,
+
+            pv.subtotal
+
+        FROM produto_venda pv
+
+        INNER JOIN produto p
+            ON p.id = pv.produto_id
+    """
+
+    cursor.execute(sql)
+
+    produtos = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return produtos

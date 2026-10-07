@@ -33,8 +33,8 @@ def configurar_fornecedor_routes(app):
     @app.route("/fornecedor")
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador",
-    "Gerente"
+    "administrador",
+    "gerente"
 )
     def fornecedor():
 

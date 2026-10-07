@@ -101,7 +101,7 @@ def total_vendas_periodo(
     elif tipo_vendas == "pendentes":
 
         sql += """
-        AND status_pagamento = 'Pendente'
+        AND status_pagamento = 'pendente'
     """
 
     cursor.execute(
@@ -154,7 +154,7 @@ def faturamento_periodo(
     elif tipo_vendas == "pendentes":
 
         sql += """
-        AND status_pagamento = 'Pendente'
+        AND status_pagamento = 'pendente'
     """
 
     cursor.execute(
@@ -207,7 +207,7 @@ def ticket_medio_periodo(
     elif tipo_vendas == "pendentes":
 
         sql += """
-        AND status_pagamento = 'Pendente'
+        AND status_pagamento = 'pendente'
     """
 
     cursor.execute(
@@ -461,36 +461,9 @@ def resumo_fechamento_dia(
     )
 
     sql = """
-        SELECT
+       SELECT
 
             COUNT(*) AS total_vendas,
-
-            COALESCE(
-    SUM(
-        CASE
-            WHEN status_pagamento = 'pendente'
-            THEN valor_total
-            ELSE 0
-        END
-    ),
-    0
-) AS total_pendente,
-
-            SUM(
-    CASE
-        WHEN status_pagamento = 'pago'
-        THEN 1
-        ELSE 0
-    END
-) AS pagas,
-
-SUM(
-    CASE
-        WHEN status_pagamento = 'pendente'
-        THEN 1
-        ELSE 0
-    END
-) AS pendentes,
 
             COALESCE(
                 SUM(valor_total),
@@ -498,9 +471,39 @@ SUM(
             ) AS total_vendido,
 
             COALESCE(
-                SUM(valor_recebido),
+                SUM(
+                    CASE
+                        WHEN status_pagamento = 'pago'
+                        THEN valor_total
+                        ELSE 0
+                    END
+                ),
                 0
-            ) AS total_recebido,
+            ) AS total_pago,
+
+            COALESCE(
+                SUM(
+                    CASE
+                        WHEN cliente_id IS NOT NULL
+                        AND status_pagamento = 'pendente'
+                        THEN valor_total
+                        ELSE 0
+                    END
+                ),
+                0
+            ) AS total_fiado,
+
+            COALESCE(
+                SUM(
+                    CASE
+                        WHEN conta_pendente_id IS NOT NULL
+                        AND status_pagamento = 'pendente'
+                        THEN valor_total
+                        ELSE 0
+                    END
+                ),
+                0
+            ) AS total_conta_pendente,
 
             COALESCE(
                 SUM(troco),
@@ -514,9 +517,7 @@ SUM(
 
         FROM venda
 
-        WHERE DATE(
-            data_venda
-        ) = %s
+        WHERE DATE(data_venda) = %s
     """
 
     cursor.execute(

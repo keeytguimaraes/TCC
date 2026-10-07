@@ -29,7 +29,7 @@ def configurar_usuario_routes(app):
     @app.route("/usuario")
     @login_obrigatorio
     @perfil_obrigatorio(
-        "Administrador"
+        "administrador"
     )
     def usuario():
 
@@ -45,7 +45,7 @@ def configurar_usuario_routes(app):
 )
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador"
+    "administrador"
 )
     def tela_cadastrar_usuario():
 
@@ -59,7 +59,7 @@ def configurar_usuario_routes(app):
 )
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador"
+    "administrador"
 )
     def cadastrar_usuario():
 
@@ -128,7 +128,7 @@ def configurar_usuario_routes(app):
 )
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador"
+    "administrador"
 )
     def tela_editar_usuario(
     id_usuario
@@ -149,7 +149,7 @@ def configurar_usuario_routes(app):
 )
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador"
+    "administrador"
 )
     def editar_usuario(
     id_usuario
@@ -189,14 +189,14 @@ def configurar_usuario_routes(app):
 )
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador"
+    "administrador"
 )
     def desativar_usuario(
     id_usuario
 ):
 
     # Proteção:
-    # Administrador não pode
+    # administrador não pode
     # desativar a si mesmo
 
         if (
@@ -229,7 +229,7 @@ def configurar_usuario_routes(app):
 
     @app.route("/usuario/inativos")
     @login_obrigatorio
-    @perfil_obrigatorio("Administrador")
+    @perfil_obrigatorio("administrador")
     def usuarios_inativos():
 
         dados = (
@@ -246,7 +246,7 @@ def configurar_usuario_routes(app):
     methods=["POST"]
 )
     @login_obrigatorio
-    @perfil_obrigatorio("Administrador")
+    @perfil_obrigatorio("administrador")
     def reativar_usuario(
     id_usuario
 ):
@@ -269,7 +269,7 @@ def configurar_usuario_routes(app):
 )
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador"
+    "administrador"
 )
     def tela_alterar_senha(
     id_usuario
@@ -291,7 +291,7 @@ def configurar_usuario_routes(app):
 )
     @login_obrigatorio
     @perfil_obrigatorio(
-    "Administrador"
+    "administrador"
 )
     def alterar_senha(
     id_usuario
