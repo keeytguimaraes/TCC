@@ -18,7 +18,11 @@ from app.controllers.fornecedor_controller import (
     cadastrar_fornecedor_controller,
 
     pegar_fornecedor_por_id,
-    editar_fornecedor_controller
+    editar_fornecedor_controller,
+
+    pegar_fornecedores_inativos,
+    reativar_fornecedor,
+    desativar_fornecedor_controller
 )
 
 
@@ -161,3 +165,71 @@ def configurar_fornecedor_routes(app):
 
             fornecedor=fornecedor
         )
+    
+    @app.route(
+    "/fornecedor/inativos"
+)
+    def fornecedores_inativos():
+
+        fornecedores = (
+        pegar_fornecedores_inativos()
+    )
+
+        return render_template(
+        "fornecedor/inativar_fornecedor.html",
+        fornecedores=fornecedores
+    )
+
+    @app.route(
+    "/fornecedor/reativar/<int:id>"
+)
+    def reativar(id):
+
+        try:
+
+            reativar_fornecedor(
+            id
+        )
+
+            flash(
+            "Fornecedor reativado com sucesso!",
+            "success"
+        )
+
+        except Exception:
+
+            flash(
+            "Erro ao reativar fornecedor.",
+            "danger"
+        )
+
+        return redirect(
+        "/fornecedor/inativos"
+    )
+
+    @app.route(
+    "/fornecedor/desativar/<int:id>"
+)
+    def desativar(id):
+
+        try:
+
+            desativar_fornecedor_controller(
+            id
+        )
+
+            flash(
+            "Fornecedor desativado com sucesso!",
+            "success"
+        )
+
+        except Exception:
+
+            flash(
+            "Erro ao desativar fornecedor.",
+            "danger"
+        )
+
+        return redirect(
+        "/fornecedor"
+    )

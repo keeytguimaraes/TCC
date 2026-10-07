@@ -21,6 +21,8 @@ def listar_fornecedores():
 
         FROM fornecedor
 
+        WHERE ativo = 1
+
         ORDER BY nome
     """
 
@@ -181,3 +183,75 @@ def editar_fornecedor(
 
     # Fecha conexão
     conexao.close()
+
+def desativar_fornecedor(
+    fornecedor_id
+):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor()
+
+    sql = """
+        UPDATE fornecedor
+        SET ativo = 0
+        WHERE id = %s
+    """
+
+    cursor.execute(
+        sql,
+        (fornecedor_id,)
+    )
+
+    conexao.commit()
+
+    cursor.close()
+    conexao.close()
+
+def reativar_fornecedor(
+    fornecedor_id
+):
+
+    conexao = conectar()
+
+    cursor = conexao.cursor()
+
+    sql = """
+        UPDATE fornecedor
+        SET ativo = 1
+        WHERE id = %s
+    """
+
+    cursor.execute(
+        sql,
+        (fornecedor_id,)
+    )
+
+    conexao.commit()
+
+    cursor.close()
+    conexao.close()
+
+def listar_fornecedores_inativos():
+
+    conexao = conectar()
+
+    cursor = conexao.cursor(
+        cursor_factory=RealDictCursor
+    )
+
+    sql = """
+        SELECT *
+        FROM fornecedor
+        WHERE ativo = 0
+        ORDER BY nome
+    """
+
+    cursor.execute(sql)
+
+    dados = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return dados

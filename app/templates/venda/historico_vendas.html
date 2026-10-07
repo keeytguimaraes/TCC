@@ -62,6 +62,10 @@ Histórico de Vendas
 
                     <th>Status</th>
 
+                    <th class="coluna-usuario">
+                        Responsável
+                    </th>
+
                     <th>Detalhes</th>
 
                 </tr>
@@ -110,6 +114,10 @@ Histórico de Vendas
                             {{ venda.status_pagamento }}
                         </span>
                     
+                    </td>
+
+                    <td class="coluna-usuario">
+                        {{ venda.usuario or "Não informado" }}
                     </td>
 
                     <td class="coluna-detalhes">

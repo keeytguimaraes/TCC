@@ -46,18 +46,24 @@ def criar_conta_pendente(nome):
 
     cursor = conexao.cursor()
 
+    from flask import session
+
+    usuario_id = session["usuario_id"]
+
     sql = """
     INSERT INTO conta_pendente (
 
         nome_cliente_temporario,
-        status
+        status,
+        usuario_id
 
     )
 
     VALUES (
 
         %s,
-        'aberta'
+        'aberta',
+        %s
 
     )
 
@@ -66,7 +72,7 @@ def criar_conta_pendente(nome):
 
     cursor.execute(
     sql,
-    (nome,)
+    (nome,usuario_id)
 )
 
     conta_id = cursor.fetchone()[0]

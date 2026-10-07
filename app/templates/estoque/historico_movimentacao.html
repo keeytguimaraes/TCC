@@ -74,6 +74,8 @@ Histórico de Movimentação
 
                     <th>Motivo</th>
 
+                    <th>Responsável</th>
+
                 </tr>
 
             </thead>
@@ -128,6 +130,10 @@ Histórico de Movimentação
 
                     <td>
                         {{ item.motivo }}
+                    </td>
+
+                    <td>
+                        {{ item.usuario or "Não informado" }}
                     </td>
 
                 </tr>

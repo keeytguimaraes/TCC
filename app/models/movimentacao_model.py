@@ -52,6 +52,10 @@ def cadastrar_movimentacao(
     # ==========================
     # SALVA MOVIMENTAÇÃO
     # ==========================
+
+    from flask import session
+    usuario_id = session["usuario_id"]
+
     sql = """
 INSERT INTO movimentacao_estoque (
 
@@ -60,11 +64,12 @@ INSERT INTO movimentacao_estoque (
     quantidade_caixa,
     quantidade_unidade,
     quantidade_fracionada,
-    motivo
+    motivo,
+    usuario_id
 
 )
 
-VALUES (%s, %s, %s, %s, %s, %s)
+VALUES (%s, %s, %s, %s, %s, %s, %s)
 """
 
     cursor.execute(
@@ -78,7 +83,8 @@ VALUES (%s, %s, %s, %s, %s, %s)
         quantidade_caixa,
         quantidade_unidade,
         quantidade_fracionada,
-        motivo
+        motivo,
+        usuario_id
 
     )
 )
@@ -294,12 +300,17 @@ def listar_movimentacoes():
 
             m.*,
 
-            p.nome
+            p.nome,
+
+            u.nome AS usuario
 
         FROM movimentacao_estoque m
 
         INNER JOIN produto p
             ON p.id = m.produto_id
+
+        LEFT JOIN usuario u
+            ON u.id = m.usuario_id
 
         ORDER BY
             m.data_movimentacao DESC

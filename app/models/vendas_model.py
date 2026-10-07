@@ -71,22 +71,28 @@ def listar_historico_vendas():
     sql = """
         SELECT
 
-    v.*,
+            v.*,
 
-    c.nome AS cliente_nome,
+            c.nome AS cliente_nome,
 
-    cp.nome_cliente_temporario
+            cp.nome_cliente_temporario,
 
-FROM venda v
+            u.nome AS usuario
 
-LEFT JOIN cliente c
-    ON c.id = v.cliente_id
+        FROM venda v
 
-LEFT JOIN conta_pendente cp
-    ON cp.id = v.conta_pendente_id
+        LEFT JOIN cliente c
+            ON c.id = v.cliente_id
 
-ORDER BY v.data_venda DESC
+        LEFT JOIN conta_pendente cp
+            ON cp.id = v.conta_pendente_id
+
+        LEFT JOIN usuario u
+            ON u.id = v.usuario_id
+
+        ORDER BY v.data_venda DESC
     """
+
 
     cursor.execute(sql)
 

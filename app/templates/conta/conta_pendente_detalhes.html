@@ -49,6 +49,11 @@ Detalhes da Conta
         </p>
 
         <p>
+            <strong>Responsável:</strong>
+            {{ conta.usuario or "Não informado" }}
+        </p>
+
+        <p>
             <strong>Aberta em:</strong>
 
             {{ conta.data_abertura.strftime('%d/%m/%Y %H:%M') }}

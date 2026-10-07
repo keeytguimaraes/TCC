@@ -42,6 +42,18 @@ Fornecedor
 
     </div>
 
+    <div>
+
+        <a
+            href="/fornecedor/inativos"
+            class="button button-secondary"
+        >
+            <i class="fa-solid fa-box-archive"></i>
+            Fornecedores Inativos
+        </a>
+    
+    </div>
+
     <div class="search-info">
 
         <span id="search-count">
@@ -153,6 +165,13 @@ Fornecedor
             Editar
 
         </a>
+
+        <a
+    href="/fornecedor/desativar/{{ fornecedor.id }}"
+    class="button button-danger"
+>
+    Desativar
+</a>
 
     </div>
 

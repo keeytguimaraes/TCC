@@ -299,6 +299,9 @@ def configurar_carrinho_routes(app):
         # ----------------------
         # INSERT VENDA
         # ----------------------
+
+        usuario_id = session["usuario_id"]
+
         sql_venda = """
             INSERT INTO venda (
 
@@ -309,12 +312,14 @@ def configurar_carrinho_routes(app):
                 status_pagamento,
                 conta_id,
                 conta_pendente_id,
-                saldo_devedor
+                saldo_devedor,
+                usuario_id
 
             )
             VALUES (
                 %s, %s, %s, %s,
-                %s, %s, %s, %s
+                %s, %s, %s, %s, 
+                %s
             )
 
             RETURNING id
@@ -332,7 +337,8 @@ def configurar_carrinho_routes(app):
                 status_pagamento,
                 conta_id,
                 conta_pendente_id,
-                saldo_devedor
+                saldo_devedor,
+                usuario_id
             )
         )
 

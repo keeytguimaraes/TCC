@@ -4,7 +4,10 @@ from app.models.fornecedor_model import (
     listar_fornecedores,
     cadastrar_fornecedor,
     buscar_fornecedor_por_id,
-    editar_fornecedor
+    editar_fornecedor,
+    listar_fornecedores_inativos,
+    reativar_fornecedor,
+    desativar_fornecedor
 )
 
 
@@ -64,4 +67,35 @@ def editar_fornecedor_controller(
         nome,
         telefone,
         observacao
+    )
+
+# ==========================
+# LISTAR FORNECEDORES INATIVOS
+# ==========================
+
+def pegar_fornecedores_inativos():
+
+    return listar_fornecedores_inativos()
+
+# ==========================
+# REATIVAR FORNECEDOR
+# ==========================
+
+def reativar_fornecedor_controller(
+    id_fornecedor
+):
+
+    reativar_fornecedor(
+        id_fornecedor
+    )
+
+# ==========================
+# DESATIVAR FORNECEDOR
+# ==========================
+def desativar_fornecedor_controller(
+    id_fornecedor
+):
+
+    desativar_fornecedor(
+        id_fornecedor
     )
