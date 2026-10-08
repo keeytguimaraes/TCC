@@ -4,14 +4,258 @@
 Dashboard
 {% endblock %}
 
-{% block titulo_pagina %}
-Dashboard
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/dashboard.css'
+    ) }}"
+>
+
 {% endblock %}
 
 {% block conteudo %}
 
-<h2>Bem-vindo ao Sistema Integrado de Gestão Comercial</h2>
+<div class="page-title">
 
-<p>Se você está vendo esta mensagem, o layout base está funcionando.</p>
+    <h1>
+        Dashboard
+    </h1>
+
+</div>
+
+<!-- ========================= -->
+<!-- ADMINISTRADOR -->
+<!-- ========================= -->
+
+{% if perfil == "administrador" %}
+
+<h2>
+    Painel do Administrador
+</h2>
+
+<div class="dashboard-cards">
+
+    <div class="card">
+        <h3>Total vendido hoje</h3>
+        <p>R$ {{ dados.vendido_hoje }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total vendido mês</h3>
+        <p>R$ {{ dados.vendido_mes }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Fiados abertos</h3>
+        <p>{{ dados.fiados_abertos }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Contas pendentes</h3>
+        <p>{{ dados.contas_pendentes }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Estoque baixo</h3>
+        <p>{{ dados.estoque_baixo }}</p>
+    </div>
+
+</div>
+
+<div class="card">
+
+    <h3>
+        Mensagem do dia
+    </h3>
+
+    <p>
+        Bom dia, {{ session.nome }}!
+    </p>
+
+</div>
+
+{% endif %}
+
+
+<!-- ========================= -->
+<!-- GERENTE -->
+<!-- ========================= -->
+
+{% if perfil == "gerente" %}
+
+<h2>
+    Painel do Gerente
+    </h2>
+
+<div class="dashboard-cards">
+
+    <div class="card">
+        <h3>Total vendido hoje</h3>
+        <p>R$ {{ dados.vendido_hoje }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total vendido mês</h3>
+        <p>R$ {{ dados.vendido_mes }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Fiados abertos</h3>
+        <p>{{ dados.fiados_abertos }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Contas pendentes</h3>
+        <p>{{ dados.contas_pendentes }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Estoque baixo</h3>
+        <p>{{ dados.estoque_baixo }}</p>
+    </div>
+
+</div>
+
+<div class="card">
+
+    <h3>
+        Resumo
+    </h3>
+
+    <p>
+        Existem {{ dados.contas_pendentes }}
+        contas pendentes abertas.
+    </p>
+
+</div>
+
+{% endif %}
+
+
+<!-- ========================= -->
+<!-- FUNCIONÁRIO -->
+<!-- ========================= -->
+
+{% if perfil == "funcionario" %}
+
+<h2>
+    Meu Painel
+</h2>
+
+<div class="dashboard-cards">
+
+    <div class="card">
+        <h3>Minhas vendas hoje</h3>
+    
+        <p>
+            {{ dados.vendas_hoje }}
+        </p>
+    </div>
+
+    <div class="card">
+
+        <h3>
+            Valor vendido hoje
+        </h3>
+
+        <p>
+            R$ {{ dados.valor_vendido }}
+        </p>
+
+    </div>
+
+</div>
+
+<div class="card">
+
+    <h3>
+        Mensagem
+    </h3>
+
+    <p>
+        Você realizou {{ dados.vendas_hoje }} venda(s) hoje.
+    </p>
+
+</div>
+
+<div class="card">
+
+    <h3>
+        Últimas vendas
+    </h3>
+
+    <table class="dashboard-table">
+
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+    
+        <tbody>
+    
+            {% for venda in dados.ultimas_vendas %}
+    
+            <tr>
+    
+                <td>
+                    {{ venda.data_venda.strftime('%d/%m/%Y') }}
+                </td>
+    
+                <td>
+                    R$ {{ venda.valor_total }}
+                </td>
+    
+            </tr>
+    
+            {% endfor %}
+    
+        </tbody>
+    
+    </table>
+
+</div>
+
+<div class="card">
+
+    <h3>
+        Últimas contas pendentes
+    </h3>
+
+    <table>
+
+        <tr>
+
+            <th>Cliente</th>
+
+            <th>Status</th>
+
+        </tr>
+
+        {% for conta in dados.ultimas_contas %}
+
+        <tr>
+
+            <td>
+                {{ conta.nome_cliente_temporario }}
+            </td>
+
+            <td>
+                {{ conta.status }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+{% endif %}
 
 {% endblock %}

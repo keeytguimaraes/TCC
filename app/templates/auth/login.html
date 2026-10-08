@@ -1,71 +1,223 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar · SIGC</title>
 
-    <title>Login SIGC</title>
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/design-system.css') }}"
+    >
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/pages/login.css') }}"
+    >
 
 </head>
+<body class="login-page">
 
-<body>
+    <div class="login-shell">
 
-    <h1>Login</h1>
+        <!-- ==========================
+             PAINEL DE MARCA
+        ========================== -->
+        <aside class="login-brand">
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
+            <div class="login-brand__top">
+                <div class="login-brand__mark">S</div>
+                <span class="login-brand__name">SIGC</span>
+            </div>
 
-    {% for categoria, mensagem in messages %}
+            <div class="login-brand__middle">
 
-        <div class="alert alert-{{ categoria }}">
-            {{ mensagem }}
-        </div>
+                <h2 class="login-brand__heading">
+                    Gestão comercial simples para o seu negócio crescer.
+                </h2>
 
-    {% endfor %}
+                <p class="login-brand__text">
+                    Estoque, vendas, clientes e financeiro em um só lugar —
+                    pensado para o dia a dia do pequeno comerciante.
+                </p>
 
-{% endif %}
+                <div class="login-brand__modules">
+
+                    <div class="login-brand__module">
+                        <span class="login-brand__module-icon" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 8l-9-5-9 5 9 5 9-5z"/>
+                                <path d="M3 8v8l9 5 9-5V8"/>
+                                <path d="M12 13v8"/>
+                            </svg>
+                        </span>
+                        Controle de estoque em tempo real
+                    </div>
+
+                    <div class="login-brand__module">
+                        <span class="login-brand__module-icon" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="6" width="20" height="13" rx="2"/>
+                                <circle cx="12" cy="12.5" r="3.2"/>
+                                <path d="M6 6V4h12v2"/>
+                            </svg>
+                        </span>
+                        Vendas e fechamento de caixa
+                    </div>
+
+                    <div class="login-brand__module">
+                        <span class="login-brand__module-icon" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v18h18"/>
+                                <path d="M7 15l4-5 3 3 5-7"/>
+                            </svg>
+                        </span>
+                        Relatórios financeiros completos
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="login-brand__footer">
+                &copy; {{ ano_atual | default(2026) }} SIGC — Sistema Integrado de Gestão Comercial
+            </div>
+
+        </aside>
+
+        <!-- ==========================
+             PAINEL DE FORMULARIO
+        ========================== -->
+        <main class="login-form-panel">
+
+            <div class="login-card">
+
+                <!-- Logo compacto, visivel apenas em telas menores -->
+                <div class="login-card__mobile-brand">
+                    <div class="login-brand__mark">S</div>
+                    <span class="login-brand__name">SIGC</span>
+                </div>
+
+                <h1>Entrar</h1>
+                <p class="login-card__subtitle">
+                    Acesse sua conta para continuar
+                </p>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="login-alert login-alert--{{ category }}" role="alert">
+                <svg class="login-alert__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M12 8v5"/>
+                    <path d="M12 16.2v.1"/>
+                </svg>
+
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endwith %}
 
-    <form method="POST">
+                <form
+                    class="login-form"
+                    method="POST"
+                    action="{{ url_for('login') if url_for else '/login' }}"
+                    novalidate
+                >
 
-        <input
-            type="text"
-            name="usuario"
-            placeholder="Usuário"
-            required
-        >
+                    <div class="login-field">
 
-        <div class="campo-senha">
+                        <label for="usuario">Usuário</label>
 
-            <input
-            type="password"
-            id="senha"
-            name="senha"
-            placeholder="Senha"
-            required
-        >
-        
-            <button
-            type="button"
-            id="toggle-confirmar"
-        >
-            <i class="fa-solid fa-eye"></i>
-        </button>
-        
-        </div>
+                        <div class="login-input-wrap">
+                            <svg class="login-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                <path d="M2 6l10 7 10-7"/>
+                            </svg>
+                            <input
+                                type="text"
+                                id="usuario"
+                                name="usuario"
+                                placeholder="Digite seu usuário"
+                                value="{{ usuario_preenchido | default('') }}"
+                                autocomplete="username"
+                                autofocus
+                                required
+                            >
+                        </div>
 
-        <button type="submit">
+                    </div>
 
-            Entrar
+                    <div class="login-field login-field--password">
 
-        </button>
+                        <label for="senha">Senha</label>
 
-    </form>
+                        <div class="login-input-wrap">
+                            <svg class="login-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="4" y="10" width="16" height="11" rx="2"/>
+                                <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+                            </svg>
+                            <input
+                                type="password"
+                                id="senha"
+                                name="senha"
+                                placeholder="Sua senha"
+                                autocomplete="current-password"
+                                required
+                            >
+                           <button
+    type="button"
+    class="login-toggle-senha"
+    id="toggle-senha"
+    aria-label="Mostrar senha"
+    aria-pressed="false"
+>
+    <svg class="icone-olho-aberto" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+        <circle cx="12" cy="12" r="3"/>
+    </svg>
+    <svg class="icone-olho-fechado" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 3l18 18"/>
+        <path d="M10.6 5.2A10.6 10.6 0 0 1 12 5c7 0 11 7 11 7a13.4 13.4 0 0 1-3.3 3.9M6.6 6.6C3.4 8.5 1 12 1 12s4 7 11 7a9.8 9.8 0 0 0 5.4-1.6"/>
+        <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+    </svg>
+</button>
+                        </div>
 
-    
-<script src="{{ url_for('static', filename='js/global/senha.js') }}"></script>
+                    </div>
+
+                    <div class="login-form__row">
+
+                        <label class="login-checkbox">
+                            <input type="checkbox" name="lembrar_me">
+                            Lembrar-me
+                        </label>
+                    
+                    </div>
+                    
+                    <p class="login-form__ajuda">
+                        Esqueceu sua senha? Entre em contato com o administrador do sistema para redefinir seu acesso.
+                    </p>
+
+                    <button type="submit" class="login-submit" id="botao-entrar">
+                        <span class="login-submit__spinner" aria-hidden="true"></span>
+                        <span class="login-submit__label">Entrar</span>
+                    </button>
+
+                </form>
+
+                <div class="login-card__footer">
+                    <strong>SIGC</strong> &middot; versão 1.0.0
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/pages/login.js') }}"></script>
 
 </body>
-
 </html>

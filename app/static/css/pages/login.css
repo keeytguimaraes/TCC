@@ -1,0 +1,438 @@
+/* ============================================================
+   SIGC — Tela de Login
+   ============================================================
+   Depende de design-system.css (carregado ANTES deste arquivo
+   no <head> do template). Nenhuma cor, espacamento ou raio aqui
+   e um valor novo — tudo vem dos tokens var(--...) ja oficiais.
+   ============================================================ */
+
+   html, body{
+    height: 100%;
+  }
+  
+  body.login-page{
+    margin: 0;
+    font-family: var(--font-family);
+    background: var(--color-bg);
+  }
+  
+  .login-shell{
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    min-height: 100vh;
+  }
+  
+  /* ==========================
+     PAINEL DE MARCA (esquerda)
+  ========================== */
+  
+  .login-brand{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--space-10) var(--space-10) var(--space-8);
+    background: linear-gradient(165deg, var(--color-primary) 0%, var(--color-primary-active) 100%);
+    color: var(--color-text-inverse);
+  }
+  
+  .login-brand__top{
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  
+  .login-brand__mark{
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--text-lg);
+    flex-shrink: 0;
+  }
+  
+  .login-brand__name{
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.01em;
+  }
+  
+  .login-brand__middle{
+    max-width: 420px;
+  }
+  
+  .login-brand__heading{
+    font-size: 1.9rem;
+    line-height: 1.25;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.015em;
+    margin: 0 0 var(--space-4);
+  }
+  
+  .login-brand__text{
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: rgba(255,255,255,.82);
+    margin: 0;
+  }
+  
+  .login-brand__modules{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+  
+  .login-brand__module{
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,.88);
+  }
+  
+  .login-brand__module-icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,.12);
+    font-size: var(--text-xs);
+    flex-shrink: 0;
+  }
+  
+  .login-brand__footer{
+    font-size: var(--text-xs);
+    color: rgba(255,255,255,.6);
+  }
+  
+  /* ==========================
+     PAINEL DE FORMULARIO (direita)
+  ========================== */
+  
+  .login-form-panel{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+    background: var(--color-surface);
+  }
+  
+  .login-card{
+    width: 100%;
+    max-width: 360px;
+  }
+  
+  .login-card__mobile-brand{
+    display: none;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+  }
+  
+  .login-card__mobile-brand .login-brand__mark{
+    background: var(--color-primary-light);
+    border-color: var(--color-primary-border);
+    color: var(--color-primary);
+  }
+  
+  .login-card__mobile-brand .login-brand__name{
+    color: var(--color-text);
+  }
+  
+  .login-card h1{
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    letter-spacing: -0.015em;
+  }
+  
+  .login-card__subtitle{
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+  }
+  
+  /* Alerta de erro de autenticacao */
+  
+  .login-alert{
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-5);
+    background: var(--color-danger-light);
+    border: 1px solid var(--color-danger-border);
+    border-radius: var(--radius-md);
+    color: #8F1717;
+    font-size: var(--text-sm);
+  }
+  
+  .login-alert__icon{
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  
+  /* Formulario */
+  
+  .login-form{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+  
+  .login-field{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .login-field label{
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+  }
+  
+  .login-input-wrap{
+    position: relative;
+  }
+  
+  .login-input-wrap svg.login-input-icon{
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-tertiary);
+    pointer-events: none;
+  }
+  
+  .login-field input{
+    width: 100%;
+    padding: 11px 14px 11px 40px;
+    font-family: inherit;
+    font-size: var(--text-base);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  
+  .login-field input::placeholder{
+    color: var(--color-text-tertiary);
+  }
+  
+  .login-field input:hover{
+    border-color: var(--color-border-strong);
+  }
+  
+  .login-field input:focus{
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-focus);
+  }
+  
+  .login-field input.is-invalid{
+    border-color: var(--color-danger);
+  }
+  
+  .login-field input.is-invalid:focus{
+    box-shadow: var(--shadow-focus-danger);
+  }
+  
+  /* Campo de senha com toggle de visibilidade */
+  
+  .login-field--password input{
+    padding-right: 42px;
+  }
+  
+  .login-toggle-senha{
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-tertiary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition-fast), background var(--transition-fast);
+  }
+  
+  .login-toggle-senha svg{
+    display: block;
+  }
+  
+  .login-toggle-senha .icone-olho-fechado{
+    display: none;
+  }
+  
+  .login-toggle-senha.is-visible .icone-olho-aberto{
+    display: none;
+  }
+  
+  .login-toggle-senha.is-visible .icone-olho-fechado{
+    display: block;
+  }
+  
+  .login-toggle-senha:hover{
+    color: var(--color-text-secondary);
+    background: var(--color-bg-subtle);
+  }
+  
+  .login-toggle-senha:focus-visible{
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
+  
+  /* Linha: lembrar-me + esqueci senha */
+  
+  .login-form__row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: -4px;
+  }
+  
+  .login-checkbox{
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .login-checkbox input{
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+  }
+  
+  .login-form__ajuda{
+    margin: -8px 0 0;
+    font-size: var(--text-xs);
+    line-height: 1.5;
+    color: var(--color-text-tertiary);
+  }
+  
+  /* Botao de entrar, com estado de carregamento */
+  
+  .login-submit{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: 12px 18px;
+    margin-top: var(--space-2);
+    font-family: inherit;
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-inverse);
+    background: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  
+  .login-submit:hover{
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+  }
+  
+  .login-submit:focus-visible{
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
+  
+  .login-submit:disabled{
+    opacity: .85;
+    cursor: progress;
+  }
+  
+  .login-submit__spinner{
+    display: none;
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255,255,255,.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: login-spin .6s linear infinite;
+  }
+  
+  .login-submit.is-loading .login-submit__spinner{
+    display: inline-block;
+  }
+  
+  .login-submit.is-loading .login-submit__label::after{
+    content: "Entrando...";
+  }
+  
+  .login-submit.is-loading .login-submit__label{
+    font-size: 0;
+  }
+  
+  .login-submit.is-loading .login-submit__label::after{
+    font-size: var(--text-base);
+  }
+  
+  @keyframes login-spin{
+    to{ transform: rotate(360deg); }
+  }
+  
+  /* Rodape institucional */
+  
+  .login-card__footer{
+    margin-top: var(--space-8);
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+  }
+  
+  .login-card__footer strong{
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  /* ==========================
+     RESPONSIVO
+  ========================== */
+  
+  @media (max-width: 1024px){
+    .login-shell{
+      grid-template-columns: 1fr;
+    }
+    .login-brand{
+      display: none;
+    }
+    .login-card__mobile-brand{
+      display: flex;
+    }
+    .login-form-panel{
+      padding: var(--space-6) var(--space-4);
+    }
+  }
+  
+  @media (max-width: 480px){
+    .login-form-panel{
+      align-items: flex-start;
+      padding-top: var(--space-10);
+    }
+  }

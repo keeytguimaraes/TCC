@@ -36,8 +36,6 @@ def configurar_auth_routes(app):
                 )
             )
 
-            print("USUARIO LOGADO:", usuario_logado)
-
             if usuario_logado:
 
                 session["usuario_id"] = (
@@ -51,8 +49,6 @@ def configurar_auth_routes(app):
                 session["perfil"] = (
                     usuario_logado["perfil"]
                 )
-
-                print("PERFIL NA SESSAO:", session["perfil"])
 
                 return redirect("/dashboard")
 

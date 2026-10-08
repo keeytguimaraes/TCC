@@ -22,7 +22,7 @@ from app.routes.relatorio_route import configurar_relatorio_routes
 # Importa rota rotas
 from app.routes.routes import configurar_rotas
 # Importa rota dashboard
-from app.routes.dashboard_route import configurar_rotas_dashboard
+from app.routes.dashboard_route import configurar_dashboard_routes
 # Importa rota movimentação
 from app.routes.movimentacao_route import configurar_movimentacao_routes
 # Importa rota fichas/sinuca
@@ -81,7 +81,7 @@ configurar_carrinho_routes(app)
 configurar_conta_routes(app)
 configurar_fiado_routes(app)
 configurar_relatorio_routes(app)
-configurar_rotas_dashboard(app)
+configurar_dashboard_routes(app)
 configurar_movimentacao_routes(app)
 configurar_sinuca_routes(app)
 configurar_auth_routes(app)

@@ -1,14 +1,31 @@
+from flask import (
+    render_template,
+    session
+)
+
 from app.utils.auth import (
     login_obrigatorio
 )
-from flask import render_template
 
-def configurar_rotas_dashboard(app):
+from app.controllers.dashboard_controller import (
+    pegar_dashboard
+)
+
+
+def configurar_dashboard_routes(app):
 
     @app.route("/dashboard")
     @login_obrigatorio
     def dashboard():
+
+        dados = pegar_dashboard()
+
+        perfil = session.get(
+            "perfil"
+        )
+
         return render_template(
             "dashboard/dashboard.html",
-            titulo_pagina="Dashboard"
+            dados=dados,
+            perfil=perfil
         )
