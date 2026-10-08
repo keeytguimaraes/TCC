@@ -1,5 +1,8 @@
 # Importa Flask
-from flask import Flask
+from flask import (
+    Flask,
+    render_template
+)
 
 # Importa rotas de cliente
 from app.routes.cliente_route import configurar_cliente_routes
@@ -44,6 +47,13 @@ app = Flask(
     # Diz onde ficarão CSS, JS e imagens futuramente
     static_folder="app/static"
 )
+
+@app.errorhandler(403)
+def acesso_negado(error):
+
+    return render_template(
+        "errors/403.html"
+    ), 403
 # SECRET KEY
 app.secret_key = "tcc_bar"
 

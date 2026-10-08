@@ -1,9 +1,10 @@
 from flask import (
     session,
     redirect,
-    flash
+    abort
 )
 
+from flask import request
 from functools import wraps
 
 
@@ -30,12 +31,7 @@ def perfil_obrigatorio(*perfis):
 
             if session.get("perfil") not in perfis:
 
-                flash(
-                    "Você não tem permissão para acessar esta página.",
-                    "error"
-                )
-
-                return redirect("/")
+                abort(403)
 
             return func(*args, **kwargs)
 

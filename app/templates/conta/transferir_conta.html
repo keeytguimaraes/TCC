@@ -46,14 +46,18 @@ Transferir para Fiado
 
     <br><br>
 
-    <a
-        href="/cliente"
-        class="button button-success"
-    >
-        <i class="fa-solid fa-user-plus"></i>
+    {% if session.get("perfil") != "funcionario" %}
 
-        Cadastrar Novo Cliente
-    </a>
+<a
+    href="/cliente"
+    class="button button-success"
+>
+    <i class="fa-solid fa-user-plus"></i>
+
+    Cadastrar Novo Cliente
+</a>
+
+{% endif %}
 
     <button
         type="submit"

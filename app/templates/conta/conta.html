@@ -209,16 +209,20 @@ Contas Pendentes
 
             <div class="modal-actions">
 
-                <a
-                    href="/cliente"
-                    class="button button-success"
-                >
+                {% if session.get("perfil") != "funcionario" %}
 
-                    <i class="fa-solid fa-user-plus"></i>
+<a
+    href="/cliente"
+    class="button button-success"
+>
 
-                    Cadastrar Novo Cliente
+    <i class="fa-solid fa-user-plus"></i>
 
-                </a>
+    Cadastrar Novo Cliente
+
+</a>
+
+{% endif %}
 
                 <button
                     type="submit"

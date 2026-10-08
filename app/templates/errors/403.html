@@ -1,0 +1,51 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Acesso Negado
+{% endblock %}
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/error_403.css'
+    ) }}"
+>
+
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="error-container">
+
+    <div class="error-card">
+
+        <i class="fa-solid fa-lock"></i>
+
+        <h1>403</h1>
+
+        <h2>Acesso Negado</h2>
+
+        <p>
+            Você não possui permissão para acessar esta página.
+        </p>
+
+        <p>
+            Caso precise deste recurso,
+            entre em contato com um administrador.
+        </p>
+
+        <a
+            href="/dashboard"
+            class="button button-primary"
+        >
+            Voltar ao Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,11 +1,10 @@
 {% extends "base/base.html" %}
 
 {% block titulo %}
-Dashboard
+Início
 {% endblock %}
 
 {% block css %}
-
 <link
     rel="stylesheet"
     href="{{ url_for(
@@ -13,7 +12,6 @@ Dashboard
         filename='css/pages/dashboard.css'
     ) }}"
 >
-
 {% endblock %}
 
 {% block conteudo %}
@@ -21,144 +19,360 @@ Dashboard
 <div class="page-title">
 
     <h1>
-        Dashboard
+        Início
     </h1>
 
 </div>
 
-<!-- ========================= -->
+<!-- ===================== -->
 <!-- ADMINISTRADOR -->
-<!-- ========================= -->
+<!-- ===================== -->
 
 {% if perfil == "administrador" %}
 
-<h2>
-    Painel do Administrador
-</h2>
+<div class="dashboard-mensagem">
+
+    <h2>
+        Painel do Administrador
+    </h2>
+
+    <p>
+        {{ dados.mensagem }}
+    </p>
+
+</div>
 
 <div class="dashboard-cards">
 
-    <div class="card">
-        <h3>Total vendido hoje</h3>
+    <div class="card-dashboard">
+        <h3>Vendido Hoje</h3>
         <p>R$ {{ dados.vendido_hoje }}</p>
     </div>
 
-    <div class="card">
-        <h3>Total vendido mês</h3>
+    <div class="card-dashboard">
+        <h3>Vendido Mês</h3>
         <p>R$ {{ dados.vendido_mes }}</p>
     </div>
 
-    <div class="card">
-        <h3>Fiados abertos</h3>
+    <div class="card-dashboard">
+        <h3>Fiados</h3>
         <p>{{ dados.fiados_abertos }}</p>
     </div>
 
-    <div class="card">
-        <h3>Contas pendentes</h3>
+    <div class="card-dashboard">
+        <h3>Contas Pendentes</h3>
         <p>{{ dados.contas_pendentes }}</p>
     </div>
 
-    <div class="card">
-        <h3>Estoque baixo</h3>
+    <div class="card-dashboard">
+        <h3>Estoque Baixo</h3>
         <p>{{ dados.estoque_baixo }}</p>
     </div>
 
 </div>
 
-<div class="card">
+<div class="dashboard-section">
 
-    <h3>
-        Mensagem do dia
-    </h3>
+    <h2>
+        Alertas do Sistema
+    </h2>
 
-    <p>
-        Bom dia, {{ session.nome }}!
-    </p>
+    {% for alerta in dados.alertas %}
+
+        <div class="alerta-item">
+
+            {{ alerta }}
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<div class="dashboard-section">
+
+    <h2>
+        Últimas Vendas
+    </h2>
+
+    <table class="dashboard-table">
+
+        <thead>
+
+            <tr>
+
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Status</th>
+                <th>Responsável</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for venda in dados.ultimas_vendas %}
+
+            <tr>
+
+                <td>
+                    {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
+                </td>
+
+                <td>
+                    R$ {{ venda.valor_total }}
+                </td>
+
+                <td>
+                    {{ venda.status_pagamento }}
+                </td>
+
+                <td>
+                    {{ venda.responsavel }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<div class="dashboard-section">
+
+    <h2>
+        Últimas Movimentações
+    </h2>
+
+    <table class="dashboard-table">
+
+        <thead>
+
+            <tr>
+
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Produto</th>
+                <th>Responsável</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for item in dados.ultimas_movimentacoes %}
+
+            <tr>
+
+                <td>
+                    {{ item.data_movimentacao.strftime('%d/%m/%Y') }}
+                </td>
+
+                <td>
+                    {{ item.tipo_movimentacao }}
+                </td>
+
+                <td>
+                    {{ item.produto }}
+                </td>
+
+                <td>
+                    {{ item.responsavel }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
 
 </div>
 
 {% endif %}
 
-
-<!-- ========================= -->
+<!-- ===================== -->
 <!-- GERENTE -->
-<!-- ========================= -->
+<!-- ===================== -->
 
 {% if perfil == "gerente" %}
 
-<h2>
-    Painel do Gerente
+<div class="dashboard-mensagem">
+
+    <h2>
+        Painel do Gerente
     </h2>
+
+    <p>
+        {{ dados.mensagem }}
+    </p>
+
+</div>
 
 <div class="dashboard-cards">
 
-    <div class="card">
-        <h3>Total vendido hoje</h3>
+    <div class="card-dashboard">
+        <h3>Vendido Hoje</h3>
         <p>R$ {{ dados.vendido_hoje }}</p>
     </div>
 
-    <div class="card">
-        <h3>Total vendido mês</h3>
+    <div class="card-dashboard">
+        <h3>Vendido Mês</h3>
         <p>R$ {{ dados.vendido_mes }}</p>
     </div>
 
-    <div class="card">
-        <h3>Fiados abertos</h3>
+    <div class="card-dashboard">
+        <h3>Fiados</h3>
         <p>{{ dados.fiados_abertos }}</p>
     </div>
 
-    <div class="card">
-        <h3>Contas pendentes</h3>
+    <div class="card-dashboard">
+        <h3>Contas Pendentes</h3>
         <p>{{ dados.contas_pendentes }}</p>
     </div>
 
-    <div class="card">
-        <h3>Estoque baixo</h3>
+    <div class="card-dashboard">
+        <h3>Estoque Baixo</h3>
         <p>{{ dados.estoque_baixo }}</p>
     </div>
 
 </div>
 
-<div class="card">
+<div class="dashboard-section">
 
-    <h3>
-        Resumo
-    </h3>
+    <h2>
+        Últimas Vendas
+    </h2>
 
-    <p>
-        Existem {{ dados.contas_pendentes }}
-        contas pendentes abertas.
-    </p>
+    <table class="dashboard-table">
+
+        <thead>
+
+            <tr>
+
+                <th>Data</th>
+                <th>Valor</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for venda in dados.ultimas_vendas %}
+
+            <tr>
+
+                <td>
+                    {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
+                </td>
+
+                <td>
+                    R$ {{ venda.valor_total }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<div class="dashboard-section">
+
+    <h2>
+        Últimas Movimentações
+    </h2>
+
+    <table class="dashboard-table">
+
+        <thead>
+
+            <tr>
+
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Produto</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for item in dados.ultimas_movimentacoes %}
+
+            <tr>
+
+                <td>
+                    {{ item.data_movimentacao.strftime('%d/%m/%Y') }}
+                </td>
+
+                <td>
+                    {{ item.tipo_movimentacao }}
+                </td>
+
+                <td>
+                    {{ item.produto }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
 
 </div>
 
 {% endif %}
 
-
-<!-- ========================= -->
+<!-- ===================== -->
 <!-- FUNCIONÁRIO -->
-<!-- ========================= -->
+<!-- ===================== -->
 
 {% if perfil == "funcionario" %}
 
-<h2>
-    Meu Painel
-</h2>
+<div class="dashboard-mensagem">
+
+    <h2>
+        Painel do Funcionário
+    </h2>
+
+    <p>
+        {{ dados.mensagem }}
+    </p>
+
+</div>
 
 <div class="dashboard-cards">
 
-    <div class="card">
-        <h3>Minhas vendas hoje</h3>
-    
+    <div class="card-dashboard">
+
+        <h3>
+            Minhas Vendas Hoje
+        </h3>
+
         <p>
             {{ dados.vendas_hoje }}
         </p>
+
     </div>
 
-    <div class="card">
+    <div class="card-dashboard">
 
         <h3>
-            Valor vendido hoje
+            Valor Vendido Hoje
         </h3>
 
         <p>
@@ -169,88 +383,87 @@ Dashboard
 
 </div>
 
-<div class="card">
+<div class="dashboard-section">
 
-    <h3>
-        Mensagem
-    </h3>
-
-    <p>
-        Você realizou {{ dados.vendas_hoje }} venda(s) hoje.
-    </p>
-
-</div>
-
-<div class="card">
-
-    <h3>
-        Últimas vendas
-    </h3>
+    <h2>
+        Últimas Vendas
+    </h2>
 
     <table class="dashboard-table">
 
         <thead>
+
             <tr>
+
                 <th>Data</th>
-                <th>Total</th>
+                <th>Valor</th>
+
             </tr>
+
         </thead>
-    
+
         <tbody>
-    
+
             {% for venda in dados.ultimas_vendas %}
-    
+
             <tr>
-    
+
                 <td>
-                    {{ venda.data_venda.strftime('%d/%m/%Y') }}
+                    {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
                 </td>
-    
+
                 <td>
                     R$ {{ venda.valor_total }}
                 </td>
-    
+
             </tr>
-    
+
             {% endfor %}
-    
+
         </tbody>
-    
+
     </table>
 
 </div>
 
-<div class="card">
+<div class="dashboard-section">
 
-    <h3>
-        Últimas contas pendentes
-    </h3>
+    <h2>
+        Últimas Contas Pendentes
+    </h2>
 
-    <table>
+    <table class="dashboard-table">
 
-        <tr>
+        <thead>
 
-            <th>Cliente</th>
+            <tr>
 
-            <th>Status</th>
+                <th>Cliente</th>
+                <th>Data</th>
 
-        </tr>
+            </tr>
 
-        {% for conta in dados.ultimas_contas %}
+        </thead>
 
-        <tr>
+        <tbody>
 
-            <td>
-                {{ conta.nome_cliente_temporario }}
-            </td>
+            {% for conta in dados.ultimas_contas %}
 
-            <td>
-                {{ conta.status }}
-            </td>
+            <tr>
 
-        </tr>
+                <td>
+                    {{ conta.nome_cliente_temporario }}
+                </td>
 
-        {% endfor %}
+                <td>
+                    {{ conta.data_abertura.strftime('%d/%m/%Y') }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
 
     </table>
 

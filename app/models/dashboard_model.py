@@ -125,6 +125,12 @@ def buscar_dashboard_administrador():
         buscar_alertas_dashboard()
     )
 
+    dados["mensagem"] = (
+    gerar_mensagem_dashboard(
+        dados
+    )
+)
+
     return dados
 
 # =====================
@@ -142,6 +148,14 @@ def buscar_dashboard_gerente():
     dados["ultimas_movimentacoes"] = (
         buscar_ultimas_movimentacoes()
     )
+
+    dados["mensagem"] = f"""
+Bem-vinda!
+
+Existem {dados['estoque_baixo']} produto(s)
+com estoque baixo e
+{dados['contas_pendentes']} conta(s) pendente(s).
+"""
 
     return dados
 
@@ -242,6 +256,12 @@ def buscar_dashboard_funcionario(
         cursor.fetchall()
     )
 
+    dados["mensagem"] = (
+    f"Você realizou "
+    f"{dados['vendas_hoje']} venda(s) hoje. "
+    f"Continue o ótimo trabalho!"
+)
+
     cursor.close()
     conexao.close()
 
@@ -257,11 +277,23 @@ def buscar_ultimas_vendas():
 
     cursor.execute("""
         SELECT
-            id,
-            valor_total,
-            data_venda
-        FROM venda
-        ORDER BY data_venda DESC
+
+            v.data_venda,
+            v.valor_total,
+            v.status_pagamento,
+
+            COALESCE(
+                u.nome,
+                'Não informado'
+            ) AS responsavel
+
+        FROM venda v
+
+        LEFT JOIN usuario u
+            ON u.id = v.usuario_id
+
+        ORDER BY v.data_venda DESC
+
         LIMIT 5
     """)
 
@@ -282,11 +314,29 @@ def buscar_ultimas_movimentacoes():
 
     cursor.execute("""
         SELECT
-            tipo_movimentacao,
-            motivo,
-            data_movimentacao
-        FROM movimentacao_estoque
-        ORDER BY data_movimentacao DESC
+
+            m.data_movimentacao,
+
+            m.tipo_movimentacao,
+
+            p.nome AS produto,
+
+            COALESCE(
+                u.nome,
+                'Não informado'
+            ) AS responsavel
+
+        FROM movimentacao_estoque m
+
+        INNER JOIN produto p
+            ON p.id = m.produto_id
+
+        LEFT JOIN usuario u
+            ON u.id = m.usuario_id
+
+        ORDER BY
+            m.data_movimentacao DESC
+
         LIMIT 5
     """)
 
@@ -343,3 +393,14 @@ def buscar_alertas_dashboard():
     conexao.close()
 
     return alertas
+
+def gerar_mensagem_dashboard(
+    dados
+):
+
+    return f"""
+Bom dia!
+
+Hoje existem {dados['contas_pendentes']} conta(s) pendente(s)
+e {dados['estoque_baixo']} produto(s) com estoque baixo.
+"""
