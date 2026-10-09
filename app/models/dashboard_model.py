@@ -1,20 +1,93 @@
+# ==================================================
+# IMPORTA FUNÇÃO RESPONSÁVEL POR CRIAR CONEXÃO
+# COM O BANCO DE DADOS
+# ==================================================
 from app.database.conexao import conectar
+
+# ==================================================
+# PERMITE QUE OS RESULTADOS DAS CONSULTAS
+# SEJAM RETORNADOS COMO DICIONÁRIOS
+#
+# Exemplo:
+#
+# resultado["nome"]
+#
+# ao invés de:
+#
+# resultado[0]
+# ==================================================
 from psycopg2.extras import RealDictCursor
 
-def buscar_indicadores_dashboard():
+
+# ==================================================
+# CONSTANTE UTILIZADA COMO PADRÃO PARA
+# TODOS OS CURSORES DO SISTEMA
+#
+# Isso evita repetir RealDictCursor
+# em todas as funções.
+# ==================================================
+CURSOR_PADRAO = RealDictCursor
+
+
+# ==================================================
+# CRIAR CURSOR
+# ==================================================
+def criar_cursor():
+
+    """
+    Responsável por criar:
+
+    - conexão com banco
+    - cursor configurado com RealDictCursor
+
+    Retorna:
+
+    conexao
+    cursor
+    """
 
     conexao = conectar()
 
     cursor = conexao.cursor(
-        cursor_factory=RealDictCursor
+        cursor_factory=CURSOR_PADRAO
     )
 
-    dados = {}
+    return conexao, cursor
 
-    # =====================
-    # VENDIDO HOJE
-    # =====================
 
+# ==================================================
+# INDICADORES GERAIS DO DASHBOARD
+# ==================================================
+def buscar_indicadores_dashboard():
+
+    """
+    Busca os principais indicadores utilizados
+    pelos dashboards de administrador e gerente.
+
+    Indicadores retornados:
+
+    - vendido hoje
+    - vendido mês
+    - fiados abertos
+    - contas pendentes
+    - estoque baixo
+    """
+
+    conexao, cursor = criar_cursor()
+
+    dados_dashboard = {}
+
+    # ==================================================
+    # TOTAL VENDIDO HOJE
+    # ==================================================
+
+    # Soma todas as vendas realizadas
+    # na data atual.
+    #
+    # CURRENT_DATE retorna apenas a data.
+    #
+    # COALESCE garante que o retorno seja
+    # 0 caso não existam vendas.
     cursor.execute("""
         SELECT
             COALESCE(
@@ -25,14 +98,23 @@ def buscar_indicadores_dashboard():
         WHERE DATE(data_venda) = CURRENT_DATE
     """)
 
-    dados["vendido_hoje"] = (
+    dados_dashboard["vendido_hoje"] = (
         cursor.fetchone()["total"]
     )
 
-    # =====================
-    # VENDIDO MÊS
-    # =====================
+    # ==================================================
+    # TOTAL VENDIDO NO MÊS
+    # ==================================================
 
+    # Soma todas as vendas do mês atual.
+    #
+    # O filtro verifica:
+    #
+    # - mês atual
+    # - ano atual
+    #
+    # evitando misturar meses de anos
+    # diferentes.
     cursor.execute("""
         SELECT
             COALESCE(
@@ -54,232 +136,396 @@ def buscar_indicadores_dashboard():
             )
     """)
 
-    dados["vendido_mes"] = (
+    dados_dashboard["vendido_mes"] = (
         cursor.fetchone()["total"]
     )
 
-    # =====================
-    # FIADOS
-    # =====================
+    # ==================================================
+    # FIADOS EM ABERTO
+    # ==================================================
 
+    # Conta quantas contas de fiado
+    # continuam abertas.
     cursor.execute("""
         SELECT COUNT(*) AS total
         FROM conta
         WHERE status_conta = 'aberta'
     """)
 
-    dados["fiados_abertos"] = (
+    dados_dashboard["fiados_abertos"] = (
         cursor.fetchone()["total"]
     )
 
-    # =====================
+    # ==================================================
     # CONTAS PENDENTES
-    # =====================
+    # ==================================================
 
+    # Conta quantas contas pendentes
+    # ainda estão abertas.
     cursor.execute("""
         SELECT COUNT(*) AS total
         FROM conta_pendente
         WHERE status = 'aberta'
     """)
 
-    dados["contas_pendentes"] = (
+    dados_dashboard["contas_pendentes"] = (
         cursor.fetchone()["total"]
     )
 
-    # =====================
+    # ==================================================
     # ESTOQUE BAIXO
-    # =====================
+    # ==================================================
 
+    # Conta quantos produtos possuem
+    # quantidade igual ou inferior a 10 unidades.
     cursor.execute("""
         SELECT COUNT(*) AS total
         FROM estoque
         WHERE quantidade_atual_unidade <= 10
     """)
 
-    dados["estoque_baixo"] = (
+    dados_dashboard["estoque_baixo"] = (
         cursor.fetchone()["total"]
     )
 
     cursor.close()
     conexao.close()
 
-    return dados
+    return dados_dashboard
 
-# =====================
-# ADMINISTRADOR
-# =====================
 
+# ==================================================
+# GERAR MENSAGEM DO DASHBOARD
+# ==================================================
+def gerar_mensagem_dashboard(
+    dados_dashboard
+):
+
+    """
+    Gera a mensagem exibida para
+    administradores.
+
+    Recebe os indicadores calculados
+    anteriormente e monta um resumo.
+    """
+
+    return f"""
+Bom dia!
+
+Hoje existem {dados_dashboard['contas_pendentes']} conta(s) pendente(s)
+e {dados_dashboard['estoque_baixo']} produto(s) com estoque baixo.
+"""
+
+# ==================================================
+# DASHBOARD ADMINISTRADOR
+# ==================================================
 def buscar_dashboard_administrador():
 
-    dados = buscar_indicadores_dashboard()
+    """
+    Monta todos os dados necessários
+    para o dashboard do administrador.
 
-    dados["ultimas_vendas"] = (
+    O administrador possui acesso
+    completo ao sistema.
+    """
+
+    # Busca indicadores gerais
+    dados_dashboard = (
+        buscar_indicadores_dashboard()
+    )
+
+    # Busca últimas vendas realizadas
+    dados_dashboard["ultimas_vendas"] = (
         buscar_ultimas_vendas()
     )
 
-    dados["ultimas_movimentacoes"] = (
+    # Busca últimas movimentações
+    dados_dashboard["ultimas_movimentacoes"] = (
         buscar_ultimas_movimentacoes()
     )
 
-    dados["alertas"] = (
+    # Busca alertas importantes
+    dados_dashboard["alertas"] = (
         buscar_alertas_dashboard()
     )
 
-    dados["mensagem"] = (
-    gerar_mensagem_dashboard(
-        dados
+    # Gera mensagem personalizada
+    dados_dashboard["mensagem"] = (
+        gerar_mensagem_dashboard(
+            dados_dashboard
+        )
     )
-)
 
-    return dados
+    return dados_dashboard
 
-# =====================
-# GERENTE
-# =====================
-
+# ==================================================
+# DASHBOARD GERENTE
+# ==================================================
 def buscar_dashboard_gerente():
 
-    dados = buscar_indicadores_dashboard()
+    """
+    Monta os dados exibidos
+    para usuários do perfil gerente.
+    """
 
-    dados["ultimas_vendas"] = (
+    dados_dashboard = (
+        buscar_indicadores_dashboard()
+    )
+
+    dados_dashboard["ultimas_vendas"] = (
         buscar_ultimas_vendas()
     )
 
-    dados["ultimas_movimentacoes"] = (
+    dados_dashboard["ultimas_movimentacoes"] = (
         buscar_ultimas_movimentacoes()
     )
 
-    dados["mensagem"] = f"""
+    dados_dashboard["mensagem"] = f"""
 Bem-vinda!
 
-Existem {dados['estoque_baixo']} produto(s)
+Existem {dados_dashboard['estoque_baixo']} produto(s)
 com estoque baixo e
-{dados['contas_pendentes']} conta(s) pendente(s).
+{dados_dashboard['contas_pendentes']} conta(s) pendente(s).
 """
 
-    return dados
+    return dados_dashboard
 
-
-# =====================
-# FUNCIONÁRIO
-# =====================
-
+# ==================================================
+# DASHBOARD FUNCIONÁRIO
+# ==================================================
 def buscar_dashboard_funcionario(
     usuario_id
 ):
 
-    conexao = conectar()
+    """
+    Responsável por montar os dados
+    exibidos para usuários do perfil
+    funcionário.
 
-    cursor = conexao.cursor(
-        cursor_factory=RealDictCursor
-    )
+    Diferente do administrador e gerente,
+    o funcionário visualiza apenas
+    informações relacionadas às suas
+    próprias atividades.
 
-    dados = {}
+    Dados exibidos:
 
-    # =====================
-    # VENDAS DELE HOJE
-    # =====================
+    - Quantidade de vendas realizadas hoje
+    - Valor vendido hoje
+    - Últimas vendas realizadas
+    - Últimas contas pendentes abertas
+    - Mensagem motivacional
+    """
 
-    cursor.execute("""
+    # Cria conexão com o banco de dados
+    # e cursor configurado para retornar
+    # resultados como dicionário.
+    conexao, cursor = criar_cursor()
+
+    # Dicionário que armazenará todos os
+    # dados enviados para a página.
+    dados_dashboard = {}
+
+    # ==================================================
+    # QUANTIDADE DE VENDAS REALIZADAS HOJE
+    # ==================================================
+
+    # Conta quantas vendas foram realizadas
+    # pelo funcionário logado na data atual.
+    #
+    # O filtro utiliza:
+    #
+    # usuario_id = funcionário atual
+    # CURRENT_DATE = data de hoje
+    cursor.execute(
+        """
         SELECT COUNT(*) AS total
+
         FROM venda
+
         WHERE usuario_id = %s
+
         AND DATE(data_venda) = CURRENT_DATE
-    """,
-    (usuario_id,)
+        """,
+        (usuario_id,)
     )
 
-    dados["vendas_hoje"] = (
+    # Recupera o resultado retornado
+    # pela consulta e armazena dentro
+    # do dicionário principal.
+    dados_dashboard["vendas_hoje"] = (
         cursor.fetchone()["total"]
     )
 
-    # =====================
-    # VALOR VENDIDO HOJE
-    # =====================
+    # ==================================================
+    # VALOR TOTAL VENDIDO HOJE
+    # ==================================================
 
-    cursor.execute("""
+    # Soma o valor total de todas as vendas
+    # realizadas pelo funcionário na data atual.
+    #
+    # COALESCE evita que o banco retorne
+    # NULL quando não houver vendas.
+    cursor.execute(
+        """
         SELECT
+
             COALESCE(
                 SUM(valor_total),
                 0
             ) AS total
+
         FROM venda
+
         WHERE usuario_id = %s
+
         AND DATE(data_venda) = CURRENT_DATE
-    """,
-    (usuario_id,)
+        """,
+        (usuario_id,)
     )
 
-    dados["valor_vendido"] = (
+    # Armazena o valor vendido no dia.
+    dados_dashboard["valor_vendido"] = (
         cursor.fetchone()["total"]
     )
 
-    # =====================
-    # ÚLTIMAS VENDAS
-    # =====================
+    # ==================================================
+    # ÚLTIMAS VENDAS DO FUNCIONÁRIO
+    # ==================================================
 
-    cursor.execute("""
+    # Busca as 5 vendas mais recentes
+    # realizadas pelo funcionário.
+    #
+    # ORDER BY DESC:
+    # mais recente primeiro.
+    #
+    # LIMIT 5:
+    # apenas os cinco registros mais recentes.
+    cursor.execute(
+        """
         SELECT
+
             id,
+
             valor_total,
+
             data_venda
+
         FROM venda
+
         WHERE usuario_id = %s
+
         ORDER BY data_venda DESC
+
         LIMIT 5
-    """,
-    (usuario_id,)
+        """,
+        (usuario_id,)
     )
 
-    dados["ultimas_vendas"] = (
+    # Recupera todos os registros encontrados.
+    dados_dashboard["ultimas_vendas"] = (
         cursor.fetchall()
     )
 
-    # =====================
-    # CONTAS PENDENTES
-    # =====================
+    # ==================================================
+    # ÚLTIMAS CONTAS PENDENTES
+    # ==================================================
 
-    cursor.execute("""
+    # Busca as últimas contas pendentes
+    # abertas pelo funcionário.
+    #
+    # Essas contas representam clientes
+    # temporários que ainda não efetuaram
+    # o pagamento.
+    cursor.execute(
+        """
         SELECT
+
             id,
+
             nome_cliente_temporario,
+
             data_abertura
+
         FROM conta_pendente
+
         WHERE usuario_id = %s
+
         ORDER BY data_abertura DESC
+
         LIMIT 5
-    """,
-    (usuario_id,)
+        """,
+        (usuario_id,)
     )
 
-    dados["ultimas_contas"] = (
+    # Armazena a lista das contas encontradas.
+    dados_dashboard["ultimas_contas"] = (
         cursor.fetchall()
     )
 
-    dados["mensagem"] = (
-    f"Você realizou "
-    f"{dados['vendas_hoje']} venda(s) hoje. "
-    f"Continue o ótimo trabalho!"
-)
+    # ==================================================
+    # MENSAGEM EXIBIDA NO DASHBOARD
+    # ==================================================
 
+    # Cria uma mensagem simples utilizando
+    # a quantidade de vendas realizadas hoje.
+    #
+    # Essa mensagem serve apenas para deixar
+    # o dashboard mais amigável para o usuário.
+    dados_dashboard["mensagem"] = (
+        f"Você realizou "
+        f"{dados_dashboard['vendas_hoje']} venda(s) hoje. "
+        f"Continue o ótimo trabalho!"
+    )
+
+    # Fecha cursor.
     cursor.close()
+
+    # Fecha conexão.
     conexao.close()
 
-    return dados
+    # Retorna todos os dados preparados.
+    return dados_dashboard
 
+# ==================================================
+# ÚLTIMAS VENDAS
+# ==================================================
 def buscar_ultimas_vendas():
 
-    conexao = conectar()
+    """
+    Busca as 5 vendas mais recentes do sistema.
 
-    cursor = conexao.cursor(
-        cursor_factory=RealDictCursor
-    )
+    Esta função é utilizada pelos dashboards
+    de administrador e gerente para exibir
+    rapidamente as últimas movimentações de venda.
 
+    Informações retornadas:
+
+    - Data da venda
+    - Valor total
+    - Status do pagamento
+    - Nome do responsável pela venda
+    """
+
+    # Cria conexão com o banco de dados
+    # e cursor configurado para retornar
+    # resultados em formato de dicionário.
+    conexao, cursor = criar_cursor()
+
+    # Consulta responsável por retornar
+    # as últimas vendas registradas.
+    #
+    # LEFT JOIN é utilizado para trazer
+    # o nome do usuário responsável.
+    #
+    # COALESCE evita valores NULL caso
+    # o usuário não esteja definido.
     cursor.execute("""
         SELECT
 
             v.data_venda,
+
             v.valor_total,
+
             v.status_pagamento,
 
             COALESCE(
@@ -297,21 +543,51 @@ def buscar_ultimas_vendas():
         LIMIT 5
     """)
 
+    # Recupera todos os registros encontrados.
     vendas = cursor.fetchall()
 
+    # Libera recursos.
     cursor.close()
     conexao.close()
 
+    # Retorna a lista de vendas.
     return vendas
 
+
+# ==================================================
+# ÚLTIMAS MOVIMENTAÇÕES DE ESTOQUE
+# ==================================================
 def buscar_ultimas_movimentacoes():
 
-    conexao = conectar()
+    """
+    Busca as últimas movimentações de estoque.
 
-    cursor = conexao.cursor(
-        cursor_factory=RealDictCursor
-    )
+    Essas movimentações podem representar:
 
+    - Entrada de produtos
+    - Saída de produtos
+    - Ajustes manuais
+    - Correções de estoque
+
+    Informações retornadas:
+
+    - Data da movimentação
+    - Tipo da movimentação
+    - Produto
+    - Responsável
+    """
+
+    # Cria conexão com banco.
+    conexao, cursor = criar_cursor()
+
+    # Consulta responsável por buscar
+    # as últimas movimentações registradas.
+    #
+    # INNER JOIN:
+    # Obtém o nome do produto.
+    #
+    # LEFT JOIN:
+    # Obtém o usuário responsável.
     cursor.execute("""
         SELECT
 
@@ -340,26 +616,53 @@ def buscar_ultimas_movimentacoes():
         LIMIT 5
     """)
 
+    # Recupera os registros encontrados.
     movimentacoes = cursor.fetchall()
 
+    # Fecha recursos do banco.
     cursor.close()
     conexao.close()
 
+    # Retorna a lista de movimentações.
     return movimentacoes
 
+
+# ==================================================
+# ALERTAS DO DASHBOARD
+# ==================================================
 def buscar_alertas_dashboard():
 
-    conexao = conectar()
+    """
+    Gera uma lista de alertas que serão
+    exibidos no dashboard administrativo.
 
-    cursor = conexao.cursor(
-        cursor_factory=RealDictCursor
-    )
+    Atualmente são verificados:
 
+    - Produtos com estoque baixo
+    - Contas pendentes abertas
+
+    Novos alertas podem ser adicionados
+    futuramente nesta função.
+    """
+
+    # Cria conexão e cursor.
+    conexao, cursor = criar_cursor()
+
+    # Lista onde serão armazenados
+    # todos os alertas encontrados.
     alertas = []
 
+    # ==================================================
+    # ALERTA DE ESTOQUE BAIXO
+    # ==================================================
+
+    # Conta quantos produtos possuem
+    # estoque igual ou inferior a 10 unidades.
     cursor.execute("""
         SELECT COUNT(*) AS total
+
         FROM estoque
+
         WHERE quantidade_atual_unidade <= 10
     """)
 
@@ -367,15 +670,25 @@ def buscar_alertas_dashboard():
         cursor.fetchone()["total"]
     )
 
+    # Caso exista pelo menos um produto
+    # com estoque baixo, adiciona um alerta.
     if estoque_baixo > 0:
 
         alertas.append(
             f"{estoque_baixo} produto(s) com estoque baixo"
         )
 
+    # ==================================================
+    # ALERTA DE CONTAS PENDENTES
+    # ==================================================
+
+    # Conta quantas contas pendentes
+    # ainda estão abertas.
     cursor.execute("""
         SELECT COUNT(*) AS total
+
         FROM conta_pendente
+
         WHERE status = 'aberta'
     """)
 
@@ -383,24 +696,17 @@ def buscar_alertas_dashboard():
         cursor.fetchone()["total"]
     )
 
+    # Se existirem contas pendentes,
+    # adiciona um alerta correspondente.
     if pendentes > 0:
 
         alertas.append(
             f"{pendentes} conta(s) pendente(s)"
         )
 
+    # Fecha recursos do banco.
     cursor.close()
     conexao.close()
 
+    # Retorna a lista completa de alertas.
     return alertas
-
-def gerar_mensagem_dashboard(
-    dados
-):
-
-    return f"""
-Bom dia!
-
-Hoje existem {dados['contas_pendentes']} conta(s) pendente(s)
-e {dados['estoque_baixo']} produto(s) com estoque baixo.
-"""
