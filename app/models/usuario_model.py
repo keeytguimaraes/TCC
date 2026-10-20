@@ -55,13 +55,14 @@ def listar_usuarios():
     # Busca os campos necessários para exibir os usuários.
     cursor.execute("""
         SELECT
-            id,
-            nome,
-            usuario,
-            perfil,
-            ativo
-        FROM usuario
-        ORDER BY nome
+        id,
+        nome,
+        usuario,
+        perfil,
+        ativo
+    FROM usuario
+    WHERE ativo = 1
+    ORDER BY nome
     """)
 
     # Recupera todos os registros encontrados.

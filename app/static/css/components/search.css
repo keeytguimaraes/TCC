@@ -1,5 +1,7 @@
 /* ==========================
    SEARCH BOX
+   Depende dos tokens definidos em base.css
+   (carregado antes deste arquivo).
 ========================== */
 
 .search-box{
@@ -14,27 +16,29 @@
 
     padding:12px 18px;
 
-    background:#fff;
+    background: var(--card);
 
-    border:1px solid #dcdcdc;
+    border: 1px solid var(--border);
 
-    border-radius:12px;
+    border-radius: var(--radius-md);
 
     width:400px;
+
+    max-width: 100%;
 
     transition:.3s;
 }
 
 .search-box:focus-within{
 
-    border-color:#2e7d32;
+    border-color: var(--primary);
 
-    box-shadow:0 0 0 4px rgba(46,125,50,.15);
+    box-shadow: var(--shadow-focus);
 }
 
 .search-box i{
 
-    color:#777;
+    color: var(--text-muted);
 
     font-size:18px;
 }
@@ -50,11 +54,13 @@
     font-size:16px;
 
     background:transparent;
+
+    color: var(--text);
 }
 
 .search-box input::placeholder{
 
-    color:#999;
+    color: var(--text-muted);
 }
 
 /* ==========================
@@ -67,5 +73,18 @@
 
     font-size:14px;
 
-    color:#777;
+    color: var(--text-muted);
+}
+
+/* ==========================
+   RESPONSIVIDADE
+========================== */
+
+@media (max-width: 480px){
+
+    .search-box{
+        width: 100%;
+        margin: var(--space-4) 0;
+    }
+
 }

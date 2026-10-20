@@ -1,14 +1,17 @@
-.product-card{
+/* Depende dos tokens definidos em base.css
+   (carregado antes deste arquivo). */
+
+   .product-card{
 
     position: relative;
 
-    background: #ffffff;
+    background: var(--card);
 
-    border-radius: 14px;
+    border-radius: var(--radius-lg);
 
     padding: 20px;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border);
 
     transition: .3s;
 
@@ -24,8 +27,7 @@
 
     transform: translateY(-3px);
 
-    box-shadow:
-        0 10px 20px rgba(0,0,0,.08);
+    box-shadow: var(--shadow-lg);
 
 }
 
@@ -43,11 +45,13 @@
 
     font-weight: 600;
 
+    color: var(--text);
+
 }
 
 .product-card-category{
 
-    color: #6b7280;
+    color: var(--text-muted);
 
     font-size: 14px;
 
@@ -81,6 +85,8 @@
 
     font-size: 16px;
 
+    color: var(--text-muted);
+
 }
 
 .product-grid{
@@ -94,5 +100,18 @@
         );
 
     gap: 20px;
+
+}
+
+/* ==========================
+   RESPONSIVIDADE
+========================== */
+
+@media (max-width: 480px){
+
+    .product-grid{
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
 
 }

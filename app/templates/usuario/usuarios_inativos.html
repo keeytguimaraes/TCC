@@ -1,40 +1,128 @@
+
 {% extends "base/base.html" %}
+
+{% block titulo %}
+Usuários Inativos
+{% endblock %}
+
+{% block css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/pages/usuarios-teste.css') }}"
+>
+{% endblock %}
 
 {% block conteudo %}
 
-<h1>Usuários Inativos</h1>
+<div class="pagina-usuarios">
 
-{% for usuario in usuarios %}
+    <header class="usuarios-cabecalho">
+        <div>
+            <h1 class="usuarios-titulo">Usuários Inativos</h1>
+            <p class="usuarios-descricao">
+                Consulte e reative usuários que foram desativados.
+            </p>
+        </div>
 
-<div>
+        <div class="usuarios-cabecalho-acoes">
+            <a href="/usuario"
+               class="usuario-btn usuario-btn-outline">
+                <i class="fa-solid fa-arrow-left"></i>
+                Voltar aos usuários
+            </a>
+        </div>
+    </header>
 
-    {{ usuario.nome }}
-    -
-    {{ usuario.usuario }}
-    -
-    {{ usuario.perfil }}
+    <section class="usuarios-painel">
 
-    <form
-        method="POST"
-        action="/usuario/reativar/{{ usuario.id }}"
-    >
+        <div class="usuarios-painel-cabecalho">
+            <h2 class="usuarios-painel-titulo">
+                Contas desativadas
+            </h2>
+            <p class="usuarios-painel-subtitulo">
+                Os usuários reativados voltarão à listagem principal.
+            </p>
+        </div>
 
-        <button
-            type="submit"
-        >
-            Reativar
-        </button>
+        <div class="usuarios-filtros">
+            <div class="usuario-busca">
+                <i class="fa-solid fa-magnifying-glass usuario-busca-icone"></i>
+                <input
+                    type="search"
+                    class="usuario-input"
+                    data-busca-usuarios
+                    placeholder="Pesquisar usuário inativo..."
+                    aria-label="Pesquisar usuários inativos"
+                >
+            </div>
 
-    </form>
+            <span class="usuarios-contagem" data-contagem-usuarios>
+                {{ usuarios|length }} usuário(s)
+            </span>
+        </div>
+
+        <div class="usuarios-lista" data-lista-usuarios>
+
+            {% for usuario in usuarios %}
+
+            <article class="usuario-card" data-item-usuario>
+
+                <div class="usuario-identificacao">
+                    <div class="usuario-avatar" aria-hidden="true">
+                        {{ usuario.nome[0] | upper if usuario.nome else '?' }}
+                    </div>
+
+                    <div class="usuario-dados">
+                        <span class="usuario-nome">{{ usuario.nome }}</span>
+                        <span class="usuario-email">{{ usuario.usuario }}</span>
+                    </div>
+                </div>
+
+                <div class="usuario-perfil">
+                    <span class="usuario-badge usuario-badge-inativo">
+                        {{ usuario.perfil }}
+                    </span>
+                </div>
+
+                <div class="usuario-acoes">
+                    <form
+                        method="POST"
+                        action="/usuario/reativar/{{ usuario.id }}"
+                    >
+                        <button
+                            type="submit"
+                            class="usuario-btn usuario-btn-primary"
+                        >
+                            <i class="fa-solid fa-user-check"></i>
+                            Reativar
+                        </button>
+                    </form>
+                </div>
+
+            </article>
+
+            {% else %}
+
+            <div class="usuarios-vazio">
+                <h3>Nenhum usuário inativo</h3>
+                <p>Todos os usuários estão ativos ou não há registros desativados.</p>
+            </div>
+
+            {% endfor %}
+
+            <div class="usuarios-vazio" data-vazio-busca hidden>
+                <h3>Nenhum resultado encontrado</h3>
+                <p>Tente pesquisar usando outro nome, usuário ou perfil.</p>
+            </div>
+
+        </div>
+
+    </section>
 
 </div>
 
-{% endfor %}
+{% endblock %}
 
-<a href="/usuario">
-
-    Voltar
-
-</a>
-
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/pages/usuarios.js') }}"></script>
 {% endblock %}

@@ -1,4 +1,7 @@
-.alert{
+/* Depende dos tokens definidos em base.css
+   (carregado antes deste arquivo). */
+
+   .alert{
 
     position: fixed;
     top: 20px;
@@ -13,10 +16,9 @@
 
     padding: 16px 20px;
 
-    border-radius: 12px;
+    border-radius: var(--radius-md);
 
-    box-shadow:
-        0 8px 20px rgba(0,0,0,.08);
+    box-shadow: var(--shadow);
 
     font-weight: 600;
 
@@ -27,18 +29,34 @@
 
 .alert-success{
 
-    background: #edf7ed;
-    color: #1e4620;
+    background: var(--success-bg);
+    color: var(--success-text);
 
-    border-left: 5px solid #81c784;
+    border-left: 5px solid var(--success-border);
 }
 
 .alert-error{
 
-    background: #fdecec;
-    color: #7f1d1d;
+    background: var(--danger-bg);
+    color: var(--danger-text);
 
-    border-left: 5px solid #ef9a9a;
+    border-left: 5px solid var(--danger-border);
+}
+
+.alert-warning{
+
+    background: var(--warning-bg);
+    color: var(--warning-text);
+
+    border-left: 5px solid var(--warning-border);
+}
+
+.alert-info{
+
+    background: var(--info-bg);
+    color: var(--info-text);
+
+    border-left: 5px solid var(--info-border);
 }
 
 @keyframes slideIn{
@@ -59,8 +77,21 @@
 
 }
 
-.alert{
-    display: flex;
-    align-items: center;
-    gap: 12px;
+/* ==========================
+   RESPONSIVIDADE
+   Em telas estreitas, min-width:350px estourava a
+   viewport e causava rolagem horizontal na página toda.
+========================== */
+
+@media (max-width: 480px){
+
+    .alert{
+        left: var(--space-4);
+        right: var(--space-4);
+        top: var(--space-4);
+        min-width: 0;
+        max-width: none;
+        width: auto;
+    }
+
 }

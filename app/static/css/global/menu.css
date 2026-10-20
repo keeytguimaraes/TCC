@@ -1,210 +1,126 @@
-/* ======================================================
-   SIDEBAR
-====================================================== */
-
 .sidebar {
 
+    width: var(--largura-menu);
+    background: var(--black);
+
     position: sticky;
-
     top: 0;
-
     height: 100vh;
 
-    width: var(--largura-menu);
-
-    background: var(--cor-preta);
-
     display: flex;
-
     flex-direction: column;
-
     flex-shrink: 0;
 
-}
-
-.sidebar {
-    width: var(--largura-menu);
-
-    background: var(--cor-preta);
-
-    position: sticky;
-
-    top: 0;
-
-    height: 100vh;
-
     overflow-y: auto;
-
     scrollbar-width: none;
-}
-
-.sidebar::-webkit-scrollbar {
-
-    display: none;
-
-}
-
-/* ======================================================
-   LOGO
-====================================================== */
-
-.sidebar-logo {
-
-    height: var(--altura-header);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-bottom: 1px solid rgba(255,255,255,.08);
-
-}
-
-.sidebar-logo h2 {
-
-    color: var(--cor-branca);
-
-    font-size: 24px;
-    font-weight: 700;
-
-    letter-spacing: 2px;
-
-}
-
-
-/* ======================================================
-   MENU
-====================================================== */
-
-.sidebar-menu {
-
-    display: flex;
-
-    flex-direction: column;
-
-    padding: 15px;
-
-    gap: 8px;
-
-}
-
-/* ======================================================
-   LINKS
-====================================================== */
-
-.sidebar-link {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 15px;
-
-    min-height: 56px;
-
-    padding: 0 18px;
-
-    text-decoration: none;
-
-    color: var(--cor-branca);
-
-    border-radius: 12px;
 
     transition: var(--transicao);
 
-    box-sizing: border-box;
-
 }
 
+.sidebar::-webkit-scrollbar { display: none; }
 
-/* ======================================================
-   ÍCONES
-====================================================== */
+.sidebar-logo {
+    height: var(--altura-header);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.sidebar-logo h2 { color: var(--card); font-size: 24px; font-weight: 700; letter-spacing: 2px; }
+
+.sidebar-menu { display: flex; flex-direction: column; padding: 15px; gap: 8px; }
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 56px;
+    padding: 0 18px;
+    text-decoration: none;
+    color: var(--card);
+    border-radius: 12px;
+    transition: var(--transicao);
+    box-sizing: border-box;
+}
 
 .sidebar-icon {
-
-    width: 24px;
-
-    min-width: 24px;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    color: var(--cor-amarela);
-
+    width: 24px; min-width: 24px;
+    display: flex; justify-content: center; align-items: center;
+    color: var(--sidebar-icon-muted);
     font-size: 20px;
-
 }
 
+.sidebar-text { font-size: 15px; font-weight: 500; }
 
-/* ======================================================
-   TEXTO
-====================================================== */
+.sidebar-link:hover { background: rgba(255,255,255,.08); }
 
-.sidebar-text {
-
-    font-size: 15px;
-
-    font-weight: 500;
-
+.sidebar-link:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--accent);
 }
-
-
-/* ======================================================
-   HOVER
-====================================================== */
-
-.sidebar-link:hover {
-
-    background: rgba(255,255,255,.08);
-
-}
-
-
-/* ======================================================
-   ITEM ATIVO
-====================================================== */
 
 .sidebar-link.active {
-
-    background: var(--cor-vermelha);
-
-    color: var(--cor-branca);
-
+    background: var(--primary);
+    color: var(--card);
 }
 
+.sidebar-link.active .sidebar-icon { color: var(--sidebar-icon-active); }
+
+.header-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(193,39,45,.35);
+    border-radius: var(--radius-sm);
+}
 
 /* ======================================================
-   RESPONSIVIDADE
+   DESKTOP — menu recolhido manualmente (estado persistido
+   em localStorage, aplicado antes do 1º paint — ver base.html)
 ====================================================== */
 
-/* ==========================
-   MENU RECOLHIDO
-========================== */
+.sidebar.recolhido{ width: 80px; }
+.sidebar.recolhido .sidebar-text{ display:none; }
+.sidebar.recolhido .sidebar-link{ justify-content:center; }
+.sidebar.recolhido .sidebar-logo span{ display:none; }
 
-.sidebar.recolhido{
+/* ======================================================
+   OVERLAY — usado só na gaveta mobile/tablet
+====================================================== */
 
-    width: 80px;
-
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 900;
 }
+.sidebar-overlay.is-visible { display: block; }
 
-.sidebar.recolhido .sidebar-text{
+/* ======================================================
+   TABLET/CELULAR — a MESMA classe ".recolhido" passa a
+   significar "gaveta aberta" neste breakpoint
+====================================================== */
 
-    display:none;
+@media (max-width: 1024px){
 
-}
+    .sidebar{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--largura-menu);
+        max-width: 85vw;
+        height: 100vh;
+        transform: translateX(-100%);
+        z-index: 1000;
+        box-shadow: var(--shadow-lg);
+    }
 
-.sidebar.recolhido .sidebar-link{
+    .sidebar.recolhido{ transform: translateX(0); }
+    .sidebar.recolhido .sidebar-text{ display: block; }
+    .sidebar.recolhido .sidebar-link{ justify-content: flex-start; }
+    .sidebar.recolhido .sidebar-logo span{ display: inline; }
 
-    justify-content:center;
-
-}
-
-.sidebar.recolhido .sidebar-logo span{
-
-    display:none;
+    body.menu-aberto{ overflow: hidden; }
 
 }

@@ -1,5 +1,7 @@
 /* ======================================================
    BOTÃO BASE
+   Depende dos tokens definidos em base.css
+   (carregado antes deste arquivo).
 ====================================================== */
 
 .button {
@@ -12,7 +14,7 @@
     padding: 10px 18px;
 
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
 
     font-size: 15px;
     font-weight: 600;
@@ -32,8 +34,8 @@
 
 .button-primary {
 
-    background: var(--cor-vermelha);
-    color: var(--cor-branca);
+    background: var(--primary);
+    color: var(--card);
 
 }
 
@@ -50,8 +52,8 @@
 
 .button-secondary {
 
-    background: #6c757d;
-    color: white;
+    background: var(--secondary);
+    color: var(--card);
 
 }
 
@@ -68,8 +70,8 @@
 
 .button-success {
 
-    background: #2e7d32;
-    color: white;
+    background: var(--success);
+    color: var(--card);
 
 }
 
@@ -86,8 +88,8 @@
 
 .button-danger {
 
-    background: #d32f2f;
-    color: white;
+    background: var(--danger);
+    color: var(--card);
 
 }
 
@@ -96,4 +98,3 @@
     filter: brightness(0.92);
 
 }
-

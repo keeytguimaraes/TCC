@@ -292,3 +292,5 @@ if __name__ == "__main__":
     app.run(
         debug=True
     )
+
+# fiz tudo isso pq o chato do professor pediu, mesmo sem ter necessidade, tnc

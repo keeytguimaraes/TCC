@@ -1,69 +1,176 @@
+
 {% extends "base/base.html" %}
+
+{% block titulo %}
+Usuários
+{% endblock %}
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/pages/usuarios-teste.css') }}"
+>
+
+{% endblock %}
 
 {% block conteudo %}
 
-<h1>Usuários</h1>
 
-<a href="/usuario/inativos">
 
-    Usuários Inativos
+<div class="pagina-usuarios">
 
-</a>
+    <!-- Cabeçalho da página -->
+    <header class="usuarios-cabecalho">
+        <div>
+            <h1 class="usuarios-titulo">Usuários</h1>
+            <p class="usuarios-descricao">
+                Gerencie os usuários e suas permissões de acesso ao SIGC.
+            </p>
+        </div>
 
-<a href="/usuario/cadastrar">
+        <div class="usuarios-cabecalho-acoes">
+            <a href="/usuario/inativos"
+               class="usuario-btn usuario-btn-outline">
+                Usuários Inativos
+            </a>
 
-    Novo Usuário
+            <a href="/usuario/cadastrar"
+               class="usuario-btn usuario-btn-primary">
+                <span aria-hidden="true">+</span>
+                Novo Usuário
+            </a>
+        </div>
+    </header>
 
-</a>
+    
+<div class="usuarios-filtros">
+    <div class="usuario-busca">
+        <i class="fa-solid fa-magnifying-glass usuario-busca-icone"></i>
+        <input
+            type="search"
+            class="usuario-input"
+            data-busca-usuarios
+            placeholder="Pesquisar por nome, usuário ou perfil..."
+            aria-label="Pesquisar usuários"
+        >
+    </div>
 
-<ul>
+    <span class="usuarios-contagem" data-contagem-usuarios>
+        {{ usuarios|length }} usuário(s)
+    </span>
+</div>
 
-{% for usuario in usuarios %}
 
-<li>
+    <!-- Listagem de usuários -->
+    <section class="usuarios-painel">
 
-    {{ usuario.nome }}
-    -
-    {{ usuario.usuario }}
-    -
-    {{ usuario.perfil }}
+        <div class="usuarios-painel-cabecalho">
+            <div>
+                <h2 class="usuarios-painel-titulo">
+                    Usuários cadastrados
+                </h2>
+                <p class="usuarios-painel-subtitulo">
+                    Consulte e gerencie os acessos ao sistema.
+                </p>
+            </div>
+        </div>
 
-</li>
+        <div class="usuarios-lista">
 
-<a
-    href="/usuario/editar/{{ usuario.id }}"
-    class="button button-primary"
->
-    Editar
-</a>
+            {% for usuario in usuarios %}
 
-<a
-    href="/usuario/senha/{{ usuario.id }}"
-    class="button button-warning"
->
-    Alterar Senha
-</a>
+            <article class="usuario-card">
 
-{% if usuario.id != session["usuario_id"] %}
+                <div class="usuario-identificacao">
 
-<form
-    method="POST"
-    action="/usuario/desativar/{{ usuario.id }}"
-    style="display:inline;"
->
+                    <div class="usuario-avatar" aria-hidden="true">
+                        {{ usuario.nome[0] | upper if usuario.nome else '?' }}
+                    </div>
 
-    <button
-        type="submit"
-    >
-        Desativar
-    </button>
+                    <div class="usuario-dados">
+                        <span class="usuario-nome">
+                            {{ usuario.nome }}
+                        </span>
 
-</form>
+                        <span class="usuario-email">
+                            {{ usuario.usuario }}
+                        </span>
+                    </div>
 
-{% endif %}
+                </div>
 
-{% endfor %}
+                <div class="usuario-perfil">
+                    <span class="usuario-badge usuario-badge-perfil">
+                        {{ usuario.perfil }}
+                    </span>
+                </div>
 
-</ul>
+                <div class="usuario-acoes">
+
+                    <a href="/usuario/editar/{{ usuario.id }}"
+                       class="usuario-acao"
+                       title="Editar usuário"
+                       aria-label="Editar {{ usuario.nome }}">
+                        Editar
+                    </a>
+
+                    <a href="/usuario/senha/{{ usuario.id }}"
+                       class="usuario-acao"
+                       title="Alterar senha"
+                       aria-label="Alterar senha de {{ usuario.nome }}">
+                        Senha
+                    </a>
+
+                    {% if usuario.id != session["usuario_id"] %}
+
+                    <form
+                        method="POST"
+                        action="/usuario/desativar/{{ usuario.id }}"
+                        class="usuario-form-desativar"
+                        onsubmit="return confirm('Deseja realmente desativar este usuário?');"
+                    >
+                        <button
+                            type="submit"
+                            class="usuario-acao usuario-acao-excluir"
+                            aria-label="Desativar {{ usuario.nome }}"
+                        >
+                            Desativar
+                        </button>
+                    </form>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+            {% else %}
+
+            <div class="usuarios-vazio">
+                <div class="usuarios-vazio-icone" aria-hidden="true">
+                    <span>♙</span>
+                </div>
+
+                <h3>Nenhum usuário encontrado</h3>
+
+                <p>
+                    Ainda não há usuários para exibir nesta listagem.
+                    Você pode cadastrar um novo usuário para começar.
+                </p>
+
+                <a href="/usuario/cadastrar"
+                   class="usuario-btn usuario-btn-primary">
+                    Novo Usuário
+                </a>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</div>
 
 {% endblock %}

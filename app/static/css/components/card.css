@@ -1,16 +1,18 @@
 /* ==========================
    CARD
+   Depende dos tokens definidos em base.css
+   (carregado antes deste arquivo).
 ========================== */
 
 .card{
 
-    background:#ffffff;
+    background: var(--card);
 
-    border-radius:16px;
+    border-radius: var(--radius-md);
 
-    box-shadow:0 4px 12px rgba(0,0,0,.08);
+    box-shadow: var(--shadow);
 
-    border:1px solid #e8e8e8;
+    border: 1px solid var(--border);
 
     overflow:hidden;
 
@@ -32,9 +34,9 @@
 
     padding:18px 24px;
 
-    background:#f8f9fa;
+    background: var(--header-bg);
 
-    border-bottom:1px solid #e8e8e8;
+    border-bottom: 1px solid var(--border);
 }
 
 .card-header h2{
@@ -43,7 +45,7 @@
 
     font-size:20px;
 
-    color:#333;
+    color: var(--text);
 }
 
 
@@ -96,5 +98,21 @@
     padding-top:0;
 
     padding-bottom:0;
+
+}
+
+/* ==========================
+   RESPONSIVIDADE
+========================== */
+
+@media (max-width: 480px){
+
+    .card-header{
+        padding: var(--space-4);
+    }
+
+    .card-body{
+        padding: var(--space-4);
+    }
 
 }

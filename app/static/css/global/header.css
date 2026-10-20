@@ -1,12 +1,14 @@
 /* ======================================================
    HEADER
+   Depende dos tokens definidos em base.css
+   (carregado antes deste arquivo).
 ====================================================== */
 
 .header {
 
     height: var(--altura-header);
 
-    background: var(--cor-branca);
+    background: var(--card);
 
     display: flex;
     align-items: center;
@@ -14,7 +16,7 @@
 
     padding: 0 30px;
 
-    box-shadow: var(--sombra);
+    box-shadow: var(--shadow);
 
     z-index: 100;
 
@@ -30,6 +32,8 @@
     display: flex;
     align-items: center;
     gap: 20px;
+
+    min-width: 0;
 
 }
 
@@ -48,7 +52,9 @@
 
     cursor: pointer;
 
-    color: var(--cor-texto);
+    color: var(--text);
+
+    flex-shrink: 0;
 
 }
 
@@ -63,7 +69,11 @@
 
     font-weight: 600;
 
-    color: var(--cor-texto);
+    color: var(--text);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
 }
 
@@ -80,7 +90,9 @@
 
     font-size: 16px;
 
-    color: var(--cor-texto);
+    color: var(--text);
+
+    flex-shrink: 0;
 
 }
 
@@ -109,5 +121,34 @@
     opacity:.7;
 
     font-size:12px;
+
+}
+
+
+/* ======================================================
+   RESPONSIVIDADE
+====================================================== */
+
+@media (max-width: 768px){
+
+    .header{
+        padding: 0 var(--space-4);
+    }
+
+    .header-title{
+        font-size: 18px;
+    }
+
+}
+
+@media (max-width: 480px){
+
+    .header-user-info{
+        display: none; /* mantém o ícone e o botão "Sair" visíveis; esconde nome/perfil para não apertar o layout */
+    }
+
+    .header-user{
+        gap: var(--space-2);
+    }
 
 }

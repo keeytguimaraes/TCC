@@ -645,3 +645,36 @@ Nunca criar componentes visuais duplicados se já existir componente reutilizáv
 Manter consistência entre Dashboard, Produtos, Estoque, Vendas e Contas.
 Priorizar clareza operacional antes de estética.
 O sistema deve parecer um ERP comercial moderno.
+
+2. PALETA DE CORES OFICIAL
+
+Cor Primária — Vermelho SIGC
+HEX: #C1272D
+Uso: ações principais, item ativo da sidebar, botão de entrar.
+
+Cor de Perigo
+HEX: #B3261E
+Uso: exclusões, ações destrutivas. Mesma família do vermelho de marca,
+levemente mais escura, para permanecer distinguível do botão primário.
+
+Cor de Destaque — Amarelo SIGC
+HEX: #F4B400
+Uso: ícone do item ativo da sidebar, detalhes de marca. Nunca usado como
+fundo de áreas grandes com texto branco.
+
+Cor de Aviso (feedback)
+HEX: #FFC107
+
+Cor de Sucesso
+HEX: #198754 (preservada)
+
+Cor de Informação
+HEX: #0DCAF0 (preservada)
+
+Estrutura — Preto/Grafite
+HEX: #1C1C1C
+Uso: sidebar, texto principal, elementos de contraste.
+
+[histórico: a versão anterior deste documento definia uma paleta azul
+(#0D6EFD) que nunca chegou a ser usada no CSS real do projeto. Esta
+seção a substitui como referência oficial.]
