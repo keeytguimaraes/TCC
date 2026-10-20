@@ -32,6 +32,14 @@ from flask import (
     request
 )
 
+# ------------------------------------------------------------
+# IMPORTAÇÕES DE MÓDULOS DO PYTHON
+# ------------------------------------------------------------
+# os: permite acessar variáveis de ambiente do sistema,
+# utilizadas para configurar valores externos ao código,
+# como a chave secreta da aplicação Flask.
+import os
+
 
 # ------------------------------------------------------------
 # IMPORTAÇÕES DAS ROTAS
@@ -145,7 +153,7 @@ app = Flask(
 # IMPORTANTE:
 # Em produção, utilize uma chave forte obtida de uma variável
 # de ambiente, em vez de manter uma chave fixa no código.
-app.secret_key = "tcc_bar"
+app.secret_key = os.getenv("SECRET_KEY")
 
 
 # ============================================================
