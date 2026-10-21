@@ -70,18 +70,17 @@
 
     {% include 'componentes/menu.html' %}
 
-    {% include 'componentes/menu.html' %}
+    <script>
+    (function () {
+        try {
+            var desktop = window.matchMedia("(min-width: 1025px)").matches;
+            if (desktop && localStorage.getItem("menu-fechado") === "true") {
+                document.querySelector(".sidebar").classList.add("recolhido");
+            }
+        } catch (e) {}
+    })();
+    </script>
 
-<script>
-(function () {
-    try {
-        var desktop = window.matchMedia("(min-width: 1025px)").matches;
-        if (desktop && localStorage.getItem("menu-fechado") === "true") {
-            document.querySelector(".sidebar").classList.add("recolhido");
-        }
-    } catch (e) {}
-})();
-</script>
     <!-- =======================
          CONTEÚDO
     ======================== -->
