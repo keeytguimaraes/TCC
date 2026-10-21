@@ -32,41 +32,72 @@ Início
 
 <div class="dashboard-mensagem">
 
-    <h2>
-        Painel do Administrador
-    </h2>
+    <div class="dashboard-mensagem__icone">
+        <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
+    </div>
 
-    <p>
-        {{ dados.mensagem }}
-    </p>
+    <div>
+        <h2>
+            Painel do Administrador
+        </h2>
+
+        <p>
+            {{ dados.mensagem }}
+        </p>
+    </div>
 
 </div>
 
 <div class="dashboard-cards">
 
-    <div class="card-dashboard">
-        <h3>Vendido Hoje</h3>
-        <p>R$ {{ dados.vendido_hoje }}</p>
+    <div class="card-dashboard card-dashboard--success">
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-sack-dollar" aria-hidden="true"></i>
+        </div>
+        <div class="card-dashboard__corpo">
+            <h3>Vendido Hoje</h3>
+            <p>R$ {{ dados.vendido_hoje }}</p>
+        </div>
     </div>
 
-    <div class="card-dashboard">
-        <h3>Vendido Mês</h3>
-        <p>R$ {{ dados.vendido_mes }}</p>
+    <div class="card-dashboard card-dashboard--success">
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+        </div>
+        <div class="card-dashboard__corpo">
+            <h3>Vendido Mês</h3>
+            <p>R$ {{ dados.vendido_mes }}</p>
+        </div>
     </div>
 
-    <div class="card-dashboard">
-        <h3>Fiados</h3>
-        <p>{{ dados.fiados_abertos }}</p>
+    <div class="card-dashboard card-dashboard--info">
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+        </div>
+        <div class="card-dashboard__corpo">
+            <h3>Fiados</h3>
+            <p>{{ dados.fiados_abertos }}</p>
+        </div>
     </div>
 
-    <div class="card-dashboard">
-        <h3>Contas Pendentes</h3>
-        <p>{{ dados.contas_pendentes }}</p>
+    <div class="card-dashboard card-dashboard--warning">
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
+        </div>
+        <div class="card-dashboard__corpo">
+            <h3>Contas Pendentes</h3>
+            <p>{{ dados.contas_pendentes }}</p>
+        </div>
     </div>
 
-    <div class="card-dashboard">
-        <h3>Estoque Baixo</h3>
-        <p>{{ dados.estoque_baixo }}</p>
+    <div class="card-dashboard card-dashboard--danger">
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        </div>
+        <div class="card-dashboard__corpo">
+            <h3>Estoque Baixo</h3>
+            <p>{{ dados.estoque_baixo }}</p>
+        </div>
     </div>
 
 </div>
@@ -74,16 +105,20 @@ Início
 <div class="dashboard-section">
 
     <h2>
+        <i class="fa-solid fa-bell" aria-hidden="true"></i>
         Alertas do Sistema
     </h2>
 
     {% for alerta in dados.alertas %}
 
         <div class="alerta-item">
-
-            {{ alerta }}
-
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+            <span>{{ alerta }}</span>
         </div>
+
+    {% else %}
+
+        <p class="dashboard-table-vazia">Nenhum alerta no momento.</p>
 
     {% endfor %}
 
@@ -92,106 +127,130 @@ Início
 <div class="dashboard-section">
 
     <h2>
+        <i class="fa-solid fa-receipt" aria-hidden="true"></i>
         Últimas Vendas
     </h2>
 
-    <table class="dashboard-table">
+    <div class="tabela-wrapper">
 
-        <thead>
+        <table class="dashboard-table">
 
-            <tr>
+            <thead>
 
-                <th>Data</th>
-                <th>Valor</th>
-                <th>Status</th>
-                <th>Responsável</th>
+                <tr>
 
-            </tr>
+                    <th>Data</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Responsável</th>
 
-        </thead>
+                </tr>
 
-        <tbody>
+            </thead>
 
-            {% for venda in dados.ultimas_vendas %}
+            <tbody>
 
-            <tr>
+                {% for venda in dados.ultimas_vendas %}
 
-                <td>
-                    {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
-                </td>
+                <tr>
 
-                <td>
-                    R$ {{ venda.valor_total }}
-                </td>
+                    <td>
+                        {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
+                    </td>
 
-                <td>
-                    {{ venda.status_pagamento }}
-                </td>
+                    <td>
+                        R$ {{ venda.valor_total }}
+                    </td>
 
-                <td>
-                    {{ venda.responsavel }}
-                </td>
+                    <td>
+                        <span class="badge {{ 'badge--success' if venda.status_pagamento == 'pago' else 'badge--warning' }}">
+                            {{ venda.status_pagamento }}
+                        </span>
+                    </td>
 
-            </tr>
+                    <td>
+                        {{ venda.responsavel }}
+                    </td>
 
-            {% endfor %}
+                </tr>
 
-        </tbody>
+                {% else %}
 
-    </table>
+                <tr>
+                    <td class="dashboard-table-vazia" colspan="4">Nenhuma venda registrada.</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
 <div class="dashboard-section">
 
     <h2>
+        <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
         Últimas Movimentações
     </h2>
 
-    <table class="dashboard-table">
+    <div class="tabela-wrapper">
 
-        <thead>
+        <table class="dashboard-table">
 
-            <tr>
+            <thead>
 
-                <th>Data</th>
-                <th>Tipo</th>
-                <th>Produto</th>
-                <th>Responsável</th>
+                <tr>
 
-            </tr>
+                    <th>Data</th>
+                    <th>Tipo</th>
+                    <th>Produto</th>
+                    <th>Responsável</th>
 
-        </thead>
+                </tr>
 
-        <tbody>
+            </thead>
 
-            {% for item in dados.ultimas_movimentacoes %}
+            <tbody>
 
-            <tr>
+                {% for item in dados.ultimas_movimentacoes %}
 
-                <td>
-                    {{ item.data_movimentacao.strftime('%d/%m/%Y') }}
-                </td>
+                <tr>
 
-                <td>
-                    {{ item.tipo_movimentacao }}
-                </td>
+                    <td>
+                        {{ item.data_movimentacao.strftime('%d/%m/%Y') }}
+                    </td>
 
-                <td>
-                    {{ item.produto }}
-                </td>
+                    <td>
+                        {{ item.tipo_movimentacao }}
+                    </td>
 
-                <td>
-                    {{ item.responsavel }}
-                </td>
+                    <td>
+                        {{ item.produto }}
+                    </td>
 
-            </tr>
+                    <td>
+                        {{ item.responsavel }}
+                    </td>
 
-            {% endfor %}
+                </tr>
 
-        </tbody>
+                {% else %}
 
-    </table>
+                <tr>
+                    <td class="dashboard-table-vazia" colspan="4">Nenhuma movimentação registrada.</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
@@ -205,41 +264,72 @@ Início
 
 <div class="dashboard-mensagem">
 
-    <h2>
-        Painel do Gerente
-    </h2>
+    <div class="dashboard-mensagem__icone">
+        <i class="fa-solid fa-user-tie" aria-hidden="true"></i>
+    </div>
 
-    <p>
-        {{ dados.mensagem }}
-    </p>
+    <div>
+        <h2>
+            Painel do Gerente
+        </h2>
+
+        <p>
+            {{ dados.mensagem }}
+        </p>
+    </div>
 
 </div>
 
 <div class="dashboard-cards">
 
-    <div class="card-dashboard">
-        <h3>Vendido Hoje</h3>
-        <p>R$ {{ dados.vendido_hoje }}</p>
+    <div class="card-dashboard card-dashboard--success">
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-sack-dollar" aria-hidden="true"></i>
+        </div>
+        <div class="card-dashboard__corpo">
+            <h3>Vendido Hoje</h3>
+            <p>R$ {{ dados.vendido_hoje }}</p>
+        </div>
     </div>
 
-    <div class="card-dashboard">
-        <h3>Vendido Mês</h3>
-        <p>R$ {{ dados.vendido_mes }}</p>
+    <div class="card-dashboard card-dashboard--success">
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+        </div>
+        <div class="card-dashboard__corpo">
+            <h3>Vendido Mês</h3>
+            <p>R$ {{ dados.vendido_mes }}</p>
+        </div>
     </div>
 
-    <div class="card-dashboard">
-        <h3>Fiados</h3>
-        <p>{{ dados.fiados_abertos }}</p>
+    <div class="card-dashboard card-dashboard--info">
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+        </div>
+        <div class="card-dashboard__corpo">
+            <h3>Fiados</h3>
+            <p>{{ dados.fiados_abertos }}</p>
+        </div>
     </div>
 
-    <div class="card-dashboard">
-        <h3>Contas Pendentes</h3>
-        <p>{{ dados.contas_pendentes }}</p>
+    <div class="card-dashboard card-dashboard--warning">
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
+        </div>
+        <div class="card-dashboard__corpo">
+            <h3>Contas Pendentes</h3>
+            <p>{{ dados.contas_pendentes }}</p>
+        </div>
     </div>
 
-    <div class="card-dashboard">
-        <h3>Estoque Baixo</h3>
-        <p>{{ dados.estoque_baixo }}</p>
+    <div class="card-dashboard card-dashboard--danger">
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        </div>
+        <div class="card-dashboard__corpo">
+            <h3>Estoque Baixo</h3>
+            <p>{{ dados.estoque_baixo }}</p>
+        </div>
     </div>
 
 </div>
@@ -247,91 +337,113 @@ Início
 <div class="dashboard-section">
 
     <h2>
+        <i class="fa-solid fa-receipt" aria-hidden="true"></i>
         Últimas Vendas
     </h2>
 
-    <table class="dashboard-table">
+    <div class="tabela-wrapper">
 
-        <thead>
+        <table class="dashboard-table">
 
-            <tr>
+            <thead>
 
-                <th>Data</th>
-                <th>Valor</th>
+                <tr>
 
-            </tr>
+                    <th>Data</th>
+                    <th>Valor</th>
 
-        </thead>
+                </tr>
 
-        <tbody>
+            </thead>
 
-            {% for venda in dados.ultimas_vendas %}
+            <tbody>
 
-            <tr>
+                {% for venda in dados.ultimas_vendas %}
 
-                <td>
-                    {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
-                </td>
+                <tr>
 
-                <td>
-                    R$ {{ venda.valor_total }}
-                </td>
+                    <td>
+                        {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
+                    </td>
 
-            </tr>
+                    <td>
+                        R$ {{ venda.valor_total }}
+                    </td>
 
-            {% endfor %}
+                </tr>
 
-        </tbody>
+                {% else %}
 
-    </table>
+                <tr>
+                    <td class="dashboard-table-vazia" colspan="2">Nenhuma venda registrada.</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
 <div class="dashboard-section">
 
     <h2>
+        <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
         Últimas Movimentações
     </h2>
 
-    <table class="dashboard-table">
+    <div class="tabela-wrapper">
 
-        <thead>
+        <table class="dashboard-table">
 
-            <tr>
+            <thead>
 
-                <th>Data</th>
-                <th>Tipo</th>
-                <th>Produto</th>
+                <tr>
 
-            </tr>
+                    <th>Data</th>
+                    <th>Tipo</th>
+                    <th>Produto</th>
 
-        </thead>
+                </tr>
 
-        <tbody>
+            </thead>
 
-            {% for item in dados.ultimas_movimentacoes %}
+            <tbody>
 
-            <tr>
+                {% for item in dados.ultimas_movimentacoes %}
 
-                <td>
-                    {{ item.data_movimentacao.strftime('%d/%m/%Y') }}
-                </td>
+                <tr>
 
-                <td>
-                    {{ item.tipo_movimentacao }}
-                </td>
+                    <td>
+                        {{ item.data_movimentacao.strftime('%d/%m/%Y') }}
+                    </td>
 
-                <td>
-                    {{ item.produto }}
-                </td>
+                    <td>
+                        {{ item.tipo_movimentacao }}
+                    </td>
 
-            </tr>
+                    <td>
+                        {{ item.produto }}
+                    </td>
 
-            {% endfor %}
+                </tr>
 
-        </tbody>
+                {% else %}
 
-    </table>
+                <tr>
+                    <td class="dashboard-table-vazia" colspan="3">Nenhuma movimentação registrada.</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
@@ -345,39 +457,57 @@ Início
 
 <div class="dashboard-mensagem">
 
-    <h2>
-        Painel do Funcionário
-    </h2>
+    <div class="dashboard-mensagem__icone">
+        <i class="fa-solid fa-user" aria-hidden="true"></i>
+    </div>
 
-    <p>
-        {{ dados.mensagem }}
-    </p>
+    <div>
+        <h2>
+            Painel do Funcionário
+        </h2>
+
+        <p>
+            {{ dados.mensagem }}
+        </p>
+    </div>
 
 </div>
 
 <div class="dashboard-cards">
 
-    <div class="card-dashboard">
+    <div class="card-dashboard card-dashboard--info">
 
-        <h3>
-            Minhas Vendas Hoje
-        </h3>
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+        </div>
 
-        <p>
-            {{ dados.vendas_hoje }}
-        </p>
+        <div class="card-dashboard__corpo">
+            <h3>
+                Minhas Vendas Hoje
+            </h3>
+
+            <p>
+                {{ dados.vendas_hoje }}
+            </p>
+        </div>
 
     </div>
 
-    <div class="card-dashboard">
+    <div class="card-dashboard card-dashboard--success">
 
-        <h3>
-            Valor Vendido Hoje
-        </h3>
+        <div class="card-dashboard__icone">
+            <i class="fa-solid fa-sack-dollar" aria-hidden="true"></i>
+        </div>
 
-        <p>
-            R$ {{ dados.valor_vendido }}
-        </p>
+        <div class="card-dashboard__corpo">
+            <h3>
+                Valor Vendido Hoje
+            </h3>
+
+            <p>
+                R$ {{ dados.valor_vendido }}
+            </p>
+        </div>
 
     </div>
 
@@ -386,86 +516,108 @@ Início
 <div class="dashboard-section">
 
     <h2>
+        <i class="fa-solid fa-receipt" aria-hidden="true"></i>
         Últimas Vendas
     </h2>
 
-    <table class="dashboard-table">
+    <div class="tabela-wrapper">
 
-        <thead>
+        <table class="dashboard-table">
 
-            <tr>
+            <thead>
 
-                <th>Data</th>
-                <th>Valor</th>
+                <tr>
 
-            </tr>
+                    <th>Data</th>
+                    <th>Valor</th>
 
-        </thead>
+                </tr>
 
-        <tbody>
+            </thead>
 
-            {% for venda in dados.ultimas_vendas %}
+            <tbody>
 
-            <tr>
+                {% for venda in dados.ultimas_vendas %}
 
-                <td>
-                    {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
-                </td>
+                <tr>
 
-                <td>
-                    R$ {{ venda.valor_total }}
-                </td>
+                    <td>
+                        {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
+                    </td>
 
-            </tr>
+                    <td>
+                        R$ {{ venda.valor_total }}
+                    </td>
 
-            {% endfor %}
+                </tr>
 
-        </tbody>
+                {% else %}
 
-    </table>
+                <tr>
+                    <td class="dashboard-table-vazia" colspan="2">Nenhuma venda registrada.</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
 <div class="dashboard-section">
 
     <h2>
+        <i class="fa-solid fa-file-invoice" aria-hidden="true"></i>
         Últimas Contas Pendentes
     </h2>
 
-    <table class="dashboard-table">
+    <div class="tabela-wrapper">
 
-        <thead>
+        <table class="dashboard-table">
 
-            <tr>
+            <thead>
 
-                <th>Cliente</th>
-                <th>Data</th>
+                <tr>
 
-            </tr>
+                    <th>Cliente</th>
+                    <th>Data</th>
 
-        </thead>
+                </tr>
 
-        <tbody>
+            </thead>
 
-            {% for conta in dados.ultimas_contas %}
+            <tbody>
 
-            <tr>
+                {% for conta in dados.ultimas_contas %}
 
-                <td>
-                    {{ conta.nome_cliente_temporario }}
-                </td>
+                <tr>
 
-                <td>
-                    {{ conta.data_abertura.strftime('%d/%m/%Y') }}
-                </td>
+                    <td>
+                        {{ conta.nome_cliente_temporario }}
+                    </td>
 
-            </tr>
+                    <td>
+                        {{ conta.data_abertura.strftime('%d/%m/%Y') }}
+                    </td>
 
-            {% endfor %}
+                </tr>
 
-        </tbody>
+                {% else %}
 
-    </table>
+                <tr>
+                    <td class="dashboard-table-vazia" colspan="2">Nenhuma conta pendente.</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 

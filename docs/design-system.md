@@ -39,146 +39,39 @@ Poucos cliques
 Leitura rápida
 Consistência visual
 Responsividade
+
 2. PALETA DE CORES OFICIAL
-Cor Primária
-Azul SIGC
 
-HEX:
+Cor Primária — Vermelho SIGC
+HEX: #C1272D
+Uso: ações principais, item ativo da sidebar, botão de entrar.
 
-#0D6EFD
+Cor de Perigo
+HEX: #B3261E
+Uso: exclusões, ações destrutivas. Mesma família do vermelho de marca,
+levemente mais escura, para permanecer distinguível do botão primário.
 
-RGB:
+Cor de Destaque — Amarelo SIGC
+HEX: #F4B400
+Uso: ícone do item ativo da sidebar, detalhes de marca. Nunca usado como
+fundo de áreas grandes com texto branco.
 
-rgb(13, 110, 253)
+Cor de Aviso (feedback)
+HEX: #FFC107
 
-Uso:
-
-Botões principais
-Links
-Elementos ativos
-Destaques
-Cor Secundária
-
-HEX:
-
-#6C757D
-
-RGB:
-
-rgb(108,117,125)
-
-Uso:
-
-Botões secundários
-Textos auxiliares
 Cor de Sucesso
+HEX: #198754 (preservada)
 
-HEX:
-
-#198754
-
-RGB:
-
-rgb(25,135,84)
-
-Uso:
-
-Confirmações
-Pagamentos
-Indicadores positivos
-Cor de Aviso
-
-HEX:
-
-#FFC107
-
-RGB:
-
-rgb(255,193,7)
-
-Uso:
-
-Alertas
-Atenção
-Estoque baixo
-Cor de Erro
-
-HEX:
-
-#DC3545
-
-RGB:
-
-rgb(220,53,69)
-
-Uso:
-
-Exclusões
-Erros
-Ações destrutivas
 Cor de Informação
+HEX: #0DCAF0 (preservada)
 
-HEX:
+Estrutura — Preto/Grafite
+HEX: #1C1C1C
+Uso: sidebar, texto principal, elementos de contraste.
 
-#0DCAF0
-
-RGB:
-
-rgb(13,202,240)
-
-Uso:
-
-Informações
-Avisos neutros
-Fundo Principal
-
-HEX:
-
-#F5F7FA
-
-Uso:
-
-Plano de fundo geral.
-
-Fundo dos Cards
-
-HEX:
-
-#FFFFFF
-
-Uso:
-
-Cards e painéis.
-
-Bordas
-
-HEX:
-
-#DEE2E6
-
-Uso:
-
-Separações sutis.
-
-Texto Principal
-
-HEX:
-
-#212529
-
-Uso:
-
-Títulos e conteúdo principal.
-
-Texto Secundário
-
-HEX:
-
-#6C757D
-
-Uso:
-
-Descrições e informações auxiliares.
+[histórico: a versão anterior deste documento definia uma paleta azul
+(#0D6EFD) que nunca chegou a ser usada no CSS real do projeto. Esta
+seção a substitui como referência oficial.]
 
 3. TIPOGRAFIA
 Fonte Principal
@@ -645,36 +538,3 @@ Nunca criar componentes visuais duplicados se já existir componente reutilizáv
 Manter consistência entre Dashboard, Produtos, Estoque, Vendas e Contas.
 Priorizar clareza operacional antes de estética.
 O sistema deve parecer um ERP comercial moderno.
-
-2. PALETA DE CORES OFICIAL
-
-Cor Primária — Vermelho SIGC
-HEX: #C1272D
-Uso: ações principais, item ativo da sidebar, botão de entrar.
-
-Cor de Perigo
-HEX: #B3261E
-Uso: exclusões, ações destrutivas. Mesma família do vermelho de marca,
-levemente mais escura, para permanecer distinguível do botão primário.
-
-Cor de Destaque — Amarelo SIGC
-HEX: #F4B400
-Uso: ícone do item ativo da sidebar, detalhes de marca. Nunca usado como
-fundo de áreas grandes com texto branco.
-
-Cor de Aviso (feedback)
-HEX: #FFC107
-
-Cor de Sucesso
-HEX: #198754 (preservada)
-
-Cor de Informação
-HEX: #0DCAF0 (preservada)
-
-Estrutura — Preto/Grafite
-HEX: #1C1C1C
-Uso: sidebar, texto principal, elementos de contraste.
-
-[histórico: a versão anterior deste documento definia uma paleta azul
-(#0D6EFD) que nunca chegou a ser usada no CSS real do projeto. Esta
-seção a substitui como referência oficial.]
