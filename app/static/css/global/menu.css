@@ -1,126 +1,222 @@
+/* ======================================================
+   SIDEBAR
+   Mesmo fundo estrutural (--black), sem sombras nem bordas
+   laterais. O logo tem a altura do header e a mesma linha
+   inferior, para os dois blocos formarem uma única barra.
+====================================================== */
+
 .sidebar {
-
-    width: var(--largura-menu);
-    background: var(--black);
-
     position: sticky;
     top: 0;
+
+    width: var(--largura-menu);
     height: 100vh;
 
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
 
+    background: var(--black);
+
+    overflow-x: hidden;
     overflow-y: auto;
     scrollbar-width: none;
 
     transition: var(--transicao);
-
 }
 
-.sidebar::-webkit-scrollbar { display: none; }
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+/* ---------- logo ---------- */
 
 .sidebar-logo {
     height: var(--altura-header);
+    padding: 0 var(--space-5);
+    flex-shrink: 0;
+
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-bottom: 1px solid rgba(255,255,255,.08);
+    gap: var(--space-3);
+
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
 }
 
-.sidebar-logo h2 { color: var(--card); font-size: 24px; font-weight: 700; letter-spacing: 2px; }
+.sidebar-logo i {
+    font-size: 20px;
+    color: var(--accent);
+}
 
-.sidebar-menu { display: flex; flex-direction: column; padding: 15px; gap: 8px; }
+.sidebar-logo span,
+.sidebar-logo h2 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    color: #fff;
+    white-space: nowrap;
+}
+
+/* ---------- navegação ---------- */
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3);
+}
 
 .sidebar-link {
+    position: relative;
+
     display: flex;
     align-items: center;
-    gap: 15px;
-    min-height: 56px;
-    padding: 0 18px;
-    text-decoration: none;
-    color: var(--card);
-    border-radius: 12px;
-    transition: var(--transicao);
+    gap: var(--space-3);
+
+    min-height: 44px;
+    padding: 0 var(--space-3);
+
+    border-radius: var(--radius-sm);
     box-sizing: border-box;
+
+    color: rgba(255, 255, 255, .82);
+    text-decoration: none;
+    white-space: nowrap;
+
+    transition: background var(--transicao), color var(--transicao);
 }
 
 .sidebar-icon {
-    width: 24px; min-width: 24px;
-    display: flex; justify-content: center; align-items: center;
+    width: 24px;
+    min-width: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17px;
     color: var(--sidebar-icon-muted);
-    font-size: 20px;
+
+    transition: color var(--transicao);
 }
 
-.sidebar-text { font-size: 15px; font-weight: 500; }
+.sidebar-text {
+    font-size: .9375rem;
+    font-weight: 500;
+}
 
-.sidebar-link:hover { background: rgba(255,255,255,.08); }
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, .07);
+    color: #fff;
+}
+
+.sidebar-link:hover .sidebar-icon {
+    color: var(--accent);
+}
+
+/* item ativo: vermelho + detalhe amarelo na lateral */
+.sidebar-link.active {
+    background: var(--primary);
+    color: #fff;
+}
+
+.sidebar-link.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--accent);
+}
+
+.sidebar-link.active .sidebar-icon {
+    color: var(--sidebar-icon-active);
+}
 
 .sidebar-link:focus-visible {
     outline: none;
     box-shadow: inset 0 0 0 2px var(--accent);
 }
 
-.sidebar-link.active {
-    background: var(--primary);
-    color: var(--card);
+/* ---------- recolhida (desktop) ---------- */
+
+.sidebar.recolhido {
+    width: 80px;
 }
 
-.sidebar-link.active .sidebar-icon { color: var(--sidebar-icon-active); }
-
-.header-toggle:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(193,39,45,.35);
-    border-radius: var(--radius-sm);
+.sidebar.recolhido .sidebar-text,
+.sidebar.recolhido .sidebar-logo span {
+    display: none;
 }
 
-/* ======================================================
-   DESKTOP — menu recolhido manualmente (estado persistido
-   em localStorage, aplicado antes do 1º paint — ver base.html)
-====================================================== */
+.sidebar.recolhido .sidebar-logo {
+    justify-content: center;
+    padding: 0;
+}
 
-.sidebar.recolhido{ width: 80px; }
-.sidebar.recolhido .sidebar-text{ display:none; }
-.sidebar.recolhido .sidebar-link{ justify-content:center; }
-.sidebar.recolhido .sidebar-logo span{ display:none; }
+.sidebar.recolhido .sidebar-link {
+    justify-content: center;
+    padding: 0;
+}
 
-/* ======================================================
-   OVERLAY — usado só na gaveta mobile/tablet
-====================================================== */
+/* ---------- overlay (mobile/tablet) ---------- */
 
 .sidebar-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,.55);
     z-index: 900;
+    background: rgba(0, 0, 0, .55);
 }
-.sidebar-overlay.is-visible { display: block; }
 
-/* ======================================================
-   TABLET/CELULAR — a MESMA classe ".recolhido" passa a
-   significar "gaveta aberta" neste breakpoint
-====================================================== */
+.sidebar-overlay.is-visible {
+    display: block;
+}
 
-@media (max-width: 1024px){
+/* ---------- gaveta (<= 1024px): .recolhido = ABERTA ---------- */
 
-    .sidebar{
+@media (max-width: 1024px) {
+
+    .sidebar {
         position: fixed;
         top: 0;
         left: 0;
+        z-index: 1000;
+
         width: var(--largura-menu);
         max-width: 85vw;
         height: 100vh;
+
         transform: translateX(-100%);
-        z-index: 1000;
+    }
+
+    .sidebar.recolhido {
+        width: var(--largura-menu);
+        transform: translateX(0);
         box-shadow: var(--shadow-lg);
     }
 
-    .sidebar.recolhido{ transform: translateX(0); }
-    .sidebar.recolhido .sidebar-text{ display: block; }
-    .sidebar.recolhido .sidebar-link{ justify-content: flex-start; }
-    .sidebar.recolhido .sidebar-logo span{ display: inline; }
+    /* na gaveta os textos sempre aparecem */
+    .sidebar.recolhido .sidebar-text,
+    .sidebar.recolhido .sidebar-logo span {
+        display: inline;
+    }
 
-    body.menu-aberto{ overflow: hidden; }
+    .sidebar.recolhido .sidebar-logo {
+        justify-content: flex-start;
+        padding: 0 var(--space-5);
+    }
 
+    .sidebar.recolhido .sidebar-link {
+        justify-content: flex-start;
+        padding: 0 var(--space-3);
+    }
+
+    body.menu-aberto {
+        overflow: hidden;
+    }
 }

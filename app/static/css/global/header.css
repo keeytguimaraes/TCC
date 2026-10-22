@@ -1,154 +1,164 @@
 /* ======================================================
    HEADER
-   Depende dos tokens definidos em base.css
-   (carregado antes deste arquivo).
+   Altura compartilhada com .sidebar-logo (--altura-header),
+   para que a linha inferior dos dois blocos seja contínua.
 ====================================================== */
 
+:root {
+    /* Ajuste local: cabeçalho mais compacto (era 70px).
+       Se preferir, mova este valor para base.css e apague daqui. */
+    --altura-header: 60px;
+}
+
 .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
 
     height: var(--altura-header);
-
-    background: var(--card);
+    padding: 0 var(--space-6);
 
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: var(--space-4);
 
-    padding: 0 30px;
-
-    box-shadow: var(--shadow);
-
-    z-index: 100;
-
+    background:#1C1C1C;
+    border-bottom: 1px solid var(--border);
 }
 
-
-/* ======================================================
-   LADO ESQUERDO
-====================================================== */
+/* ---------- lado esquerdo ---------- */
 
 .header-left {
-
     display: flex;
     align-items: center;
-    gap: 20px;
-
+    gap: var(--space-3);
     min-width: 0;
-
 }
-
-
-/* ======================================================
-   BOTÃO MENU
-====================================================== */
 
 .header-toggle {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
     background: transparent;
-
     border: none;
+    border-radius: var(--radius-sm);
 
-    font-size: 22px;
-
+    font-size: 18px;
+    color: var(--text-muted);
     cursor: pointer;
 
-    color: var(--text);
-
-    flex-shrink: 0;
-
+    transition: background var(--transicao), color var(--transicao);
 }
 
-
-/* ======================================================
-   TÍTULO
-====================================================== */
+.header-toggle:hover {
+    background: var(--bg);
+    color: var(--text);
+}
 
 .header-title {
-
-    font-size: 24px;
-
+    margin: 0;
+    font-size: 1.0625rem;
     font-weight: 600;
-
-    color: var(--text);
-
+    letter-spacing: -.01em;
+    color: #ffffff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
 }
 
-
-/* ======================================================
-   USUÁRIO
-====================================================== */
+/* ---------- usuário ---------- */
 
 .header-user {
-
     display: flex;
     align-items: center;
-    gap: 10px;
-
-    font-size: 16px;
-
-    color: var(--text);
-
+    gap: var(--space-3);
     flex-shrink: 0;
-
+    color: var(--text);
 }
 
-.header-user i {
-
-    font-size: 28px;
-
+.header-user > i {
+    font-size: 30px;
+    line-height: 1;
+    color: #ffffff;
 }
 
-.header-user-info{
-
-    display:flex;
-
-    flex-direction:column;
-
+.header-user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
 }
 
-.header-user-name{
-
-    font-weight:600;
-
+.header-user-name {
+    font-size: .875rem;
+    font-weight: 600;
+    color: #ffffff;
 }
 
-.header-user-role{
-
-    opacity:.7;
-
-    font-size:12px;
-
+.header-user-role {
+    font-size: .75rem;
+    color: #ffffff;
+    opacity: 1;
 }
 
+/* Botão Sair: mesma cor do .button-danger, porém proporcional ao header */
+.header-user .button {
+    min-height: 36px;
+    padding: 0 var(--space-4);
+    margin-left: var(--space-1);
+    gap: var(--space-2);
+    font-size: .8125rem;
+    border-radius: var(--radius-sm);
+}
 
-/* ======================================================
-   RESPONSIVIDADE
-====================================================== */
+.header-user .button i {
+    font-size: .875rem;
+}
 
-@media (max-width: 768px){
+.header-toggle:focus-visible,
+.header-user .button:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
 
-    .header{
+/* ---------- responsivo ---------- */
+
+@media (max-width: 1024px) {
+    .header {
         padding: 0 var(--space-4);
     }
-
-    .header-title{
-        font-size: 18px;
-    }
-
 }
 
-@media (max-width: 480px){
-
-    .header-user-info{
-        display: none; /* mantém o ícone e o botão "Sair" visíveis; esconde nome/perfil para não apertar o layout */
-    }
-
-    .header-user{
+@media (max-width: 560px) {
+    .header {
         gap: var(--space-2);
     }
 
+    .header-user-info {
+        display: none;
+    }
+
+    .header-user > i {
+        font-size: 26px;
+    }
+
+    /* Sair vira botão de ícone (texto permanece para leitores de tela) */
+    .header-user .button {
+        width: 40px;
+        height: 40px;
+        min-height: 40px;
+        padding: 0;
+        margin-left: 0;
+        font-size: 0;
+        gap: 0;
+    }
+
+    .header-user .button i {
+        font-size: 1rem;
+    }
 }
