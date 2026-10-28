@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
     // Encontra a barra de pesquisa da página atual.
     const pesquisa = document.querySelector("[data-busca-usuarios]");
@@ -28,7 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
         let quantidadeVisivel = 0;
 
         itens.forEach((item) => {
-            const texto = item.textContent
+            // Usa data-busca (nome, login e perfil) quando existir, para que
+            // os textos dos botões ("Editar", "Senha"...) não entrem na busca.
+            const texto = (item.dataset.busca || item.textContent)
                 .toLocaleLowerCase("pt-BR");
 
             const corresponde = texto.includes(termo);

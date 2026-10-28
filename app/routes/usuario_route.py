@@ -58,6 +58,27 @@ from app.utils.auth import (
 
 
 # ============================================================
+# PERFIS ACEITOS
+# ============================================================
+# O restante do sistema (menu, dashboard) compara o perfil em
+# letras minúsculas. Por isso o valor recebido dos formulários é
+# normalizado e validado antes de ser gravado.
+PERFIS_VALIDOS = (
+    "administrador",
+    "gerente",
+    "funcionario"
+)
+
+
+def normalizar_perfil(perfil):
+    """
+    Remove espaços e converte o perfil para minúsculas.
+    """
+
+    return (perfil or "").strip().lower()
+
+
+# ============================================================
 # CONFIGURAR ROTAS DE USUÁRIOS
 # ============================================================
 def configurar_usuario_routes(app):
@@ -186,10 +207,25 @@ def configurar_usuario_routes(app):
             "confirmar_senha"
         )
 
-        # Recupera o perfil atribuído ao novo usuário.
-        perfil = request.form.get(
-            "perfil"
+        # Recupera o perfil atribuído ao novo usuário
+        # (normalizado para minúsculas).
+        perfil = normalizar_perfil(
+            request.form.get(
+                "perfil"
+            )
         )
+
+        # Aceita somente perfis existentes no sistema.
+        if perfil not in PERFIS_VALIDOS:
+
+            flash(
+                "Selecione um perfil válido.",
+                "error"
+            )
+
+            return redirect(
+                "/usuario/cadastrar"
+            )
 
         # Compara a senha com sua confirmação.
         # Se forem diferentes, interrompe o cadastro.
@@ -300,6 +336,68 @@ def configurar_usuario_routes(app):
             "perfil"
         )
 
+        # ----------------------------------------------------
+        # VALIDAÇÕES DA EDIÇÃO
+        # ----------------------------------------------------
+        # Cadastro atual do usuário que será editado.
+        usuario_atual = buscar_usuario_controller(
+            id_usuario
+        )
+
+        if not usuario_atual:
+
+            flash(
+                "Usuário não encontrado.",
+                "error"
+            )
+
+            return redirect(
+                "/usuario"
+            )
+
+        # O novo login não pode pertencer a outro usuário.
+        existente = usuario_existe(
+            usuario
+        )
+
+        if existente and existente["id"] != id_usuario:
+
+            flash(
+                "Já existe um usuário com esse login.",
+                "error"
+            )
+
+            return redirect(
+                f"/usuario/editar/{id_usuario}"
+            )
+
+        # O administrador não altera o próprio perfil:
+        # o perfil já gravado é mantido.
+        editando_a_si_mesmo = (
+            id_usuario == session["usuario_id"]
+        )
+
+        if editando_a_si_mesmo:
+
+            perfil = usuario_atual["perfil"]
+
+        else:
+
+            perfil = normalizar_perfil(
+                perfil
+            )
+
+            if perfil not in PERFIS_VALIDOS:
+
+                flash(
+                    "Selecione um perfil válido.",
+                    "error"
+                )
+
+                return redirect(
+                    f"/usuario/editar/{id_usuario}"
+                )
+
         # Encaminha o identificador e os novos dados
         # ao controller responsável pela atualização.
         editar_usuario_controller(
@@ -308,6 +406,12 @@ def configurar_usuario_routes(app):
             usuario,
             perfil
         )
+
+        # Mantém o nome exibido no cabeçalho atualizado
+        # quando o administrador edita o próprio cadastro.
+        if editando_a_si_mesmo:
+
+            session["nome"] = nome
 
         # Informa que a chamada de atualização foi concluída.
         flash(

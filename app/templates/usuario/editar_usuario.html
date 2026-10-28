@@ -1,73 +1,139 @@
 {% extends "base/base.html" %}
 
+{% block titulo %}
+Editar Usuário
+{% endblock %}
+
+{% block css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/pages/usuarios.css') }}"
+>
+{% endblock %}
+
 {% block conteudo %}
 
-<h1>Editar Usuário</h1>
+{# Compara o perfil sem diferenciar maiúsculas de minúsculas. #}
+{% set perfil_atual = (usuario.perfil or '')|lower %}
+{% set editando_a_si_mesmo = usuario.id == session["usuario_id"] %}
 
-<form method="POST">
+<div class="pagina-usuarios">
 
-    <input
-        type="text"
-        name="nome"
-        value="{{ usuario.nome }}"
-        required
-    >
+    <header class="usuarios-cabecalho">
+        <div>
+            <h1 class="usuarios-titulo">Editar Usuário</h1>
+            <p class="usuarios-descricao">
+                Atualize o nome, o login e o perfil de acesso.
+                Para trocar a senha, use a ação "Senha" na listagem.
+            </p>
+        </div>
+    </header>
 
-    <input
-        type="text"
-        name="usuario"
-        value="{{ usuario.usuario }}"
-        required
-    >
+    <section class="usuarios-painel usuarios-painel-form">
 
-    <select
-        name="perfil"
-        required
-    >
+        <form method="POST" class="usuarios-form">
 
-        <option
-            value="administrador"
-            {% if usuario.perfil == "administrador" %}
-            selected
-            {% endif %}
-        >
-            administrador
-        </option>
+            <div class="usuarios-campo">
+                <label for="nome">Nome completo</label>
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    value="{{ usuario.nome }}"
+                    required
+                >
+            </div>
 
-        <option
-            value="gerente"
-            {% if usuario.perfil == "gerente" %}
-            selected
-            {% endif %}
-        >
-            gerente
-        </option>
+            <div class="usuarios-campo">
+                <label for="usuario">Usuário (login)</label>
+                <input
+                    type="text"
+                    id="usuario"
+                    name="usuario"
+                    value="{{ usuario.usuario }}"
+                    autocomplete="off"
+                    required
+                >
+            </div>
 
-        <option
-            value="Funcionario"
-            {% if usuario.perfil == "Funcionario" %}
-            selected
-            {% endif %}
-        >
-            Funcionário
-        </option>
+            <div class="usuarios-campo">
+                <label for="perfil">Perfil de acesso</label>
 
-    </select>
+                <select
+                    id="perfil"
+                    name="perfil"
+                    required
+                    {% if editando_a_si_mesmo %}disabled{% endif %}
+                >
 
-    <a
-        href="/usuario"
-        class="button button-secondary"
-    >
-        Voltar
-    </a>
+                    <option
+                        value=""
+                        disabled
+                        {% if perfil_atual not in ['administrador', 'gerente', 'funcionario'] %}
+                        selected
+                        {% endif %}
+                    >
+                        Selecione o perfil
+                    </option>
 
-    <button
-        type="submit"
-        class="button button-primary"
-    >
-        Salvar
-    </button>
+                    <option
+                        value="administrador"
+                        {% if perfil_atual == "administrador" %}
+                        selected
+                        {% endif %}
+                    >
+                        Administrador
+                    </option>
 
-</form>
+                    <option
+                        value="gerente"
+                        {% if perfil_atual == "gerente" %}
+                        selected
+                        {% endif %}
+                    >
+                        Gerente
+                    </option>
+
+                    <option
+                        value="funcionario"
+                        {% if perfil_atual == "funcionario" %}
+                        selected
+                        {% endif %}
+                    >
+                        Funcionário
+                    </option>
+
+                </select>
+
+                {% if editando_a_si_mesmo %}
+                <p class="usuarios-campo-ajuda">
+                    Você não pode alterar o seu próprio perfil de acesso.
+                </p>
+                {% endif %}
+            </div>
+
+            <div class="acoes-formulario">
+
+                <a
+                    href="/usuario"
+                    class="usuario-btn usuario-btn-outline"
+                >
+                    Voltar
+                </a>
+
+                <button
+                    type="submit"
+                    class="usuario-btn usuario-btn-primary"
+                >
+                    Salvar
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</div>
 
 {% endblock %}

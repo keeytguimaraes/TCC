@@ -16,13 +16,11 @@ Início
 
 {% block conteudo %}
 
-<div class="page-title">
+{# Primeiro nome do usuário autenticado (mesma sessão usada pelo header). #}
+{% set primeiro_nome = (session.get("nome") or "")|trim|replace("  ", " ") %}
+{% set primeiro_nome = primeiro_nome.split(" ")[0] if primeiro_nome else "" %}
 
-    <h1>
-        Início
-    </h1>
-
-</div>
+<h1 class="visually-hidden">Início</h1>
 
 <!-- ===================== -->
 <!-- ADMINISTRADOR -->
@@ -30,27 +28,42 @@ Início
 
 {% if perfil == "administrador" %}
 
-<div class="dashboard-mensagem">
+<section class="dashboard-boasvindas" data-periodo="dia">
 
-    <div class="dashboard-mensagem__icone">
-        <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
-    </div>
+    <div class="dashboard-boasvindas__texto">
 
-    <div>
-        <h2>
+        <span class="dashboard-boasvindas__perfil">
+            <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
             Painel do Administrador
+        </span>
+
+        <h2 class="dashboard-boasvindas__saudacao">
+            <span data-saudacao>Olá</span>, {{ primeiro_nome }}
         </h2>
 
-        <p>
-            {{ dados.mensagem }}
+        <p class="dashboard-boasvindas__mensagem">
+            {# A mensagem do model começa com "Bom dia!" / "Bem-vinda!" fixos e
+               conflitaria com a saudação dinâmica; usamos os mesmos contadores reais. #}
+            Hoje existem {{ dados.contas_pendentes }} conta(s) pendente(s)
+            e {{ dados.estoque_baixo }} produto(s) com estoque baixo.
         </p>
+
     </div>
 
-</div>
+    <div class="dashboard-boasvindas__meta">
 
+        <span class="dashboard-boasvindas__icone" aria-hidden="true">
+            <i class="fa-solid fa-sun" data-saudacao-icone></i>
+        </span>
+
+        <span class="dashboard-boasvindas__data" data-data-atual></span>
+
+    </div>
+
+</section>
 <div class="dashboard-cards">
 
-    <div class="card-dashboard card-dashboard--success">
+    <div class="card-dashboard card-dashboard--destaque card-dashboard--success">
         <div class="card-dashboard__icone">
             <i class="fa-solid fa-sack-dollar" aria-hidden="true"></i>
         </div>
@@ -60,7 +73,7 @@ Início
         </div>
     </div>
 
-    <div class="card-dashboard card-dashboard--success">
+    <div class="card-dashboard card-dashboard--destaque card-dashboard--success">
         <div class="card-dashboard__icone">
             <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
         </div>
@@ -80,7 +93,7 @@ Início
         </div>
     </div>
 
-    <div class="card-dashboard card-dashboard--warning">
+    <div class="card-dashboard {{ 'card-dashboard--warning' if dados.contas_pendentes|int(0) > 0 else 'card-dashboard--neutro' }}">
         <div class="card-dashboard__icone">
             <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
         </div>
@@ -90,7 +103,7 @@ Início
         </div>
     </div>
 
-    <div class="card-dashboard card-dashboard--danger">
+    <div class="card-dashboard {{ 'card-dashboard--danger' if dados.estoque_baixo|int(0) > 0 else 'card-dashboard--neutro' }}">
         <div class="card-dashboard__icone">
             <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
         </div>
@@ -102,12 +115,18 @@ Início
 
 </div>
 
-<div class="dashboard-section">
+<section class="dashboard-section dashboard-section--alertas">
 
-    <h2>
-        <i class="fa-solid fa-bell" aria-hidden="true"></i>
-        Alertas do Sistema
-    </h2>
+    <div class="dashboard-section__cabecalho">
+
+        <h2>
+            <i class="fa-solid fa-bell" aria-hidden="true"></i>
+            Alertas do Sistema
+        </h2>
+
+        <span class="dashboard-section__contagem">{{ dados.alertas|length }}</span>
+
+    </div>
 
     {% for alerta in dados.alertas %}
 
@@ -118,34 +137,33 @@ Início
 
     {% else %}
 
-        <p class="dashboard-table-vazia">Nenhum alerta no momento.</p>
+        <p class="dashboard-vazio">Nenhum alerta no momento.</p>
 
     {% endfor %}
 
-</div>
+</section>
 
-<div class="dashboard-section">
+<div class="dashboard-duas-colunas">
 
-    <h2>
-        <i class="fa-solid fa-receipt" aria-hidden="true"></i>
-        Últimas Vendas
-    </h2>
+<section class="dashboard-section">
+
+    <div class="dashboard-section__cabecalho">
+
+        <h2>
+            <i class="fa-solid fa-receipt" aria-hidden="true"></i>
+            Últimas Vendas
+        </h2>
+
+        <span class="dashboard-section__contagem">{{ dados.ultimas_vendas|length }} recentes</span>
+
+    </div>
 
     <div class="tabela-wrapper">
 
         <table class="dashboard-table">
 
             <thead>
-
-                <tr>
-
-                    <th>Data</th>
-                    <th>Valor</th>
-                    <th>Status</th>
-                    <th>Responsável</th>
-
-                </tr>
-
+                <tr><th>Data</th><th class="col-valor">Valor</th><th>Status</th><th>Responsável</th></tr>
             </thead>
 
             <tbody>
@@ -154,21 +172,22 @@ Início
 
                 <tr>
 
-                    <td>
+                    <td data-label="Data">
                         {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
                     </td>
 
-                    <td>
+                    <td data-label="Valor" class="col-valor">
                         R$ {{ venda.valor_total }}
                     </td>
 
-                    <td>
-                        <span class="badge {{ 'badge--success' if venda.status_pagamento == 'pago' else 'badge--warning' }}">
+                    <td data-label="Status">
+                        {% set status = (venda.status_pagamento or '')|lower %}
+                        <span class="badge {{ 'badge--success' if status == 'pago' else 'badge--warning' }}">
                             {{ venda.status_pagamento }}
                         </span>
                     </td>
 
-                    <td>
+                    <td data-label="Responsável">
                         {{ venda.responsavel }}
                     </td>
 
@@ -181,37 +200,34 @@ Início
                 </tr>
 
                 {% endfor %}
-
             </tbody>
 
         </table>
 
     </div>
 
-</div>
+</section>
 
-<div class="dashboard-section">
 
-    <h2>
-        <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
-        Últimas Movimentações
-    </h2>
+<section class="dashboard-section">
+
+    <div class="dashboard-section__cabecalho">
+
+        <h2>
+            <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+            Últimas Movimentações
+        </h2>
+
+        <span class="dashboard-section__contagem">{{ dados.ultimas_movimentacoes|length }} recentes</span>
+
+    </div>
 
     <div class="tabela-wrapper">
 
         <table class="dashboard-table">
 
             <thead>
-
-                <tr>
-
-                    <th>Data</th>
-                    <th>Tipo</th>
-                    <th>Produto</th>
-                    <th>Responsável</th>
-
-                </tr>
-
+                <tr><th>Data</th><th>Tipo</th><th>Produto</th><th>Responsável</th></tr>
             </thead>
 
             <tbody>
@@ -220,19 +236,19 @@ Início
 
                 <tr>
 
-                    <td>
+                    <td data-label="Data">
                         {{ item.data_movimentacao.strftime('%d/%m/%Y') }}
                     </td>
 
-                    <td>
+                    <td data-label="Tipo">
                         {{ item.tipo_movimentacao }}
                     </td>
 
-                    <td>
+                    <td data-label="Produto">
                         {{ item.produto }}
                     </td>
 
-                    <td>
+                    <td data-label="Responsável">
                         {{ item.responsavel }}
                     </td>
 
@@ -245,12 +261,13 @@ Início
                 </tr>
 
                 {% endfor %}
-
             </tbody>
 
         </table>
 
     </div>
+
+</section>
 
 </div>
 
@@ -262,27 +279,42 @@ Início
 
 {% if perfil == "gerente" %}
 
-<div class="dashboard-mensagem">
+<section class="dashboard-boasvindas" data-periodo="dia">
 
-    <div class="dashboard-mensagem__icone">
-        <i class="fa-solid fa-user-tie" aria-hidden="true"></i>
-    </div>
+    <div class="dashboard-boasvindas__texto">
 
-    <div>
-        <h2>
+        <span class="dashboard-boasvindas__perfil">
+            <i class="fa-solid fa-user-tie" aria-hidden="true"></i>
             Painel do Gerente
+        </span>
+
+        <h2 class="dashboard-boasvindas__saudacao">
+            <span data-saudacao>Olá</span>, {{ primeiro_nome }}
         </h2>
 
-        <p>
-            {{ dados.mensagem }}
+        <p class="dashboard-boasvindas__mensagem">
+            {# A mensagem do model começa com "Bom dia!" / "Bem-vinda!" fixos e
+               conflitaria com a saudação dinâmica; usamos os mesmos contadores reais. #}
+            Hoje existem {{ dados.contas_pendentes }} conta(s) pendente(s)
+            e {{ dados.estoque_baixo }} produto(s) com estoque baixo.
         </p>
+
     </div>
 
-</div>
+    <div class="dashboard-boasvindas__meta">
 
+        <span class="dashboard-boasvindas__icone" aria-hidden="true">
+            <i class="fa-solid fa-sun" data-saudacao-icone></i>
+        </span>
+
+        <span class="dashboard-boasvindas__data" data-data-atual></span>
+
+    </div>
+
+</section>
 <div class="dashboard-cards">
 
-    <div class="card-dashboard card-dashboard--success">
+    <div class="card-dashboard card-dashboard--destaque card-dashboard--success">
         <div class="card-dashboard__icone">
             <i class="fa-solid fa-sack-dollar" aria-hidden="true"></i>
         </div>
@@ -292,7 +324,7 @@ Início
         </div>
     </div>
 
-    <div class="card-dashboard card-dashboard--success">
+    <div class="card-dashboard card-dashboard--destaque card-dashboard--success">
         <div class="card-dashboard__icone">
             <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
         </div>
@@ -312,7 +344,7 @@ Início
         </div>
     </div>
 
-    <div class="card-dashboard card-dashboard--warning">
+    <div class="card-dashboard {{ 'card-dashboard--warning' if dados.contas_pendentes|int(0) > 0 else 'card-dashboard--neutro' }}">
         <div class="card-dashboard__icone">
             <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
         </div>
@@ -322,7 +354,7 @@ Início
         </div>
     </div>
 
-    <div class="card-dashboard card-dashboard--danger">
+    <div class="card-dashboard {{ 'card-dashboard--danger' if dados.estoque_baixo|int(0) > 0 else 'card-dashboard--neutro' }}">
         <div class="card-dashboard__icone">
             <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
         </div>
@@ -334,26 +366,27 @@ Início
 
 </div>
 
-<div class="dashboard-section">
+<div class="dashboard-duas-colunas">
 
-    <h2>
-        <i class="fa-solid fa-receipt" aria-hidden="true"></i>
-        Últimas Vendas
-    </h2>
+<section class="dashboard-section">
+
+    <div class="dashboard-section__cabecalho">
+
+        <h2>
+            <i class="fa-solid fa-receipt" aria-hidden="true"></i>
+            Últimas Vendas
+        </h2>
+
+        <span class="dashboard-section__contagem">{{ dados.ultimas_vendas|length }} recentes</span>
+
+    </div>
 
     <div class="tabela-wrapper">
 
         <table class="dashboard-table">
 
             <thead>
-
-                <tr>
-
-                    <th>Data</th>
-                    <th>Valor</th>
-
-                </tr>
-
+                <tr><th>Data</th><th class="col-valor">Valor</th></tr>
             </thead>
 
             <tbody>
@@ -362,11 +395,11 @@ Início
 
                 <tr>
 
-                    <td>
+                    <td data-label="Data">
                         {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
                     </td>
 
-                    <td>
+                    <td data-label="Valor" class="col-valor">
                         R$ {{ venda.valor_total }}
                     </td>
 
@@ -379,36 +412,34 @@ Início
                 </tr>
 
                 {% endfor %}
-
             </tbody>
 
         </table>
 
     </div>
 
-</div>
+</section>
 
-<div class="dashboard-section">
 
-    <h2>
-        <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
-        Últimas Movimentações
-    </h2>
+<section class="dashboard-section">
+
+    <div class="dashboard-section__cabecalho">
+
+        <h2>
+            <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+            Últimas Movimentações
+        </h2>
+
+        <span class="dashboard-section__contagem">{{ dados.ultimas_movimentacoes|length }} recentes</span>
+
+    </div>
 
     <div class="tabela-wrapper">
 
         <table class="dashboard-table">
 
             <thead>
-
-                <tr>
-
-                    <th>Data</th>
-                    <th>Tipo</th>
-                    <th>Produto</th>
-
-                </tr>
-
+                <tr><th>Data</th><th>Tipo</th><th>Produto</th></tr>
             </thead>
 
             <tbody>
@@ -417,15 +448,15 @@ Início
 
                 <tr>
 
-                    <td>
+                    <td data-label="Data">
                         {{ item.data_movimentacao.strftime('%d/%m/%Y') }}
                     </td>
 
-                    <td>
+                    <td data-label="Tipo">
                         {{ item.tipo_movimentacao }}
                     </td>
 
-                    <td>
+                    <td data-label="Produto">
                         {{ item.produto }}
                     </td>
 
@@ -438,12 +469,13 @@ Início
                 </tr>
 
                 {% endfor %}
-
             </tbody>
 
         </table>
 
     </div>
+
+</section>
 
 </div>
 
@@ -455,84 +487,81 @@ Início
 
 {% if perfil == "funcionario" %}
 
-<div class="dashboard-mensagem">
+<section class="dashboard-boasvindas" data-periodo="dia">
 
-    <div class="dashboard-mensagem__icone">
-        <i class="fa-solid fa-user" aria-hidden="true"></i>
-    </div>
+    <div class="dashboard-boasvindas__texto">
 
-    <div>
-        <h2>
+        <span class="dashboard-boasvindas__perfil">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
             Painel do Funcionário
+        </span>
+
+        <h2 class="dashboard-boasvindas__saudacao">
+            <span data-saudacao>Olá</span>, {{ primeiro_nome }}
         </h2>
 
-        <p>
+        <p class="dashboard-boasvindas__mensagem">
             {{ dados.mensagem }}
         </p>
+
     </div>
 
-</div>
+    <div class="dashboard-boasvindas__meta">
 
+        <span class="dashboard-boasvindas__icone" aria-hidden="true">
+            <i class="fa-solid fa-sun" data-saudacao-icone></i>
+        </span>
+
+        <span class="dashboard-boasvindas__data" data-data-atual></span>
+
+    </div>
+
+</section>
 <div class="dashboard-cards">
 
-    <div class="card-dashboard card-dashboard--info">
-
+    <div class="card-dashboard card-dashboard--destaque card-dashboard--info">
         <div class="card-dashboard__icone">
             <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
         </div>
-
         <div class="card-dashboard__corpo">
-            <h3>
-                Minhas Vendas Hoje
-            </h3>
-
-            <p>
-                {{ dados.vendas_hoje }}
-            </p>
+            <h3>Minhas Vendas Hoje</h3>
+            <p>{{ dados.vendas_hoje }}</p>
         </div>
-
     </div>
 
-    <div class="card-dashboard card-dashboard--success">
-
+    <div class="card-dashboard card-dashboard--destaque card-dashboard--success">
         <div class="card-dashboard__icone">
             <i class="fa-solid fa-sack-dollar" aria-hidden="true"></i>
         </div>
-
         <div class="card-dashboard__corpo">
-            <h3>
-                Valor Vendido Hoje
-            </h3>
-
-            <p>
-                R$ {{ dados.valor_vendido }}
-            </p>
+            <h3>Valor Vendido Hoje</h3>
+            <p>R$ {{ dados.valor_vendido }}</p>
         </div>
-
     </div>
 
 </div>
 
-<div class="dashboard-section">
+<div class="dashboard-duas-colunas">
 
-    <h2>
-        <i class="fa-solid fa-receipt" aria-hidden="true"></i>
-        Últimas Vendas
-    </h2>
+<section class="dashboard-section">
+
+    <div class="dashboard-section__cabecalho">
+
+        <h2>
+            <i class="fa-solid fa-receipt" aria-hidden="true"></i>
+            Últimas Vendas
+        </h2>
+
+        <span class="dashboard-section__contagem">{{ dados.ultimas_vendas|length }} recentes</span>
+
+    </div>
 
     <div class="tabela-wrapper">
 
         <table class="dashboard-table">
 
             <thead>
-
-                <tr>
-
-                    <th>Data</th>
-                    <th>Valor</th>
-
-                </tr>
-
+                <tr><th>Data</th><th class="col-valor">Valor</th></tr>
             </thead>
 
             <tbody>
@@ -541,11 +570,11 @@ Início
 
                 <tr>
 
-                    <td>
+                    <td data-label="Data">
                         {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}
                     </td>
 
-                    <td>
+                    <td data-label="Valor" class="col-valor">
                         R$ {{ venda.valor_total }}
                     </td>
 
@@ -558,35 +587,34 @@ Início
                 </tr>
 
                 {% endfor %}
-
             </tbody>
 
         </table>
 
     </div>
 
-</div>
+</section>
 
-<div class="dashboard-section">
 
-    <h2>
-        <i class="fa-solid fa-file-invoice" aria-hidden="true"></i>
-        Últimas Contas Pendentes
-    </h2>
+<section class="dashboard-section">
+
+    <div class="dashboard-section__cabecalho">
+
+        <h2>
+            <i class="fa-solid fa-file-invoice" aria-hidden="true"></i>
+            Últimas Contas Pendentes
+        </h2>
+
+        <span class="dashboard-section__contagem">{{ dados.ultimas_contas|length }} recentes</span>
+
+    </div>
 
     <div class="tabela-wrapper">
 
         <table class="dashboard-table">
 
             <thead>
-
-                <tr>
-
-                    <th>Cliente</th>
-                    <th>Data</th>
-
-                </tr>
-
+                <tr><th>Cliente</th><th>Data</th></tr>
             </thead>
 
             <tbody>
@@ -595,11 +623,11 @@ Início
 
                 <tr>
 
-                    <td>
+                    <td data-label="Cliente">
                         {{ conta.nome_cliente_temporario }}
                     </td>
 
-                    <td>
+                    <td data-label="Data">
                         {{ conta.data_abertura.strftime('%d/%m/%Y') }}
                     </td>
 
@@ -612,15 +640,20 @@ Início
                 </tr>
 
                 {% endfor %}
-
             </tbody>
 
         </table>
 
     </div>
 
+</section>
+
 </div>
 
 {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/pages/dashboard.js') }}"></script>
 {% endblock %}

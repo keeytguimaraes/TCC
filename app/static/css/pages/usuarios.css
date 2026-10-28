@@ -1,0 +1,757 @@
+/* ==========================================================
+   MÓDULO USUÁRIOS — SIGC
+   Substitui usuarios-teste.css. Usa somente os tokens globais
+   definidos em base.css (nenhuma cor própria do módulo).
+   Usado por: usuario.html, usuarios_inativos.html,
+   cadastrar_usuario.html, editar_usuario.html e alterar_senha.html
+   ========================================================== */
+
+   .pagina-usuarios {
+    width: 100%;
+    min-width: 0;
+    color: var(--text);
+}
+
+.pagina-usuarios [hidden] {
+    display: none !important;
+}
+
+/* ---------- cabeçalho da página ---------- */
+
+.usuarios-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+}
+
+.usuarios-titulo {
+    margin: 0 0 4px;
+    font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--text);
+}
+
+.usuarios-descricao {
+    margin: 0;
+    font-size: .9375rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.usuarios-cabecalho-acoes {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+/* ---------- botões ---------- */
+
+.pagina-usuarios .usuario-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+
+    min-height: 42px;
+    padding: 0 var(--space-4);
+
+    border: 1px solid transparent;
+    border-radius: var(--input-radius);
+
+    font: inherit;
+    font-size: .875rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+
+    transition: background var(--transicao), border-color var(--transicao), filter var(--transicao);
+}
+
+.pagina-usuarios .usuario-btn-primary {
+    color: #fff;
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.pagina-usuarios .usuario-btn-primary:hover {
+    filter: brightness(.92);
+}
+
+.pagina-usuarios .usuario-btn-outline {
+    color: var(--text);
+    background: var(--card);
+    border-color: var(--border);
+}
+
+.pagina-usuarios .usuario-btn-outline:hover {
+    background: var(--bg);
+    border-color: var(--text-muted);
+}
+
+.pagina-usuarios .usuario-btn:focus-visible,
+.pagina-usuarios .usuario-acao:focus-visible,
+.pagina-usuarios .usuarios-aba:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+/* ---------- abas (ativos / inativos) ---------- */
+
+.usuarios-abas {
+    display: flex;
+    gap: var(--space-1);
+    margin-bottom: var(--space-5);
+    border-bottom: 1px solid var(--border);
+}
+
+.usuarios-aba {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+
+    min-height: 44px;
+    padding: 0 var(--space-4);
+    margin-bottom: -1px;
+
+    border-bottom: 2px solid transparent;
+
+    font-size: .9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-muted);
+
+    transition: color var(--transicao), border-color var(--transicao);
+}
+
+.usuarios-aba:hover {
+    color: var(--text);
+}
+
+.usuarios-aba.is-ativa {
+    color: var(--text);
+    border-bottom-color: var(--primary);
+}
+
+.usuarios-aba-contagem {
+    min-width: 22px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-size: .75rem;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.usuarios-aba.is-ativa .usuarios-aba-contagem {
+    background: var(--danger-bg);
+    border-color: var(--danger-border);
+    color: var(--danger-text);
+}
+
+/* ---------- painel ---------- */
+
+.usuarios-painel {
+    overflow: hidden;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+}
+
+.usuarios-filtros {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--border);
+}
+
+.usuario-busca {
+    position: relative;
+    flex: 1 1 280px;
+    min-width: 0;
+    max-width: 440px;
+}
+
+.usuario-busca-icone {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.pagina-usuarios .usuario-input,
+.pagina-usuarios .usuarios-campo input,
+.pagina-usuarios .usuarios-campo select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 var(--space-4);
+
+    font: inherit;
+    font-size: .9375rem;
+    color: var(--text);
+
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--input-radius);
+
+    transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+
+.usuario-busca .usuario-input {
+    padding-left: 42px;
+}
+
+.pagina-usuarios .usuario-input:hover,
+.pagina-usuarios .usuarios-campo input:hover,
+.pagina-usuarios .usuarios-campo select:hover {
+    border-color: var(--text-muted);
+}
+
+.pagina-usuarios .usuario-input:focus,
+.pagina-usuarios .usuarios-campo input:focus,
+.pagina-usuarios .usuarios-campo select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: var(--shadow-focus);
+}
+
+.usuarios-contagem {
+    font-size: .8125rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* resumo por perfil (calculado a partir da própria listagem) */
+
+.usuarios-resumo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    margin: 0;
+    padding: var(--space-3) var(--space-6);
+    list-style: none;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border);
+    font-size: .8125rem;
+    color: var(--text-muted);
+}
+
+.usuarios-resumo li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.usuarios-resumo strong {
+    color: var(--text);
+}
+
+.usuarios-resumo-ponto {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--secondary);
+}
+
+.usuarios-resumo-ponto--administrador { background: var(--black); }
+.usuarios-resumo-ponto--gerente { background: var(--accent); }
+.usuarios-resumo-ponto--funcionario { background: var(--secondary); opacity: .55; }
+
+/* ---------- lista ---------- */
+
+.usuarios-lista {
+    display: flex;
+    flex-direction: column;
+}
+
+.usuarios-lista-cabecalho,
+.usuario-card {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) 140px 100px 250px;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-4) var(--space-6);
+}
+
+.usuarios-lista-cabecalho {
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border);
+    font-size: .75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: var(--text-muted);
+}
+
+.usuarios-lista-cabecalho span:last-child {
+    text-align: right;
+}
+
+.usuario-card {
+    border-bottom: 1px solid var(--border);
+    transition: background var(--transicao);
+}
+
+.usuario-card:last-of-type {
+    border-bottom: none;
+}
+
+.usuario-card:hover {
+    background: var(--bg);
+}
+
+.usuario-identificacao {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 0;
+}
+
+.usuario-avatar {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+
+    width: 40px;
+    height: 40px;
+
+    border-radius: var(--radius-sm);
+    background: var(--black);
+    color: var(--accent);
+
+    font-size: .9375rem;
+    font-weight: 700;
+}
+
+.usuario-card--inativo .usuario-avatar {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+.usuario-dados {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.usuario-nome {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    overflow-wrap: anywhere;
+    font-size: .9375rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.usuario-voce {
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    font-size: .6875rem;
+    font-weight: 600;
+    color: var(--warning-text);
+}
+
+.usuario-login {
+    overflow-wrap: anywhere;
+    font-size: .8125rem;
+    color: var(--text-muted);
+}
+
+.usuario-meta {
+    display: contents;
+}
+
+/* ---------- badges ---------- */
+
+.usuario-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-size: .75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.usuario-badge-perfil {
+    background: var(--bg);
+    color: var(--text-muted);
+}
+
+.usuario-badge-perfil--administrador {
+    background: var(--black);
+    border-color: var(--black);
+    color: #fff;
+}
+
+.usuario-badge-perfil--gerente {
+    background: var(--warning-bg);
+    border-color: var(--warning-border);
+    color: var(--warning-text);
+}
+
+.usuario-badge-ativo {
+    background: var(--success-bg);
+    border-color: var(--success-border);
+    color: var(--success-text);
+}
+
+.usuario-badge-inativo {
+    background: var(--bg);
+    color: var(--text-muted);
+}
+
+.usuario-badge-ativo::before,
+.usuario-badge-inativo::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+/* ---------- ações ---------- */
+
+.usuario-acoes {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.usuario-acoes form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.pagina-usuarios .usuario-acao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    min-height: 36px;
+    padding: 0 var(--space-3);
+
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+
+    font: inherit;
+    font-size: .8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+
+    transition: background var(--transicao), border-color var(--transicao), color var(--transicao);
+}
+
+.pagina-usuarios .usuario-acao:hover {
+    background: var(--bg);
+    border-color: var(--text-muted);
+}
+
+.pagina-usuarios .usuario-acao-excluir {
+    color: var(--danger-text);
+    border-color: var(--danger-border);
+}
+
+.pagina-usuarios .usuario-acao-excluir:hover {
+    background: var(--danger-bg);
+    border-color: var(--danger);
+}
+
+.pagina-usuarios .usuario-acao-sucesso {
+    color: var(--success-text);
+    border-color: var(--success-border);
+}
+
+.pagina-usuarios .usuario-acao-sucesso:hover {
+    background: var(--success-bg);
+    border-color: var(--success);
+}
+
+/* ---------- estado vazio ---------- */
+
+.usuarios-vazio {
+    padding: var(--space-8) var(--space-6);
+    text-align: center;
+}
+
+.usuarios-vazio-icone {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin: 0 auto var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-size: 1.25rem;
+    color: var(--text-muted);
+}
+
+.usuarios-vazio h3 {
+    margin: 0 0 var(--space-2);
+    font-size: 1rem;
+}
+
+.usuarios-vazio p {
+    max-width: 380px;
+    margin: 0 auto var(--space-5);
+    font-size: .875rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.usuarios-vazio p:last-child {
+    margin-bottom: 0;
+}
+
+/* ---------- formulários (cadastro, edição, senha) ---------- */
+
+/* Páginas de formulário: a coluna inteira (título + painel) fica centralizada
+   na área útil ao lado do menu, com largura confortável para leitura. */
+.pagina-usuarios:has(.usuarios-painel-form) {
+    max-width: 760px;
+    margin-inline: auto;
+}
+
+.usuarios-painel-form {
+    width: 100%;
+}
+
+.usuarios-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    padding: var(--space-6);
+}
+
+.usuarios-form-identificacao {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-6);
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border);
+}
+
+.usuarios-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.usuarios-campo label {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.usuarios-campo-ajuda {
+    margin: 0;
+    font-size: .75rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+/* select: a regra global remove a seta nativa; aqui ela é redesenhada */
+.pagina-usuarios .usuarios-campo select {
+    appearance: none;
+    padding-right: 40px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%236B6B6B' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+.pagina-usuarios .usuarios-campo select:disabled,
+.pagina-usuarios .usuarios-campo input:disabled {
+    background-color: var(--bg);
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.campo-senha {
+    position: relative;
+}
+
+.campo-senha input {
+    padding-right: 48px;
+}
+
+.campo-senha button {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+
+    transition: background var(--transicao), color var(--transicao);
+}
+
+.campo-senha button:hover {
+    background: var(--bg);
+    color: var(--text);
+}
+
+.campo-senha button:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+.acoes-formulario {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border);
+}
+
+/* ---------- tablet / telas estreitas (considera a sidebar aberta) ---------- */
+
+@media (max-width: 1200px) {
+
+    .usuarios-lista-cabecalho {
+        display: none;
+    }
+
+    .usuario-card {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: var(--space-3) var(--space-4);
+    }
+
+    .usuario-meta {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        grid-column: 1;
+    }
+
+    .usuario-acoes {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: center;
+    }
+}
+
+/* ---------- celular ---------- */
+
+@media (max-width: 600px) {
+
+    .usuarios-cabecalho {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .usuarios-cabecalho-acoes .usuario-btn {
+        width: 100%;
+    }
+
+    .usuarios-aba {
+        flex: 1;
+        justify-content: center;
+        padding: 0 var(--space-3);
+    }
+
+    .usuarios-filtros,
+    .usuarios-resumo {
+        padding-left: var(--space-4);
+        padding-right: var(--space-4);
+    }
+
+    .usuario-busca {
+        flex-basis: 100%;
+        max-width: none;
+    }
+
+    .usuario-card {
+        grid-template-columns: minmax(0, 1fr);
+        padding: var(--space-4);
+    }
+
+    .usuario-meta,
+    .usuario-acoes {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .usuario-acoes {
+        justify-content: flex-start;
+        padding-top: var(--space-3);
+        border-top: 1px solid var(--border);
+    }
+
+    .pagina-usuarios .usuario-acao {
+        min-height: 40px;
+        flex: 1 1 auto;
+    }
+
+    .usuario-acoes form {
+        flex: 1 1 auto;
+    }
+
+    .usuario-acoes form .usuario-acao {
+        width: 100%;
+    }
+
+    .usuarios-form {
+        padding: var(--space-4);
+    }
+
+    .usuarios-form-identificacao {
+        padding: var(--space-3) var(--space-4);
+    }
+
+    .acoes-formulario .usuario-btn {
+        flex: 1 1 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pagina-usuarios *,
+    .pagina-usuarios *::before,
+    .pagina-usuarios *::after {
+        transition: none !important;
+    }
+}
