@@ -15,176 +15,172 @@ Editar Produto
 
 {% block conteudo %}
 
-<div class="card">
+{# Lista igual à do cadastro (+ "Caixa", que só existia na edição). #}
+{% set embalagens = ['Lata', 'PET', 'KS', 'Long Neck', 'Pacote', 'Saco', 'Garrafa', 'Caixa'] %}
+{% set embalagem_atual = produto.tipo_embalagem or '' %}
 
-    <div class="card-header">
+<div class="pagina-produtos pagina-produtos--form">
 
-        <h2>
-            Editar Produto
-        </h2>
+    <header class="produtos-cabecalho">
 
-    </div>
+        <div>
+            <h1 class="produtos-titulo">Editar Produto</h1>
+            <p class="produtos-descricao">
+                Alterando <strong>{{ produto.nome }}</strong>.
+                O estoque e a imagem do produto não são modificados por esta tela.
+            </p>
+        </div>
 
-    <div class="card-body">
+    </header>
 
-        <form
-            action="/produto/atualizar/{{ produto.id }}"
-            method="POST"
-            class="produto-form"
-        >
+    <form
+        action="/produto/atualizar/{{ produto.id }}"
+        method="POST"
+        class="produto-form prod-painel"
+    >
 
-            <div class="form-group">
+        <!-- IDENTIFICAÇÃO -->
 
-                <label>
-                    Nome do produto
-                </label>
+        <fieldset class="prod-secao">
 
-                <input
-                    type="text"
-                    name="nome"
-                    value="{{ produto.nome }}"
-                    required
-                >
+            <legend>Identificação</legend>
 
-            </div>
+            <div class="prod-grid">
 
-            <div class="form-group">
-
-                <label>
-                    Categoria
-                </label>
-
-                <input
-                    type="text"
-                    name="categoria"
-                    value="{{ produto.categoria }}"
-                    required
-                >
-
-            </div>
-
-            <div class="form-group">
-
-                <label>
-                    Sabor
-                </label>
-
-                <input
-                    type="text"
-                    name="sabor"
-                    value="{{ produto.sabor }}"
-                    placeholder="Zero, Original, Queijo, Presunto..."
-                >
-
-            </div>
-
-            <div class="form-group">
-
-                <label>
-                    Tipo da embalagem
-                </label>
-
-                <select
-    name="tipo_embalagem"
-    class="form-select"
->
-
-                    <option value="Lata"
-                        {% if produto.tipo_embalagem == 'Lata' %}selected{% endif %}
+                <div class="form-group prod-campo prod-campo--cheio">
+                    <label for="prod-nome">Nome do produto</label>
+                    <input
+                        type="text"
+                        id="prod-nome"
+                        name="nome"
+                        value="{{ produto.nome or '' }}"
+                        required
                     >
-                        Lata
-                    </option>
+                </div>
 
-                    <option value="Garrafa"
-                        {% if produto.tipo_embalagem == 'Garrafa' %}selected{% endif %}
+                <div class="form-group prod-campo">
+                    <label for="prod-categoria">Categoria</label>
+                    <input
+                        type="text"
+                        id="prod-categoria"
+                        name="categoria"
+                        value="{{ produto.categoria or '' }}"
+                        required
                     >
-                        Garrafa
-                    </option>
+                </div>
 
-                    <option value="Caixa"
-                        {% if produto.tipo_embalagem == 'Caixa' %}selected{% endif %}
+                <div class="form-group prod-campo">
+                    <label for="prod-sabor">Sabor</label>
+                    <input
+                        type="text"
+                        id="prod-sabor"
+                        name="sabor"
+                        value="{{ produto.sabor or '' }}"
+                        placeholder="Zero, Original, Queijo, Presunto..."
                     >
-                        Caixa
-                    </option>
+                </div>
 
-                    <option value="Pacote"
-                        {% if produto.tipo_embalagem == 'Pacote' %}selected{% endif %}
+                <div class="form-group prod-campo">
+                    <label for="prod-embalagem">Tipo da embalagem</label>
+                    <select
+                        id="prod-embalagem"
+                        name="tipo_embalagem"
+                        class="form-select"
                     >
-                        Pacote
-                    </option>
 
-                    <option value="Saco"
-                        {% if produto.tipo_embalagem == 'Saco' %}selected{% endif %}
+                        <option value="" {% if not embalagem_atual %}selected{% endif %}>
+                            Escolha uma opção
+                        </option>
+
+                        {% for embalagem in embalagens %}
+                        <option
+                            value="{{ embalagem }}"
+                            {% if embalagem == embalagem_atual %}selected{% endif %}
+                        >
+                            {{ embalagem }}
+                        </option>
+                        {% endfor %}
+
+                        {% if embalagem_atual and embalagem_atual not in embalagens %}
+                        <option value="{{ embalagem_atual }}" selected>
+                            {{ embalagem_atual }}
+                        </option>
+                        {% endif %}
+
+                    </select>
+                </div>
+
+                <div class="form-group prod-campo">
+                    <label for="prod-volume">Volume / Peso</label>
+                    <input
+                        type="text"
+                        id="prod-volume"
+                        name="volume"
+                        value="{{ produto.volume or '' }}"
+                        placeholder="350ml, 600ml, 1L, 2L, 90g..."
                     >
-                        Saco
-                    </option>
-
-                </select>
+                </div>
 
             </div>
 
-            <div class="form-group">
+        </fieldset>
 
-                <label>
-                    Volume / Peso
-                </label>
+        <!-- PREÇOS E EMBALAGEM -->
 
-                <input
-                    type="text"
-                    name="volume"
-                    value="{{ produto.volume }}"
-                    placeholder="350ml, 600ml, 1L, 2L, 90g..."
-                >
+        <fieldset class="prod-secao">
 
-            </div>
+            <legend>Preços e embalagem</legend>
 
-            <div class="form-group">
+            <div class="prod-grid">
 
-                <label>
-                    Preço de venda
-                </label>
+                <div class="form-group prod-campo">
+                    <label for="prod-preco-venda">Preço de venda</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        id="prod-preco-venda"
+                        name="preco_venda"
+                        value="{{ produto.preco_venda }}"
+                        required
+                    >
+                </div>
 
-                <input
-                    type="number"
-                    step="0.01"
-                    name="preco_venda"
-                    value="{{ produto.preco_venda }}"
-                    required
-                >
+                <div class="form-group prod-campo">
+                    <label for="prod-preco-caixa">Preço da caixa</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        id="prod-preco-caixa"
+                        name="preco_caixa"
+                        value="{{ produto.preco_caixa or '' }}"
+                    >
+                </div>
 
-            </div>
-
-            <div class="form-group">
-
-                <label>
-                    Preço da caixa
-                </label>
-            
-                <input
-                    type="number"
-                    step="0.01"
-                    name="preco_caixa"
-                    value="{{ produto.preco_caixa or '' }}"
-                >
-            
-            </div>
-
-            <div class="form-group">
-
-                <label>
-                    Quantidade por caixa
-                </label>
-
-                <input
-                    type="number"
-                    name="quantidade_por_caixa"
-                    value="{{ produto.quantidade_por_caixa }}"
-                    required
-                >
+                <div class="form-group prod-campo">
+                    <label for="prod-qtd-caixa">Quantidade por caixa</label>
+                    <input
+                        type="number"
+                        min="1"
+                        id="prod-qtd-caixa"
+                        name="quantidade_por_caixa"
+                        value="{{ produto.quantidade_por_caixa }}"
+                        required
+                    >
+                </div>
 
             </div>
 
-            <div class="checkbox-group">
+        </fieldset>
+
+        <!-- FORMAS DE VENDA -->
+
+        <fieldset class="prod-secao">
+
+            <legend>Formas de venda</legend>
+
+            <div class="checkbox-group prod-opcao">
 
                 <input
                     type="checkbox"
@@ -194,143 +190,111 @@ Editar Produto
                 >
 
                 <label for="vende_por_dose">
-
                     Produto vendido por dose
-
                 </label>
 
             </div>
 
             <div
-                class="form-group"
-                id="campo-dose"
+                class="prod-condicional"
+                id="grupo-dose"
+                {% if not produto.vende_por_dose %}hidden{% endif %}
             >
 
-                <label>
-                    Volume da dose (ml)
-                </label>
+                <div class="form-group prod-campo" id="campo-dose">
+                    <label for="prod-volume-dose">Volume da dose (ml)</label>
+                    <input
+                        type="number"
+                        min="0"
+                        id="prod-volume-dose"
+                        name="volume_dose_ml"
+                        value="{{ produto.volume_dose_ml or '' }}"
+                    >
+                </div>
+
+                <div class="form-group prod-campo" id="campo-preco-dose">
+                    <label for="prod-preco-dose">Preço da dose</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        id="prod-preco-dose"
+                        name="preco_dose"
+                        value="{{ produto.preco_dose or '' }}"
+                    >
+                </div>
+
+            </div>
+
+            <div class="checkbox-group prod-opcao">
 
                 <input
-                    type="number"
-                    name="volume_dose_ml"
-                    value="{{ produto.volume_dose_ml }}"
+                    type="checkbox"
+                    id="vende_por_unidade"
+                    name="vende_por_unidade"
+                    {% if produto.vende_por_unidade %}checked{% endif %}
                 >
+
+                <label for="vende_por_unidade">
+                    Produto vendido por unidade (avulso)
+                </label>
 
             </div>
 
             <div
-    class="form-group"
-    id="campo-preco-dose"
-    {% if not produto.vende_por_dose %}
-    style="display:none;"
-    {% endif %}
->
+                class="prod-condicional"
+                id="grupo-unidade"
+                {% if not produto.vende_por_unidade %}hidden{% endif %}
+            >
 
-    <label>
-        Preço da dose
-    </label>
+                <div class="form-group prod-campo" id="campo-preco-unidade">
+                    <label for="prod-preco-unidade">Preço unitário</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        id="prod-preco-unidade"
+                        name="preco_unidade"
+                        value="{{ produto.preco_unidade or '' }}"
+                    >
+                </div>
 
-    <input
-        type="number"
-        step="0.01"
-        name="preco_dose"
-        value="{{ produto.preco_dose or '' }}"
-    >
-
-</div>
-
-<div class="checkbox-group">
-
-    <input
-        type="checkbox"
-        id="vende_por_unidade"
-        name="vende_por_unidade"
-        {% if produto.vende_por_unidade %}
-        checked
-        {% endif %}
-    >
-
-    <label for="vende_por_unidade">
-
-        Produto vendido por unidade
-
-    </label>
-
-</div>
-
-
-
-<div
-    class="form-group"
-    id="campo-preco-unidade"
-    {% if not produto.vende_por_unidade %}
-    style="display:none;"
-    {% endif %}
->
-
-    <label>
-        Preço unitário
-    </label>
-
-    <input
-        type="number"
-        step="0.01"
-        name="preco_unidade"
-        value="{{ produto.preco_unidade or '' }}"
-    >
-
-</div>
-
-<div
-    class="form-group"
-    id="campo-quantidade-unidade"
-    {% if not produto.vende_por_unidade %}
-    style="display:none;"
-    {% endif %}
->
-
-    <label>
-        Quantidade por unidade
-    </label>
-
-    <input
-        type="number"
-        name="quantidade_por_unidade"
-        value="{{ produto.quantidade_por_unidade or '' }}"
-    >
-
-</div>
-
-
-            <div class="produto-form-actions">
-
-                <a
-                    href="/produto"
-                    class="button button-secondary"
-                >
-
-                    <i class="fa-solid fa-arrow-left"></i>
-
-                    Voltar
-
-                </a>
-
-                <button
-                    type="submit"
-                    class="button button-success"
-                >
-
-                    <i class="fa-solid fa-floppy-disk"></i>
-
-                    Salvar Alterações
-
-                </button>
+                <div class="form-group prod-campo" id="campo-quantidade-unidade">
+                    <label for="prod-qtd-unidade">Quantidade por unidade</label>
+                    <input
+                        type="number"
+                        min="0"
+                        id="prod-qtd-unidade"
+                        name="quantidade_por_unidade"
+                        value="{{ produto.quantidade_por_unidade or '' }}"
+                    >
+                </div>
 
             </div>
 
-        </form>
+        </fieldset>
 
-    </div>
+        <div class="produto-form-actions prod-acoes">
+
+            <a
+                href="/produto"
+                class="prod-btn prod-btn-outline"
+            >
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                Voltar
+            </a>
+
+            <button
+                type="submit"
+                class="prod-btn prod-btn-primary"
+            >
+                <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+                Salvar Alterações
+            </button>
+
+        </div>
+
+    </form>
 
 </div>
 

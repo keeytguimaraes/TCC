@@ -15,41 +15,36 @@ Editar Cliente
 
 {% block conteudo %}
 
-<div class="page-header">
+<div class="pagina-clientes pagina-clientes--form">
 
-    <h1>
-        Editar Cliente
-    </h1>
+    <header class="clientes-cabecalho">
 
-    <a
-        href="{{ url_for('cliente') }}"
-        class="button button-secondary"
-    >
-        <i class="fa-solid fa-arrow-left"></i>
-        Voltar
-    </a>
+        <div>
+            <h1 class="clientes-titulo">Editar Cliente</h1>
+            <p class="clientes-descricao">
+                Altere o nome do cliente. As contas de fiado e o histórico dele não são modificados.
+            </p>
+        </div>
 
-</div>
+    </header>
 
-<div class="card card-cliente">
-
-    <div class="card-body">
-
-        <h2>
-            <i class="fa-solid fa-user"></i>
-            Cliente
-        </h2>
+    <section class="cliente-painel">
 
         <div class="cliente-info">
 
-            <span class="cliente-label">
-                Nome Atual
-            </span>
+            <span class="cliente-avatar cliente-avatar--grande" aria-hidden="true">{{ (cliente.nome or '?')[:1]|upper }}</span>
 
-            <h3>
-                {{ cliente.nome }}
-            </h3>
+            <div class="cliente-info-texto">
 
+                <span class="cliente-label">
+                    Nome Atual
+                </span>
+
+                <h2>
+                    {{ cliente.nome }}
+                </h2>
+
+            </div>
         </div>
 
         <form
@@ -59,7 +54,7 @@ Editar Cliente
 
             <div class="form-group">
 
-                <label>
+                <label for="nome-editar">
                     Alterar Nome
                 </label>
 
@@ -68,17 +63,26 @@ Editar Cliente
                     name="nome"
                     value="{{ cliente.nome }}"
                     required
+                    autofocus
                 >
 
             </div>
 
-            <div class="cliente-acoes">
+            <div class="cliente-acoes cliente-acoes--formulario">
+
+                <a
+                    href="{{ url_for('cliente') }}"
+                    class="cliente-btn cliente-btn-outline"
+                >
+                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                    Voltar
+                </a>
 
                 <button
                     type="submit"
-                    class="button button-success"
+                    class="cliente-btn cliente-btn-primary"
                 >
-                    <i class="fa-solid fa-floppy-disk"></i>
+                    <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
                     Salvar Alterações
                 </button>
 
@@ -86,7 +90,7 @@ Editar Cliente
 
         </form>
 
-    </div>
+    </section>
 
 </div>
 

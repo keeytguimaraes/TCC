@@ -1,10 +1,16 @@
 {% extends "base/base.html" %}
+{% from "produto/_macros.html" import moeda, numero, volume %}
 
 {% block titulo %}
 Detalhes do Produto
 {% endblock %}
 
 {% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/pages/produto.css') }}"
+>
 
 <link
     rel="stylesheet"
@@ -18,34 +24,42 @@ Detalhes do Produto
 
 {% block conteudo %}
 
-<div class="page-header">
+{% set vol = volume(produto.volume)|trim %}
 
-    <h1>
-        Detalhes do Produto
-    </h1>
+<div class="pagina-produtos">
 
-    <a
-        href="/produto"
-        class="btn-voltar"
-    >
-        ← Voltar
-    </a>
+    <!-- ===================== -->
+    <!-- CABEÇALHO -->
+    <!-- ===================== -->
 
-</div>
+    <header class="produtos-cabecalho">
 
-<div class="detalhes-grid">
+        <div>
+            <h1 class="produtos-titulo">Detalhes do Produto</h1>
+            <p class="produtos-descricao">
+                Informações, preços e histórico de alterações de preço.
+            </p>
+        </div>
 
-    <!-- PRODUTO -->
+        <a
+            href="/produto"
+            class="prod-btn prod-btn-outline"
+        >
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Voltar
+        </a>
 
-    <div class="detalhe-card">
+    </header>
 
-        <h2>
-            🥤 Produto
-        </h2>
+    <!-- ===================== -->
+    <!-- RESUMO: PRODUTO + STATUS + AÇÕES -->
+    <!-- ===================== -->
 
-        {% if produto.imagem %}
+    <section class="detalhe-resumo {{ 'detalhe-resumo--inativo' if not produto.ativo }}">
 
-        <div class="produto-imagem">
+        <div class="detalhe-imagem">
+
+            {% if produto.imagem %}
 
             <img
                 src="{{ url_for(
@@ -55,142 +69,49 @@ Detalhes do Produto
                 alt="{{ produto.nome }}"
             >
 
+            {% else %}
+
+            <i class="fa-solid fa-box" aria-hidden="true"></i>
+
+            {% endif %}
+
         </div>
 
-        {% endif %}
+        <div class="detalhe-identidade">
 
-        <p>
-            <strong>Nome:</strong>
-            {{ produto.nome }}
-        </p>
+            {% if produto.categoria %}
+            <span class="catalogo-categoria">{{ produto.categoria }}</span>
+            {% endif %}
 
-        <p>
-            <strong>Categoria:</strong>
-            {{ produto.categoria }}
-        </p>
+            <h2 class="detalhe-nome">
+                {{ produto.nome }}
+                {% if vol %}<span class="prod-volume">{{ vol }}</span>{% endif %}
+            </h2>
 
-        {% if produto.sabor %}
-        <p>
-            <strong>Sabor:</strong>
-            {{ produto.sabor }}
-        </p>
-        {% endif %}
+            <div class="detalhe-status">
 
-        {% if produto.tipo_embalagem %}
-        <p>
-            <strong>Embalagem:</strong>
-            {{ produto.tipo_embalagem }}
-        </p>
-        {% endif %}
+                {% if produto.ativo %}
+                <span class="prod-selo prod-selo--ativo">Ativo</span>
+                {% else %}
+                <span class="prod-selo prod-selo--inativo">Inativo</span>
+                {% endif %}
 
-        {% if produto.volume %}
-        <p>
-            <strong>Volume:</strong>
-            {{ produto.volume }}
-        </p>
-        {% endif %}
+                <span class="detalhe-preco-destaque">
+                    {{ moeda(produto.preco_venda) }}
+                </span>
 
-    </div>
+            </div>
 
-    <!-- PREÇO -->
+        </div>
 
-    <div class="detalhe-card">
-
-        <h2>
-            💰 Preço
-        </h2>
-    
-        <p>
-            <strong>Preço de venda:</strong>
-            R$ {{ produto.preco_venda }}
-        </p>
-    
-        <p>
-            <strong>Quantidade por caixa:</strong>
-            {{ produto.quantidade_por_caixa }}
-        </p>
-    
-        {% if produto.vende_por_dose %}
-    
-        <p>
-            <strong>Venda por dose:</strong>
-            Sim
-        </p>
-    
-        <p>
-            <strong>Volume da dose:</strong>
-            {{ produto.volume_dose_ml }} ml
-        </p>
-    
-        <p>
-            <strong>Preço da dose:</strong>
-            R$ {{ produto.preco_dose }}
-        </p>
-    
-        {% endif %}
-    
-        {% if produto.vende_por_unidade %}
-    
-        <p>
-            <strong>Preço da unidade:</strong>
-            R$ {{ produto.preco_unidade }}
-        </p>
-    
-        <p>
-            <strong>Quantidade por unidade:</strong>
-            {{ produto.quantidade_por_unidade }}
-        </p>
-    
-        {% endif %}
-    
-    </div>
-
-  
-    <!-- STATUS -->
-
-    <div class="detalhe-card">
-
-        <h2>
-            📊 Status
-        </h2>
-
-        {% if produto.ativo %}
-
-        <p>
-            <strong>Situação:</strong>
-            Ativo
-        </p>
-
-        {% else %}
-
-        <p>
-            <strong>Situação:</strong>
-            Inativo
-        </p>
-
-        {% endif %}
-
-    </div>
-
-    <!-- AÇÕES -->
-
-    <div class="detalhe-card">
-
-        <h2>
-            ⚙️ Ações
-        </h2>
-
-        <div class="acoes-produto">
+        <div class="acoes-produto detalhe-acoes">
 
             <a
                 href="/produto/editar/{{ produto.id }}"
-                class="button button-secondary"
+                class="prod-btn prod-btn-conta"
             >
-
-                <i class="fa-solid fa-pen-to-square"></i>
-
+                <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
                 Editar
-
             </a>
 
             {% if produto.ativo %}
@@ -201,13 +122,11 @@ Detalhes do Produto
             >
 
                 <button
-                    class="button button-danger"
+                    type="submit"
+                    class="prod-btn prod-btn-perigo-suave"
                 >
-
-                    <i class="fa-solid fa-ban"></i>
-
+                    <i class="fa-solid fa-ban" aria-hidden="true"></i>
                     Inativar
-
                 </button>
 
             </form>
@@ -220,13 +139,11 @@ Detalhes do Produto
             >
 
                 <button
-                    class="button button-success"
+                    type="submit"
+                    class="prod-btn prod-btn-sucesso"
                 >
-
-                    <i class="fa-solid fa-check"></i>
-
+                    <i class="fa-solid fa-check" aria-hidden="true"></i>
                     Ativar
-
                 </button>
 
             </form>
@@ -235,69 +152,199 @@ Detalhes do Produto
 
         </div>
 
+    </section>
+
+    <!-- ===================== -->
+    <!-- PRODUTO + PREÇO E EMBALAGEM -->
+    <!-- ===================== -->
+
+    <div class="detalhes-grid">
+
+        <section class="detalhe-card" aria-labelledby="det-produto">
+
+            <h2 id="det-produto">
+                <i class="fa-solid fa-tag" aria-hidden="true"></i>
+                Produto
+            </h2>
+
+            <dl class="detalhe-lista">
+
+                <div>
+                    <dt>Nome</dt>
+                    <dd>{{ produto.nome }}</dd>
+                </div>
+
+                {% if produto.categoria %}
+                <div>
+                    <dt>Categoria</dt>
+                    <dd>{{ produto.categoria }}</dd>
+                </div>
+                {% endif %}
+
+                {% if produto.sabor %}
+                <div>
+                    <dt>Sabor</dt>
+                    <dd>{{ produto.sabor }}</dd>
+                </div>
+                {% endif %}
+
+                {% if produto.tipo_embalagem %}
+                <div>
+                    <dt>Embalagem</dt>
+                    <dd>{{ produto.tipo_embalagem }}</dd>
+                </div>
+                {% endif %}
+
+                {% if vol %}
+                <div>
+                    <dt>Volume / Peso</dt>
+                    <dd>{{ vol }}</dd>
+                </div>
+                {% endif %}
+
+            </dl>
+
+        </section>
+
+        <section class="detalhe-card" aria-labelledby="det-preco">
+
+            <h2 id="det-preco">
+                <i class="fa-solid fa-coins" aria-hidden="true"></i>
+                Preço e embalagem
+            </h2>
+
+            <dl class="detalhe-lista">
+
+                <div class="detalhe-lista-destaque">
+                    <dt>Preço de venda</dt>
+                    <dd>{{ moeda(produto.preco_venda) }}</dd>
+                </div>
+
+                {% if produto.preco_caixa %}
+                <div>
+                    <dt>Preço da caixa</dt>
+                    <dd>{{ moeda(produto.preco_caixa) }}</dd>
+                </div>
+                {% endif %}
+
+                {% if produto.quantidade_por_caixa %}
+                <div>
+                    <dt>Quantidade por caixa</dt>
+                    <dd>{{ numero(produto.quantidade_por_caixa) }}</dd>
+                </div>
+                {% endif %}
+
+                {% if produto.vende_por_unidade %}
+
+                {% if produto.preco_unidade %}
+                <div>
+                    <dt>Preço da unidade</dt>
+                    <dd>{{ moeda(produto.preco_unidade) }}</dd>
+                </div>
+                {% endif %}
+
+                {% if produto.quantidade_por_unidade %}
+                <div>
+                    <dt>Quantidade por unidade</dt>
+                    <dd>{{ numero(produto.quantidade_por_unidade) }}</dd>
+                </div>
+                {% endif %}
+
+                {% endif %}
+
+                {% if produto.vende_por_dose %}
+
+                <div>
+                    <dt>Venda por dose</dt>
+                    <dd>Sim</dd>
+                </div>
+
+                {% if produto.volume_dose_ml %}
+                <div>
+                    <dt>Volume da dose</dt>
+                    <dd>{{ numero(produto.volume_dose_ml) }} ml</dd>
+                </div>
+                {% endif %}
+
+                {% if produto.preco_dose %}
+                <div>
+                    <dt>Preço da dose</dt>
+                    <dd>{{ moeda(produto.preco_dose) }}</dd>
+                </div>
+                {% endif %}
+
+                {% endif %}
+
+            </dl>
+
+        </section>
+
     </div>
 
-    <!-- HISTÓRICO -->
+    <!-- ===================== -->
+    <!-- HISTÓRICO DE PREÇOS -->
+    <!-- ===================== -->
 
-    <div class="detalhe-card historico-card">
+    <section class="detalhe-card historico-card" aria-labelledby="det-historico">
 
-        <h2>
-            📈 Histórico de Preços
+        <h2 id="det-historico">
+            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+            Histórico de Preços
         </h2>
 
         {% if historico %}
 
-        <table class="tabela-historico">
+        <div class="tabela-wrapper">
 
-            <thead>
+            <table class="tabela-historico">
 
-                <tr>
+                <thead>
 
-                    <th>Data</th>
+                    <tr>
+                        <th>Data</th>
+                        <th>Preço Antigo</th>
+                        <th>Preço Novo</th>
+                    </tr>
 
-                    <th>Preço Antigo</th>
+                </thead>
 
-                    <th>Preço Novo</th>
+                <tbody>
 
-                </tr>
+                    {% for item in historico %}
 
-            </thead>
+                    <tr>
 
-            <tbody>
+                        <td data-label="Data">
+                            {{ item.data_alteracao.strftime('%d/%m/%Y %H:%M') }}
+                        </td>
 
-                {% for item in historico %}
+                        <td data-label="Preço Antigo">
+                            {{ moeda(item.preco_antigo) }}
+                        </td>
 
-                <tr>
+                        <td data-label="Preço Novo" class="col-novo">
+                            {{ moeda(item.preco_novo) }}
+                        </td>
 
-                    <td>
-                        {{ item.data_alteracao.strftime('%d/%m/%Y %H:%M') }}
-                    </td>
+                    </tr>
 
-                    <td>
-                        R$ {{ item.preco_antigo }}
-                    </td>
+                    {% endfor %}
 
-                    <td>
-                        R$ {{ item.preco_novo }}
-                    </td>
+                </tbody>
 
-                </tr>
+            </table>
 
-                {% endfor %}
-
-            </tbody>
-
-        </table>
+        </div>
 
         {% else %}
 
-        <p>
+        <p class="detalhe-vazio">
             Nenhuma alteração de preço registrada.
         </p>
 
         {% endif %}
 
-    </div>
+    </section>
 
 </div>
 

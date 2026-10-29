@@ -1,524 +1,601 @@
-/* ==========================
-   TÍTULO
-========================== */
+/* ==========================================================
+   MÓDULO CLIENTES — SIGC
+   Usado por: cliente.html, clientes_inativos.html e
+   editar_cliente.html. Usa somente os tokens de base.css.
+   Tudo é escopado em .pagina-clientes (e no modal do módulo),
+   então nada vaza para outros módulos.
+   ========================================================== */
 
-.content-main h1{
+   .pagina-clientes {
+    width: 100%;
+    min-width: 0;
+    color: var(--text);
+}
 
-    margin-bottom: 32px;
+/* ---------- cabeçalho da página ---------- */
 
-    font-size: 2rem;
+.clientes-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+}
 
+.clientes-titulo {
+    margin: 0 0 4px;
+    font-size: clamp(1.4rem, 2.4vw, 1.75rem);
     font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--text);
 }
 
-
-/* ==========================
-   PESQUISA
-========================== */
-
-.cliente-pesquisa{
-
-    margin-bottom: 28px;
+.clientes-descricao {
+    margin: 0;
+    font-size: .9375rem;
+    line-height: 1.5;
+    color: var(--text-muted);
 }
 
-/* ==========================
-   FORMULÁRIO
-========================== */
-
-.cliente-form{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:16px;
-}
-
-.cliente-form input{
-
-    flex:1;
-}
-
-/* ==========================
-   LISTA
-========================== */
-
-.cliente-lista{
-
-    list-style:none;
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:18px;
-
-    padding:0;
-
-    margin:0;
-}
-
-
-/* ==========================
-   ITEM
-========================== */
-
-.cliente-lista li{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    background:#fff;
-
-    padding:18px 24px;
-
-    border-radius:12px;
-
-    box-shadow:0 4px 10px rgba(0,0,0,.08);
-
-    transition:.25s;
-}
-
-.cliente-lista li:hover{
-
-    transform:translateY(-2px);
-
-    box-shadow:0 8px 18px rgba(0,0,0,.12);
-}
-
-
-/* ==========================
-   NOME
-========================== */
-
-.search-text{
-
-    font-size:18px;
-
-    font-weight:600;
-
-    color:#333;
-}
-
-
-/* ==========================
-   BOTÕES
-========================== */
-
-.cliente-acoes{
-
-    display:flex;
-
-    gap:12px;
-
-    align-items:center;
-
-}
-
-
-/* ==========================
-   RESPONSIVIDADE
-========================== */
-
-@media(max-width:768px){
-
-    .cliente-lista li{
-
-        flex-direction:column;
-
-        align-items:flex-start;
-
-        gap:18px;
-    }
-
-    .cliente-acoes{
-
-        width:100%;
-    }
-
-    .cliente-form{
-
-        flex-direction:column;
-
-        align-items:stretch;
-    }
-
-    .cliente-form input{
-
-        min-width:100%;
-    }
-}
-.search-empty{
-
-    text-align:center;
-
-    margin-top:20px;
-
-}
-
-.search-empty i{
-
-    font-size:50px;
-
-    color:#999;
-
-    margin-bottom:15px;
-
-}
-
-.search-empty h3{
-
-    margin-bottom:10px;
-
-}
-
-.search-empty p{
-
-    color:#666;
-
-    margin-bottom:20px;
-
-}
-.search-hidden{
-
-    display:none;
-
-}
-
-.button-conta{
-
-    background:#5e35b1;
-
-    color:white;
-
-
-
-}
-
-.button-conta:hover{
-
-    background:#512da8;
-
-    color:white;
-
-}
-
-/* ==========================
-   BOTÃO CADASTRAR CLIENTE
-========================== */
-
-.btn-cadastrar-cliente{
-
-    min-width: 180px;
-
-    padding: 12px 20px;
-
-    font-size: 15px;
-
+/* ---------- botões do módulo ---------- */
+
+.pagina-clientes .cliente-btn,
+.modal-cliente .cliente-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+
+    min-height: 42px;
+    padding: 0 var(--space-4);
+
+    border: 1px solid transparent;
+    border-radius: var(--input-radius);
+
+    font: inherit;
+    font-size: .875rem;
     font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
 
+    transition: background var(--transicao), border-color var(--transicao),
+                color var(--transicao), filter var(--transicao);
 }
 
-.btn-cadastrar-cliente i{
-
-    font-size: 18px;
-
+.cliente-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
 }
 
-.page-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
+/* ação principal da tela (Cadastrar, Salvar) */
+.cliente-btn-primary {
+    color: #fff;
+    background: var(--primary);
+    border-color: var(--primary);
+    margin-bottom: 22px !important;
 }
 
-.card-cliente{
-    max-width: 600px;
+.cliente-btn-primary:hover {
+    filter: brightness(.92);
 }
 
-.card-cliente h2{
-    margin-bottom:25px;
+/* ação neutra (Editar, Voltar, Clientes Inativos, Cancelar) */
+.cliente-btn-outline {
+    color: var(--text);
+    background: var(--card);
+    border-color: var(--border);
 }
 
-.form-group{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
+.cliente-btn-outline:hover {
+    background: var(--bg);
+    border-color: var(--text-muted);
 }
 
-.form-group label{
-    font-weight:600;
+/* Ver Conta Fiado: destaque estrutural em preto */
+.cliente-btn-conta {
+    color: #fff;
+    background: var(--black);
+    border-color: var(--black);
 }
 
-
-.page-header{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:30px;
-
+.cliente-btn-conta:hover {
+    filter: brightness(1.35);
 }
 
-.card-cliente{
-
-    max-width:700px;
-
+/* Desativar na lista: vermelho discreto; sólido só na confirmação */
+.cliente-btn-perigo-suave {
+    color: var(--danger);
+    background: var(--card);
+    border-color: var(--danger-border);
 }
 
-.card-cliente h2{
-
-    margin-bottom:30px;
-
+.cliente-btn-perigo-suave:hover {
+    background: var(--danger-bg);
+    border-color: var(--danger);
 }
 
-.cliente-info{
-
-    margin-bottom:30px;
-
-    padding:28px;
-
-    border-radius:16px;
-
-    background:#f7f7f7;
+.cliente-btn-perigo {
+    color: #fff;
+    background: var(--danger);
+    border-color: var(--danger);
 }
 
-.cliente-label{
-
-    display:block;
-
-    font-size:14px;
-
-    color:#666;
-
-    margin-bottom:8px;
-
+.cliente-btn-perigo:hover {
+    filter: brightness(.92);
 }
 
-.cliente-info h3{
-
-    margin:0;
-
-    font-size:42px;
-
-    font-weight:700;
-
-    color:#2e7d32;
+/* Reativar */
+.cliente-btn-sucesso {
+    color: var(--success-text);
+    background: var(--success-bg);
+    border-color: var(--success-border);
 }
 
-.cliente-form-editar{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:20px;
-
+.cliente-btn-sucesso:hover {
+    border-color: var(--success);
+    filter: brightness(.97);
 }
 
-.form-group{
+/* ---------- painel (cadastro e edição) ---------- */
 
-    display:flex;
+.cliente-painel {
+    margin-bottom: var(--space-6);
+    padding: var(--space-5) var(--space-6);
 
-    flex-direction:column;
-
-    gap:10px;
-
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
 }
 
-.form-group label{
+.cliente-painel-titulo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
 
-    font-weight:600;
-
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
 }
 
-.form-group input{
-
-    width:100%;
-
-    max-width:700px;
-
-    padding:16px 20px;
-
-    border:1px solid #d9d9d9;
-
-    border-radius:14px;
-
-    font-size:16px;
-
-    background:#fff;
-
-    transition:.2s;
+.cliente-painel-titulo i {
+    font-size: .875rem;
+    color: var(--primary);
 }
 
-.form-group input:focus{
+/* ---------- campos ---------- */
 
-    outline:none;
-
-    border-color:#2e7d32;
-
-    box-shadow:0 0 0 3px rgba(46,125,50,.15);
+.pagina-clientes .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
 }
 
-.cliente-acoes{
-
-    display:flex;
-
-    gap:12px;
-
+.pagina-clientes .form-group label {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--text);
 }
-/* =================================
-   OVERLAY DO MODAL
-================================= */
 
-.modal-overlay-cliente{
+.pagina-clientes .form-group input {
+    width: 100%;
+    max-width: none;
+    min-height: 44px;
+    padding: 0 var(--space-4);
 
-    position: fixed;
+    font: inherit;
+    font-size: .9375rem;
+    color: var(--text);
 
-    top: 0;
-    left: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--input-radius);
 
-    width: 100vw;
-    height: 100vh;
+    transition: border-color var(--transicao), box-shadow var(--transicao);
+}
 
-    background: rgba(0,0,0,.55);
+.pagina-clientes .form-group input:hover {
+    border-color: var(--text-muted);
+}
 
-    display: none;
+.pagina-clientes .form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: var(--shadow-focus);
+}
 
+/* cadastro: campo + botão na mesma linha (compacto) */
+.cliente-form {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-3);
+}
+
+.cliente-form .form-group {
+    flex: 1;
+}
+
+/* ---------- pesquisa + contagem ---------- */
+
+.cliente-pesquisa {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.cliente-pesquisa .search-box {
+    flex: 1 1 280px;
+    max-width: 480px;
+    min-width: 0;
+}
+
+.cliente-pesquisa .search-info {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* ---------- lista ---------- */
+
+.cliente-lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: 0;
+    margin: 0;
+}
+
+.cliente-lista li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-4);
+
+    padding: var(--space-3) var(--space-5);
+
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+
+    transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+
+.cliente-lista li:hover {
+    border-color: var(--text-muted);
+}
+
+.cliente-identidade {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 0;
+}
+
+.cliente-lista .search-text {
+    min-width: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+.cliente-avatar {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
 
-    align-items: center;
+    border-radius: 50%;
+    font-size: .9375rem;
+    font-weight: 700;
 
-    z-index: 9999;
-
+    color: var(--accent);
+    background: var(--black);
 }
 
-.modal-overlay-cliente.ativo{
+.cliente-avatar--grande {
+    width: 52px;
+    height: 52px;
+    font-size: 1.25rem;
+}
 
+.cliente-acoes {
     display: flex;
-
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
 }
 
-
-/* =================================
-   CAIXA DO MODAL
-================================= */
-
-.modal-cliente{
-
-    background: #ffffff;
-
-    width: 550px;
-
-    max-width: 90%;
-
-    padding: 30px;
-
-    border-radius: 16px;
-
-    box-shadow: 0 10px 30px rgba(0,0,0,.25);
-
-    animation: abrirModal .2s ease;
-
+/* inativos: leitura preservada, mas visualmente "pausado" */
+.cliente-item--inativo {
+    background: var(--bg);
+    box-shadow: none;
 }
 
+.cliente-item--inativo .cliente-avatar {
+    color: var(--text-muted);
+    background: var(--border);
+}
 
-/* =================================
-   TÍTULO
-================================= */
+.cliente-item--inativo .search-text {
+    color: var(--text-muted);
+}
 
-.modal-cliente h2{
+.cliente-selo {
+    padding: 2px 10px;
+    border-radius: 999px;
 
-    margin: 0 0 15px;
+    font-size: .6875rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
 
+    color: var(--text-muted);
+    background: var(--card);
+    border: 1px solid var(--border);
+}
+
+/* ---------- estado vazio / sem resultado ---------- */
+
+.cliente-vazio {
+    margin-bottom: var(--space-4);
+    padding: var(--space-8) var(--space-5);
     text-align: center;
 
+    background: var(--card);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
 }
 
-
-/* =================================
-   CONTEÚDO
-================================= */
-
-#conteudo-modal{
-
-    margin-top: 20px;
-
-    line-height: 1.6;
-
+.cliente-vazio i {
+    margin-bottom: var(--space-3);
+    font-size: 2rem;
+    color: var(--text-muted);
 }
 
-
-/* =================================
-   AVISO
-================================= */
-
-.alerta-conta-aberta{
-
-    text-align: left;
-
+.cliente-vazio h3 {
+    margin: 0 0 var(--space-1);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
 }
 
-.alerta-conta-aberta h3{
-
-    color: #dc3545;
-
-    margin-bottom: 15px;
-
+.cliente-vazio p {
+    margin: 0 0 var(--space-4);
+    font-size: .875rem;
+    color: var(--text-muted);
 }
 
-.texto-aviso{
-
-    margin-top: 15px;
-
-    font-weight: 600;
-
+.cliente-vazio p:last-child {
+    margin-bottom: 0;
 }
 
+.cliente-vazio .cliente-btn i {
+    margin: 0;
+    font-size: inherit;
+    color: inherit;
+}
 
-/* =================================
-   BOTÕES
-================================= */
+.search-hidden {
+    display: none !important;
+}
 
-.modal-botoes{
+/* ---------- edição ---------- */
 
+.pagina-clientes--form {
+    max-width: 720px;
+    margin-inline: auto;
+}
+
+.cliente-info {
     display: flex;
+    align-items: center;
+    gap: var(--space-4);
 
-    justify-content: center;
+    margin-bottom: var(--space-5);
+    padding: var(--space-4) var(--space-5);
 
-    gap: 12px;
-
-    margin-top: 25px;
-
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
 }
 
+.cliente-info-texto {
+    flex: 1;
+    min-width: 0;
+}
 
-/* =================================
-   ANIMAÇÃO
-================================= */
+.cliente-label {
+    display: block;
+    margin-bottom: 2px;
 
-@keyframes abrirModal{
+    font-size: .6875rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
 
-    from{
+.cliente-info h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
 
-        opacity: 0;
+.cliente-form-editar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
 
-        transform: translateY(-10px);
+.cliente-acoes--formulario {
+    justify-content: flex-end;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border);
+}
 
+/* ---------- modal de desativação ---------- */
+
+.modal-overlay-cliente {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-4);
+    background: rgba(28, 28, 28, .6);
+    z-index: 9999;
+}
+
+.modal-overlay-cliente.ativo {
+    display: flex;
+}
+
+.modal-cliente {
+    width: 520px;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: var(--space-6);
+
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    border-top: 4px solid var(--accent);
+    box-shadow: var(--shadow-lg, 0 10px 30px rgba(0, 0, 0, .25));
+
+    animation: abrirModal .2s ease;
+}
+
+.modal-cliente h2 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-3);
+
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.modal-cliente h2 i {
+    color: var(--accent);
+}
+
+.modal-cliente hr {
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--border);
+}
+
+#conteudo-modal {
+    margin-top: var(--space-4);
+    font-size: .9375rem;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+.alerta-conta-aberta {
+    text-align: left;
+}
+
+.alerta-conta-aberta h3 {
+    margin: 0 0 var(--space-3);
+    font-size: 1rem;
+    color: var(--danger);
+}
+
+.texto-aviso {
+    margin-top: var(--space-3);
+    font-weight: 600;
+}
+
+.modal-botoes {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+}
+
+.modal-botoes form {
+    margin: 0;
+}
+
+@keyframes abrirModal {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- responsividade ---------- */
+
+@media (max-width: 720px) {
+
+    .clientes-cabecalho .cliente-btn {
+        width: 100%;
     }
 
-    to{
-
-        opacity: 1;
-
-        transform: translateY(0);
-
+    .cliente-painel {
+        padding: var(--space-4);
     }
 
+    .cliente-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .cliente-lista li {
+        flex-direction: column;
+        align-items: stretch;
+        padding: var(--space-4);
+    }
+
+    .cliente-acoes .cliente-btn {
+        flex: 1 1 auto;
+    }
+
+    .cliente-lista li > form,
+    .cliente-lista li > form .cliente-btn {
+        width: 100%;
+    }
+
+    .cliente-info {
+        flex-wrap: wrap;
+    }
+
+    .cliente-acoes--formulario .cliente-btn {
+        flex: 1 1 100%;
+    }
+
+    .modal-botoes .cliente-btn,
+    .modal-botoes form {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .modal-cliente {
+        animation: none;
+    }
+
+    .pagina-clientes *,
+    .modal-cliente * {
+        transition: none !important;
+    }
 }

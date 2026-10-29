@@ -27,6 +27,29 @@ from app.models.produto_model import (
 
 
 # ==================================================
+# AUXILIAR: CAMPO NUMÉRICO OPCIONAL VAZIO -> None
+# ==================================================
+#
+# Um campo de formulário deixado em branco chega
+# ao Python como texto vazio (""). Em uma coluna
+# numérica do PostgreSQL, "" gera erro; já None
+# é gravado como NULL.
+#
+# Usado apenas nos campos numéricos OPCIONAIS
+# (preço da caixa, dose, avulso).
+#
+# ==================================================
+
+def _vazio_para_none(valor):
+
+    if isinstance(valor, str) and valor.strip() == "":
+
+        return None
+
+    return valor
+
+
+# ==================================================
 # LISTAR CATEGORIAS
 # ==================================================
 #
@@ -158,7 +181,7 @@ def cadastrar_produto_controller(
 
         preco_venda,
 
-        preco_caixa,
+        _vazio_para_none(preco_caixa),
 
         quantidade_por_caixa,
 
@@ -168,11 +191,11 @@ def cadastrar_produto_controller(
 
         vende_por_unidade,
 
-        volume_dose_ml,
+        _vazio_para_none(volume_dose_ml),
 
-        preco_dose,
+        _vazio_para_none(preco_dose),
 
-        preco_unidade,
+        _vazio_para_none(preco_unidade),
 
         quantidade_por_unidade,
 
@@ -245,37 +268,46 @@ def editar_produto_controller(
     quantidade_por_unidade
 ):
 
+    # ATENÇÃO: os argumentos são passados POR NOME.
+    #
+    # Antes, a chamada era posicional e a ordem dos
+    # últimos parâmetros não coincidia com a assinatura
+    # de editar_produto() no model (quantidade_por_unidade,
+    # volume_dose_ml, preco_dose, preco_unidade). Com isso,
+    # cada edição gravava os valores nas colunas erradas.
     editar_produto(
 
-        produto_id,
+        produto_id=produto_id,
 
-        nome,
+        nome=nome,
 
-        categoria,
+        categoria=categoria,
 
-        sabor,
+        sabor=sabor,
 
-        tipo_embalagem,
+        tipo_embalagem=tipo_embalagem,
 
-        volume,
+        volume=volume,
 
-        preco_venda,
+        preco_venda=preco_venda,
 
-        preco_caixa,
+        preco_caixa=_vazio_para_none(preco_caixa),
 
-        quantidade_por_caixa,
+        quantidade_por_caixa=quantidade_por_caixa,
 
-        vende_por_dose,
+        vende_por_dose=vende_por_dose,
 
-        vende_por_unidade,
+        vende_por_unidade=vende_por_unidade,
 
-        volume_dose_ml,
+        quantidade_por_unidade=_vazio_para_none(
+            quantidade_por_unidade
+        ),
 
-        preco_dose,
+        volume_dose_ml=_vazio_para_none(volume_dose_ml),
 
-        preco_unidade,
+        preco_dose=_vazio_para_none(preco_dose),
 
-        quantidade_por_unidade
+        preco_unidade=_vazio_para_none(preco_unidade)
     )
 
 

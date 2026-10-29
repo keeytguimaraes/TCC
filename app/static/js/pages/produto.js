@@ -1,118 +1,85 @@
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+/* ==========================================================
+   PRODUTOS — campos condicionais (venda por dose / avulsa)
+   Usado pelo modal de cadastro (produto.html) e pela edição
+   (editar_produto.html).
 
-        const checkboxDose =
-            document.getElementById(
-                "vende_por_dose"
-            );
+   Mantém os ids originais e a mesma regra: marcar a opção
+   mostra os campos; desmarcar esconde. Os valores digitados
+   são preservados ao alternar. Os campos escondidos usam o
+   atributo [hidden] (e não style.display), para não quebrar
+   o layout em grade.
+   ========================================================== */
 
-        const campoDose =
-            document.getElementById(
-                "campo-dose"
-            );
+   document.addEventListener("DOMContentLoaded", () => {
 
-        const campoPrecoDose =
-            document.getElementById(
+    const grupos = [
+        {
+            checkbox: "vende_por_dose",
+            // blocos que aparecem quando a opção está marcada
+            campos: [
+                "grupo-dose",
+                "campo-dose",
                 "campo-preco-dose"
-            );
+            ],
+            // campos exigidos somente enquanto a opção está marcada
+            obrigatorios: [
+                "volume_dose_ml",
+                "preco_dose"
+            ]
+        },
+        {
+            checkbox: "vende_por_unidade",
+            campos: [
+                "grupo-unidade",
+                "campo-unidade",
+                "campo-preco-unidade",
+                "campo-quantidade-unidade"
+            ],
+            obrigatorios: [
+                "preco_unidade"
+            ]
+        }
+    ];
 
-        const checkboxUnidade =
-            document.getElementById(
-                "vende_por_unidade"
-            );
+    grupos.forEach((grupo) => {
 
-        const campoPrecoUnidade =
-            document.getElementById(
-                "campo-preco-unidade"
-            );
+        const checkbox = document.getElementById(grupo.checkbox);
 
-        function atualizarCampos() {
+        if (!checkbox) return;
 
-            if (
-                checkboxDose
-            ) {
+        const formulario = checkbox.form;
 
-                const mostrar =
-                    checkboxDose.checked;
+        function atualizar() {
 
-                if(campoDose)
-                    campoDose.style.display =
-                        mostrar
-                        ? "block"
-                        : "none";
+            const mostrar = checkbox.checked;
 
-                if(campoPrecoDose)
-                    campoPrecoDose.style.display =
-                        mostrar
-                        ? "block"
-                        : "none";
-            }
+            grupo.campos.forEach((id) => {
 
-            if (
-                checkboxUnidade
-            ) {
+                const elemento = document.getElementById(id);
 
-                const mostrar =
-                    checkboxUnidade.checked;
+                if (elemento) {
+                    elemento.hidden = !mostrar;
+                }
 
-                if(campoPrecoUnidade)
-                    campoPrecoUnidade.style.display =
-                        mostrar
-                        ? "block"
-                        : "none";
-            }
+            });
+
+            // Campo escondido não pode bloquear o envio do formulário.
+            grupo.obrigatorios.forEach((nome) => {
+
+                const campo = formulario && formulario.elements[nome];
+
+                if (campo) {
+                    campo.required = mostrar;
+                }
+
+            });
 
         }
 
-        if(checkboxDose){
+        checkbox.addEventListener("change", atualizar);
 
-            checkboxDose.addEventListener(
-                "change",
-                atualizarCampos
-            );
+        atualizar();
 
-        }
+    });
 
-        if(checkboxUnidade){
-
-            checkboxUnidade.addEventListener(
-                "change",
-                atualizarCampos
-            );
-
-        }
-
-        atualizarCampos();
-
-    }
-);
-
-const checkboxUnidade =
-    document.getElementById(
-        "vende_por_unidade"
-    );
-
-const campoUnidade =
-    document.getElementById(
-        "campo-unidade"
-    );
-
-if(
-    checkboxUnidade &&
-    campoUnidade
-){
-
-    checkboxUnidade.addEventListener(
-        "change",
-        () => {
-
-            campoUnidade.style.display =
-                checkboxUnidade.checked
-                    ? "block"
-                    : "none";
-
-        }
-    );
-
-}
+});

@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const input = document.getElementById("search-input");
     const contador = document.getElementById("search-count");
-    const cardNovoProduto = document.querySelector(".novo-produto-card");
+    const vazio = document.getElementById("search-empty");
 
     if (!input) return;
 
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return texto
             .toLowerCase()
             .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
+            .replace(/[̀-ͯ]/g, "");
 
     }
 
@@ -27,12 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         itens.forEach(item => {
 
+            const alvo = item.querySelector(
+                ".search-text"
+            );
+
             const texto = normalizarTexto(
-
-                item.querySelector(
-                    ".search-text"
-                ).textContent
-
+                alvo ? alvo.textContent : ""
             );
 
             if(texto.includes(pesquisa)){
@@ -86,19 +86,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
-        // CARD NOVO PRODUTO
+        // ESTADO VAZIO DA PESQUISA
 
-        if(cardNovoProduto){
+        if(vazio){
 
-            if(pesquisa === ""){
-
-                cardNovoProduto.style.display = "flex";
-
-            }else{
-
-                cardNovoProduto.style.display = "none";
-
-            }
+            vazio.hidden = !(
+                pesquisa !== "" &&
+                encontrados === 0
+            );
 
         }
 

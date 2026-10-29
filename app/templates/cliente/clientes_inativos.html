@@ -15,98 +15,131 @@ Clientes Inativos
 
 {% block conteudo %}
 
-<h1>Clientes Inativos</h1>
+<div class="pagina-clientes">
 
-<a
-    href="/cliente"
-    class="button button-secondary"
->
-    <i class="fa-solid fa-arrow-left"></i>
-    Voltar
-</a>
+    <header class="clientes-cabecalho">
 
-<br><br>
+        <div>
+            <h1 class="clientes-titulo">Clientes Inativos</h1>
+            <p class="clientes-descricao">
+                Clientes desativados. O histórico deles é mantido e eles podem ser reativados.
+            </p>
+        </div>
 
-<div class="cliente-pesquisa">
+        <a
+            href="/cliente"
+            class="cliente-btn cliente-btn-outline"
+        >
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Voltar
+        </a>
 
-    <div class="search-box">
+    </header>
 
-        <i class="fa-solid fa-magnifying-glass"></i>
+    <section class="cliente-lista-secao" aria-label="Lista de clientes inativos">
 
-        <input
-            type="text"
-            id="search-input"
-            placeholder="Pesquisar cliente..."
+        <div class="cliente-pesquisa">
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Pesquisar cliente..."
+                    aria-label="Pesquisar cliente inativo"
+                >
+
+            </div>
+
+            <div class="search-info">
+
+                <span id="search-count">
+
+                    {{ clientes|length }} cliente(s)
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <div
+            class="cliente-vazio search-empty search-hidden"
+            id="search-empty"
         >
 
-    </div>
+            <i class="fa-solid fa-user-slash" aria-hidden="true"></i>
 
-    <div class="search-info">
+            <h3>Nenhum cliente encontrado</h3>
 
-        <span id="search-count">
+            <p>
+                Nenhum cliente corresponde à pesquisa.
+            </p>
 
-            {{ clientes|length }} cliente(s)
+        </div>
 
-        </span>
+        {% if not clientes %}
 
-    </div>
+        <div class="cliente-vazio">
+
+            <i class="fa-solid fa-user-check" aria-hidden="true"></i>
+
+            <h3>Nenhum cliente inativo encontrado</h3>
+
+            <p>
+                Todos os clientes cadastrados estão ativos.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+        <ul class="cliente-lista">
+
+            {% for cliente in clientes %}
+
+            <li class="search-item cliente-item--inativo">
+
+                <div class="cliente-identidade">
+
+                    <span class="cliente-avatar" aria-hidden="true">{{ (cliente.nome or '?')[:1]|upper }}</span>
+
+                    <strong class="search-text">
+
+                        {{ cliente.nome }}
+
+                    </strong>
+
+                    <span class="cliente-selo">Inativo</span>
+
+                </div>
+
+                <form
+                    action="/cliente/reativar/{{ cliente.id }}"
+                    method="POST"
+                >
+
+                    <button
+                        type="submit"
+                        class="cliente-btn cliente-btn-sucesso"
+                    >
+                        <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+                        Reativar
+                    </button>
+
+                </form>
+
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+    </section>
 
 </div>
-
-<div
-    class="card search-empty search-hidden"
-    id="search-empty"
->
-
-    <div class="card-body">
-
-        <i class="fa-solid fa-user-slash"></i>
-
-        <h3>Nenhum cliente encontrado</h3>
-
-        <p>
-            Nenhum cliente corresponde à pesquisa.
-        </p>
-
-    </div>
-
-</div>
-
-<ul class="cliente-lista">
-
-    {% for cliente in clientes %}
-
-    <li class="search-item">
-
-        <strong class="search-text">
-
-            {{ cliente.nome }}
-
-        </strong>
-
-        <form
-            action="/cliente/reativar/{{ cliente.id }}"
-            method="POST"
-        >
-
-            <button
-                type="submit"
-                class="button button-success"
-            >
-
-                <i class="fa-solid fa-rotate-left"></i>
-
-                Reativar
-
-            </button>
-
-        </form>
-
-    </li>
-
-    {% endfor %}
-
-</ul>
 
 {% endblock %}
 

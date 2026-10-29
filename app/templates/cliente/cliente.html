@@ -15,77 +15,45 @@ Clientes
 
 {% block conteudo %}
 
-<h1>Clientes</h1>
+<div class="pagina-clientes">
 
+    <!-- ===================== -->
+    <!-- CABEÇALHO -->
+    <!-- ===================== -->
 
-<div class="cliente-pesquisa">
+    <header class="clientes-cabecalho">
 
-    <div class="search-box">
+        <div>
+            <h1 class="clientes-titulo">Clientes</h1>
+            <p class="clientes-descricao">
+                Cadastre, consulte e gerencie os clientes e as contas de fiado.
+            </p>
+        </div>
 
-        <i class="fa-solid fa-magnifying-glass"></i>
-
-        <input
-            type="text"
-            id="search-input"
-            placeholder="Pesquisar cliente..."
+        <a
+            href="/cliente/inativos"
+            class="cliente-btn cliente-btn-outline"
         >
+            <i class="fa-solid fa-user-slash" aria-hidden="true"></i>
+            Clientes Inativos
+        </a>
 
-    </div>
+    </header>
 
-    <a
-        href="/cliente/inativos"
-        class="button button-secondary"
+    <!-- ===================== -->
+    <!-- NOVO CLIENTE -->
+    <!-- ===================== -->
+
+    <section
+        class="cliente-painel"
+        id="card-cadastro"
+        aria-labelledby="titulo-cadastro"
     >
-        <i class="fa-solid fa-user-slash"></i>
-        Clientes Inativos
-    </a>
-    
-    <div class="search-info">
 
-        <span id="search-count">
-    
-            {{ clientes|length }} cliente(s)
-    
-        </span>
-    
-    </div>
-
-</div>
-<div class="card search-empty search-hidden" id="search-empty">
-
-    <div class="card-body">
-
-        <i class="fa-solid fa-user-slash"></i>
-
-        <h3>Nenhum cliente encontrado</h3>
-
-        <p>
-            Nenhum cliente corresponde à pesquisa.
-        </p>
-
-        <button
-    type="button"
-    class="button button-success btn-cadastrar-cliente"
-    id="btn-cadastrar-cliente"
->
-    <i class="fa-solid fa-plus"></i>
-    Cadastrar cliente
-</button>
-
-    </div>
-
-</div>
-
-<div class="card"
-id="card-cadastro">
-
-    <div class="card-header">
-
-        <h2>Novo Cliente</h2>
-
-    </div>
-
-    <div class="card-body">
+        <h2 class="cliente-painel-titulo" id="titulo-cadastro">
+            <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+            Novo Cliente
+        </h2>
 
         <form
             action="{{ url_for('cadastrar_cliente') }}"
@@ -93,114 +61,184 @@ id="card-cadastro">
             class="cliente-form"
         >
 
-        <div class="form-group">
+            <div class="form-group">
 
-            <label for="nome-cliente">
-        
-                <i class="fa-solid fa-user"></i>
-        
-                Nome do Cliente
-        
-            </label>
-        
-            <input
-        
-                type="text"
-        
-                id="nome-cliente"
-        
-                name="nome"
-        
-                class="input"
-        
-                placeholder="Digite o nome do cliente"
-        
-                required
-        
+                <label for="nome-cliente">
+                    Nome do Cliente
+                </label>
+
+                <input
+                    type="text"
+                    id="nome-cliente"
+                    name="nome"
+                    class="input"
+                    placeholder="Digite o nome do cliente"
+                    required
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="cliente-btn cliente-btn-primary"
             >
-        
-        </div>
-
-            <button class="button button-success">
-
-                <i class="fa-solid fa-plus"></i>
-
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
                 Cadastrar
-
             </button>
 
         </form>
 
-    </div>
+    </section>
+
+    <!-- ===================== -->
+    <!-- PESQUISA + LISTA -->
+    <!-- ===================== -->
+
+    <section class="cliente-lista-secao" aria-label="Lista de clientes">
+
+        <div class="cliente-pesquisa">
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Pesquisar cliente..."
+                    aria-label="Pesquisar cliente"
+                >
+
+            </div>
+
+            <div class="search-info">
+
+                <span id="search-count">
+
+                    {{ clientes|length }} cliente(s)
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="cliente-vazio search-empty search-hidden" id="search-empty">
+
+            <i class="fa-solid fa-user-slash" aria-hidden="true"></i>
+
+            <h3>Nenhum cliente encontrado</h3>
+
+            <p>
+                Nenhum cliente corresponde à pesquisa.
+            </p>
+
+            <button
+                type="button"
+                class="cliente-btn cliente-btn-primary btn-cadastrar-cliente"
+                id="btn-cadastrar-cliente"
+            >
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                Cadastrar cliente
+            </button>
+
+        </div>
+
+        {% if not clientes %}
+
+        <div class="cliente-vazio">
+
+            <i class="fa-solid fa-users" aria-hidden="true"></i>
+
+            <h3>Nenhum cliente cadastrado</h3>
+
+            <p>
+                Use o formulário acima para cadastrar o primeiro cliente.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+        <ul class="cliente-lista">
+
+            {% for cliente in clientes %}
+
+            <li class="search-item">
+
+                <div class="cliente-identidade">
+
+                    <span class="cliente-avatar" aria-hidden="true">{{ (cliente.nome or '?')[:1]|upper }}</span>
+
+                    <strong class="search-text">
+
+                        {{ cliente.nome }}
+
+                    </strong>
+
+                </div>
+
+                <div class="cliente-acoes">
+
+                    <a
+                        href="/cliente/fiado/{{ cliente.id }}"
+                        class="cliente-btn cliente-btn-conta"
+                    >
+                        <i class="fa-solid fa-wallet" aria-hidden="true"></i>
+                        Ver Conta Fiado
+                    </a>
+
+                    <a
+                        href="{{ url_for('tela_editar_cliente', id_cliente=cliente.id) }}"
+                        class="cliente-btn cliente-btn-outline"
+                    >
+                        <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                        Editar
+                    </a>
+
+                    <button
+                        type="button"
+                        class="cliente-btn cliente-btn-perigo-suave"
+                        onclick="abrirModalDesativar(
+                            '{{ cliente.id }}',
+                            '{{ cliente.nome }}',
+                            '{{ cliente.conta_aberta }}',
+                            '{{ cliente.saldo_devedor }}'
+                        )"
+                    >
+                        <i class="fa-solid fa-user-lock" aria-hidden="true"></i>
+                        Desativar
+                    </button>
+
+                </div>
+
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+    </section>
 
 </div>
 
-<ul class="cliente-lista">
+<!-- ===================== -->
+<!-- MODAL DESATIVAR -->
+<!-- ===================== -->
 
-    {% for cliente in clientes %}
-
-    <li class="search-item">
-
-        <strong class="search-text">
-
-            {{ cliente.nome }}
-
-        </strong>
-
-        <div class="cliente-acoes">
-
-            <a
-            href="/cliente/fiado/{{ cliente.id }}"
-            class="button button-conta"
-        >
-        
-            <i class="fa-solid fa-wallet"></i>
-        
-            Ver Conta Fiado
-        
-        </a>
-        
-
-            <a
-                href="{{ url_for('tela_editar_cliente', id_cliente=cliente.id) }}"
-                class="button button-secondary"
-            >
-
-                <i class="fa-solid fa-pen"></i>
-
-                Editar
-
-            </a>
-
-            <button
-            type="button"
-            class="button button-danger"
-            onclick="abrirModalDesativar(
-                '{{ cliente.id }}',
-                '{{ cliente.nome }}',
-                '{{ cliente.conta_aberta }}',
-                '{{ cliente.saldo_devedor }}'
-            )"
-        >
-        <i class="fa-solid fa-user-lock"></i>
-            Desativar
-        </button>
-
-    </div>
-
-    </li>
-
-    {% endfor %}
-
-</ul>
-
-<div class="modal-overlay-cliente" id="modalDesativar">
+<div
+    class="modal-overlay-cliente"
+    id="modalDesativar"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="titulo-modal"
+>
 
     <div class="modal-cliente">
 
         <h2 id="titulo-modal">
 
-            <i class="fa-solid fa-triangle-exclamation"></i>
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
 
             Desativar Cliente
 
@@ -215,24 +253,24 @@ id="card-cadastro">
         <div class="modal-botoes">
 
             <button
-    type="button"
-    class="button button-secondary"
-    onclick="fecharModalDesativar()"
->
-    Cancelar
-</button>
+                type="button"
+                class="cliente-btn cliente-btn-outline"
+                onclick="fecharModalDesativar()"
+            >
+                Cancelar
+            </button>
 
             <form
-            id="formDesativarCliente"
+                id="formDesativarCliente"
                 method="POST"
             >
 
                 <button
-                id="btnDesativarCliente"
+                    id="btnDesativarCliente"
                     type="submit"
-                    class="button button-danger"
+                    class="cliente-btn cliente-btn-perigo"
                 >
-                Desativar
+                    Desativar
                 </button>
 
             </form>

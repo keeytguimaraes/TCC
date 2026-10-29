@@ -1,0 +1,22 @@
+{# ==========================================================
+    Funções de apresentação do módulo Produtos.
+    Só formatam o que será exibido; não alteram dados.
+    Uso:  {% from "produto/_macros.html" import moeda, numero, volume %}
+    ========================================================== #}
+ 
+ {# Valor monetário com duas casas (mesmo padrão decimal já usado no sistema). #}
+ {% macro moeda(valor) -%}
+ R$ {{ '%.2f'|format((valor or 0)|float) }}
+ {%- endmacro %}
+ 
+ {# Quantidade sem casas desnecessárias: 350.0 -> 350 | 0.5 -> 0.5 #}
+ {% macro numero(valor) -%}
+ {{ '%g'|format((valor or 0)|float) }}
+ {%- endmacro %}
+ 
+ {# Volume/peso legível: "350.0ml" -> "350ml". Retorna vazio quando é zero ou ausente. #}
+ {% macro volume(valor) -%}
+ {%- set s = (valor if valor is not none else '')|string|trim -%}
+ {%- set s = s.replace('.0ml', 'ml').replace('.0kg', 'kg').replace('.0L', 'L').replace('.0g', 'g') -%}
+ {%- if s not in ['', '0', '0ml', '0L', '0g', '0kg'] -%}{{ s }}{%- endif -%}
+ {%- endmacro %}

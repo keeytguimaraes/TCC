@@ -1,4 +1,5 @@
 {% extends "base/base.html" %}
+{% from "produto/_macros.html" import moeda, numero, volume %}
 
 {% block titulo %}
 Produtos
@@ -6,582 +7,565 @@ Produtos
 
 {% block css %}
 
-
-<link
-    rel="stylesheet"
-    href="{{ url_for(
-        'static',
-        filename='css/pages/estoque.css'
-    ) }}"
->
-
-
 <link
     rel="stylesheet"
     href="{{ url_for('static', filename='css/pages/produto.css') }}"
 >
+
 {% endblock %}
 
 {% block conteudo %}
 
-<div class="page-header">
+{# Filtro selecionado, deduzido da rota que renderizou a página. #}
+{% set filtro = 'inativos' if request.endpoint == 'produtos_inativos'
+                else ('ativos' if request.endpoint == 'produtos_ativos' else 'todos') %}
 
-    <div class="page-title">
+<div class="pagina-produtos">
 
-        <h1>
-            Produtos
-        </h1>
+    <!-- ===================== -->
+    <!-- CABEÇALHO -->
+    <!-- ===================== -->
 
-    </div>
+    <header class="produtos-cabecalho">
 
+        <div>
+            <h1 class="produtos-titulo">Produtos</h1>
+            <p class="produtos-descricao">
+                Catálogo de produtos. Clique em um produto para ver os detalhes e o histórico de preços.
+            </p>
+        </div>
 
-</div>
-
-<div class="produto-pesquisa">
-
-    <div class="search-box">
-
-        <i class="fa-solid fa-magnifying-glass"></i>
-
-        <input
-            type="text"
-            id="search-input"
-            placeholder="Pesquisar produto..."
+        <button
+            type="button"
+            class="prod-btn prod-btn-primary novo-produto-card"
+            data-modal="produto-modal"
         >
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            Novo Produto
+        </button>
+
+    </header>
+
+    <!-- ===================== -->
+    <!-- PESQUISA + FILTROS -->
+    <!-- ===================== -->
+
+    <div class="produtos-barra produto-pesquisa">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Pesquisar produto..."
+                aria-label="Pesquisar produto"
+            >
+
+        </div>
+
+        <nav class="produtos-filtros filtros-produto" aria-label="Filtrar produtos por situação">
+
+            <a
+                href="/produto"
+                class="{{ 'ativo' if filtro == 'todos' }}"
+                {% if filtro == 'todos' %}aria-current="page"{% endif %}
+            >
+                Todos
+            </a>
+
+            <a
+                href="/produto/ativos"
+                class="{{ 'ativo' if filtro == 'ativos' }}"
+                {% if filtro == 'ativos' %}aria-current="page"{% endif %}
+            >
+                Ativos
+            </a>
+
+            <a
+                href="/produto/inativos"
+                class="{{ 'ativo' if filtro == 'inativos' }}"
+                {% if filtro == 'inativos' %}aria-current="page"{% endif %}
+            >
+                Inativos
+            </a>
+
+        </nav>
+
+        <div class="search-info">
+
+            <span id="search-count" aria-live="polite">
+
+                {{ produtos|length }} produto(s)
+
+            </span>
+
+        </div>
 
     </div>
 
-    <div class="search-info">
+    <!-- ===================== -->
+    <!-- ESTADOS VAZIOS -->
+    <!-- ===================== -->
 
-        <span id="search-count">
+    <div class="prod-vazio" id="search-empty" hidden>
 
-            {{ produtos|length }} produto(s)
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
 
-        </span>
+        <h3>Nenhum produto encontrado</h3>
 
-    </div>
-    <div
-    class="novo-produto-card"
-    data-modal="produto-modal"
->
-
-    <div class="novo-produto-icon">
-
-        <i class="fa-solid fa-plus"></i>
+        <p>Nenhum produto corresponde à pesquisa.</p>
 
     </div>
 
-    <div>
+    {% if not produtos %}
+
+    <div class="prod-vazio">
+
+        <i class="fa-solid fa-box-open" aria-hidden="true"></i>
 
         <h3>
-            Novo Produto
+            {% if filtro == 'ativos' %}Nenhum produto ativo
+            {% elif filtro == 'inativos' %}Nenhum produto inativo
+            {% else %}Nenhum produto cadastrado{% endif %}
         </h3>
 
         <p>
-            Cadastre um item no catálogo
+            {% if filtro == 'todos' %}
+            Use o botão "Novo Produto" para cadastrar o primeiro item do catálogo.
+            {% else %}
+            Nenhum produto corresponde a este filtro.
+            {% endif %}
         </p>
 
     </div>
 
-</div>
+    {% endif %}
 
-</div>
+    <!-- ===================== -->
+    <!-- CATÁLOGO -->
+    <!-- ===================== -->
 
-<div
-    class="modal"
-    id="produto-modal"
->
+    <div class="catalogo-grid">
 
-    <div class="modal-content">
+        {% for produto in produtos %}
 
-        <div class="modal-header">
+        {% set vol = volume(produto.volume)|trim %}
 
-            <h2>
-                Novo Produto
-            </h2>
-
-            <button
-                class="modal-close"
-                data-close-modal
-            >
-
-                ×
-
-            </button>
-
-        </div>
-
-        <form
-            action="/produto/cadastrar"
-            method="POST"
-            enctype="multipart/form-data"
+        <a
+            href="/produto/detalhes/{{ produto.id }}"
+            class="catalogo-link product-card-link search-item"
         >
 
-            <div class="modal-body">
+            <article class="catalogo-card {{ 'catalogo-card--inativo' if not produto.ativo }}">
 
-                    <div class="form-group">
-                
-                        <label>
-                            Nome do produto
-                        </label>
-                
-                        <input
-                            type="text"
-                            name="nome"
-                            required
-                        >
-                
-                    </div>
-                
-                    <div class="form-group">
-                
-                        <label>
-                            Categoria
-                        </label>
-                
-                        <input
-                            type="text"
-                            name="categoria"
-                            placeholder="Bebida, Comida..."
-                            required
-                        >
-                
-                    </div>
+                <div class="catalogo-imagem">
 
-                    <div class="form-group">
+                    {% if produto.imagem %}
 
-                        <label>
-                            Sabor
-                        </label>
-                    
-                        <input
-                            type="text"
-                            name="sabor"
-                            placeholder="Original, Zero, Queijo, Presunto..."
-                        >
-                    
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            Tipo da embalagem
-                        </label>
-                    
-                        <select name="tipo_embalagem">
-                    
-                            <option value="">
-                                Escolha uma opção
-                            </option>
-                    
-                            <option value="Lata">
-                                Lata
-                            </option>
-                    
-                            <option value="PET">
-                                PET
-                            </option>
-                    
-                            <option value="KS">
-                                KS
-                            </option>
-                    
-                            <option value="Long Neck">
-                                Long Neck
-                            </option>
-                    
-                            <option value="Pacote">
-                                Pacote
-                            </option>
-                    
-                            <option value="Saco">
-                                Saco
-                            </option>
-                    
-                            <option value="Garrafa">
-                                Garrafa
-                            </option>
-                    
-                        </select>
-                    
-                    </div>
-                    <div class="form-group">
-
-                        <label>
-                            Imagem do Produto
-                        </label>
-                    
-                        <input
-                            type="file"
-                            name="imagem"
-                            accept="image/*"
-                        >
-                    
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            Volume / Peso
-                        </label>
-                        
-                        <input
-                            type="number"
-                            step="0.01"
-                            name="valor_volume"
-                        >
-                        
-                        <select name="unidade_volume">
-                        
-                            <option value="ml">
-                                ml
-                            </option>
-                        
-                            <option value="L">
-                                L
-                            </option>
-                        
-                            <option value="g">
-                                g
-                            </option>
-                        
-                            <option value="kg">
-                                kg
-                            </option>
-                        
-                        </select>
-                    
-                    </div>
-                    
-                
-                    <div class="form-group">
-                
-                        <label>
-                            Preço de venda
-                        </label>
-                
-                        <input
-                            type="number"
-                            step="0.01"
-                            name="preco_venda"
-                            required
-                        >
-                
-                    </div>
-
-                    
-                
-                    <div class="form-group">
-                
-                        <label>
-                            Quantidade por caixa
-                        </label>
-                
-                        <input
-                            type="number"
-                            name="quantidade_por_caixa"
-                            required
-                        >
-                
-                    </div>
-
-                    <div class="form-group">
-                    <label>
-                        Estoque mínimo
-                    </label>
-                    
-                    <input
-                        type="number"
-                        name="estoque_minimo"
-                        min="0"
-                        value="10"
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='uploads/produtos/' ~ produto.imagem
+                        ) }}"
+                        alt="{{ produto.nome }}"
+                        loading="lazy"
                     >
-                </div>
-              
-                <div class="form-group">
 
-                    <label>
-                        Preço da caixa
-                    </label>
-                
-                    <input
-                        type="number"
-                        step="0.01"
-                        name="preco_caixa"
-                    >
-                
-                </div>
-                
-                    <div class="checkbox-group">
+                    {% else %}
 
-                        <input
-                            type="checkbox"
-                            id="vende_por_dose"
-                            name="vende_por_dose"
-                        >
-                    
-                        <label for="vende_por_dose">
-                    
-                            Produto vendido por dose
-                    
-                        </label>
-                    
+                    <i class="fa-solid fa-box" aria-hidden="true"></i>
+
+                    {% endif %}
+
+                    {% if produto.ativo %}
+                    <span class="prod-selo prod-selo--ativo catalogo-selo">Ativo</span>
+                    {% else %}
+                    <span class="prod-selo prod-selo--inativo catalogo-selo">Inativo</span>
+                    {% endif %}
+
+                </div>
+
+                <div class="catalogo-corpo">
+
+                    {% if produto.categoria %}
+                    <span class="catalogo-categoria">{{ produto.categoria }}</span>
+                    {% endif %}
+
+                    <h3 class="catalogo-titulo search-text">
+                        {{ produto.nome }}
+                        {% if vol %}<span class="prod-volume">{{ vol }}</span>{% endif %}
+                    </h3>
+
+                    {% if produto.tipo_embalagem or produto.sabor %}
+                    <dl class="catalogo-dados">
+
+                        {% if produto.tipo_embalagem %}
+                        <div>
+                            <dt>Embalagem</dt>
+                            <dd>{{ produto.tipo_embalagem }}</dd>
+                        </div>
+                        {% endif %}
+
+                        {% if produto.sabor %}
+                        <div>
+                            <dt>Sabor</dt>
+                            <dd>{{ produto.sabor }}</dd>
+                        </div>
+                        {% endif %}
+
+                    </dl>
+                    {% endif %}
+
+                    <div class="catalogo-rodape">
+
+                        <span class="catalogo-preco">
+                            {{ moeda(produto.preco_venda) }}
+                        </span>
+
+                        <div class="catalogo-extras">
+
+                            {% if produto.quantidade_por_caixa %}
+                            <span class="prod-chip">
+                                <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+                                {{ numero(produto.quantidade_por_caixa) }} por caixa
+                            </span>
+                            {% endif %}
+
+                            {% if produto.vende_por_dose and produto.volume_dose_ml %}
+                            <span class="prod-chip prod-chip--aviso">
+                                <i class="fa-solid fa-whiskey-glass" aria-hidden="true"></i>
+                                Dose {{ numero(produto.volume_dose_ml) }}ml
+                            </span>
+                            {% endif %}
+
+                            {% if produto.vende_por_unidade %}
+                            <span class="prod-chip prod-chip--aviso">
+                                <i class="fa-solid fa-cubes" aria-hidden="true"></i>
+                                Venda avulsa
+                            </span>
+                            {% endif %}
+
+                        </div>
+
                     </div>
 
-                    <div
-    class="form-group"
-    id="campo-preco-dose"
-    style="display:none;"
->
-
-    <label>
-        Preço da dose
-    </label>
-
-    <input
-        type="number"
-        step="0.01"
-        name="preco_dose"
-        placeholder="R$3,00"
-    >
-
-</div>
-
-                    <div class="checkbox-group">
-
-                        <input
-                            type="checkbox"
-                            id="vende_por_unidade"
-                            name="vende_por_unidade"
-                        >
-                    
-                        <label for="vende_por_unidade">
-                    
-                            Produto vendido avulso
-                    
-                        </label>
-                    
-                    </div>
-
-                    <div
-    class="form-group"
-    id="campo-unidade"
-    style="display:none;"
->
-
-    <label>
-        Preço da unidade
-    </label>
-
-    <input
-        type="number"
-        step="0.01"
-        name="preco_unidade"
-        placeholder="0.50"
-    >
-
-    <label>
-        Quantidade por unidade
-    </label>
-
-    <input
-        type="number"
-        name="quantidade_por_unidade"
-        placeholder="20"
-    >
-
-</div>
-
-                    <div
-    class="form-group"
-    id="campo-dose"
-    style="display:none;"
->
-
-    <label>
-        Volume da dose (ml)
-    </label>
-
-    <input
-        type="number"
-        name="volume_dose_ml"
-        placeholder="50"
-    >
-
-</div>
-                
                 </div>
 
-            <div class="modal-footer">
+            </article>
 
-                <button
-                    type="button"
-                    class="button button-secondary"
-                    data-close-modal
-                >
+        </a>
 
-                    Cancelar
-
-                </button>
-
-                <button
-                    class="button button-success"
-                >
-
-                    Salvar
-
-                </button>
-
-            </div>
-
-        </form>
+        {% endfor %}
 
     </div>
 
-</div>
+    <!-- ===================== -->
+    <!-- MODAL: NOVO PRODUTO -->
+    <!-- ===================== -->
 
-<h2>
-    Produtos cadastrados
-</h2>
-
-<div class="filtros-produto">
-
-    <a href="/produto">
-        Todos
-    </a>
-
-    <a href="/produto/ativos">
-        Ativos
-    </a>
-
-    <a href="/produto/inativos">
-        Inativos
-    </a>
-
-</div>
-
-<div class="product-grid">
-
-    {% for produto in produtos %}
-
-    <a
-        href="/produto/detalhes/{{ produto.id }}"
-        class="product-card-link search-item"
+    <div
+        class="modal"
+        id="produto-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="produto-modal-titulo"
     >
 
-        <div class="product-card">
+        <div class="modal-content">
 
-            <div class="product-card-image">
+            <div class="modal-header">
 
-                {% if produto.imagem %}
+                <h2 id="produto-modal-titulo">
+                    Novo Produto
+                </h2>
 
-                <img
-                    src="{{ url_for(
-                        'static',
-                        filename='uploads/produtos/' ~ produto.imagem
-                    ) }}"
-                    alt="{{ produto.nome }}"
+                <button
+                    type="button"
+                    class="modal-close"
+                    data-close-modal
+                    aria-label="Fechar"
                 >
 
-                {% else %}
+                    ×
 
-                <i class="fa-solid fa-box"></i>
-
-                {% endif %}
+                </button>
 
             </div>
 
-            <div class="product-card-body">
+            <form
+                action="/produto/cadastrar"
+                method="POST"
+                enctype="multipart/form-data"
+            >
 
-                <h3 class="product-card-title search-text">
+                <div class="modal-body">
 
-                    {{ produto.nome }}
+                    <!-- IDENTIFICAÇÃO -->
 
-                    {% if produto.volume %}
-                        {{ produto.volume }}
-                    {% endif %}
+                    <fieldset class="prod-secao">
 
-                </h3>
+                        <legend>Identificação</legend>
 
-                <div class="product-card-details">
+                        <div class="prod-grid">
 
-                    <div class="info-row">
-                        <span class="info-label">Categoria</span>
-                        <span class="info-value">{{ produto.categoria }}</span>
-                    </div>
-                
-                    <div class="info-row">
-                        <span class="info-label">Embalagem</span>
-                        <span class="info-value">{{ produto.tipo_embalagem }}</span>
-                    </div>
-                
-                    {% if produto.sabor %}
-                    <div class="info-row">
-                        <span class="info-label">Sabor</span>
-                        <span class="info-value">{{ produto.sabor }}</span>
-                    </div>
-                    {% endif %}
-                
-                    {% if produto.volume %}
-                    <div class="info-row">
-                        <span class="info-label">Volume</span>
-                        <span class="info-value">{{ produto.volume }}</span>
-                    </div>
-                    {% endif %}
-                
+                            <div class="form-group prod-campo prod-campo--cheio">
+                                <label for="prod-nome">Nome do produto</label>
+                                <input
+                                    type="text"
+                                    id="prod-nome"
+                                    name="nome"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group prod-campo">
+                                <label for="prod-categoria">Categoria</label>
+                                <input
+                                    type="text"
+                                    id="prod-categoria"
+                                    name="categoria"
+                                    placeholder="Bebida, Comida..."
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group prod-campo">
+                                <label for="prod-sabor">Sabor</label>
+                                <input
+                                    type="text"
+                                    id="prod-sabor"
+                                    name="sabor"
+                                    placeholder="Original, Zero, Queijo, Presunto..."
+                                >
+                            </div>
+
+                            <div class="form-group prod-campo">
+                                <label for="prod-embalagem">Tipo da embalagem</label>
+                                <select id="prod-embalagem" name="tipo_embalagem">
+                                    <option value="">Escolha uma opção</option>
+                                    <option value="Lata">Lata</option>
+                                    <option value="PET">PET</option>
+                                    <option value="KS">KS</option>
+                                    <option value="Long Neck">Long Neck</option>
+                                    <option value="Pacote">Pacote</option>
+                                    <option value="Saco">Saco</option>
+                                    <option value="Garrafa">Garrafa</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group prod-campo">
+                                <label for="prod-valor-volume">Volume / Peso</label>
+                                <div class="prod-duplo">
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        id="prod-valor-volume"
+                                        name="valor_volume"
+                                        required
+                                    >
+                                    <select
+                                        name="unidade_volume"
+                                        aria-label="Unidade de medida"
+                                    >
+                                        <option value="ml">ml</option>
+                                        <option value="L">L</option>
+                                        <option value="g">g</option>
+                                        <option value="kg">kg</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group prod-campo prod-campo--cheio">
+                                <label for="prod-imagem">Imagem do Produto</label>
+                                <input
+                                    type="file"
+                                    id="prod-imagem"
+                                    name="imagem"
+                                    accept="image/*"
+                                >
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+
+                    <!-- PREÇOS E ESTOQUE -->
+
+                    <fieldset class="prod-secao">
+
+                        <legend>Preços e estoque</legend>
+
+                        <div class="prod-grid">
+
+                            <div class="form-group prod-campo">
+                                <label for="prod-preco-venda">Preço de venda</label>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    id="prod-preco-venda"
+                                    name="preco_venda"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group prod-campo">
+                                <label for="prod-preco-caixa">Preço da caixa</label>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    id="prod-preco-caixa"
+                                    name="preco_caixa"
+                                >
+                            </div>
+
+                            <div class="form-group prod-campo">
+                                <label for="prod-qtd-caixa">Quantidade por caixa</label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    id="prod-qtd-caixa"
+                                    name="quantidade_por_caixa"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group prod-campo">
+                                <label for="prod-estoque-minimo">Estoque mínimo</label>
+                                <input
+                                    type="number"
+                                    id="prod-estoque-minimo"
+                                    name="estoque_minimo"
+                                    min="0"
+                                    value="10"
+                                >
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+
+                    <!-- FORMAS DE VENDA -->
+
+                    <fieldset class="prod-secao">
+
+                        <legend>Formas de venda</legend>
+
+                        <div class="checkbox-group prod-opcao">
+
+                            <input
+                                type="checkbox"
+                                id="vende_por_dose"
+                                name="vende_por_dose"
+                            >
+
+                            <label for="vende_por_dose">
+                                Produto vendido por dose
+                            </label>
+
+                        </div>
+
+                        <div class="prod-condicional" id="grupo-dose" hidden>
+
+                            <div class="form-group prod-campo" id="campo-dose" hidden>
+                                <label for="prod-volume-dose">Volume da dose (ml)</label>
+                                <input
+                                    type="number"
+                                    id="prod-volume-dose"
+                                    name="volume_dose_ml"
+                                    min="0"
+                                    placeholder="50"
+                                >
+                            </div>
+
+                            <div class="form-group prod-campo" id="campo-preco-dose" hidden>
+                                <label for="prod-preco-dose">Preço da dose</label>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    id="prod-preco-dose"
+                                    name="preco_dose"
+                                    placeholder="R$3,00"
+                                >
+                            </div>
+
+                        </div>
+
+                        <div class="checkbox-group prod-opcao">
+
+                            <input
+                                type="checkbox"
+                                id="vende_por_unidade"
+                                name="vende_por_unidade"
+                            >
+
+                            <label for="vende_por_unidade">
+                                Produto vendido avulso
+                            </label>
+
+                        </div>
+
+                        <div class="prod-condicional" id="campo-unidade" hidden>
+
+                            <div class="form-group prod-campo">
+                                <label for="prod-preco-unidade">Preço da unidade</label>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    id="prod-preco-unidade"
+                                    name="preco_unidade"
+                                    placeholder="0.50"
+                                >
+                            </div>
+
+                            <div class="form-group prod-campo">
+                                <label for="prod-qtd-unidade">Quantidade por unidade</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    id="prod-qtd-unidade"
+                                    name="quantidade_por_unidade"
+                                    placeholder="20"
+                                >
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+
                 </div>
 
-                <div class="product-card-info">
+                <div class="modal-footer">
 
-                    <div class="product-price">
-                        R$ {{ produto.preco_venda }}
-                    </div>
-                
-                    <div class="product-extra">
-                
-                        <span>
-                            📦 {{ produto.quantidade_por_caixa }} por caixa
-                        </span>
-                
-                        {% if produto.vende_por_dose %}
-                        <span>
-                            🥃 Dose {{ produto.volume_dose_ml }}ml
-                        </span>
-                        {% endif %}
+                    <button
+                        type="button"
+                        class="prod-btn prod-btn-outline"
+                        data-close-modal
+                    >
+                        Cancelar
+                    </button>
 
-                        {% if produto.vende_por_unidade %}
+                    <button
+                        type="submit"
+                        class="prod-btn prod-btn-primary"
+                    >
+                        <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+                        Salvar
+                    </button>
 
-<span>
-Venda avulsa
-</span>
-
-{% endif %}
-                
-                    </div>
-                
-                    {% if produto.ativo %}
-                
-                    <span class="badge badge-success">
-                        Ativo
-                    </span>
-                
-                    {% else %}
-                
-                    <span class="badge badge-danger">
-                        Inativo
-                    </span>
-                
-                    {% endif %}
-                
                 </div>
 
-            </div>
+            </form>
 
         </div>
 
-    </a>
-
-    {% endfor %}
+    </div>
 
 </div>
 
