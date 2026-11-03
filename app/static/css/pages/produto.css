@@ -44,90 +44,6 @@
     color: var(--text-muted);
 }
 
-/* ---------- botões ---------- */
-
-.pagina-produtos .prod-btn,
-#produto-modal .prod-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
-
-    min-height: 42px;
-    padding: 0 var(--space-4);
-
-    border: 1px solid transparent;
-    border-radius: var(--input-radius);
-
-    font: inherit;
-    font-size: .875rem;
-    font-weight: 600;
-    text-decoration: none;
-    white-space: nowrap;
-    cursor: pointer;
-
-    transition: background var(--transicao), border-color var(--transicao),
-                color var(--transicao), filter var(--transicao);
-}
-
-.prod-btn:focus-visible {
-    outline: none;
-    box-shadow: var(--shadow-focus);
-}
-
-.prod-btn-primary {
-    color: #fff;
-    background: var(--primary);
-    border-color: var(--primary);
-}
-
-.prod-btn-primary:hover {
-    filter: brightness(.92);
-}
-
-.prod-btn-outline {
-    color: var(--text);
-    background: var(--card);
-    border-color: var(--border);
-}
-
-.prod-btn-outline:hover {
-    background: var(--bg);
-    border-color: var(--text-muted);
-}
-
-.prod-btn-conta {
-    color: #fff;
-    background: var(--black);
-    border-color: var(--black);
-}
-
-.prod-btn-conta:hover {
-    filter: brightness(1.35);
-}
-
-.prod-btn-perigo-suave {
-    color: var(--danger);
-    background: var(--card);
-    border-color: var(--danger-border);
-}
-
-.prod-btn-perigo-suave:hover {
-    background: var(--danger-bg);
-    border-color: var(--danger);
-}
-
-.prod-btn-sucesso {
-    color: var(--success-text);
-    background: var(--success-bg);
-    border-color: var(--success-border);
-}
-
-.prod-btn-sucesso:hover {
-    border-color: var(--success);
-    filter: brightness(.97);
-}
-
 /* ---------- selos e chips ---------- */
 
 .prod-selo {
@@ -475,9 +391,7 @@
 
 .pagina-produtos .form-group,
 #produto-modal .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
+    /* display, direção e espaçamento vêm de input.css (.form-group). */
     min-width: 0;
     margin: 0;
 }
@@ -621,7 +535,6 @@
 #produto-modal .modal-header {
     flex-shrink: 0;
     padding: var(--space-4) var(--space-6);
-    border-bottom: 1px solid var(--border);
 }
 
 #produto-modal .modal-header h2 {
@@ -685,7 +598,6 @@
     flex-shrink: 0;
     padding: var(--space-4) var(--space-6);
     background: var(--card);
-    border-top: 1px solid var(--border);
 }
 
 /* ---------- edição ---------- */
@@ -721,7 +633,7 @@
 
 @media (max-width: 720px) {
 
-    .produtos-cabecalho .prod-btn {
+    .produtos-cabecalho .btn {
         width: 100%;
     }
 
@@ -754,7 +666,7 @@
         padding: var(--space-4);
     }
 
-    .prod-acoes .prod-btn {
+    .prod-acoes .btn {
         flex: 1 1 100%;
     }
 
@@ -772,7 +684,7 @@
         padding-inline: var(--space-4);
     }
 
-    #produto-modal .modal-footer .prod-btn {
+    #produto-modal .modal-footer .btn {
         flex: 1;
     }
 }

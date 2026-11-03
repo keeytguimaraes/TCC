@@ -9,6 +9,16 @@ Detalhes do Produto
 
 <link
     rel="stylesheet"
+    href="{{ url_for('static', filename='css/components/acoes.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/components/confirmar.css') }}"
+>
+
+<link
+    rel="stylesheet"
     href="{{ url_for('static', filename='css/pages/produto.css') }}"
 >
 
@@ -43,7 +53,7 @@ Detalhes do Produto
 
         <a
             href="/produto"
-            class="prod-btn prod-btn-outline"
+            class="btn btn-cancelar"
         >
             <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
             Voltar
@@ -108,7 +118,7 @@ Detalhes do Produto
 
             <a
                 href="/produto/editar/{{ produto.id }}"
-                class="prod-btn prod-btn-conta"
+                class="btn btn-editar"
             >
                 <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
                 Editar
@@ -119,11 +129,16 @@ Detalhes do Produto
             <form
                 action="/produto/inativar/{{ produto.id }}"
                 method="POST"
+                data-confirmar="desativar"
+                data-verbo="inativar"
+                data-registro="produto"
+                data-nome="{{ produto.nome }}"
+                data-explicacao="O produto não será excluído: vendas, movimentações de estoque e histórico de preços continuam registrados. Ele deixará de aparecer na lista de ativos, porém poderá ser ativado novamente."
             >
 
                 <button
                     type="submit"
-                    class="prod-btn prod-btn-perigo-suave"
+                    class="btn btn-desativar"
                 >
                     <i class="fa-solid fa-ban" aria-hidden="true"></i>
                     Inativar
@@ -136,11 +151,16 @@ Detalhes do Produto
             <form
                 action="/produto/ativar/{{ produto.id }}"
                 method="POST"
+                data-confirmar="reativar"
+                data-verbo="ativar"
+                data-registro="produto"
+                data-nome="{{ produto.nome }}"
+                data-explicacao="O produto voltará à lista de ativos e poderá ser vendido novamente, desde que tenha estoque."
             >
 
                 <button
                     type="submit"
-                    class="prod-btn prod-btn-sucesso"
+                    class="btn btn-reativar"
                 >
                     <i class="fa-solid fa-check" aria-hidden="true"></i>
                     Ativar
@@ -347,5 +367,16 @@ Detalhes do Produto
     </section>
 
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/confirmar.js'
+    ) }}"
+></script>
 
 {% endblock %}

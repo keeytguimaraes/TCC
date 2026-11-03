@@ -10,6 +10,22 @@ Editar Fornecedor
     rel="stylesheet"
     href="{{ url_for(
         'static',
+        filename='css/components/acoes.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/components/confirmar.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
         filename='css/pages/fornecedor.css'
     ) }}"
 >
@@ -18,84 +34,100 @@ Editar Fornecedor
 
 {% block conteudo %}
 
-<div class="page-title">
+<div class="pagina-fornecedores pagina-fornecedores--form">
 
-    <h1>
-        Editar Fornecedor
-    </h1>
+    <header class="forn-cabecalho">
 
-</div>
+        <div>
 
-<div class="editar-card">
+            <h1 class="forn-titulo">
+                Editar Fornecedor
+            </h1>
 
-    <form
-        action="/fornecedor/editar/{{ fornecedor.id }}"
-        method="POST"
-    >
-
-        <div class="form-group">
-
-            <label>
-                Nome
-            </label>
-
-            <input
-                type="text"
-                name="nome"
-                value="{{ fornecedor.nome }}"
-                required
-            >
+            <p class="forn-subtitulo">
+                Altere os dados de contato do fornecedor.
+            </p>
 
         </div>
 
-        <div class="form-group">
+    </header>
 
-            <label>
-                Telefone
-            </label>
+    <div class="editar-card forn-painel">
 
-            <input
-                type="text"
-                name="telefone"
-                value="{{ fornecedor.telefone }}"
-            >
+        <form
+            action="/fornecedor/editar/{{ fornecedor.id }}"
+            method="POST"
+        >
 
-        </div>
+            <div class="form-group forn-campo">
 
-        <div class="form-group">
+                <label for="edit-nome">
+                    Nome <span class="forn-obrig" aria-hidden="true">*</span>
+                </label>
 
-            <label>
-                Observação
-            </label>
+                <input
+                    type="text"
+                    id="edit-nome"
+                    name="nome"
+                    value="{{ fornecedor.nome or '' }}"
+                    required
+                >
 
-            <textarea
-                name="observacao"
-                rows="5"
-            >{{ fornecedor.observacao }}</textarea>
+            </div>
 
-        </div>
+            <div class="form-group forn-campo">
 
-        <div class="editar-acoes">
+                <label for="edit-telefone">
+                    Telefone
+                </label>
 
-            <a
-                href="/fornecedor"
-                class="button button-secondary"
-            >
-                <i class="fa-solid fa-arrow-left"></i>
-                Voltar
-            </a>
+                <input
+                    type="text"
+                    id="edit-telefone"
+                    name="telefone"
+                    value="{{ fornecedor.telefone or '' }}"
+                    inputmode="tel"
+                >
 
-            <button
-                type="submit"
-                class="button button-success"
-            >
-                <i class="fa-solid fa-floppy-disk"></i>
-                Salvar Alterações
-            </button>
+            </div>
 
-        </div>
+            <div class="form-group forn-campo">
 
-    </form>
+                <label for="edit-observacao">
+                    Observação
+                </label>
+
+                <textarea
+                    id="edit-observacao"
+                    name="observacao"
+                    rows="5"
+                >{{ fornecedor.observacao or '' }}</textarea>
+
+            </div>
+
+            <div class="editar-acoes forn-acoes">
+
+                <a
+                    href="/fornecedor"
+                    class="btn btn-cancelar"
+                >
+                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                    Voltar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-salvar"
+                >
+                    <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+                    Salvar Alterações
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 

@@ -10,6 +10,22 @@ Fornecedores Inativos
     rel="stylesheet"
     href="{{ url_for(
         'static',
+        filename='css/components/acoes.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/components/confirmar.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
         filename='css/pages/fornecedor.css'
     ) }}"
 >
@@ -18,83 +34,113 @@ Fornecedores Inativos
 
 {% block conteudo %}
 
-<div class="page-title">
+<div class="pagina-fornecedores">
 
-    <h1>
-        Fornecedores Inativos
-    </h1>
+    <header class="forn-cabecalho">
 
-    <p>
-        Fornecedores desativados que podem ser reativados.
-    </p>
+        <div>
 
-</div>
+            <h1 class="forn-titulo">
+                Fornecedores Inativos
+            </h1>
 
-<a
-    href="/fornecedor"
-    class="button button-secondary"
->
-    Voltar
-</a>
+            <p class="forn-subtitulo">
+                Fornecedores desativados que podem ser reativados.
+            </p>
 
-<br><br>
-
-{% if fornecedores %}
-
-<div class="fornecedor-grid">
-
-    {% for fornecedor in fornecedores %}
-
-    <div
-        class="fornecedor-card"
-    >
-
-        <h3>
-            {{ fornecedor.nome }}
-        </h3>
-
-        <p>
-
-            <strong>
-                Telefone:
-            </strong>
-
-            {{ fornecedor.telefone or '-' }}
-
-        </p>
-
-        <p>
-
-            <strong>
-                Observação:
-            </strong>
-
-            {{ fornecedor.observacao or '-' }}
-
-        </p>
+        </div>
 
         <a
-            href="/fornecedor/reativar/{{ fornecedor.id }}"
-            class="button button-success"
+            href="/fornecedor"
+            class="btn btn-cancelar"
         >
-
-            <i class="fa-solid fa-rotate-left"></i>
-
-            Reativar
-
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Voltar
         </a>
+
+    </header>
+
+    {% if fornecedores %}
+
+    <p class="forn-contagem">
+        {{ fornecedores|length }} fornecedor(es) inativo(s)
+    </p>
+
+    <div class="fornecedor-grid forn-grid">
+
+        {% for fornecedor in fornecedores %}
+
+        <article class="fornecedor-card forn-card forn-card-inativo">
+
+            <div class="forn-card-topo">
+
+                <span class="forn-avatar">
+                    <i class="fa-solid fa-truck" aria-hidden="true"></i>
+                </span>
+
+                <h3 class="forn-card-nome">
+                    {{ fornecedor.nome }}
+                </h3>
+
+            </div>
+
+            <dl class="forn-dados">
+
+                <div>
+                    <dt>Telefone</dt>
+                    {% if fornecedor.telefone and fornecedor.telefone.strip() %}
+                    <dd class="forn-telefone">{{ fornecedor.telefone }}</dd>
+                    {% else %}
+                    <dd class="forn-nulo">Não informado</dd>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <dt>Observação</dt>
+                    {% if fornecedor.observacao and fornecedor.observacao.strip() %}
+                    <dd
+                        class="forn-obs"
+                        title="{{ fornecedor.observacao }}"
+                    >{{ fornecedor.observacao }}</dd>
+                    {% else %}
+                    <dd class="forn-nulo">Sem observação</dd>
+                    {% endif %}
+                </div>
+
+            </dl>
+
+            <div class="forn-card-acoes">
+
+                <form
+                    action="/fornecedor/reativar/{{ fornecedor.id }}"
+                    method="POST"
+                    class="forn-form-acao"
+                    data-confirmar="reativar"
+                    data-registro="fornecedor"
+                    data-nome="{{ fornecedor.nome }}"
+                >
+                    <button
+                        type="submit"
+                        class="btn btn-reativar"
+                    >
+                        <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+                        Reativar
+                    </button>
+                </form>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
 
     </div>
 
-    {% endfor %}
+    {% else %}
 
-</div>
+    <div class="forn-vazio">
 
-{% else %}
-
-<div class="card">
-
-    <div class="card-body">
+        <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
 
         <h3>
             Nenhum fornecedor inativo
@@ -106,8 +152,19 @@ Fornecedores Inativos
 
     </div>
 
+    {% endif %}
+
 </div>
 
-{% endif %}
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/confirmar.js'
+    ) }}"
+></script>
 
 {% endblock %}

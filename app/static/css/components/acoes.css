@@ -1,0 +1,110 @@
+/* ============================================================
+   BOTÕES DE AÇÃO — SIGC (componente global)
+   Uso:  <button class="btn btn-desativar"> ... </button>
+   Variantes: btn-adicionar | btn-desativar | btn-reativar |
+              btn-editar | btn-salvar | btn-cancelar
+   Não altera o button.css antigo (.button-*). Os tokens têm valor
+   de reserva, então funciona com qualquer versão do base.css.
+============================================================ */
+
+.btn{
+    --btn-vermelho:var(--cor-vermelha, #c62828);
+    --btn-grafite:var(--black, #1c1c1c);
+    --btn-verde:var(--success, #2e7d32);
+    --btn-borda:var(--border, #dcdcdc);
+    --btn-texto:var(--text, #222);
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-height:40px;
+    padding:0 18px;
+    box-sizing:border-box;
+    border:1px solid transparent;
+    border-radius:10px;
+    font:inherit;
+    font-size:.9rem;
+    font-weight:600;
+    line-height:1;
+    text-decoration:none;
+    white-space:nowrap;
+    cursor:pointer;
+    transition:background-color .2s ease, border-color .2s ease,
+               box-shadow .2s ease, transform .1s ease, filter .2s ease;
+    -webkit-tap-highlight-color:transparent;
+}
+
+.btn i{
+    font-size:.95em;
+    line-height:1;
+}
+
+.btn:hover{
+    filter:brightness(.92);
+}
+
+.btn:active{
+    transform:translateY(1px);
+    filter:brightness(.86);
+}
+
+.btn:focus-visible{
+    outline:none;
+    box-shadow:0 0 0 3px #fff, 0 0 0 5px var(--btn-grafite);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"]{
+    opacity:.55;
+    cursor:not-allowed;
+    filter:none;
+    transform:none;
+}
+
+/* Compacto: linhas de tabela/lista com pouco espaço (ex.: Usuários) */
+.btn-sm{
+    min-height:36px;
+    padding:0 12px;
+    gap:6px;
+    border-radius:8px;
+    font-size:.8125rem;
+}
+
+.btn-adicionar,
+.btn-desativar{
+    background:var(--btn-vermelho);
+    color:#fff;
+}
+
+.btn-reativar{
+    background:var(--btn-verde);
+    color:#fff;
+}
+
+.btn-editar,
+.btn-salvar{
+    background:var(--btn-grafite);
+    color:#fff;
+}
+
+.btn-cancelar{
+    background:#fff;
+    border-color:var(--btn-borda);
+    color:var(--btn-texto);
+}
+
+.btn-cancelar:hover{
+    background:#f6f6f6;
+    border-color:#bdbdbd;
+    filter:none;
+}
+
+.btn-cancelar:active{
+    background:#eee;
+    filter:none;
+}
+
+@media (prefers-reduced-motion:reduce){
+    .btn{ transition:none; }
+}

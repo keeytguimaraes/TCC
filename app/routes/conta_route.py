@@ -135,7 +135,7 @@ def configurar_conta_routes(app):
         # Atualiza o status da conta cujo ID foi informado.
         sql_conta = """
             UPDATE conta_pendente
-            SET status = 'Quitada'
+            SET status = 'quitada'
             WHERE id = %s
         """
 

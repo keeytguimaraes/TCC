@@ -1,4 +1,3 @@
-
 # ============================================================
 # ROTAS DE FORNECEDORES — SIGC
 # ============================================================
@@ -233,11 +232,14 @@ def configurar_fornecedor_routes(app):
     # REATIVAR FORNECEDOR
     # --------------------------------------------------------
     # URL: /fornecedor/reativar/<id>
+    # Método: POST (alteração de estado não deve ocorrer por GET;
+    # o formulário da tela de inativos pede confirmação antes).
     #
     # Esta rota utiliza try/except para tratar exceções
     # levantadas durante a tentativa de reativação.
     @app.route(
-        "/fornecedor/reativar/<int:id>"
+        "/fornecedor/reativar/<int:id>",
+        methods=["POST"]
     )
     def reativar(id):
         """
@@ -274,11 +276,14 @@ def configurar_fornecedor_routes(app):
     # DESATIVAR FORNECEDOR
     # --------------------------------------------------------
     # URL: /fornecedor/desativar/<id>
+    # Método: POST (o formulário da listagem pede confirmação
+    # antes de enviar).
     #
     # Tenta desativar o fornecedor selecionado e apresenta
     # uma mensagem de acordo com o resultado da operação.
     @app.route(
-        "/fornecedor/desativar/<int:id>"
+        "/fornecedor/desativar/<int:id>",
+        methods=["POST"]
     )
     def desativar(id):
         """

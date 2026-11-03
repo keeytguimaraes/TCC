@@ -10,6 +10,22 @@ Fornecedor
     rel="stylesheet"
     href="{{ url_for(
         'static',
+        filename='css/components/acoes.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/components/confirmar.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
         filename='css/pages/fornecedor.css'
     ) }}"
 >
@@ -18,64 +34,72 @@ Fornecedor
 
 {% block conteudo %}
 
-<div class="page-title">
+<div class="pagina-fornecedores">
 
-    <h1>
-        Fornecedores
-    </h1>
+    <!-- CABEÇALHO -->
 
-</div>
+    <header class="forn-cabecalho">
 
-<!-- PESQUISA -->
+        <div>
 
-<div class="fornecedor-pesquisa">
+            <h1 class="forn-titulo">
+                Fornecedores
+            </h1>
 
-    <div class="search-box">
+            <p class="forn-subtitulo">
+                Cadastre e gerencie os fornecedores do comércio.
+            </p>
 
-        <i class="fa-solid fa-magnifying-glass"></i>
-
-        <input
-            type="text"
-            id="search-input"
-            placeholder="Pesquisar fornecedor..."
-        >
-
-    </div>
-
-    <div>
+        </div>
 
         <a
             href="/fornecedor/inativos"
-            class="button button-secondary"
+            class="btn btn-cancelar"
         >
-            <i class="fa-solid fa-box-archive"></i>
+            <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
             Fornecedores Inativos
         </a>
-    
+
+    </header>
+
+    <!-- PESQUISA -->
+
+    <div class="fornecedor-pesquisa forn-barra">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Pesquisar fornecedor..."
+                aria-label="Pesquisar fornecedor"
+                autocomplete="off"
+            >
+
+        </div>
+
+        <div class="search-info">
+
+            <span id="search-count">
+
+                {{ fornecedores|length }} fornecedor(es)
+
+            </span>
+
+        </div>
+
     </div>
 
-    <div class="search-info">
+    <!-- NENHUM ENCONTRADO -->
 
-        <span id="search-count">
+    <div
+        class="forn-vazio search-empty search-hidden"
+        id="search-empty"
+    >
 
-            {{ fornecedores|length }} fornecedor(es)
-
-        </span>
-
-    </div>
-
-</div>
-
-<!-- CARD NENHUM ENCONTRADO -->
-
-<div
-    class="card search-empty search-hidden"
-    id="search-empty"
->
-
-    <div class="card-body">
-
-        <i class="fa-solid fa-truck"></i>
+        <i class="fa-solid fa-truck" aria-hidden="true"></i>
 
         <h3>
             Nenhum fornecedor encontrado
@@ -86,117 +110,145 @@ Fornecedor
         </p>
 
         <button
-            class="button button-success"
+            type="button"
+            class="btn btn-adicionar"
             data-modal="fornecedor-modal"
         >
-            <i class="fa-solid fa-plus"></i>
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
             Cadastrar fornecedor
         </button>
 
     </div>
 
-</div>
+    <!-- LISTA (o primeiro item é o acesso ao cadastro) -->
 
-<!-- CARD NOVO FORNECEDOR -->
+    <div class="fornecedor-grid forn-grid">
 
-<div
-    class="nova-entrada-card"
-    id="card-cadastro"
-    data-modal="fornecedor-modal"
->
-
-    <div class="nova-entrada-icon">
-
-        <i class="fa-solid fa-truck"></i>
-
-    </div>
-
-    <h3>
-        Novo Fornecedor
-    </h3>
-
-    <p>
-        Cadastrar fornecedor
-    </p>
-
-</div>
-
-<!-- LISTA DE FORNECEDORES -->
-
-<div class="fornecedor-grid">
-
-    {% for fornecedor in fornecedores %}
-
-    <div
-        class="fornecedor-card search-item"
-    >
-
-        <h3 class="search-text">
-            {{ fornecedor.nome }}
-        </h3>
-
-        <p>
-
-            <strong>
-                Telefone:
-            </strong>
-
-            {{ fornecedor.telefone }}
-
-        </p>
-
-        <p>
-
-            <strong>
-                Observação:
-            </strong>
-
-            {{ fornecedor.observacao }}
-
-        </p>
-
-        <a
-            href="/fornecedor/editar/{{ fornecedor.id }}"
-            class="button button-secondary"
+        <button
+            type="button"
+            class="nova-entrada-card forn-novo"
+            id="card-cadastro"
+            data-modal="fornecedor-modal"
         >
 
-            <i class="fa-solid fa-pen-to-square"></i>
+            <span class="forn-novo-icone">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            </span>
 
-            Editar
+            <span class="forn-novo-texto">
+                <strong>Novo Fornecedor</strong>
+                <small>Cadastrar fornecedor</small>
+            </span>
 
-        </a>
+        </button>
 
-        <a
-    href="/fornecedor/desativar/{{ fornecedor.id }}"
-    class="button button-danger"
->
-    Desativar
-</a>
+        {% for fornecedor in fornecedores %}
+
+        <article class="fornecedor-card forn-card search-item">
+
+            <div class="forn-card-topo">
+
+                <span class="forn-avatar">
+                    <i class="fa-solid fa-truck" aria-hidden="true"></i>
+                </span>
+
+                <h3 class="search-text forn-card-nome">
+                    {{ fornecedor.nome }}
+                </h3>
+
+            </div>
+
+            <dl class="forn-dados">
+
+                <div>
+                    <dt>Telefone</dt>
+                    {% if fornecedor.telefone and fornecedor.telefone.strip() %}
+                    <dd class="forn-telefone">{{ fornecedor.telefone }}</dd>
+                    {% else %}
+                    <dd class="forn-nulo">Não informado</dd>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <dt>Observação</dt>
+                    {% if fornecedor.observacao and fornecedor.observacao.strip() %}
+                    <dd
+                        class="forn-obs"
+                        title="{{ fornecedor.observacao }}"
+                    >{{ fornecedor.observacao }}</dd>
+                    {% else %}
+                    <dd class="forn-nulo">Sem observação</dd>
+                    {% endif %}
+                </div>
+
+            </dl>
+
+            <div class="forn-card-acoes">
+
+                <a
+                    href="/fornecedor/editar/{{ fornecedor.id }}"
+                    class="btn btn-editar"
+                >
+                    <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                    Editar
+                </a>
+
+                <form
+                    action="/fornecedor/desativar/{{ fornecedor.id }}"
+                    method="POST"
+                    class="forn-form-acao"
+                    data-confirmar="desativar"
+                    data-registro="fornecedor"
+                    data-nome="{{ fornecedor.nome }}"
+                >
+                    <button
+                        type="submit"
+                        class="btn btn-desativar"
+                    >
+                        <i class="fa-solid fa-ban" aria-hidden="true"></i>
+                        Desativar
+                    </button>
+                </form>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
 
     </div>
 
-    {% endfor %}
+    {% if not fornecedores %}
+    <p class="forn-aviso">
+        Nenhum fornecedor ativo cadastrado ainda.
+    </p>
+    {% endif %}
 
 </div>
 
-<!-- MODAL -->
+<!-- MODAL: NOVO FORNECEDOR -->
 
 <div
-    class="modal"
+    class="modal forn-modal"
     id="fornecedor-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="fornecedor-modal-titulo"
 >
 
     <div class="modal-content">
 
         <div class="modal-header">
 
-            <h2>
+            <h2 id="fornecedor-modal-titulo">
                 Novo Fornecedor
             </h2>
 
             <button
+                type="button"
                 class="modal-close"
                 data-close-modal
+                aria-label="Fechar"
             >
                 ×
             </button>
@@ -210,40 +262,46 @@ Fornecedor
 
             <div class="modal-body">
 
-                <div class="form-group">
+                <div class="form-group forn-campo">
 
-                    <label>
-                        Nome
+                    <label for="novo-nome">
+                        Nome <span class="forn-obrig" aria-hidden="true">*</span>
                     </label>
 
                     <input
                         type="text"
+                        id="novo-nome"
                         name="nome"
                         required
+                        autocomplete="off"
                     >
 
                 </div>
 
-                <div class="form-group">
+                <div class="form-group forn-campo">
 
-                    <label>
+                    <label for="novo-telefone">
                         Telefone
                     </label>
 
                     <input
                         type="text"
+                        id="novo-telefone"
                         name="telefone"
+                        inputmode="tel"
+                        autocomplete="off"
                     >
 
                 </div>
 
-                <div class="form-group">
+                <div class="form-group forn-campo">
 
-                    <label>
+                    <label for="novo-observacao">
                         Observação
                     </label>
 
                     <textarea
+                        id="novo-observacao"
                         name="observacao"
                         rows="4"
                     ></textarea>
@@ -256,7 +314,7 @@ Fornecedor
 
                 <button
                     type="button"
-                    class="button button-secondary"
+                    class="btn btn-cancelar"
                     data-close-modal
                 >
                     Cancelar
@@ -264,8 +322,9 @@ Fornecedor
 
                 <button
                     type="submit"
-                    class="button button-success"
+                    class="btn btn-salvar"
                 >
+                    <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
                     Salvar
                 </button>
 
@@ -292,6 +351,13 @@ Fornecedor
     src="{{ url_for(
         'static',
         filename='js/components/search_fornecedor.js'
+    ) }}"
+></script>
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/confirmar.js'
     ) }}"
 ></script>
 

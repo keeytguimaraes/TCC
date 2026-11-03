@@ -9,6 +9,11 @@ Produtos
 
 <link
     rel="stylesheet"
+    href="{{ url_for('static', filename='css/components/acoes.css') }}"
+>
+
+<link
+    rel="stylesheet"
     href="{{ url_for('static', filename='css/pages/produto.css') }}"
 >
 
@@ -37,7 +42,7 @@ Produtos
 
         <button
             type="button"
-            class="prod-btn prod-btn-primary novo-produto-card"
+            class="btn btn-adicionar novo-produto-card"
             data-modal="produto-modal"
         >
             <i class="fa-solid fa-plus" aria-hidden="true"></i>
@@ -545,7 +550,7 @@ Produtos
 
                     <button
                         type="button"
-                        class="prod-btn prod-btn-outline"
+                        class="btn btn-cancelar"
                         data-close-modal
                     >
                         Cancelar
@@ -553,7 +558,7 @@ Produtos
 
                     <button
                         type="submit"
-                        class="prod-btn prod-btn-primary"
+                        class="btn btn-salvar"
                     >
                         <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
                         Salvar

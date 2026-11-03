@@ -194,7 +194,7 @@ def fechar_conta_pendente(conta_id):
     sql = """
         UPDATE conta_pendente
 
-        SET status = 'Quitada'
+        SET status = 'quitada'
 
         WHERE id = %s
     """

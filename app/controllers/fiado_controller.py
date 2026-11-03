@@ -167,7 +167,7 @@ def receber_pagamento_fiado(
         novo_saldo = 0
 
         status_conta = (
-            "Quitada"
+            "quitada"
         )
 
     else:

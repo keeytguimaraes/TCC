@@ -1,421 +1,508 @@
-/* ==========================
-   TÍTULO
-========================== */
+/* ============================================================
+   FORNECEDORES — SIGC
+   Identidade: preto / vermelho / amarelo. Usa os tokens do base.css.
+   Tudo é limitado a .pagina-fornecedores e aos modais .forn-modal,
+   para não afetar outras telas nem os modais globais.
+============================================================ */
 
-.page-title{
-
-    margin-bottom:24px;
-
+.pagina-fornecedores [hidden],
+.pagina-fornecedores .search-hidden,
+.forn-modal [hidden]{
+    display:none !important;
 }
 
-.page-title h1{
-
-    margin:0;
-
-    font-size:2rem;
-
-    font-weight:700;
-
-}
-
-/* ==========================
-   CARD NOVO FORNECEDOR
-========================== */
-
-.nova-entrada-card{
-
-    width:350px;
-
-    height:250px;
-
-    margin:24px auto;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    text-align:center;
-
-    gap:20px;
-
-    background:#fff;
-
-    border-radius:28px;
-
-    cursor:pointer;
-
-    box-shadow:
-        0 4px 12px rgba(0,0,0,.08);
-
-    transition:.25s;
-
-}
-
-.nova-entrada-card:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:
-        0 10px 20px rgba(0,0,0,.12);
-
-}
-
-.nova-entrada-icon{
-
-    width:70px;
-
-    height:70px;
-
-    border-radius:50%;
-
-    background:#2e7d32;
-
-    color:white;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-size:28px;
-
-}
-
-.nova-entrada-card h3{
-
-    margin:0;
-
-}
-
-.nova-entrada-card p{
-
-    margin:0;
-
-    color:#777;
-
-}
-
-/* ==========================
-   GRID FORNECEDORES
-========================== */
-
-.fornecedor-grid{
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fill,
-            minmax(320px,1fr)
-        );
-
-    gap:24px;
-
-    margin-top:30px;
-
-}
-
-/* ==========================
-   CARD FORNECEDOR
-========================== */
-
-.fornecedor-card{
-
-    background:#fff;
-
-    padding:24px;
-
-    border-radius:18px;
-
-    box-shadow:
-        0 4px 12px rgba(0,0,0,.08);
-
-    transition:.25s;
-
-}
-
-.fornecedor-card:hover{
-
-    transform:translateY(-3px);
-
-}
-
-.fornecedor-card h3{
-
-    margin-top:0;
-
-    margin-bottom:16px;
-
-    color:#2e7d32;
-
-}
-
-.fornecedor-card p{
-
-    margin:10px 0;
-
-    color:#444;
-
-    line-height:1.5;
-
-}
-
-/* ==========================
-   MODAL
-========================== */
-
-.modal-content{
-
-    width:700px;
-
-    max-width:95%;
-
-    border-radius:20px;
-
-}
-
-.modal-body{
-
-    padding:25px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:20px;
-
-}
-
-.form-group{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:8px;
-
-}
-
-.form-group label{
-
-    font-weight:600;
-
-    color:#333;
-
-}
-
-.form-group input,
-.form-group textarea{
-
+.pagina-fornecedores{
     width:100%;
-
-    padding:12px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    font-size:15px;
-
-    box-sizing:border-box;
-
+    max-width:1200px;
+    margin-inline:auto;
 }
 
-.form-group textarea{
+/* ---------- Cabeçalho ---------- */
 
-    resize:vertical;
-
-}
-
-.modal-footer{
-
+.forn-cabecalho{
     display:flex;
-
-    justify-content:flex-end;
-
-    gap:12px;
-
-    padding:20px;
-
-    border-top:1px solid #eee;
-
-}
-
-/* ==========================
-   RESPONSIVO
-========================== */
-
-@media(max-width:768px){
-
-    .fornecedor-grid{
-
-        grid-template-columns:1fr;
-
-    }
-
-    .nova-entrada-card{
-
-        width:100%;
-
-        max-width:350px;
-
-    }
-
-}
-
-/* ==========================
-   EDITAR FORNECEDOR
-========================== */
-
-.editar-card{
-
-    background:#fff;
-
-    padding:30px;
-
-    border-radius:20px;
-
-    box-shadow:
-        0 4px 12px rgba(0,0,0,.08);
-
-    max-width:800px;
-
-    margin:auto;
-
-}
-
-.editar-card form{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:20px;
-
-}
-
-.editar-acoes{
-
-    display:flex;
-
+    align-items:flex-end;
     justify-content:space-between;
+    flex-wrap:wrap;
+    gap:var(--space-4);
+    margin-bottom:var(--space-6);
+}
 
+.forn-titulo{
+    margin:0;
+    font-size:1.75rem;
+    font-weight:800;
+    letter-spacing:-.01em;
+    color:var(--black);
+}
+
+.forn-titulo::after{
+    content:"";
+    display:block;
+    width:48px;
+    height:4px;
+    margin-top:var(--space-2);
+    border-radius:2px;
+    background:var(--accent);
+}
+
+.forn-subtitulo{
+    margin:var(--space-2) 0 0;
+    color:var(--text-muted);
+}
+
+/* ---------- Pesquisa ---------- */
+
+.forn-barra{
+    display:flex;
     align-items:center;
-
-    margin-top:10px;
-
+    flex-wrap:wrap;
+    gap:var(--space-3) var(--space-4);
+    margin-bottom:var(--space-5);
 }
 
-/* ==========================
-   PESQUISA
-========================== */
-
-.pesquisa-container{
-
-    margin-bottom:25px;
-
+/* O .search-box global (search.css) já é o campo: flex, borda, padding e
+   ícone dentro. Aqui só se ajusta o que muda nesta página. */
+.pagina-fornecedores .search-box{
+    flex:1 1 280px;
+    width:auto;
+    max-width:520px;
+    min-height:44px;
+    margin:0;
+    padding:0 var(--space-4);
+    border-radius:var(--input-radius);
 }
 
-.pesquisa-container input{
+.pagina-fornecedores .search-box:focus-within{
+    border-color:var(--accent);
+    box-shadow:var(--shadow-focus);
+}
 
+.pagina-fornecedores .search-box i{
+    color:var(--text-muted);
+    font-size:1rem;
+}
+
+.pagina-fornecedores .search-box input{
+    flex:1;
+    min-width:0;
+    min-height:42px;
+    padding:0;
+    color:var(--text);
+    font:inherit;
+}
+
+.pagina-fornecedores .search-info{
+    margin:0;
+    color:var(--text-muted);
+    font-size:.9rem;
+    font-weight:600;
+}
+
+.forn-contagem{
+    margin:0 0 var(--space-4);
+    color:var(--text-muted);
+    font-size:.9rem;
+    font-weight:600;
+}
+
+/* ---------- Grade e cartões ---------- */
+
+.forn-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:var(--space-4);
+    align-items:stretch;
+}
+
+.forn-card{
+    display:flex;
+    flex-direction:column;
+    gap:var(--space-4);
+    min-width:0;
+    padding:var(--space-5);
+    background:var(--card);
+    border:1px solid var(--border);
+    border-top:3px solid var(--black);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    transition:var(--transicao);
+}
+
+.forn-card:hover{
+    border-color:var(--accent);
+    border-top-color:var(--accent);
+}
+
+.forn-card-inativo{
+    border-top-color:var(--border);
+}
+
+.forn-card-topo{
+    display:flex;
+    align-items:center;
+    gap:var(--space-3);
+    min-width:0;
+}
+
+.forn-avatar{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--black);
+    color:var(--accent);
+    font-size:1rem;
+}
+
+.forn-card-inativo .forn-avatar{
+    background:var(--bg);
+    color:var(--text-muted);
+    border:1px solid var(--border);
+}
+
+.forn-card-nome{
+    margin:0;
+    min-width:0;
+    font-size:1.05rem;
+    font-weight:700;
+    line-height:1.3;
+    color:var(--black);
+    overflow-wrap:anywhere;
+}
+
+.forn-dados{
+    display:flex;
+    flex-direction:column;
+    gap:var(--space-3);
+    margin:0;
+}
+
+.forn-dados dt{
+    margin:0 0 2px;
+    font-size:.72rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--text-muted);
+}
+
+.forn-dados dd{
+    margin:0;
+    color:var(--text);
+    line-height:1.45;
+}
+
+.forn-telefone{
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+    font-weight:600;
+}
+
+.forn-obs{
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    line-clamp: 3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    overflow-wrap:anywhere;
+}
+
+.forn-dados .forn-nulo{
+    color:var(--text-muted);
+    font-style:italic;
+}
+
+.forn-card-acoes{
+    display:flex;
+    flex-wrap:wrap;
+    gap:var(--space-2);
+    margin-top:auto;
+    padding-top:var(--space-3);
+    border-top:1px solid var(--border);
+}
+
+.forn-card-acoes > *{
+    flex:1 1 110px;
+}
+
+.forn-form-acao{
+    display:flex;
+    margin:0;
+}
+
+.forn-form-acao .btn,
+.forn-card-acoes > .btn{
     width:100%;
+}
 
-    padding:14px;
+/* ---------- Acesso ao cadastro (primeiro item da grade) ---------- */
 
-    border:1px solid #ddd;
-
-    border-radius:12px;
-
-    font-size:15px;
-
+.forn-novo{
+    display:flex;
+    align-items:center;
+    gap:var(--space-4);
+    align-self:start;
+    padding:var(--space-5);
     box-sizing:border-box;
+    background:var(--card);
+    border:2px dashed var(--border);
+    border-radius:var(--radius-lg);
+    font:inherit;
+    text-align:left;
+    color:var(--text);
+    cursor:pointer;
+    transition:var(--transicao);
+    /* neutraliza o estilo antigo (.nova-entrada-card) caso exista em outro CSS */
+    width:auto;
+    height:auto;
+    margin:0;
+    box-shadow:none;
+}
+
+.forn-novo:hover{
+    border-color:var(--accent);
+    background:var(--warning-bg);
+    transform:none;
+    box-shadow:none;
+}
+
+.forn-novo-icone{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:var(--cor-vermelha, #c62828);
+    color:#fff;
+    font-size:1.2rem;
+}
+
+.forn-novo-texto{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.forn-novo-texto strong{
+    font-size:1.05rem;
+    color:var(--black);
+}
+
+.forn-novo-texto small{
+    color:var(--text-muted);
+    font-size:.88rem;
+}
+
+.forn-aviso{
+    margin:var(--space-4) 0 0;
+    color:var(--text-muted);
+    text-align:center;
+}
+
+/* ---------- Estados vazios ---------- */
+
+.forn-vazio{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:var(--space-2);
+    width:100%;
+    max-width:420px;
+    margin:var(--space-6) auto;
+    padding:var(--space-6) var(--space-5);
+    box-sizing:border-box;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    text-align:center;
+}
+
+.forn-vazio i{
+    font-size:2rem;
+    color:var(--accent);
+}
+
+.forn-vazio h3{
+    margin:var(--space-2) 0 0;
+    font-size:1.2rem;
+    color:var(--black);
+}
+
+.forn-vazio p{
+    margin:0 0 var(--space-3);
+    color:var(--text-muted);
+}
+
+.forn-vazio p:last-child{
+    margin-bottom:0;
+}
+
+/* ---------- Formulários (cadastro e edição) ---------- */
+
+.forn-campo{
+    display:flex;
+    flex-direction:column;
+    gap:var(--space-2);
+}
+
+.forn-campo label{
+    font-size:.9rem;
+    font-weight:600;
+    color:var(--text);
+}
+
+.forn-obrig{
+    color:var(--danger);
+}
+
+.forn-campo input,
+.forn-campo textarea{
+    width:100%;
+    box-sizing:border-box;
+    padding:11px 14px;
+    border:1px solid var(--border);
+    border-radius:var(--input-radius);
+    background:var(--card);
+    color:var(--text);
+    font:inherit;
+}
+
+.forn-campo input{
+    min-height:44px;
+}
+
+.forn-campo textarea{
+    min-height:110px;
+    resize:vertical;
+}
+
+.forn-campo input:focus,
+.forn-campo textarea:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:var(--shadow-focus);
+}
+
+/* Página de edição */
+
+.pagina-fornecedores--form{
+    max-width:760px;
+}
+
+.forn-painel{
+    padding:var(--space-6);
+    background:var(--card);
+    border:1px solid var(--border);
+    border-top:4px solid var(--accent);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+}
+
+.forn-painel form{
+    display:flex;
+    flex-direction:column;
+    gap:var(--space-5);
+}
+
+.forn-acoes{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:var(--space-3);
+    margin-top:var(--space-2);
+    padding-top:var(--space-5);
+    border-top:1px solid var(--border);
+}
+
+/* ---------- Modais ---------- */
+
+.forn-modal{
+    align-items:center;
+}
+
+.forn-modal .modal-content{
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    max-width:540px;
+    max-height:calc(100vh - 32px);
+    overflow:hidden;
+    border-top:4px solid var(--accent);
+    border-radius:var(--radius-lg);
+}
+
+.forn-modal .modal-header{
+    flex:0 0 auto;
+}
+
+.forn-modal form{
+    display:flex;
+    flex-direction:column;
+    flex:1 1 auto;
+    min-height:0;
+}
+
+.forn-modal .modal-body{
+    display:flex;
+    flex-direction:column;
+    gap:var(--space-4);
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    padding:var(--space-5);
+}
+
+.forn-modal .modal-body p{
+    margin:0;
+}
+
+.forn-modal .modal-footer{
+    flex:0 0 auto;
+    flex-wrap:wrap;
+    gap:var(--space-3);
+    padding:var(--space-4) var(--space-5);
+}
+
+/* ---------- Responsivo ---------- */
+
+@media (max-width:560px){
+
+    .forn-cabecalho .btn,
+    .forn-acoes .btn{
+        width:100%;
+    }
+
+    .forn-acoes{
+        flex-direction:column-reverse;
+        align-items:stretch;
+    }
+
+    .forn-grid{
+        grid-template-columns:1fr;
+    }
+
+    .forn-painel{
+        padding:var(--space-5);
+    }
+
+    .forn-modal .modal-footer .btn{
+        flex:1 1 auto;
+    }
 
 }
 
-.search-hidden{
+@media (prefers-reduced-motion:reduce){
 
-    display:none;
-
-}
-
-.fornecedor-pesquisa{
-
-    margin-bottom:24px;
-
-}
-
-.search-info{
-
-    margin-top:10px;
-
-    color:#666;
-
-}
-
-.search-empty{
-
-    max-width: 420px;
-
-    margin: 30px auto;
-
-    padding: 40px 30px;
-
-    background: #fff;
-
-    border-radius: 24px;
-
-    box-shadow:
-        0 4px 12px rgba(0,0,0,.08);
-
-    text-align: center;
-
-}
-
-.search-empty .card-body{
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 15px;
-
-}
-
-.search-empty i{
-
-    font-size: 42px;
-
-    color: #2e7d32;
-
-}
-
-.search-empty h3{
-
-    margin: 0;
-
-    font-size: 24px;
-
-}
-
-.search-empty p{
-
-    margin: 0;
-
-    color: #666;
-
-    line-height: 1.5;
-
-}
-
-.search-empty{
-
-    grid-column: 1 / -1;
+    .forn-card,
+    .forn-novo{
+        transition:none;
+    }
 
 }

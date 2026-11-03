@@ -1,0 +1,147 @@
+/* ============================================================
+   MODAL DE CONFIRMAÇÃO — SIGC (componente global)
+   Criado por js/components/confirmar.js. Usa <dialog> e classes
+   próprias (.confirmar-*): não interfere em .modal / .modal-content
+   dos modais de cadastro e edição.
+============================================================ */
+
+.confirmar{
+    --confirmar-cor:var(--cor-vermelha, #c62828);
+    padding:0;
+    border:0;
+    background:transparent;
+    max-height:none;
+    overflow:visible;
+    width:calc(100% - 32px);
+    max-width:460px;
+    margin:auto;
+}
+
+.confirmar[data-tipo="reativar"]{
+    --confirmar-cor:var(--success, #2e7d32);
+}
+
+/* Ação impedida (ex.: cliente com conta em aberto): só informa */
+.confirmar[data-tipo="bloqueado"]{
+    --confirmar-cor:var(--accent, #f5b800);
+}
+
+.confirmar::backdrop{
+    background:rgba(0,0,0,.5);
+    opacity:0;
+    transition:opacity .2s ease;
+}
+
+.confirmar.is-aberto::backdrop{
+    opacity:1;
+}
+
+.confirmar-caixa{
+    display:flex;
+    flex-direction:column;
+    max-height:calc(100vh - 32px);
+    overflow:hidden;
+    background:#fff;
+    border-top:4px solid var(--confirmar-cor);
+    border-radius:16px;
+    box-shadow:0 20px 50px rgba(0,0,0,.28);
+    color:var(--text, #222);
+    opacity:0;
+    transform:translateY(-12px) scale(.98);
+    transition:opacity .2s ease, transform .2s ease;
+}
+
+.confirmar.is-aberto .confirmar-caixa{
+    opacity:1;
+    transform:none;
+}
+
+.confirmar-cabecalho{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:16px 20px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.confirmar-titulo{
+    margin:0;
+    font-size:1.2rem;
+    font-weight:700;
+    color:#111;
+}
+
+.confirmar-fechar{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    border:0;
+    border-radius:8px;
+    background:none;
+    font-size:1.5rem;
+    line-height:1;
+    color:#444;
+    cursor:pointer;
+}
+
+.confirmar-fechar:hover{
+    background:#f1f1f1;
+}
+
+.confirmar-fechar:focus-visible{
+    outline:none;
+    box-shadow:0 0 0 3px #fff, 0 0 0 5px #1c1c1c;
+}
+
+.confirmar-corpo{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding:20px;
+    overflow-y:auto;
+}
+
+.confirmar-corpo p{
+    margin:0;
+}
+
+.confirmar-mensagem{
+    overflow-wrap:anywhere;
+    white-space:pre-line;
+}
+
+.confirmar-explicacao{
+    color:var(--text-muted, #666);
+    font-size:.9rem;
+    line-height:1.5;
+}
+
+.confirmar-rodape{
+    display:flex;
+    justify-content:flex-end;
+    flex-wrap:wrap;
+    gap:12px;
+    padding:16px 20px;
+    border-top:1px solid #e5e7eb;
+}
+
+@media (max-width:480px){
+    .confirmar-rodape .btn{
+        flex:1 1 auto;
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+    .confirmar::backdrop,
+    .confirmar-caixa{
+        transition:none;
+    }
+}
+
+.confirmar [hidden]{
+    display:none;
+}

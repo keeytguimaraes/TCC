@@ -8,6 +8,11 @@ Editar Produto
 
 <link
     rel="stylesheet"
+    href="{{ url_for('static', filename='css/components/acoes.css') }}"
+>
+
+<link
+    rel="stylesheet"
     href="{{ url_for('static', filename='css/pages/produto.css') }}"
 >
 
@@ -278,7 +283,7 @@ Editar Produto
 
             <a
                 href="/produto"
-                class="prod-btn prod-btn-outline"
+                class="btn btn-cancelar"
             >
                 <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
                 Voltar
@@ -286,7 +291,7 @@ Editar Produto
 
             <button
                 type="submit"
-                class="prod-btn prod-btn-primary"
+                class="btn btn-salvar"
             >
                 <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
                 Salvar Alterações
