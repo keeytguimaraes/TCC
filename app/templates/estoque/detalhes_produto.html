@@ -10,149 +10,248 @@ Detalhes do Produto
     rel="stylesheet"
     href="{{ url_for(
         'static',
-        filename='css/pages/detalhes_produto.css'
+        filename='css/components/acoes.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/estoque_detalhes.css'
     ) }}"
 >
 
 {% endblock %}
 
+{#
+    Apresentação de valores ausentes (somente visual):
+    - dado ausente (None, texto vazio ou só espaços) aparece como "—", com
+      "Não informado" para leitores de tela;
+    - zero é um valor real e continua aparecendo como 0 / R$ 0,00.
+#}
+
+{% macro texto(valor) -%}
+    {%- if valor is none or (valor | string | trim) == '' -%}
+        <span class="ed-nulo"><span aria-hidden="true">—</span><span class="ed-sr">Não informado</span></span>
+    {%- else -%}
+        {{ valor }}
+    {%- endif -%}
+{%- endmacro %}
+
+{% macro moeda(valor) -%}
+    {%- if valor is none or (valor | string | trim) == '' -%}
+        <span class="ed-nulo"><span aria-hidden="true">—</span><span class="ed-sr">Não informado</span></span>
+    {%- else -%}
+        R$ {{ '{:,.2f}'.format(valor | float).replace(',', '#').replace('.', ',').replace('#', '.') }}
+    {%- endif -%}
+{%- endmacro %}
+
 {% block conteudo %}
-<div class="page-header">
 
-    <h1>
-        Detalhes do Produto
-    </h1>
+<div class="ed">
 
-    <a
-        href="/estoque/atual"
-        class="btn-voltar"
-    >
-        ← Voltar
-    </a>
+    <div class="ed-topo">
+
+        <div>
+            <h1 class="ed-titulo">Detalhes do Produto</h1>
+            <p class="ed-subtitulo">Estoque atual, última movimentação e custos</p>
+        </div>
+
+        <a href="/estoque/atual" class="btn btn-cancelar">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Voltar
+        </a>
+
+    </div>
+
+    {% if produto %}
+
+    <!-- IDENTIFICAÇÃO -->
+
+    <div class="ed-produto">
+
+        <div class="ed-produto-icone" aria-hidden="true">
+            <i class="fa-solid fa-box"></i>
+        </div>
+
+        <div class="ed-produto-texto">
+            <span class="ed-rotulo">Produto</span>
+            <h2 class="ed-produto-nome">{{ texto(produto.nome) }}</h2>
+        </div>
+
+    </div>
+
+    <div class="ed-grade">
+
+        <!-- ESTOQUE ATUAL -->
+
+        <section class="ed-secao ed-estoque ed-largo" aria-labelledby="ed-t-estoque">
+
+            <h3 class="ed-secao-titulo" id="ed-t-estoque">
+                <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+                Estoque atual
+            </h3>
+
+            <div class="ed-numeros">
+
+                <div class="ed-numero">
+                    <span class="ed-numero-valor">{{ texto(produto.quantidade_atual_caixa) }}</span>
+                    <span class="ed-numero-rotulo">
+                        <i class="fa-solid fa-box" aria-hidden="true"></i>
+                        Caixas
+                    </span>
+                </div>
+
+                <div class="ed-numero">
+                    <span class="ed-numero-valor">{{ texto(produto.quantidade_atual_unidade) }}</span>
+                    <span class="ed-numero-rotulo">
+                        <i class="fa-solid fa-cubes" aria-hidden="true"></i>
+                        Unidades
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- INFORMAÇÕES DO PRODUTO -->
+
+        <section class="ed-secao" aria-labelledby="ed-t-produto">
+
+            <h3 class="ed-secao-titulo" id="ed-t-produto">
+                <i class="fa-solid fa-tag" aria-hidden="true"></i>
+                Informações do produto
+            </h3>
+
+            <dl class="ed-lista">
+
+                <div>
+                    <dt>Categoria</dt>
+                    <dd>{{ texto(produto.categoria) }}</dd>
+                </div>
+
+                <div>
+                    <dt>Embalagem</dt>
+                    <dd>{{ texto(produto.tipo_embalagem) }}</dd>
+                </div>
+
+                {# Sabor só aparece se a consulta desta página o fornecer #}
+                {% if produto.sabor is defined %}
+                <div>
+                    <dt>Sabor</dt>
+                    <dd>{{ texto(produto.sabor) }}</dd>
+                </div>
+                {% endif %}
+
+                <div>
+                    <dt>Volume</dt>
+                    <dd>{{ texto(produto.volume) }}</dd>
+                </div>
+
+            </dl>
+
+        </section>
+
+        <!-- ÚLTIMA MOVIMENTAÇÃO -->
+
+        <section class="ed-secao" aria-labelledby="ed-t-mov">
+
+            <h3 class="ed-secao-titulo" id="ed-t-mov">
+                <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+                Última movimentação
+            </h3>
+
+            <dl class="ed-lista">
+
+                <div>
+                    <dt>Tipo</dt>
+                    <dd>
+                        {% if produto.tipo_entrada is none or produto.tipo_entrada == '' %}
+                            {{ texto(none) }}
+                        {% elif produto.tipo_entrada == 'bonificacao' %}
+                            <span class="ed-selo ed-selo--bonificacao">Bonificação</span>
+                        {% elif produto.tipo_entrada == 'compra' %}
+                            <span class="ed-selo">Compra</span>
+                        {% else %}
+                            <span class="ed-selo">{{ produto.tipo_entrada | replace('_', ' ') | capitalize }}</span>
+                        {% endif %}
+                    </dd>
+                </div>
+
+                <div>
+                    <dt>Origem</dt>
+                    <dd>{{ texto(produto.origem) }}</dd>
+                </div>
+
+                <div>
+                    <dt>Local</dt>
+                    <dd>{{ texto(produto.nome_origem) }}</dd>
+                </div>
+
+                <div>
+                    <dt>Data</dt>
+                    <dd>
+                        {% if produto.data_entrada is none or produto.data_entrada == '' %}
+                            {{ texto(none) }}
+                        {% elif produto.data_entrada.strftime is defined %}
+                            {{ produto.data_entrada.strftime('%d/%m/%Y') }}
+                        {% else %}
+                            {{ produto.data_entrada }}
+                        {% endif %}
+                    </dd>
+                </div>
+
+            </dl>
+
+        </section>
+
+        <!-- CUSTOS -->
+
+        <section class="ed-secao ed-largo" aria-labelledby="ed-t-custos">
+
+            <h3 class="ed-secao-titulo" id="ed-t-custos">
+                <i class="fa-solid fa-coins" aria-hidden="true"></i>
+                Custos
+            </h3>
+
+            <div class="ed-custos">
+
+                <div class="ed-custo ed-custo--total">
+                    <span class="ed-custo-rotulo">Custo total</span>
+                    <span class="ed-custo-valor">{{ moeda(produto.preco_total_compra) }}</span>
+                </div>
+
+                <div class="ed-custo">
+                    <span class="ed-custo-rotulo">Custo por caixa</span>
+                    <span class="ed-custo-valor">{{ moeda(produto.preco_por_caixa) }}</span>
+                </div>
+
+                <div class="ed-custo">
+                    <span class="ed-custo-rotulo">Custo por unidade</span>
+                    <span class="ed-custo-valor">{{ moeda(produto.preco_por_unidade) }}</span>
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    {% else %}
+
+    <div class="ed-vazio">
+
+        <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+
+        <h2>Produto sem movimentações</h2>
+
+        <p>Este produto ainda não possui entradas no estoque.</p>
+
+    </div>
+
+    {% endif %}
 
 </div>
-
-{% if produto %}
-
-<div class="detalhes-grid">
-
-    <!-- PRODUTO -->
-
-    <div class="detalhe-card">
-
-        <h2>
-            🥤 {{ produto.nome }}
-        </h2>
-
-        <p>
-            <strong>Categoria:</strong>
-            {{ produto.categoria }}
-        </p>
-
-        <p>
-            <strong>Embalagem:</strong>
-            {{ produto.tipo_embalagem }}
-        </p>
-
-        {% if produto.volume %}
-<p>
-    <strong>Volume:</strong>
-    {{ produto.volume }}
-</p>
-{% endif %}
-
-
-    </div>
-
-    <!-- MOVIMENTAÇÃO -->
-
-    <div class="detalhe-card">
-
-        <h2>
-            📦 Última movimentação
-        </h2>
-
-        <p>
-            <strong>Tipo:</strong>
-            {{ produto.tipo_entrada }}
-        </p>
-
-        <p>
-            <strong>Origem:</strong>
-            {{ produto.origem }}
-        </p>
-
-        <p>
-            <strong>Local:</strong>
-            {{ produto.nome_origem }}
-        </p>
-
-        <p>
-            <strong>Data:</strong>
-            {{ produto.data_entrada.strftime('%d/%m/%Y') }}
-        </p>
-
-    </div>
-
-    <!-- CUSTOS -->
-
-    <div class="detalhe-card">
-
-        <h2>
-            💰 Custos
-        </h2>
-
-        <p>
-            <strong>Total:</strong>
-            R$ {{ produto.preco_total_compra }}
-        </p>
-
-        <p>
-            <strong>Caixa:</strong>
-            R$ {{ produto.preco_por_caixa }}
-        </p>
-
-        <p>
-            <strong>Unidade:</strong>
-            R$ {{ produto.preco_por_unidade }}
-        </p>
-
-    </div>
-
-    <!-- ESTOQUE -->
-
-    <div class="detalhe-card">
-
-        <h2>
-            📊 Estoque
-        </h2>
-
-        <p>
-            📦 {{ produto.quantidade_atual_caixa }} caixas
-        </p>
-
-        <p>
-            📦 {{ produto.quantidade_atual_unidade }} unidades
-        </p>
-
-    </div>
-
-</div>
-
-{% else %}
-
-<div class="detalhe-card card-sem-movimentacao">
-
-    <h2>
-        Produto sem movimentações
-    </h2>
-
-    <p>
-        Este produto ainda não possui entradas no estoque.
-    </p>
-
-</div>
-
-{% endif %}
 
 {% endblock %}
