@@ -70,6 +70,7 @@
     min-height:44px;
     margin:0;
     padding:0 var(--space-4);
+    border-color:var(--border);
     border-radius:var(--input-radius);
 }
 
@@ -204,9 +205,9 @@
 
 .forn-obs{
     display:-webkit-box;
-    -webkit-line-clamp:3;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
     line-clamp: 3;
-    -webkit-box-orient:vertical;
     overflow:hidden;
     overflow-wrap:anywhere;
 }
@@ -465,9 +466,12 @@
 
 .forn-modal .modal-footer{
     flex:0 0 auto;
+    display:flex;
+    justify-content:flex-end;
     flex-wrap:wrap;
     gap:var(--space-3);
     padding:var(--space-4) var(--space-5);
+    border-top:1px solid var(--border);
 }
 
 /* ---------- Responsivo ---------- */

@@ -1,0 +1,49 @@
+/* ============================================================
+   SIGC — PADRÃO VISUAL COMPARTILHADO DOS MÓDULOS
+   Complementa os componentes globais. Não redefine paleta.
+   ============================================================ */
+
+   .pagina-clientes, .pagina-usuarios, .pagina-produtos, .pagina-fornecedores {
+    width:100%; min-width:0; color:var(--text);
+}
+
+.clientes-cabecalho, .usuarios-cabecalho, .produtos-cabecalho, .forn-cabecalho {
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-5);
+}
+
+.clientes-titulo, .usuarios-titulo, .produtos-titulo, .forn-titulo {
+    margin:0 0 4px; font-size:clamp(1.4rem, 2.4vw, 1.75rem);
+    line-height:1.25; font-weight:700; letter-spacing:-.02em; color:var(--text);
+}
+
+.clientes-descricao, .usuarios-descricao, .produtos-descricao, .forn-subtitulo {
+    margin:0; font-size:.9375rem; line-height:1.5; color:var(--text-muted);
+}
+
+.pagina-clientes .cliente-btn, .pagina-usuarios .usuario-btn,
+.pagina-clientes .cliente-btn, .pagina-usuarios .usuario-acao {
+    box-sizing:border-box; min-height:40px; border-radius:var(--input-radius);
+    font-family:var(--font-primary); font-size:.875rem; font-weight:600;
+    line-height:1.2; transition:background-color var(--transicao), border-color var(--transicao),
+    color var(--transicao), filter var(--transicao), box-shadow var(--transicao);
+}
+
+.pagina-clientes :is(a,button):focus-visible,
+.pagina-usuarios :is(a,button):focus-visible,
+.pagina-produtos :is(a,button):focus-visible,
+.pagina-fornecedores :is(a,button):focus-visible {
+    outline:none; box-shadow:var(--shadow-focus);
+}
+
+.pagina-clientes .cliente-painel, .pagina-clientes .cliente-lista-secao,
+.pagina-usuarios .usuarios-painel, .pagina-fornecedores .forn-painel {
+    border:1px solid var(--border); border-radius:var(--radius-md);
+    background:var(--card); box-shadow:var(--shadow);
+}
+
+@media (max-width:720px) {
+    .clientes-cabecalho, .usuarios-cabecalho, .produtos-cabecalho, .forn-cabecalho {
+        align-items:flex-start;
+    }
+}

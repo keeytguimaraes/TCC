@@ -1,88 +1,59 @@
 .historico-container{
-
     max-height: 600px;
-
     overflow-y: auto;
-
-    background: white;
-
-    padding: 30px;
-
-    border-radius: 12px;
-
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: var(--bg);
+    padding: var(--space-5);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
 }
 
 .historico-titulo{
-
     text-align: center;
-
-    color: #2e7d32;
-
-    margin-bottom: 25px;
+    color: var(--primary);
+    margin-bottom: var(--space-5);
 }
 
 .tabela-historico{
-
     width: 100%;
-
     border-collapse: collapse;
 }
 
 .tabela-historico th{
-
-    background:#2e7d32;
-
+    background: var(--primary);
     color: white;
-
-    padding: 12px;
+    padding: var(--space-3);
 }
 
 .tabela-historico td{
-
-    padding: 10px;
-
-    border-bottom: 1px solid #ddd;
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--border);
 }
 
 .tabela-historico tr:hover{
-
-    background: #f5f5f5;
+    background: var(--bg);
 }
 
 .tipo-movimentacao{
-
-    padding: 4px 10px;
-
+    padding: var(--space-2) var(--space-3);
     border-radius: 20px;
-
     color: white;
-
     font-size: 13px;
-
     font-weight: bold;
+    text-transform: none;
 }
 
 .quebra{
-
-    background: #dc3545;
+    background: var(--danger);
 }
 
 .vencido{
-
-    background: #fd7e14;
+    background: var(--warning);
 }
 
 .uso_interno{
-
-    background: #0d6efd;
+    background: var(--primary);
 }
 
 .ajuste_manual{
-
-    background: #198754;
-}
-
-.tipo-movimentacao{
-    text-transform: none;
+    background: var(--success);
 }

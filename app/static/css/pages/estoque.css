@@ -1,49 +1,30 @@
 :root{
-    --color-primary:#0f7a4f;
-    --color-primary-hover:#0c633f;
-    --color-primary-light:#e6f4ee;
-  
-    --color-warning:#b45309;
-    --color-warning-light:#fef3e2;
-  
-    --color-info:#1d4ed8;
-    --color-info-light:#e8f0fe;
-  
-    --color-neutral:#4b5563;
-    --color-neutral-light:#eef0f2;
-  
-    --color-danger:#b91c1c;
-    --color-danger-light:#fdeceb;
-  
-    --color-success:#15803d;
-    --color-success-light:#e7f6ec;
-  
-    --color-bg:#f5f6f8;
-    --color-surface:#ffffff;
-    --color-border:#e5e7eb;
-  
-    --color-text:#111827;
-    --color-text-secondary:#6b7280;
-    --color-text-tertiary:#9ca3af;
-  
-    --radius-sm:8px;
-    --radius-md:12px;
-    --radius-lg:16px;
-  
-    --shadow-sm:0 1px 2px rgba(16,24,40,.05);
-    --shadow-md:0 2px 8px rgba(16,24,40,.08);
-    --shadow-lg:0 12px 24px rgba(16,24,40,.12);
-  
-    --space-1:4px;
-    --space-2:8px;
-    --space-3:12px;
-    --space-4:16px;
-    --space-5:24px;
-    --space-6:32px;
-  
-    --font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    /* Cores padronizadas do SIGC (base.css) */
+    --primary: #C1272D;
+    --success: #198754;
+    --danger: #B3261E;
+    --accent: #F4B400;
+    --warning: #FFC107;
+    --info: #0DCAF0;
+    --secondary: #5C5C5C;
+
+    --bg: #F6F5F3;
+    --card: #FFFFFF;
+    --border: #E3E0DA;
+
+    --text: #1C1C1C;
+    --text-muted: #6B6B6B;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 15px;
+
+    --shadow: 0 2px 8px rgba(0, 0, 0, .08);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, .08);
+    --shadow-focus: 0 0 0 3px rgba(193, 39, 45, .18);
+    --transicao: .3s ease;
   }
-  
+
   .sr-only{
     position:absolute;
     width:1px;
@@ -55,47 +36,47 @@
     white-space:nowrap;
     border:0;
   }
-  
+
   /* ==========================
      TÍTULO
   ========================== */
-  
+
   .page-title{
     margin-bottom:var(--space-6);
   }
-  
+
   .page-title h1{
     margin:0;
     font-size:1.75rem;
     font-weight:700;
-    color:var(--color-text);
+    color:var(--text);
     letter-spacing:-0.02em;
   }
-  
+
   .page-subtitle{
     margin:6px 0 0;
-    color:var(--color-text-secondary);
+    color:var(--text-muted);
     font-size:.95rem;
   }
-  
+
   /* ==========================
      PESQUISA
   ========================== */
-  
+
   .estoque-pesquisa{
     margin-bottom:var(--space-5);
   }
-  
+
   /* ==========================
      GRID DE AÇÕES (NOVA ENTRADA / MOVIMENTAÇÃO / ETC.)
   ========================== */
-  
+
   .cards-estoque{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
     gap:var(--space-4);
   }
-  
+
   .nova-entrada-card{
     display:flex;
     align-items:center;
@@ -104,27 +85,27 @@
     height:auto;
     margin:0;
     padding:var(--space-5);
-    background:var(--color-surface);
-    border:1px solid var(--color-border);
+    background:var(--card);
+    border:1px solid var(--border);
     border-radius:var(--radius-lg);
     cursor:pointer;
     text-align:left;
     text-decoration:none;
     color:inherit;
-    box-shadow:var(--shadow-sm);
+    box-shadow:var(--shadow);
     transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
   }
-  
+
   .nova-entrada-card:hover{
     transform:translateY(-2px);
     box-shadow:var(--shadow-md);
   }
-  
+
   .nova-entrada-card:focus-visible{
-    outline:2px solid var(--color-primary);
+    outline:2px solid var(--primary);
     outline-offset:2px;
   }
-  
+
   .nova-entrada-icon{
     flex-shrink:0;
     width:48px;
@@ -134,110 +115,110 @@
     align-items:center;
     justify-content:center;
     font-size:18px;
-    background:var(--color-primary-light);
-    color:var(--color-primary);
+    background:var(--card);
+    color:var(--primary);
   }
-  
+
   .nova-entrada-card--primary{
-    border-color:var(--color-primary);
+    border-color:var(--primary);
   }
-  
+
   .nova-entrada-card--primary .nova-entrada-icon{
-    background:var(--color-primary);
+    background:var(--primary);
     color:#fff;
   }
-  
+
   .nova-entrada-card--warning .nova-entrada-icon{
-    background:var(--color-warning-light);
-    color:var(--color-warning);
+    background:var(--warning-light);
+    color:var(--warning);
   }
-  
+
   .nova-entrada-card--info .nova-entrada-icon{
-    background:var(--color-info-light);
-    color:var(--color-info);
+    background:var(--info-light);
+    color:var(--info);
   }
-  
+
   .nova-entrada-card--neutral .nova-entrada-icon{
-    background:var(--color-neutral-light);
-    color:var(--color-neutral);
+    background:var(--neutral-light);
+    color:var(--secondary);
   }
-  
+
   .nova-entrada-card__body{
     flex:1;
     min-width:0;
   }
-  
+
   .nova-entrada-card h3{
     margin:0;
     font-size:1rem;
     font-weight:600;
-    color:var(--color-text);
+    color:var(--text);
   }
-  
+
   .nova-entrada-card p{
     margin:4px 0 0;
     font-size:.85rem;
-    color:var(--color-text-secondary);
+    color:var(--text-muted);
   }
-  
+
   .nova-entrada-card__arrow{
     flex-shrink:0;
-    color:var(--color-text-tertiary);
+    color:var(--text-tertiary);
     font-size:.85rem;
     transition:transform .15s ease;
   }
-  
+
   .nova-entrada-card:hover .nova-entrada-card__arrow{
     transform:translateX(3px);
-    color:var(--color-text-secondary);
+    color:var(--text-secondary);
   }
-  
+
   /* ==========================
      GRID GENÉRICO DE CARDS (histórico e outras listagens)
   ========================== */
-  
+
   .estoque-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
     gap:var(--space-5);
   }
-  
+
   .estoque-card{
-    background:var(--color-surface);
-    border:1px solid var(--color-border);
+    background:var(--card);
+    border:1px solid var(--border);
     border-radius:var(--radius-lg);
     padding:var(--space-5);
-    box-shadow:var(--shadow-sm);
+    box-shadow:var(--shadow);
     transition:transform .15s ease, box-shadow .15s ease;
   }
-  
+
   .estoque-card:hover{
     transform:translateY(-2px);
     box-shadow:var(--shadow-md);
   }
-  
+
   .estoque-card h3{
     margin:0 0 var(--space-3);
     font-size:1.05rem;
     font-weight:700;
-    color:var(--color-text);
+    color:var(--text);
   }
-  
+
   .estoque-info{
     display:flex;
     flex-direction:column;
     gap:var(--space-2);
   }
-  
+
   .estoque-info span{
-    color:var(--color-text-secondary);
+    color:var(--text-muted);
     font-size:.9rem;
   }
-  
+
   /* ==========================
      RESPONSIVO
   ========================== */
-  
+
   @media(max-width:768px){
     .estoque-grid{
       grid-template-columns:1fr;
@@ -246,90 +227,90 @@
       grid-template-columns:1fr;
     }
   }
-  
+
   /* ==========================
      MODAL
   ========================== */
-  
+
   .modal-content.large{
-    width:900px;
+    width:100%;
     max-width:95%;
   }
-  
+
   .modal-body{
     display:grid;
     grid-template-columns:repeat(2,1fr);
     gap:var(--space-5);
     padding:var(--space-5);
   }
-  
+
   .form-group{
     display:flex;
     flex-direction:column;
     gap:var(--space-2);
   }
-  
+
   .form-group--full{
     grid-column:1 / -1;
   }
-  
+
   .form-group label{
     font-weight:600;
     font-size:.85rem;
-    color:var(--color-text);
+    color:var(--text);
   }
-  
+
   .form-group input,
   .form-group select,
   .form-group textarea{
     width:100%;
     padding:10px 12px;
-    border:1px solid var(--color-border);
+    border:1px solid var(--border);
     border-radius:var(--radius-sm);
     font-size:.9rem;
     font-family:var(--font-family);
     box-sizing:border-box;
-    background:var(--color-surface);
-    color:var(--color-text);
+    background:var(--card);
+    color:var(--text);
     transition:border-color .15s ease, box-shadow .15s ease;
   }
-  
+
   .form-group input:focus,
   .form-group select:focus,
   .form-group textarea:focus{
     outline:none;
-    border-color:var(--color-primary);
-    box-shadow:0 0 0 3px var(--color-primary-light);
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px var(--primary-light);
   }
-  
+
   #local-group,
   #fornecedor-group,
   #preco-group{
     display:none;
   }
-  
+
   .modal-footer{
     display:flex;
     justify-content:flex-end;
     gap:var(--space-3);
     padding:var(--space-4) var(--space-5);
-    border-top:1px solid var(--color-border);
+    border-top:1px solid var(--border);
   }
-  
+
   #movimentacao-modal .modal-body{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:var(--space-5);
   }
-  
+
   #movimentacao-modal .form-group{
     width:100%;
   }
-  
+
   #movimentacao-modal textarea{
     min-height:45px;
   }
-  
+
   @media(max-width:600px){
     .modal-body,
     #movimentacao-modal .modal-body{

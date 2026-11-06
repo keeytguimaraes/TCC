@@ -8,6 +8,11 @@ Editar Cliente
 
 <link
     rel="stylesheet"
+    href="{{ url_for('static', filename='css/components/acoes.css') }}"
+>
+
+<link
+    rel="stylesheet"
     href="{{ url_for('static', filename='css/pages/cliente.css') }}"
 >
 
@@ -45,6 +50,7 @@ Editar Cliente
                 </h2>
 
             </div>
+
         </div>
 
         <form
@@ -72,7 +78,7 @@ Editar Cliente
 
                 <a
                     href="{{ url_for('cliente') }}"
-                    class="cliente-btn cliente-btn-outline"
+                    class="btn btn-cancelar"
                 >
                     <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
                     Voltar
@@ -80,7 +86,7 @@ Editar Cliente
 
                 <button
                     type="submit"
-                    class="cliente-btn cliente-btn-primary"
+                    class="btn btn-salvar"
                 >
                     <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
                     Salvar Alterações

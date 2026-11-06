@@ -1,399 +1,503 @@
-:root{
-    --color-primary:#0f7a4f;
-    --color-primary-light:#e6f4ee;
-  
-    --color-warning:#b45309;
-    --color-warning-light:#fef3e2;
-  
-    --color-info:#1d4ed8;
-    --color-info-light:#e8f0fe;
-  
-    --color-neutral:#4b5563;
-    --color-neutral-light:#eef0f2;
-  
-    --color-danger:#b91c1c;
-    --color-danger-light:#fdeceb;
-  
-    --color-success:#15803d;
-    --color-success-light:#e7f6ec;
-  
-    --color-bg:#f5f6f8;
-    --color-surface:#ffffff;
-    --color-border:#e5e7eb;
-  
-    --color-text:#111827;
-    --color-text-secondary:#6b7280;
-    --color-text-tertiary:#9ca3af;
-  
-    --radius-sm:8px;
-    --radius-md:12px;
-    --radius-lg:16px;
-  
-    --shadow-sm:0 1px 2px rgba(16,24,40,.05);
-    --shadow-md:0 2px 8px rgba(16,24,40,.08);
-  
-    --space-1:4px;
-    --space-2:8px;
-    --space-3:12px;
-    --space-4:16px;
-    --space-5:24px;
-    --space-6:32px;
-  }
-  
-  .sr-only{
-    position:absolute;
-    width:1px;
-    height:1px;
-    padding:0;
-    margin:-1px;
-    overflow:hidden;
-    clip:rect(0,0,0,0);
-    white-space:nowrap;
-    border:0;
-  }
-  
-  /* ==========================
-     HEADER
-  ========================== */
-  
-  .page-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:var(--space-4);
+/* ==========================
+   TÍTULO
+========================== */
+
+.page-title{
     margin-bottom:var(--space-6);
-  }
-  
-  .page-header h1{
-    margin:0 0 4px;
+}
+
+.page-title h1{
+    margin:0;
     font-size:1.75rem;
     font-weight:700;
-    color:var(--color-text);
+    color:var(--text);
     letter-spacing:-0.02em;
-  }
-  
-  .page-header .page-subtitle{
-    margin:0;
-    color:var(--color-text-secondary);
+}
+
+.page-subtitle{
+    margin:6px 0 0;
+    color:var(--text-secondary);
     font-size:.9rem;
-  }
-  
-  .btn-voltar{
-    display:inline-flex;
+}
+
+/* ==========================
+   CONTADOR
+========================== */
+
+.contador{
+    margin-bottom:25px;
+    color:var(--text-secondary);
+    font-size:18px;
+}
+
+/* ==========================
+   GRID
+========================== */
+
+.contas-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(320px, 1fr)
+        );
+    gap:25px;
+}
+
+/* ==========================
+   CARD
+========================== */
+
+.conta-card{
+    background:var(--card);
+    border-radius:24px;
+    padding:25px;
+    box-shadow:
+       0 4px 16px
+        rgba(0,0,0,0.08);
+    border-left:8px solid var(--primary);
+}
+
+.conta-card:hover{
+    transform:translateY(-3px);
+    box-shadow:
+       0 12px 30px
+        rgba(0,0,0,0.12);
+}
+
+/* ==========================
+   NOME CLIENTE
+========================== */
+
+.cliente-nome{
+    color:var(--text);
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:30px;
+}
+
+/* ==========================
+   TEXTOS
+========================== */
+
+.conta-card p{
+    margin-bottom:18px;
+    font-size:16px;
+    color:var(--text-secondary);
+}
+
+.conta-card strong{
+    color:var(--text);
+}
+
+/* ==========================
+   RESPONSIVO
+========================== */
+
+@media (max-width: 768px){
+    .contas-grid{
+        grid-template-columns:1fr;
+    }
+
+    .conta-card{
+        padding:25px;
+    }
+}
+
+.conta-container{
+    width:100%;
+}
+
+.pagina-titulo{
+    margin-bottom:30px;
+}
+
+.conta-pesquisa{
+    margin-bottom:40px;
+}
+
+.total-contas{
+    margin-bottom:30px;
+    color:var(--text-secondary);
+    font-size:18px;
+}
+
+.alerta-transferencia{
+    display:flex;
     align-items:center;
-    gap:6px;
-    flex-shrink:0;
-    padding:10px 16px;
-    background:var(--color-surface);
-    border:1px solid var(--color-border);
-    color:var(--color-text);
-    text-decoration:none;
-    border-radius:var(--radius-sm);
-    font-size:.85rem;
+    gap:12px;
+    margin-top:25px;
+    margin-bottom:20px;
+    padding:14px 18px;
+    background:rgba(220, 53, 69, 0.10);
+    border:1px solid rgba(220, 53, 69, 0.25);
+    border-radius:14px;
+    color:var(--danger);
     font-weight:600;
-    transition:.15s;
-  }
-  
-  .btn-voltar:hover{
-    background:var(--color-bg);
-    border-color:var(--color-text-tertiary);
-  }
-  
-  /* ==========================
-     DASHBOARD
-  ========================== */
-  
-  .dashboard-cards{
+}
+
+.conta-card.atrasada{
+    border-left:8px solid var(--danger);
+    box-shadow:
+       0 4px 16px rgba(220, 53, 69, 0.15);
+}
+
+/* ==========================
+   AÇÕES
+========================== */
+
+.acoes-conta{
+    display:flex;
+    gap:12px;
+    margin-top:10px;
+    flex-wrap:wrap;
+}
+
+.modal-overlay{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:
+        rgba(0,0,0,0.5);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.modal-container{
+    width:700px;
+    max-width:95%;
+    background:var(--card);
+    border-radius:20px;
+    padding:30px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.modal-header button{
+    border:none;
+    background:none;
+    font-size:24px;
+    cursor:pointer;
+}
+
+.modal-container select{
+    width:100%;
+    padding:14px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin-top:10px;
+}
+
+.modal-actions{
+    display:flex;
+    gap:12px;
+    margin-top:25px;
+}
+
+/* ==========================
+   ESTADOS DO ESTOQUE (cards do dashboard)
+========================== */
+
+.dashboard-cards{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
     gap:var(--space-4);
     margin-bottom:var(--space-5);
-  }
-  
-  .dashboard-card{
-    background:var(--color-surface);
-    border:1px solid var(--color-border);
+}
+
+.dashboard-card{
+    background:var(--card);
+    border:1px solid var(--border);
     padding:var(--space-4) var(--space-5);
     border-radius:var(--radius-md);
-    box-shadow:var(--shadow-sm);
-  }
-  
-  .dashboard-card h3{
+    box-shadow:var(--shadow);
+}
+
+.dashboard-card h3{
     margin:0;
     font-size:1.75rem;
     font-weight:700;
-    color:var(--color-text);
+    color:var(--text);
     line-height:1.1;
     transition:color .15s ease;
-  }
-  
-  .dashboard-card p{
+}
+
+.dashboard-card p{
     margin-top:6px;
-    color:var(--color-text-secondary);
+    color:var(--text-secondary);
     font-size:.8rem;
     font-weight:500;
-  }
-  
-  .dashboard-card--success h3{
-    color:var(--color-success);
-  }
-  
-  .dashboard-card--info.has-alert h3{ color:var(--color-info); }
-  .dashboard-card--warning.has-alert h3{ color:var(--color-warning); }
-  .dashboard-card--danger.has-alert h3{ color:var(--color-danger); }
-  .dashboard-card--neutral.has-alert h3{ color:var(--color-neutral); }
-  
-  /* ==========================
-     FILTROS (legenda + filtro unificados)
-  ========================== */
-  
-  .filtros-status{
+}
+
+.dashboard-card--success h3{
+    color:var(--success);
+}
+
+.dashboard-card--info.has-alert h3{ color:var(--info); }
+.dashboard-card--warning.has-alert h3{ color:var(--warning); }
+.dashboard-card--danger.has-alert h3{ color:var(--danger); }
+.dashboard-card--neutral.has-alert h3{ color:var(--secondary); }
+
+/* ==========================
+   FILTROS (legenda + filtro unificados)
+========================== */
+
+.filtros-status{
     display:flex;
     align-items:center;
     gap:var(--space-2);
     flex-wrap:wrap;
     margin-bottom:var(--space-5);
-  }
-  
-  .filtro-btn{
+}
+
+.filtro-btn{
     display:inline-flex;
     align-items:center;
     gap:8px;
-    border:1px solid var(--color-border);
-    padding:8px 14px;
+    border:1px solid var(--border);
+    padding:var(--space-2) var(--space-3);
     border-radius:999px;
-    background:var(--color-surface);
+    background:var(--card);
     cursor:pointer;
     font-size:.85rem;
     font-weight:600;
-    color:var(--color-text-secondary);
+    color:var(--text-secondary);
     transition:.15s;
-  }
-  
-  .filtro-btn:hover{
-    border-color:var(--color-text-tertiary);
-    color:var(--color-text);
-  }
-  
-  .filtro-btn:focus-visible{
-    outline:2px solid var(--color-primary);
+}
+
+.filtro-btn:hover{
+    border-color:var(--text-tertiary);
+    color:var(--text);
+}
+
+.filtro-btn:focus-visible{
+    outline:2px solid var(--primary);
     outline-offset:2px;
-  }
-  
-  .filtro-btn.is-active{
-    background:var(--color-text);
-    border-color:var(--color-text);
+}
+
+.filtro-btn.is-active{
+    background:var(--text);
+    border-color:var(--text);
     color:#fff;
-  }
-  
-  .filtro-btn .dot{
+}
+
+.filtro-btn .dot{
     width:8px;
     height:8px;
     border-radius:50%;
     flex-shrink:0;
-  }
-  
-  .filtro-btn .count{
+}
+
+.filtro-btn .count{
     font-weight:700;
-  }
-  
-  .dot--todos{ background:var(--color-text-tertiary); }
-  .dot--normal{ background:var(--color-success); }
-  .dot--minimo{ background:var(--color-info); }
-  .dot--baixo{ background:var(--color-warning); }
-  .dot--sem_estoque{ background:var(--color-danger); }
-  .dot--nunca_abastecido{ background:var(--color-neutral); }
-  
-  /* ==========================
-     BUSCA
-  ========================== */
-  
-  .estoque-pesquisa{
+}
+
+.dot--todos{ background:var(--text-tertiary); }
+.dot--normal{ background:var(--success); }
+.dot--minimo{ background:var(--warning); }
+.dot--baixo{ background:var(--danger); }
+.dot--sem_estoque{ background:var(--danger); }
+.dot--nunca_abastecido{ background:var(--secondary); }
+
+/* ==========================
+   BUSCA
+========================== */
+
+.estoque-pesquisa{
     margin-bottom:var(--space-5);
-  }
-  
-  .search-box{
+}
+
+.search-box{
     position:relative;
     max-width:420px;
-  }
-  
-  .search-box i{
+}
+
+.search-box i{
     position:absolute;
     left:14px;
     top:50%;
     transform:translateY(-50%);
-    color:var(--color-text-tertiary);
+    color:var(--text-tertiary);
     font-size:.85rem;
-  }
-  
-  .search-box input{
+}
+
+.search-box input{
     width:100%;
     padding:11px 14px 11px 38px;
-    border:1px solid var(--color-border);
+    border:1px solid var(--border);
     border-radius:var(--radius-sm);
     font-size:.9rem;
-    background:var(--color-surface);
+    background:var(--card);
     box-sizing:border-box;
     transition:.15s;
-  }
-  
-  .search-box input:focus{
+}
+
+.search-box input:focus{
     outline:none;
-    border-color:var(--color-primary);
-    box-shadow:0 0 0 3px var(--color-primary-light);
-  }
-  
-  /* ==========================
-     GRID DE PRODUTOS
-  ========================== */
-  
-  .estoque-grid{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px var(--primary-light);
+}
+
+/* ==========================
+   GRID DE PRODUTOS
+========================== */
+
+.estoque-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
     gap:var(--space-4);
-  }
-  
-  .estoque-card{
+}
+
+.estoque-card{
     position:relative;
-    background:var(--color-surface);
-    border:1px solid var(--color-border);
-    border-left:4px solid var(--color-border);
+    background:var(--card);
+    border:1px solid var(--border);
+    border-left:4px solid var(--border);
     border-radius:var(--radius-md);
     padding:var(--space-4) var(--space-5);
     cursor:pointer;
     transition:.15s;
-  }
-  
-  .estoque-card:hover{
+}
+
+.estoque-card:hover{
     box-shadow:var(--shadow-md);
     transform:translateY(-2px);
-  }
-  
-  .estoque-card:focus-visible{
-    outline:2px solid var(--color-primary);
+}
+
+.estoque-card:focus-visible{
+    outline:2px solid var(--primary);
     outline-offset:2px;
-  }
-  
-  .estoque-card.status-normal{ border-left-color:var(--color-success); }
-  .estoque-card.status-minimo{ border-left-color:var(--color-info); }
-  .estoque-card.status-baixo{ border-left-color:var(--color-warning); }
-  .estoque-card.status-sem{ border-left-color:var(--color-danger); }
-  .estoque-card.status-nunca{ border-left-color:var(--color-neutral); }
-  
-  .estoque-card__header{
+}
+
+.estoque-card.status-normal{ border-left-color:var(--success); }
+.estoque-card.status-minimo{ border-left-color:var(--warning); }
+.estoque-card.status-baixo{ border-left-color:var(--danger); }
+.estoque-card.status-sem{ border-left-color:var(--danger); }
+.estoque-card.status-nunca{ border-left-color:var(--secondary); }
+
+.estoque-card__header{
     display:flex;
     align-items:flex-start;
     justify-content:space-between;
     gap:var(--space-2);
     margin-bottom:var(--space-2);
-  }
-  
-  .estoque-card h3{
+}
+
+.estoque-card h3{
     margin:0;
     display:flex;
     align-items:center;
     gap:8px;
     font-size:1rem;
     font-weight:700;
-    color:var(--color-text);
-  }
-  
-  .status-dot{
+    color:var(--text);
+}
+
+.status-dot{
     width:8px;
     height:8px;
     border-radius:50%;
     flex-shrink:0;
-  }
-  
-  .status-normal .status-dot{ background:var(--color-success); }
-  .status-minimo .status-dot{ background:var(--color-info); }
-  .status-baixo .status-dot{ background:var(--color-warning); }
-  .status-sem .status-dot{ background:var(--color-danger); }
-  .status-nunca .status-dot{ background:var(--color-neutral); }
-  
-  .status-pill{
+}
+
+.status-normal .status-dot{ background:var(--success); }
+.status-minimo .status-dot{ background:var(--warning); }
+.status-baixo .status-dot{ background:var(--danger); }
+.status-sem .status-dot{ background:var(--danger); }
+.status-nunca .status-dot{ background:var(--secondary); }
+
+.status-pill{
     flex-shrink:0;
     font-size:.7rem;
     font-weight:700;
     padding:3px 8px;
     border-radius:999px;
     white-space:nowrap;
-  }
-  
-  .status-pill--minimo{ background:var(--color-info-light); color:var(--color-info); }
-  .status-pill--baixo{ background:var(--color-warning-light); color:var(--color-warning); }
-  .status-pill--sem_estoque{ background:var(--color-danger-light); color:var(--color-danger); }
-  .status-pill--nunca_abastecido{ background:var(--color-neutral-light); color:var(--color-neutral); }
-  
-  .quantidade-principal{
+}
+
+.status-pill--minimo{ background:var(--warning-light); color:var(--warning); }
+.status-pill--baixo{ background:var(--danger-light); color:var(--danger); }
+.status-pill--sem_estoque{ background:var(--danger-light); color:var(--danger); }
+.status-pill--nunca_abastecido{ background:var(--neutral-light); color:var(--secondary); }
+
+.quantidade-principal{
     display:flex;
     align-items:center;
     gap:6px;
     font-size:1.15rem;
     font-weight:700;
-    color:var(--color-text);
+    color:var(--text);
     margin:8px 0 2px;
-  }
-  
-  .quantidade-principal i{
-    color:var(--color-text-tertiary);
+}
+
+.quantidade-principal i{
+    color:var(--text-tertiary);
     font-size:.85rem;
-  }
-  
-  .estoque-quantidade{
+}
+
+.estoque-quantidade{
     display:flex;
     align-items:center;
     gap:6px;
     font-size:.85rem;
-    color:var(--color-text-secondary);
+    color:var(--text-secondary);
     margin-bottom:var(--space-3);
-  }
-  
-  .estoque-quantidade i{
-    color:var(--color-text-tertiary);
+}
+
+.estoque-quantidade i{
+    color:var(--text-tertiary);
     font-size:.75rem;
-  }
-  
-  .estoque-card strong{
+}
+
+.estoque-card strong{
     display:block;
     margin:8px 0 var(--space-3);
-    color:var(--color-text-tertiary);
+    color:var(--text-tertiary);
     font-size:.85rem;
     font-weight:600;
-  }
-  
-  .estoque-card hr{
+}
+
+.estoque-card hr{
     border:none;
-    border-top:1px solid var(--color-border);
+    border-top:1px solid var(--border);
     margin:var(--space-2) 0 var(--space-3);
-  }
-  
-  .estoque-info{
+}
+
+.estoque-info{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:8px 12px;
-  }
-  
-  .estoque-info span{
+}
+
+.estoque-info span{
     font-size:.8rem;
-    color:var(--color-text-secondary);
+    color:var(--text-secondary);
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
-  }
-  
-  .estoque-info span strong{
-    color:var(--color-text);
+}
+
+.estoque-info span strong{
+    color:var(--text);
     font-weight:600;
     margin-right:2px;
-  }
-  
-  @media(max-width:480px){
+}
+
+@media(max-width:480px){
     .page-header{
-      flex-direction:column;
-      align-items:stretch;
+        flex-direction:column;
+        align-items:stretch;
     }
     .estoque-info{
-      grid-template-columns:1fr;
+        grid-template-columns:1fr;
     }
-  }
+}

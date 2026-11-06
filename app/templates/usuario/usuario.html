@@ -168,7 +168,9 @@ Usuários
                         method="POST"
                         action="/usuario/desativar/{{ usuario.id }}"
                         class="usuario-form-desativar"
-                        onsubmit="return confirm('Deseja realmente desativar este usuário?');"
+                        data-confirmar="desativar"
+                        data-registro="usuário"
+                        data-nome="{{ usuario.nome }}"
                     >
                         <button
                             type="submit"

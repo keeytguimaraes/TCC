@@ -8,6 +8,16 @@ Clientes Inativos
 
 <link
     rel="stylesheet"
+    href="{{ url_for('static', filename='css/components/acoes.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/components/confirmar.css') }}"
+>
+
+<link
+    rel="stylesheet"
     href="{{ url_for('static', filename='css/pages/cliente.css') }}"
 >
 
@@ -28,7 +38,7 @@ Clientes Inativos
 
         <a
             href="/cliente"
-            class="cliente-btn cliente-btn-outline"
+            class="btn btn-cancelar"
         >
             <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
             Voltar
@@ -119,11 +129,15 @@ Clientes Inativos
                 <form
                     action="/cliente/reativar/{{ cliente.id }}"
                     method="POST"
+                    data-confirmar="reativar"
+                    data-registro="cliente"
+                    data-nome="{{ cliente.nome }}"
+                    data-explicacao="O cliente voltará a aparecer na lista principal e poderá ser utilizado novamente no sistema."
                 >
 
                     <button
                         type="submit"
-                        class="cliente-btn cliente-btn-sucesso"
+                        class="btn btn-reativar"
                     >
                         <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
                         Reativar
@@ -144,6 +158,13 @@ Clientes Inativos
 {% endblock %}
 
 {% block scripts %}
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/components/confirmar.js'
+    ) }}"
+></script>
 
 <script
     src="{{ url_for(

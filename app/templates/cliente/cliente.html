@@ -8,6 +8,16 @@ Clientes
 
 <link
     rel="stylesheet"
+    href="{{ url_for('static', filename='css/components/acoes.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/components/confirmar.css') }}"
+>
+
+<link
+    rel="stylesheet"
     href="{{ url_for('static', filename='css/pages/cliente.css') }}"
 >
 
@@ -32,7 +42,7 @@ Clientes
 
         <a
             href="/cliente/inativos"
-            class="cliente-btn cliente-btn-outline"
+            class="btn btn-cancelar"
         >
             <i class="fa-solid fa-user-slash" aria-hidden="true"></i>
             Clientes Inativos
@@ -80,7 +90,7 @@ Clientes
 
             <button
                 type="submit"
-                class="cliente-btn cliente-btn-primary"
+                class="btn btn-adicionar"
             >
                 <i class="fa-solid fa-plus" aria-hidden="true"></i>
                 Cadastrar
@@ -135,7 +145,7 @@ Clientes
 
             <button
                 type="button"
-                class="cliente-btn cliente-btn-primary btn-cadastrar-cliente"
+                class="btn btn-adicionar btn-cadastrar-cliente"
                 id="btn-cadastrar-cliente"
             >
                 <i class="fa-solid fa-plus" aria-hidden="true"></i>
@@ -182,7 +192,7 @@ Clientes
 
                     <a
                         href="/cliente/fiado/{{ cliente.id }}"
-                        class="cliente-btn cliente-btn-conta"
+                        class="btn btn-cancelar"
                     >
                         <i class="fa-solid fa-wallet" aria-hidden="true"></i>
                         Ver Conta Fiado
@@ -190,25 +200,42 @@ Clientes
 
                     <a
                         href="{{ url_for('tela_editar_cliente', id_cliente=cliente.id) }}"
-                        class="cliente-btn cliente-btn-outline"
+                        class="btn btn-editar"
                     >
                         <i class="fa-solid fa-pen" aria-hidden="true"></i>
                         Editar
                     </a>
 
-                    <button
-                        type="button"
-                        class="cliente-btn cliente-btn-perigo-suave"
-                        onclick="abrirModalDesativar(
-                            '{{ cliente.id }}',
-                            '{{ cliente.nome }}',
-                            '{{ cliente.conta_aberta }}',
-                            '{{ cliente.saldo_devedor }}'
-                        )"
+                    {#
+                        Regra de negócio (continua no backend): cliente com conta
+                        em aberto NÃO pode ser desativado. O modal apenas informa
+                        o saldo real vindo da listagem e não oferece confirmar.
+                    #}
+                    <form
+                        action="/cliente/desativar/{{ cliente.id }}"
+                        method="POST"
+                        data-confirmar="desativar"
+                        data-registro="cliente"
+                        data-nome="{{ cliente.nome }}"
+                        {% if cliente.conta_aberta %}
+                        data-bloqueado
+                        data-titulo="Cliente com conta em aberto"
+                        data-mensagem="Cliente: {{ cliente.nome }}&#10;Saldo devedor: R$ {{ '%.2f'|format((cliente.saldo_devedor or 0)|float) }}"
+                        data-explicacao="Este cliente não poderá ser desativado até que a conta seja quitada."
+                        {% else %}
+                        data-explicacao="O cliente deixará de aparecer na lista principal. O histórico e a conta fiado são mantidos, e ele poderá ser reativado depois."
+                        {% endif %}
                     >
-                        <i class="fa-solid fa-user-lock" aria-hidden="true"></i>
-                        Desativar
-                    </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-desativar"
+                        >
+                            <i class="fa-solid fa-ban" aria-hidden="true"></i>
+                            Desativar
+                        </button>
+
+                    </form>
 
                 </div>
 
@@ -219,65 +246,6 @@ Clientes
         </ul>
 
     </section>
-
-</div>
-
-<!-- ===================== -->
-<!-- MODAL DESATIVAR -->
-<!-- ===================== -->
-
-<div
-    class="modal-overlay-cliente"
-    id="modalDesativar"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="titulo-modal"
->
-
-    <div class="modal-cliente">
-
-        <h2 id="titulo-modal">
-
-            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
-
-            Desativar Cliente
-
-        </h2>
-
-        <hr>
-
-        <div id="conteudo-modal">
-
-        </div>
-
-        <div class="modal-botoes">
-
-            <button
-                type="button"
-                class="cliente-btn cliente-btn-outline"
-                onclick="fecharModalDesativar()"
-            >
-                Cancelar
-            </button>
-
-            <form
-                id="formDesativarCliente"
-                method="POST"
-            >
-
-                <button
-                    id="btnDesativarCliente"
-                    type="submit"
-                    class="cliente-btn cliente-btn-perigo"
-                >
-                    Desativar
-                </button>
-
-            </form>
-
-        </div>
-
-    </div>
 
 </div>
 
@@ -295,7 +263,7 @@ Clientes
 <script
     src="{{ url_for(
         'static',
-        filename='js/pages/cliente.js'
+        filename='js/components/confirmar.js'
     ) }}"
 ></script>
 

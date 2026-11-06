@@ -38,106 +38,6 @@
     color: var(--text-muted);
 }
 
-/* ---------- botões do módulo ---------- */
-
-.pagina-clientes .cliente-btn,
-.modal-cliente .cliente-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
-
-    min-height: 42px;
-    padding: 0 var(--space-4);
-
-    border: 1px solid transparent;
-    border-radius: var(--input-radius);
-
-    font: inherit;
-    font-size: .875rem;
-    font-weight: 600;
-    text-decoration: none;
-    white-space: nowrap;
-    cursor: pointer;
-
-    transition: background var(--transicao), border-color var(--transicao),
-                color var(--transicao), filter var(--transicao);
-}
-
-.cliente-btn:focus-visible {
-    outline: none;
-    box-shadow: var(--shadow-focus);
-}
-
-/* ação principal da tela (Cadastrar, Salvar) */
-.cliente-btn-primary {
-    color: #fff;
-    background: var(--primary);
-    border-color: var(--primary);
-    margin-bottom: 22px !important;
-}
-
-.cliente-btn-primary:hover {
-    filter: brightness(.92);
-}
-
-/* ação neutra (Editar, Voltar, Clientes Inativos, Cancelar) */
-.cliente-btn-outline {
-    color: var(--text);
-    background: var(--card);
-    border-color: var(--border);
-}
-
-.cliente-btn-outline:hover {
-    background: var(--bg);
-    border-color: var(--text-muted);
-}
-
-/* Ver Conta Fiado: destaque estrutural em preto */
-.cliente-btn-conta {
-    color: #fff;
-    background: var(--black);
-    border-color: var(--black);
-}
-
-.cliente-btn-conta:hover {
-    filter: brightness(1.35);
-}
-
-/* Desativar na lista: vermelho discreto; sólido só na confirmação */
-.cliente-btn-perigo-suave {
-    color: var(--danger);
-    background: var(--card);
-    border-color: var(--danger-border);
-}
-
-.cliente-btn-perigo-suave:hover {
-    background: var(--danger-bg);
-    border-color: var(--danger);
-}
-
-.cliente-btn-perigo {
-    color: #fff;
-    background: var(--danger);
-    border-color: var(--danger);
-}
-
-.cliente-btn-perigo:hover {
-    filter: brightness(.92);
-}
-
-/* Reativar */
-.cliente-btn-sucesso {
-    color: var(--success-text);
-    background: var(--success-bg);
-    border-color: var(--success-border);
-}
-
-.cliente-btn-sucesso:hover {
-    border-color: var(--success);
-    filter: brightness(.97);
-}
-
 /* ---------- painel (cadastro e edição) ---------- */
 
 .cliente-painel {
@@ -169,7 +69,9 @@
 /* ---------- campos ---------- */
 
 .pagina-clientes .form-group {
-    /* display, direção e espaçamento vêm de input.css (.form-group). */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
     min-width: 0;
 }
 
@@ -215,6 +117,12 @@
 
 .cliente-form .form-group {
     flex: 1;
+    margin: 0;
+}
+
+/* botão Cadastrar na mesma altura do campo */
+.cliente-form .btn {
+    min-height: 44px;
 }
 
 /* ---------- pesquisa + contagem ---------- */
@@ -316,6 +224,12 @@
     gap: var(--space-2);
 }
 
+.cliente-acoes form,
+.cliente-lista li > form {
+    display: flex;
+    margin: 0;
+}
+
 /* inativos: leitura preservada, mas visualmente "pausado" */
 .cliente-item--inativo {
     background: var(--bg);
@@ -381,7 +295,7 @@
     margin-bottom: 0;
 }
 
-.cliente-vazio .cliente-btn i {
+.cliente-vazio .btn i {
     margin: 0;
     font-size: inherit;
     color: inherit;
@@ -447,103 +361,11 @@
     border-top: 1px solid var(--border);
 }
 
-/* ---------- modal de desativação ---------- */
-
-.modal-overlay-cliente {
-    position: fixed;
-    inset: 0;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    padding: var(--space-4);
-    background: rgba(28, 28, 28, .6);
-    z-index: 9999;
-}
-
-.modal-overlay-cliente.ativo {
-    display: flex;
-}
-
-.modal-cliente {
-    width: 520px;
-    max-width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: var(--space-6);
-
-    background: var(--card);
-    border-radius: var(--radius-lg);
-    border-top: 4px solid var(--accent);
-    box-shadow: var(--shadow-lg, 0 10px 30px rgba(0, 0, 0, .25));
-
-    animation: abrirModal .2s ease;
-}
-
-.modal-cliente h2 {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    margin: 0 0 var(--space-3);
-
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: var(--text);
-}
-
-.modal-cliente h2 i {
-    color: var(--accent);
-}
-
-.modal-cliente hr {
-    margin: 0;
-    border: 0;
-    border-top: 1px solid var(--border);
-}
-
-#conteudo-modal {
-    margin-top: var(--space-4);
-    font-size: .9375rem;
-    line-height: 1.6;
-    color: var(--text);
-}
-
-.alerta-conta-aberta {
-    text-align: left;
-}
-
-.alerta-conta-aberta h3 {
-    margin: 0 0 var(--space-3);
-    font-size: 1rem;
-    color: var(--danger);
-}
-
-.texto-aviso {
-    margin-top: var(--space-3);
-    font-weight: 600;
-}
-
-.modal-botoes {
-    display: flex;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    margin-top: var(--space-5);
-}
-
-.modal-botoes form {
-    margin: 0;
-}
-
-@keyframes abrirModal {
-    from { opacity: 0; transform: translateY(-10px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
 /* ---------- responsividade ---------- */
 
 @media (max-width: 720px) {
 
-    .clientes-cabecalho .cliente-btn {
+    .clientes-cabecalho .btn {
         width: 100%;
     }
 
@@ -562,12 +384,14 @@
         padding: var(--space-4);
     }
 
-    .cliente-acoes .cliente-btn {
+    .cliente-acoes .btn,
+    .cliente-acoes form {
         flex: 1 1 auto;
     }
 
+    .cliente-acoes form .btn,
     .cliente-lista li > form,
-    .cliente-lista li > form .cliente-btn {
+    .cliente-lista li > form .btn {
         width: 100%;
     }
 
@@ -575,25 +399,14 @@
         flex-wrap: wrap;
     }
 
-    .cliente-acoes--formulario .cliente-btn {
+    .cliente-acoes--formulario .btn {
         flex: 1 1 100%;
-    }
-
-    .modal-botoes .cliente-btn,
-    .modal-botoes form {
-        flex: 1 1 100%;
-        width: 100%;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
 
-    .modal-cliente {
-        animation: none;
-    }
-
-    .pagina-clientes *,
-    .modal-cliente * {
+    .pagina-clientes * {
         transition: none !important;
     }
 }
