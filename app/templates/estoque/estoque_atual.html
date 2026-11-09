@@ -10,197 +10,271 @@ Estoque Atual
     rel="stylesheet"
     href="{{ url_for(
         'static',
+        filename='css/components/acoes.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
         filename='css/pages/estoque_atual.css'
     ) }}"
 >
 
 {% endblock %}
 
+{#
+    Apresentação de dado ausente (somente visual): vazio, só espaços e a
+    palavra "None" gravada como texto aparecem como "—".
+#}
+{% macro dado(valor) -%}
+    {%- if not valor or (valor | string | trim | lower) in ['', 'none'] -%}
+        <span class="ea-nulo"><span aria-hidden="true">—</span><span class="sr-only">Não informado</span></span>
+    {%- else -%}
+        {{ valor }}
+    {%- endif -%}
+{%- endmacro %}
+
 {% block conteudo %}
 
-<div class="page-header">
+<div class="ea">
 
-    <div>
-        <h1>Estoque Atual</h1>
-        <p class="page-subtitle">Visão em tempo real da disponibilidade dos seus produtos</p>
-    </div>
+    <!-- CABEÇALHO -->
 
-    <a href="/estoque" class="btn-voltar">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-        Voltar
-    </a>
+    <div class="ea-topo">
 
-</div>
+        <div>
+            <h1 class="ea-titulo">Estoque Atual</h1>
+            <p class="ea-subtitulo">Visão em tempo real da disponibilidade dos seus produtos</p>
+        </div>
 
-<!-- DASHBOARD -->
-
-<div class="dashboard-cards">
-
-    <div class="dashboard-card">
-        <h3>{{ total_produtos }}</h3>
-        <p>Produtos</p>
-    </div>
-
-    <div class="dashboard-card dashboard-card--success">
-        <h3>{{ total_em_estoque }}</h3>
-        <p>Em estoque</p>
-    </div>
-
-    <div class="dashboard-card dashboard-card--info {% if total_minimo > 0 %}has-alert{% endif %}">
-        <h3>{{ total_minimo }}</h3>
-        <p>Estoque no mínimo</p>
-    </div>
-
-    <div class="dashboard-card dashboard-card--warning {% if total_baixo > 0 %}has-alert{% endif %}">
-        <h3>{{ total_baixo }}</h3>
-        <p>Estoque baixo</p>
-    </div>
-
-    <div class="dashboard-card dashboard-card--danger {% if total_sem_estoque > 0 %}has-alert{% endif %}">
-        <h3>{{ total_sem_estoque }}</h3>
-        <p>Sem estoque</p>
-    </div>
-
-    <div class="dashboard-card dashboard-card--neutral {% if total_nunca_abastecido > 0 %}has-alert{% endif %}">
-        <h3>{{ total_nunca_abastecido }}</h3>
-        <p>Nunca abastecido</p>
-    </div>
-
-</div>
-
-<!-- FILTROS (legenda + filtro unificados) -->
-
-<div class="filtros-status" role="group" aria-label="Filtrar produtos por status">
-
-    <button class="filtro-btn is-active" data-status="todos">
-        <span class="dot dot--todos" aria-hidden="true"></span>
-        Todos
-        <span class="count">{{ total_produtos }}</span>
-    </button>
-
-    <button class="filtro-btn" data-status="normal">
-        <span class="dot dot--normal" aria-hidden="true"></span>
-        Em estoque
-        <span class="count">{{ total_em_estoque }}</span>
-    </button>
-
-    <button class="filtro-btn" data-status="minimo">
-        <span class="dot dot--minimo" aria-hidden="true"></span>
-        Estoque no mínimo
-        <span class="count">{{ total_minimo }}</span>
-    </button>
-
-    <button class="filtro-btn" data-status="baixo">
-        <span class="dot dot--baixo" aria-hidden="true"></span>
-        Estoque baixo
-        <span class="count">{{ total_baixo }}</span>
-    </button>
-
-    <button class="filtro-btn" data-status="sem_estoque">
-        <span class="dot dot--sem_estoque" aria-hidden="true"></span>
-        Sem estoque
-        <span class="count">{{ total_sem_estoque }}</span>
-    </button>
-
-    <button class="filtro-btn" data-status="nunca_abastecido">
-        <span class="dot dot--nunca_abastecido" aria-hidden="true"></span>
-        Nunca abastecido
-        <span class="count">{{ total_nunca_abastecido }}</span>
-    </button>
-
-</div>
-
-
-<!-- PESQUISA -->
-
-<div class="estoque-pesquisa">
-
-    <div class="search-box">
-
-        <label for="search-input" class="sr-only">Pesquisar produto</label>
-
-        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-
-        <input type="text" id="search-input" placeholder="Pesquisar Produto...">
+        <a href="/estoque" class="btn btn-cancelar">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Voltar
+        </a>
 
     </div>
-</div>
 
-<div class="estoque-grid">
+    <!-- INDICADORES -->
 
-    {% for item in estoque %}
+    <div class="ea-indicadores">
 
-    <div
-        class="estoque-card {% if item.status_estoque == 'nunca_abastecido' %}status-nunca{% elif item.status_estoque == 'sem_estoque' %}status-sem{% elif item.status_estoque == 'baixo' %}status-baixo{% elif item.status_estoque == 'minimo' %}status-minimo{% else %}status-normal{% endif %}"
-        data-status="{{ item.status_estoque }}"
-        role="link"
-        tabindex="0"
-        aria-label="Ver detalhes de {{ item.nome }}"
-        onclick="window.location.href='/estoque/produto/{{ item.id }}'"
-    >
+        <div class="ea-ind ea-ind--total">
+            <span class="ea-ind-rotulo"><span class="ea-ind-ponto" aria-hidden="true"></span>Produtos</span>
+            <strong class="ea-ind-valor">{{ total_produtos }}</strong>
+        </div>
 
-        <div class="estoque-card__header">
+        <div class="ea-ind ea-ind--ok">
+            <span class="ea-ind-rotulo"><span class="ea-ind-ponto" aria-hidden="true"></span>Em estoque</span>
+            <strong class="ea-ind-valor">{{ total_em_estoque }}</strong>
+        </div>
 
-            <h3>
-                <span class="status-dot" aria-hidden="true"></span>
-                {{ item.nome }}
-            </h3>
+        <div class="ea-ind ea-ind--min {% if total_minimo > 0 %}has-alert{% endif %}">
+            <span class="ea-ind-rotulo"><span class="ea-ind-ponto" aria-hidden="true"></span>Estoque no mínimo</span>
+            <strong class="ea-ind-valor">{{ total_minimo }}</strong>
+        </div>
 
-            {% if item.status_estoque == "nunca_abastecido" %}
-                <span class="status-pill status-pill--nunca_abastecido">Nunca abastecido</span>
-            {% elif item.status_estoque == "sem_estoque" %}
-                <span class="status-pill status-pill--sem_estoque">Sem estoque</span>
-            {% elif item.status_estoque == "baixo" %}
-                <span class="status-pill status-pill--baixo">Estoque baixo</span>
-            {% elif item.status_estoque == "minimo" %}
-                <span class="status-pill status-pill--minimo">Estoque mínimo</span>
-            {% endif %}
+        <div class="ea-ind ea-ind--baixo {% if total_baixo > 0 %}has-alert{% endif %}">
+            <span class="ea-ind-rotulo"><span class="ea-ind-ponto" aria-hidden="true"></span>Estoque baixo</span>
+            <strong class="ea-ind-valor">{{ total_baixo }}</strong>
+        </div>
+
+        <div class="ea-ind ea-ind--sem {% if total_sem_estoque > 0 %}has-alert{% endif %}">
+            <span class="ea-ind-rotulo"><span class="ea-ind-ponto" aria-hidden="true"></span>Sem estoque</span>
+            <strong class="ea-ind-valor">{{ total_sem_estoque }}</strong>
+        </div>
+
+        <div class="ea-ind ea-ind--nunca {% if total_nunca_abastecido > 0 %}has-alert{% endif %}">
+            <span class="ea-ind-rotulo"><span class="ea-ind-ponto" aria-hidden="true"></span>Nunca abastecido</span>
+            <strong class="ea-ind-valor">{{ total_nunca_abastecido }}</strong>
+        </div>
+
+    </div>
+
+    <!-- PESQUISA + FILTROS -->
+
+    <div class="ea-barra">
+
+        <div class="search-box">
+
+            <label for="search-input" class="sr-only">Pesquisar produto</label>
+
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+
+            <input type="text" id="search-input" placeholder="Pesquisar Produto...">
 
         </div>
 
-        {% if item.quantidade_atual_unidade == None %}
+        <div class="filtros-status" role="group" aria-label="Filtrar produtos por status">
 
-        <strong>Nunca abastecido</strong>
+            <button class="filtro-btn is-active" data-status="todos">
+                <span class="dot dot--todos" aria-hidden="true"></span>
+                Todos
+                <span class="count">{{ total_produtos }}</span>
+            </button>
 
-        {% else %}
+            <button class="filtro-btn" data-status="normal">
+                <span class="dot dot--normal" aria-hidden="true"></span>
+                Em estoque
+                <span class="count">{{ total_em_estoque }}</span>
+            </button>
 
-            {% if item.vende_por_dose %}
+            <button class="filtro-btn" data-status="minimo">
+                <span class="dot dot--minimo" aria-hidden="true"></span>
+                Estoque no mínimo
+                <span class="count">{{ total_minimo }}</span>
+            </button>
 
-            <div class="quantidade-principal">
-                <i class="fa-solid fa-wine-bottle" aria-hidden="true"></i>
-                {{ item.quantidade_atual_caixa or 0 }} garrafas
+            <button class="filtro-btn" data-status="baixo">
+                <span class="dot dot--baixo" aria-hidden="true"></span>
+                Estoque baixo
+                <span class="count">{{ total_baixo }}</span>
+            </button>
+
+            <button class="filtro-btn" data-status="sem_estoque">
+                <span class="dot dot--sem_estoque" aria-hidden="true"></span>
+                Sem estoque
+                <span class="count">{{ total_sem_estoque }}</span>
+            </button>
+
+            <button class="filtro-btn" data-status="nunca_abastecido">
+                <span class="dot dot--nunca_abastecido" aria-hidden="true"></span>
+                Nunca abastecido
+                <span class="count">{{ total_nunca_abastecido }}</span>
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- PRODUTOS -->
+
+    <div class="estoque-grid">
+
+        {% for item in estoque %}
+
+        <div
+            class="estoque-card {% if item.status_estoque == 'nunca_abastecido' %}status-nunca{% elif item.status_estoque == 'sem_estoque' %}status-sem{% elif item.status_estoque == 'baixo' %}status-baixo{% elif item.status_estoque == 'minimo' %}status-minimo{% else %}status-normal{% endif %}"
+            data-status="{{ item.status_estoque }}"
+            role="link"
+            tabindex="0"
+            aria-label="Ver detalhes de {{ item.nome }}"
+            onclick="window.location.href='/estoque/produto/{{ item.id }}'"
+        >
+
+          <div class="ea-card-corpo">
+
+            <div class="estoque-card__header">
+
+                <h3>
+                    <span class="status-dot" aria-hidden="true"></span>
+                    {{ item.nome }}
+                </h3>
+
+                {% if item.status_estoque == "nunca_abastecido" %}
+                    <span class="status-pill status-pill--nunca_abastecido">Nunca abastecido</span>
+                {% elif item.status_estoque == "sem_estoque" %}
+                    <span class="status-pill status-pill--sem_estoque">Sem estoque</span>
+                {% elif item.status_estoque == "baixo" %}
+                    <span class="status-pill status-pill--baixo">Estoque baixo</span>
+                {% elif item.status_estoque == "minimo" %}
+                    <span class="status-pill status-pill--minimo">Estoque mínimo</span>
+                {% else %}
+                    <span class="status-pill status-pill--normal">Em estoque</span>
+                {% endif %}
+
+            </div>
+
+            {% if item.quantidade_atual_unidade == None %}
+
+            <div class="ea-qtd-vazio">
+                <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+                Nenhuma quantidade registrada
             </div>
 
             {% else %}
 
-            <div class="quantidade-principal">
-                <i class="fa-solid fa-box" aria-hidden="true"></i>
-                {{ item.quantidade_atual_caixa or 0 }} caixas
-            </div>
+                {% set caixas = item.quantidade_atual_caixa or 0 %}
 
-            <div class="estoque-quantidade">
-                <i class="fa-solid fa-cubes" aria-hidden="true"></i>
-                {{ item.quantidade_atual_unidade or 0 }} unidades
-            </div>
+                {% if item.vende_por_dose %}
+
+                <div class="ea-qtd ea-qtd--unico">
+                    <div class="ea-qtd-item">
+                        <span class="ea-qtd-valor">{{ caixas }}</span>
+                        <span class="ea-qtd-rotulo">
+                            <i class="fa-solid fa-wine-bottle" aria-hidden="true"></i>
+                            {{ 'garrafa' if caixas == 1 else 'garrafas' }}
+                        </span>
+                    </div>
+                </div>
+
+                {% else %}
+
+                {% set unidades = item.quantidade_atual_unidade or 0 %}
+
+                <div class="ea-qtd">
+                    <div class="ea-qtd-item">
+                        <span class="ea-qtd-valor">{{ caixas }}</span>
+                        <span class="ea-qtd-rotulo">
+                            <i class="fa-solid fa-box" aria-hidden="true"></i>
+                            {{ 'caixa' if caixas == 1 else 'caixas' }}
+                        </span>
+                    </div>
+
+                    <div class="ea-qtd-item">
+                        <span class="ea-qtd-valor">{{ unidades }}</span>
+                        <span class="ea-qtd-rotulo">
+                            <i class="fa-solid fa-cubes" aria-hidden="true"></i>
+                            {{ 'unidade' if unidades == 1 else 'unidades' }}
+                        </span>
+                    </div>
+                </div>
+
+                {% endif %}
 
             {% endif %}
 
-        {% endif %}
+            <div class="estoque-info">
 
-        <hr>
+                <div class="ea-dado">
+                    <span class="ea-dado-rotulo">Categoria</span>
+                    <span class="ea-dado-valor">{{ dado(item.categoria) }}</span>
+                </div>
 
-        <div class="estoque-info">
+                <div class="ea-dado">
+                    <span class="ea-dado-rotulo">Embalagem</span>
+                    <span class="ea-dado-valor">{{ dado(item.tipo_embalagem) }}</span>
+                </div>
 
-            <span><strong>Categoria:</strong> {{ item.categoria or "—" }}</span>
-            <span><strong>Embalagem:</strong> {{ item.tipo_embalagem or "—" }}</span>
-            <span><strong>Sabor:</strong> {{ item.sabor or "—" }}</span>
-            <span><strong>Volume:</strong> {{ item.volume or "—" }}</span>
+                <div class="ea-dado">
+                    <span class="ea-dado-rotulo">Sabor</span>
+                    <span class="ea-dado-valor">{{ dado(item.sabor) }}</span>
+                </div>
+
+                <div class="ea-dado">
+                    <span class="ea-dado-rotulo">Volume</span>
+                    <span class="ea-dado-valor">{{ dado(item.volume) }}</span>
+                </div>
+
+            </div>
+
+            <div class="ea-card-rodape" aria-hidden="true">
+                Ver detalhes
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+
+          </div>
 
         </div>
 
-    </div>
+        {% else %}
 
-    {% endfor %}
+        <div class="ea-vazio">Nenhum produto para exibir.</div>
+
+        {% endfor %}
+
+    </div>
 
 </div>
 

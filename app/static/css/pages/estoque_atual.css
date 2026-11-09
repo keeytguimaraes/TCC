@@ -1,503 +1,629 @@
-/* ==========================
-   TÍTULO
-========================== */
+/* ==========================================================
+   ESTOQUE ATUAL — SIGC
+   Página: templates/estoque/estoque_atual.html
 
-.page-title{
-    margin-bottom:var(--space-6);
-}
+   - Tudo vive dentro de .ea, então nada vaza para outras páginas
+     e as regras vencem o .search-box global (search.css).
+   - Tokens locais (--ea-*): reaproveitam as cores globais do
+     base.css (--cor-vermelha, --cor-preta, --cor-amarela) e têm
+     valor de reserva, igual à página Detalhes do Produto.
+   - Contrato com o JavaScript (não renomear):
+       #search-input, .estoque-card (display é controlado pelo JS,
+       por isso o card NÃO pode ser flex/grid), o primeiro <h3> do
+       card, [data-status], .filtro-btn e .is-active.
+   ========================================================== */
 
-.page-title h1{
-    margin:0;
-    font-size:1.75rem;
-    font-weight:700;
-    color:var(--text);
-    letter-spacing:-0.02em;
-}
+   .ea{
+    --ea-vermelho:var(--cor-vermelha, #c62828);
+    --ea-preto:var(--cor-preta, #1f1f1f);
+    --ea-amarelo:var(--cor-amarela, #fbc02d);
 
-.page-subtitle{
-    margin:6px 0 0;
-    color:var(--text-secondary);
-    font-size:.9rem;
-}
+    --ea-texto:#1f1f1f;
+    --ea-suave:#6b6b6b;
+    --ea-borda:#e3e0da;
+    --ea-fundo-suave:#f7f6f4;
+    --ea-card:#fff;
 
-/* ==========================
-   CONTADOR
-========================== */
+    /* situações do estoque */
+    --ea-ok:#2e7d32;      --ea-ok-bg:#e8f3e9;
+    --ea-min:#f9a825;     --ea-min-bg:#fff3cd;   --ea-min-tx:#7a5600;
+    --ea-baixo:#e65100;   --ea-baixo-bg:#fde9dc;
+    --ea-sem:#c62828;     --ea-sem-bg:#fbeaea;
+    --ea-nunca:#6b6b6b;   --ea-nunca-bg:#eeeeec;
 
-.contador{
-    margin-bottom:25px;
-    color:var(--text-secondary);
-    font-size:18px;
-}
+    --ea-raio:14px;
+    --ea-sombra:0 1px 3px rgba(0, 0, 0, .06), 0 2px 8px rgba(0, 0, 0, .04);
+    --ea-sombra-forte:0 6px 18px rgba(0, 0, 0, .12);
 
-/* ==========================
-   GRID
-========================== */
-
-.contas-grid{
-    display:grid;
-    grid-template-columns:
-        repeat(
-            auto-fill,
-            minmax(320px, 1fr)
-        );
-    gap:25px;
-}
-
-/* ==========================
-   CARD
-========================== */
-
-.conta-card{
-    background:var(--card);
-    border-radius:24px;
-    padding:25px;
-    box-shadow:
-       0 4px 16px
-        rgba(0,0,0,0.08);
-    border-left:8px solid var(--primary);
-}
-
-.conta-card:hover{
-    transform:translateY(-3px);
-    box-shadow:
-       0 12px 30px
-        rgba(0,0,0,0.12);
-}
-
-/* ==========================
-   NOME CLIENTE
-========================== */
-
-.cliente-nome{
-    color:var(--text);
-    font-size:18px;
-    font-weight:700;
-    margin-bottom:30px;
-}
-
-/* ==========================
-   TEXTOS
-========================== */
-
-.conta-card p{
-    margin-bottom:18px;
-    font-size:16px;
-    color:var(--text-secondary);
-}
-
-.conta-card strong{
-    color:var(--text);
-}
-
-/* ==========================
-   RESPONSIVO
-========================== */
-
-@media (max-width: 768px){
-    .contas-grid{
-        grid-template-columns:1fr;
-    }
-
-    .conta-card{
-        padding:25px;
-    }
-}
-
-.conta-container{
     width:100%;
+    color:var(--ea-texto);
 }
 
-.pagina-titulo{
-    margin-bottom:30px;
-}
-
-.conta-pesquisa{
-    margin-bottom:40px;
-}
-
-.total-contas{
-    margin-bottom:30px;
-    color:var(--text-secondary);
-    font-size:18px;
-}
-
-.alerta-transferencia{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-top:25px;
-    margin-bottom:20px;
-    padding:14px 18px;
-    background:rgba(220, 53, 69, 0.10);
-    border:1px solid rgba(220, 53, 69, 0.25);
-    border-radius:14px;
-    color:var(--danger);
-    font-weight:600;
-}
-
-.conta-card.atrasada{
-    border-left:8px solid var(--danger);
-    box-shadow:
-       0 4px 16px rgba(220, 53, 69, 0.15);
-}
-
-/* ==========================
-   AÇÕES
-========================== */
-
-.acoes-conta{
-    display:flex;
-    gap:12px;
-    margin-top:10px;
-    flex-wrap:wrap;
-}
-
-.modal-overlay{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:
-        rgba(0,0,0,0.5);
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-}
-
-.modal-container{
-    width:700px;
-    max-width:95%;
-    background:var(--card);
-    border-radius:20px;
-    padding:30px;
-}
-
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
-}
-
-.modal-header button{
-    border:none;
-    background:none;
-    font-size:24px;
-    cursor:pointer;
-}
-
-.modal-container select{
-    width:100%;
-    padding:14px;
-    border:1px solid var(--border);
-    border-radius:12px;
-    margin-top:10px;
-}
-
-.modal-actions{
-    display:flex;
-    gap:12px;
-    margin-top:25px;
-}
-
-/* ==========================
-   ESTADOS DO ESTOQUE (cards do dashboard)
-========================== */
-
-.dashboard-cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-    gap:var(--space-4);
-    margin-bottom:var(--space-5);
-}
-
-.dashboard-card{
-    background:var(--card);
-    border:1px solid var(--border);
-    padding:var(--space-4) var(--space-5);
-    border-radius:var(--radius-md);
-    box-shadow:var(--shadow);
-}
-
-.dashboard-card h3{
-    margin:0;
-    font-size:1.75rem;
-    font-weight:700;
-    color:var(--text);
-    line-height:1.1;
-    transition:color .15s ease;
-}
-
-.dashboard-card p{
-    margin-top:6px;
-    color:var(--text-secondary);
-    font-size:.8rem;
-    font-weight:500;
-}
-
-.dashboard-card--success h3{
-    color:var(--success);
-}
-
-.dashboard-card--info.has-alert h3{ color:var(--info); }
-.dashboard-card--warning.has-alert h3{ color:var(--warning); }
-.dashboard-card--danger.has-alert h3{ color:var(--danger); }
-.dashboard-card--neutral.has-alert h3{ color:var(--secondary); }
-
-/* ==========================
-   FILTROS (legenda + filtro unificados)
-========================== */
-
-.filtros-status{
-    display:flex;
-    align-items:center;
-    gap:var(--space-2);
-    flex-wrap:wrap;
-    margin-bottom:var(--space-5);
-}
-
-.filtro-btn{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    border:1px solid var(--border);
-    padding:var(--space-2) var(--space-3);
-    border-radius:999px;
-    background:var(--card);
-    cursor:pointer;
-    font-size:.85rem;
-    font-weight:600;
-    color:var(--text-secondary);
-    transition:.15s;
-}
-
-.filtro-btn:hover{
-    border-color:var(--text-tertiary);
-    color:var(--text);
-}
-
-.filtro-btn:focus-visible{
-    outline:2px solid var(--primary);
-    outline-offset:2px;
-}
-
-.filtro-btn.is-active{
-    background:var(--text);
-    border-color:var(--text);
-    color:#fff;
-}
-
-.filtro-btn .dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    flex-shrink:0;
-}
-
-.filtro-btn .count{
-    font-weight:700;
-}
-
-.dot--todos{ background:var(--text-tertiary); }
-.dot--normal{ background:var(--success); }
-.dot--minimo{ background:var(--warning); }
-.dot--baixo{ background:var(--danger); }
-.dot--sem_estoque{ background:var(--danger); }
-.dot--nunca_abastecido{ background:var(--secondary); }
-
-/* ==========================
-   BUSCA
-========================== */
-
-.estoque-pesquisa{
-    margin-bottom:var(--space-5);
-}
-
-.search-box{
-    position:relative;
-    max-width:420px;
-}
-
-.search-box i{
-    position:absolute;
-    left:14px;
-    top:50%;
-    transform:translateY(-50%);
-    color:var(--text-tertiary);
-    font-size:.85rem;
-}
-
-.search-box input{
-    width:100%;
-    padding:11px 14px 11px 38px;
-    border:1px solid var(--border);
-    border-radius:var(--radius-sm);
-    font-size:.9rem;
-    background:var(--card);
+.ea *,
+.ea *::before,
+.ea *::after{
     box-sizing:border-box;
-    transition:.15s;
 }
 
-.search-box input:focus{
-    outline:none;
-    border-color:var(--primary);
-    box-shadow:0 0 0 3px var(--primary-light);
+.ea .sr-only{
+    position:absolute;
+    width:1px;
+    height:1px;
+    margin:-1px;
+    padding:0;
+    overflow:hidden;
+    clip:rect(0, 0, 0, 0);
+    white-space:nowrap;
+    border:0;
 }
 
-/* ==========================
-   GRID DE PRODUTOS
-========================== */
+/* ---------- cabeçalho ---------- */
 
-.estoque-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-    gap:var(--space-4);
-}
-
-.estoque-card{
-    position:relative;
-    background:var(--card);
-    border:1px solid var(--border);
-    border-left:4px solid var(--border);
-    border-radius:var(--radius-md);
-    padding:var(--space-4) var(--space-5);
-    cursor:pointer;
-    transition:.15s;
-}
-
-.estoque-card:hover{
-    box-shadow:var(--shadow-md);
-    transform:translateY(-2px);
-}
-
-.estoque-card:focus-visible{
-    outline:2px solid var(--primary);
-    outline-offset:2px;
-}
-
-.estoque-card.status-normal{ border-left-color:var(--success); }
-.estoque-card.status-minimo{ border-left-color:var(--warning); }
-.estoque-card.status-baixo{ border-left-color:var(--danger); }
-.estoque-card.status-sem{ border-left-color:var(--danger); }
-.estoque-card.status-nunca{ border-left-color:var(--secondary); }
-
-.estoque-card__header{
+.ea-topo{
     display:flex;
     align-items:flex-start;
     justify-content:space-between;
-    gap:var(--space-2);
-    margin-bottom:var(--space-2);
+    gap:16px;
+    margin-bottom:24px;
 }
 
-.estoque-card h3{
+.ea-titulo{
     margin:0;
+    font-size:1.75rem;
+    font-weight:700;
+    letter-spacing:-.02em;
+    line-height:1.2;
+}
+
+.ea-subtitulo{
+    margin:6px 0 0;
+    font-size:.9375rem;
+    color:var(--ea-suave);
+}
+
+.ea-topo .btn{
+    flex-shrink:0;
+}
+
+/* ---------- indicadores ---------- */
+
+.ea-indicadores{
+    display:grid;
+    grid-template-columns:repeat(6, minmax(0, 1fr));
+    gap:14px;
+    margin-bottom:24px;
+}
+
+.ea-ind{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:14px;
+    min-width:0;
+    padding:16px 18px;
+
+    background:var(--ea-card);
+    border:1px solid var(--ea-borda);
+    border-top:3px solid var(--ea-borda);
+    border-radius:var(--ea-raio);
+    box-shadow:var(--ea-sombra);
+}
+
+.ea-ind-rotulo{
     display:flex;
     align-items:center;
     gap:8px;
+
+    font-size:.8125rem;
+    font-weight:600;
+    line-height:1.3;
+    color:var(--ea-suave);
+}
+
+.ea-ind-ponto{
+    flex-shrink:0;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--ea-nunca);
+}
+
+.ea-ind-valor{
+    font-size:2rem;
+    font-weight:700;
+    line-height:1;
+    font-variant-numeric:tabular-nums;
+    color:var(--ea-texto);
+}
+
+/* total: bloco escuro, igual ao "Estoque atual" de Detalhes */
+.ea-ind--total{
+    color:#fff;
+    background:var(--ea-preto);
+    border-color:var(--ea-preto);
+    border-top-color:var(--ea-amarelo);
+}
+
+.ea-ind--total .ea-ind-rotulo{ color:rgba(255, 255, 255, .78); }
+.ea-ind--total .ea-ind-ponto{ background:var(--ea-amarelo); }
+.ea-ind--total .ea-ind-valor{ color:var(--ea-amarelo); }
+
+/* cor da situação (o ponto sempre aparece; o destaque só com alerta) */
+.ea-ind--ok .ea-ind-ponto{    background:var(--ea-ok); }
+.ea-ind--min .ea-ind-ponto{   background:var(--ea-min); }
+.ea-ind--baixo .ea-ind-ponto{ background:var(--ea-baixo); }
+.ea-ind--sem .ea-ind-ponto{   background:var(--ea-sem); }
+.ea-ind--nunca .ea-ind-ponto{ background:var(--ea-nunca); }
+
+.ea-ind--ok{
+    border-top-color:var(--ea-ok);
+}
+.ea-ind--ok .ea-ind-valor{ color:var(--ea-ok); }
+
+.ea-ind--min.has-alert{   border-top-color:var(--ea-min);   background:var(--ea-min-bg); }
+.ea-ind--min.has-alert .ea-ind-valor{   color:var(--ea-min-tx); }
+
+.ea-ind--baixo.has-alert{ border-top-color:var(--ea-baixo); background:var(--ea-baixo-bg); }
+.ea-ind--baixo.has-alert .ea-ind-valor{ color:var(--ea-baixo); }
+
+.ea-ind--sem.has-alert{   border-top-color:var(--ea-sem);   background:var(--ea-sem-bg); }
+.ea-ind--sem.has-alert .ea-ind-valor{   color:var(--ea-sem); }
+
+.ea-ind--nunca.has-alert{ border-top-color:var(--ea-nunca); background:var(--ea-nunca-bg); }
+.ea-ind--nunca.has-alert .ea-ind-valor{ color:var(--ea-texto); }
+
+/* ---------- barra: pesquisa + filtros ---------- */
+
+.ea-barra{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:12px 20px;
+    margin-bottom:20px;
+}
+
+/* O .search-box global (search.css) já é o campo: flex, borda e padding.
+   Aqui só ajustamos medidas e cores, sem criar uma segunda caixa. */
+.ea .search-box{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex:1 1 280px;
+    width:auto;
+    max-width:360px;
+    min-height:44px;
+    margin:0;
+    padding:0 14px;
+
+    background:var(--ea-card);
+    border:1px solid var(--ea-borda);
+    border-radius:12px;
+    box-shadow:var(--ea-sombra);
+    transition:border-color .15s ease, box-shadow .15s ease;
+}
+
+.ea .search-box:focus-within{
+    border-color:var(--ea-preto);
+    box-shadow:0 0 0 3px rgba(251, 192, 45, .5);
+}
+
+.ea .search-box i{
+    position:static;
+    transform:none;
+    flex-shrink:0;
+    font-size:.9rem;
+    color:var(--ea-suave);
+}
+
+.ea .search-box input{
+    flex:1;
+    min-width:0;
+    width:100%;
+    height:42px;
+    padding:0;
+
+    font:inherit;
+    font-size:.9375rem;
+    color:var(--ea-texto);
+    background:transparent;
+    border:0;
+    outline:0;
+    box-shadow:none;
+}
+
+.ea .search-box input::placeholder{
+    color:#9a9a9a;
+}
+
+/* filtros de situação */
+
+.filtros-status{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px;
+    flex:2 1 auto;
+}
+
+.ea .filtro-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    min-height:38px;
+    padding:0 14px;
+
+    font:inherit;
+    font-size:.8125rem;
+    font-weight:600;
+    line-height:1;
+    white-space:nowrap;
+    color:var(--ea-texto);
+    background:var(--ea-card);
+    border:1px solid var(--ea-borda);
+    border-radius:999px;
+    cursor:pointer;
+    transition:background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.ea .filtro-btn:hover{
+    border-color:#b9b5ad;
+    background:var(--ea-fundo-suave);
+}
+
+.ea .filtro-btn:focus-visible{
+    outline:none;
+    box-shadow:0 0 0 3px #fff, 0 0 0 5px var(--ea-preto);
+}
+
+.ea .filtro-btn .dot{
+    width:9px;
+    height:9px;
+    flex-shrink:0;
+    border-radius:50%;
+}
+
+.ea .filtro-btn .count{
+    min-width:22px;
+    padding:3px 7px;
+    font-size:.75rem;
+    font-weight:700;
+    text-align:center;
+    font-variant-numeric:tabular-nums;
+    background:#eeeeec;
+    border-radius:999px;
+}
+
+.ea .filtro-btn.is-active{
+    color:#fff;
+    background:var(--ea-preto);
+    border-color:var(--ea-preto);
+}
+
+.ea .filtro-btn.is-active:hover{
+    background:var(--ea-preto);
+}
+
+.ea .filtro-btn.is-active .count{
+    color:var(--ea-preto);
+    background:var(--ea-amarelo);
+}
+
+.ea .dot--todos{          background:#9a9a9a; }
+.ea .dot--normal{         background:var(--ea-ok); }
+.ea .dot--minimo{         background:var(--ea-min); }
+.ea .dot--baixo{          background:var(--ea-baixo); }
+.ea .dot--sem_estoque{    background:var(--ea-sem); }
+.ea .dot--nunca_abastecido{ background:var(--ea-nunca); }
+
+/* o ponto fica visível também no filtro ativo (fundo escuro) */
+.ea .filtro-btn.is-active .dot{
+    box-shadow:0 0 0 2px rgba(255, 255, 255, .85);
+}
+
+/* ---------- grade de produtos ---------- */
+
+.estoque-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+    gap:16px;
+    align-items:stretch;
+}
+
+/* IMPORTANTE: o card é display:block de propósito. O search_estoque.js
+   grava display:block/none direto no elemento; o layout interno fica
+   nos filhos. */
+.ea .estoque-card{
+    position:relative;
+    display:block;
+    padding:18px 20px 14px;
+
+    color:var(--ea-texto);
+    background:var(--ea-card);
+    border:1px solid var(--ea-borda);
+    border-left:5px solid var(--ea-borda);
+    border-radius:var(--ea-raio);
+    box-shadow:var(--ea-sombra);
+    cursor:pointer;
+    transition:box-shadow .15s ease, transform .15s ease, border-color .15s ease;
+}
+
+/* corpo interno: ocupa a altura que a grade der ao card e prende o
+   rodapé na base (o card em si continua display:block). */
+.ea .ea-card-corpo{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+}
+
+.ea .estoque-card:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--ea-sombra-forte);
+}
+
+.ea .estoque-card:focus-visible{
+    outline:none;
+    box-shadow:0 0 0 3px #fff, 0 0 0 5px var(--ea-preto);
+}
+
+.ea .estoque-card.status-normal{ border-left-color:var(--ea-ok); }
+.ea .estoque-card.status-minimo{ border-left-color:var(--ea-min); }
+.ea .estoque-card.status-baixo{  border-left-color:var(--ea-baixo); }
+.ea .estoque-card.status-sem{    border-left-color:var(--ea-sem); }
+.ea .estoque-card.status-nunca{  border-left-color:var(--ea-nunca); }
+
+.ea .estoque-card__header{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.ea .estoque-card h3{
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    margin:0;
+    min-width:0;
+
     font-size:1rem;
     font-weight:700;
-    color:var(--text);
+    line-height:1.3;
+    color:var(--ea-texto);
+    overflow-wrap:anywhere;
 }
 
-.status-dot{
-    width:8px;
-    height:8px;
+.ea .status-dot{
+    flex-shrink:0;
+    width:9px;
+    height:9px;
+    margin-top:.4em;
     border-radius:50%;
-    flex-shrink:0;
 }
 
-.status-normal .status-dot{ background:var(--success); }
-.status-minimo .status-dot{ background:var(--warning); }
-.status-baixo .status-dot{ background:var(--danger); }
-.status-sem .status-dot{ background:var(--danger); }
-.status-nunca .status-dot{ background:var(--secondary); }
+.ea .status-normal .status-dot{ background:var(--ea-ok); }
+.ea .status-minimo .status-dot{ background:var(--ea-min); }
+.ea .status-baixo .status-dot{  background:var(--ea-baixo); }
+.ea .status-sem .status-dot{    background:var(--ea-sem); }
+.ea .status-nunca .status-dot{  background:var(--ea-nunca); }
 
-.status-pill{
+.ea .status-pill{
     flex-shrink:0;
-    font-size:.7rem;
+    padding:3px 10px;
+
+    font-size:.6875rem;
     font-weight:700;
-    padding:3px 8px;
-    border-radius:999px;
+    line-height:1.4;
     white-space:nowrap;
+    border-radius:999px;
 }
 
-.status-pill--minimo{ background:var(--warning-light); color:var(--warning); }
-.status-pill--baixo{ background:var(--danger-light); color:var(--danger); }
-.status-pill--sem_estoque{ background:var(--danger-light); color:var(--danger); }
-.status-pill--nunca_abastecido{ background:var(--neutral-light); color:var(--secondary); }
+.ea .status-pill--normal{          color:var(--ea-ok);      background:var(--ea-ok-bg); }
+.ea .status-pill--minimo{          color:var(--ea-min-tx);  background:var(--ea-min-bg); }
+.ea .status-pill--baixo{           color:var(--ea-baixo);   background:var(--ea-baixo-bg); }
+.ea .status-pill--sem_estoque{     color:var(--ea-sem);     background:var(--ea-sem-bg); }
+.ea .status-pill--nunca_abastecido{ color:var(--ea-nunca);  background:var(--ea-nunca-bg); }
 
-.quantidade-principal{
+/* quantidades */
+
+.ea-qtd{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.ea-qtd--unico{
+    grid-template-columns:1fr;
+}
+
+.ea-qtd-item{
     display:flex;
-    align-items:center;
-    gap:6px;
-    font-size:1.15rem;
+    flex-direction:column;
+    gap:4px;
+    min-width:0;
+    padding:10px 12px;
+
+    background:var(--ea-fundo-suave);
+    border:1px solid var(--ea-borda);
+    border-radius:10px;
+}
+
+.ea-qtd-valor{
+    font-size:1.5rem;
     font-weight:700;
-    color:var(--text);
-    margin:8px 0 2px;
+    line-height:1;
+    font-variant-numeric:tabular-nums;
 }
 
-.quantidade-principal i{
-    color:var(--text-tertiary);
-    font-size:.85rem;
-}
-
-.estoque-quantidade{
+.ea-qtd-rotulo{
     display:flex;
     align-items:center;
     gap:6px;
-    font-size:.85rem;
-    color:var(--text-secondary);
-    margin-bottom:var(--space-3);
+    font-size:.8125rem;
+    font-weight:600;
+    color:var(--ea-suave);
 }
 
-.estoque-quantidade i{
-    color:var(--text-tertiary);
+.ea-qtd-rotulo i{
     font-size:.75rem;
 }
 
-.estoque-card strong{
-    display:block;
-    margin:8px 0 var(--space-3);
-    color:var(--text-tertiary);
-    font-size:.85rem;
+.ea-qtd-vazio{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:14px;
+    padding:12px;
+
+    font-size:.875rem;
     font-weight:600;
+    color:var(--ea-suave);
+    background:var(--ea-fundo-suave);
+    border:1px dashed #cfcbc3;
+    border-radius:10px;
 }
 
-.estoque-card hr{
-    border:none;
-    border-top:1px solid var(--border);
-    margin:var(--space-2) 0 var(--space-3);
-}
+/* dados do produto */
 
-.estoque-info{
+.ea .estoque-info{
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px 12px;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:10px 14px;
+    margin:0 0 12px;
+    padding-top:14px;
+    border-top:1px solid var(--ea-borda);
 }
 
-.estoque-info span{
-    font-size:.8rem;
-    color:var(--text-secondary);
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
+.ea-dado{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
 }
 
-.estoque-info span strong{
-    color:var(--text);
+.ea-dado-rotulo{
+    font-size:.6875rem;
     font-weight:600;
-    margin-right:2px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ea-suave);
 }
 
-@media(max-width:480px){
-    .page-header{
-        flex-direction:column;
+.ea-dado-valor{
+    font-size:.875rem;
+    font-weight:600;
+    overflow-wrap:anywhere;
+}
+
+.ea-nulo{
+    color:#9a9a9a;
+    font-weight:500;
+}
+
+/* rodapé do card */
+
+.ea-card-rodape{
+    display:flex;
+    margin-top:auto;
+    align-items:center;
+    justify-content:flex-end;
+    gap:6px;
+    padding-top:10px;
+    border-top:1px solid var(--ea-borda);
+
+    font-size:.8125rem;
+    font-weight:600;
+    color:var(--ea-suave);
+    transition:color .15s ease;
+}
+
+.ea-card-rodape i{
+    font-size:.7rem;
+    transition:transform .15s ease;
+}
+
+.ea .estoque-card:hover .ea-card-rodape{
+    color:var(--ea-vermelho);
+}
+
+.ea .estoque-card:hover .ea-card-rodape i{
+    transform:translateX(3px);
+}
+
+/* lista vazia */
+
+.ea-vazio{
+    grid-column:1 / -1;
+    padding:40px 24px;
+    text-align:center;
+    font-size:.9375rem;
+    color:var(--ea-suave);
+    background:var(--ea-card);
+    border:1px dashed #cfcbc3;
+    border-radius:var(--ea-raio);
+}
+
+/* ---------- responsividade ---------- */
+
+@media (max-width:1100px){
+
+    .ea-indicadores{
+        grid-template-columns:repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width:640px){
+
+    .ea-indicadores{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+        gap:10px;
+    }
+
+    .ea-ind{
+        padding:14px;
+    }
+
+    .ea-ind-valor{
+        font-size:1.75rem;
+    }
+
+    .ea-barra{
+        gap:12px;
+    }
+
+    .ea .search-box{
+        flex-basis:100%;
+        max-width:none;
+    }
+
+    .estoque-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media (max-width:520px){
+
+    .ea-topo{
+        flex-direction:column-reverse;
         align-items:stretch;
     }
-    .estoque-info{
+
+    .ea-topo .btn{
+        align-self:flex-start;
+    }
+
+    .ea-titulo{
+        font-size:1.5rem;
+    }
+}
+
+@media (max-width:340px){
+
+    .ea-indicadores,
+    .ea-qtd,
+    .ea .estoque-info{
         grid-template-columns:1fr;
     }
 }
