@@ -1,319 +1,449 @@
 :root{
-    /* Cores padronizadas do SIGC (base.css) */
-    --primary: #C1272D;
-    --success: #198754;
-    --danger: #B3261E;
-    --accent: #F4B400;
-    --warning: #FFC107;
-    --info: #0DCAF0;
-    --secondary: #5C5C5C;
+  /* Cores padronizadas do SIGC (base.css) — bloco mantido como estava */
+  --primary: #C1272D;
+  --success: #198754;
+  --danger: #B3261E;
+  --accent: #F4B400;
+  --warning: #FFC107;
+  --info: #0DCAF0;
+  --secondary: #5C5C5C;
 
-    --bg: #F6F5F3;
-    --card: #FFFFFF;
-    --border: #E3E0DA;
+  --bg: #F6F5F3;
+  --card: #FFFFFF;
+  --border: #E3E0DA;
 
-    --text: #1C1C1C;
-    --text-muted: #6B6B6B;
+  --text: #1C1C1C;
+  --text-muted: #6B6B6B;
 
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 15px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 15px;
 
-    --shadow: 0 2px 8px rgba(0, 0, 0, .08);
-    --shadow-lg: 0 10px 20px rgba(0, 0, 0, .08);
-    --shadow-focus: 0 0 0 3px rgba(193, 39, 45, .18);
-    --transicao: .3s ease;
+  --shadow: 0 2px 8px rgba(0, 0, 0, .08);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, .08);
+  --shadow-focus: 0 0 0 3px rgba(193, 39, 45, .18);
+  --transicao: .3s ease;
+}
+
+.sr-only{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+
+/* ==========================================================
+ ESTOQUE — PÁGINA INICIAL, MODAL DE MOVIMENTAÇÃO E
+ MODAL DE NOVA ENTRADA
+ Página: templates/estoque/estoque.html
+
+ - As regras novas ficam em .es (página) e .es-modal (os dois
+   modais), para não vazar nem brigar com modal.css / input.css.
+ - Tokens locais (--es-*): reaproveitam as cores globais do
+   base.css e têm valor de reserva, igual a Detalhes do Produto
+   e Estoque Atual.
+ - Contrato com o JavaScript (não renomear): data-modal,
+   data-close-modal, .nova-entrada-card[role="button"], .modal,
+   .active, #categoria, #produto, #origem_compra, #local-group,
+   #fornecedor-group, #preco-group, #form-entrada-estoque,
+   #produto_movimentacao, #grupo-caixa/-unidade/-fracionado/-motivo,
+   #label-caixa/-unidade/-fracionado, #motivo e os name= dos campos.
+ - Os grupos de campo são mostrados/ocultados pelo JS com
+   style.display = "block" | "none"; por isso .form-group é block.
+ ========================================================== */
+
+.es,
+.es-modal{
+  --es-vermelho:var(--cor-vermelha, #c62828);
+  --es-preto:var(--cor-preta, #1f1f1f);
+  --es-amarelo:var(--cor-amarela, #fbc02d);
+
+  --es-texto:#1f1f1f;
+  --es-suave:#6b6b6b;
+  --es-borda:#e3e0da;
+  --es-borda-campo:#d6d2ca;
+  --es-fundo-suave:#f7f6f4;
+  --es-card:#fff;
+
+  --es-sombra:0 1px 3px rgba(0, 0, 0, .06), 0 2px 8px rgba(0, 0, 0, .04);
+  --es-sombra-forte:0 8px 22px rgba(0, 0, 0, .12);
+  --es-anel:0 0 0 3px rgba(251, 192, 45, .5);
+}
+
+.es *,
+.es *::before,
+.es *::after,
+.es-modal *,
+.es-modal *::before,
+.es-modal *::after{
+  box-sizing:border-box;
+}
+
+/* ---------- título da página ---------- */
+
+.page-title{
+  margin-bottom:24px;
+}
+
+.page-title h1{
+  margin:0;
+  font-size:1.75rem;
+  font-weight:700;
+  color:var(--text);
+  letter-spacing:-0.02em;
+}
+
+.page-subtitle{
+  margin:6px 0 0;
+  color:var(--text-muted);
+  font-size:.95rem;
+}
+
+/* ---------- cards de ação ---------- */
+
+.es .cards-estoque{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:16px;
+}
+
+.es .nova-entrada-card{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  width:100%;
+  height:100%;
+  min-height:108px;
+  margin:0;
+  padding:20px;
+
+  color:var(--es-texto);
+  text-align:left;
+  text-decoration:none;
+  background:var(--es-card);
+  border:1px solid var(--es-borda);
+  border-radius:14px;
+  box-shadow:var(--es-sombra);
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+.es .nova-entrada-card:hover{
+  transform:translateY(-2px);
+  border-color:var(--es-preto);
+  box-shadow:var(--es-sombra-forte);
+}
+
+.es .nova-entrada-card:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 3px #fff, 0 0 0 5px var(--es-preto);
+}
+
+.es .nova-entrada-icon{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:50px;
+  height:50px;
+
+  font-size:1.125rem;
+  color:var(--es-preto);
+  background:var(--es-fundo-suave);
+  border:1px solid var(--es-borda);
+  border-radius:12px;
+  transition:background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.es .nova-entrada-card:hover .nova-entrada-icon{
+  color:var(--es-amarelo);
+  background:var(--es-preto);
+  border-color:var(--es-preto);
+}
+
+.es .nova-entrada-card__body{
+  flex:1;
+  min-width:0;
+}
+
+.es .es-eyebrow{
+  display:block;
+  margin-bottom:3px;
+  font-size:.6875rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--es-suave);
+}
+
+.es .nova-entrada-card h3{
+  margin:0;
+  font-size:1.0625rem;
+  font-weight:700;
+  line-height:1.25;
+  color:var(--es-texto);
+}
+
+.es .nova-entrada-card p{
+  margin:4px 0 0;
+  font-size:.8125rem;
+  line-height:1.4;
+  color:var(--es-suave);
+}
+
+.es .nova-entrada-card__arrow{
+  flex-shrink:0;
+  font-size:.8125rem;
+  color:#a29d94;
+  transition:transform .15s ease, color .15s ease;
+}
+
+.es .nova-entrada-card:hover .nova-entrada-card__arrow{
+  transform:translateX(3px);
+  color:var(--es-vermelho);
+}
+
+/* ---------- modais: estrutura ---------- */
+
+.es-modal .modal-content{
+  width:100%;
+  max-width:560px;
+  overflow:hidden;
+  background:var(--es-card);
+  border-radius:16px;
+  box-shadow:0 20px 50px rgba(0, 0, 0, .28);
+}
+
+.es-modal .modal-content.large{
+  max-width:760px;
+}
+
+.es-modal .modal-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  padding:20px 24px;
+  border-bottom:1px solid var(--es-borda);
+}
+
+.es-modal .es-modal-titulo h2{
+  margin:0;
+  font-size:1.25rem;
+  font-weight:700;
+  letter-spacing:-.01em;
+  color:var(--es-texto);
+}
+
+.es-modal .es-modal-titulo p{
+  margin:4px 0 0;
+  font-size:.8125rem;
+  color:var(--es-suave);
+}
+
+.es-modal .modal-close{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  margin:-4px -6px 0 0;
+  padding:0;
+
+  font-size:1.5rem;
+  line-height:1;
+  color:var(--es-suave);
+  background:transparent;
+  border:0;
+  border-radius:10px;
+  cursor:pointer;
+  transition:background-color .15s ease, color .15s ease;
+}
+
+.es-modal .modal-close:hover{
+  color:var(--es-texto);
+  background:#f1f0ee;
+}
+
+.es-modal .modal-close:focus-visible{
+  outline:none;
+  box-shadow:var(--es-anel);
+}
+
+.es-modal .modal-body{
+  display:block;
+  padding:22px 24px 24px;
+}
+
+.es-modal .modal-footer{
+  display:flex;
+  justify-content:flex-end;
+  gap:12px;
+  padding:16px 24px;
+  background:#faf9f7;
+  border-top:1px solid var(--es-borda);
+}
+
+.es-modal .modal-footer .btn{
+  min-height:44px;
+}
+
+/* ---------- modais: seções e campos ---------- */
+
+.es-modal .es-secao + .es-secao{
+  margin-top:22px;
+  padding-top:20px;
+  border-top:1px dashed var(--es-borda);
+}
+
+.es-modal .es-secao-titulo{
+  margin:0 0 14px;
+  font-size:.75rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--es-suave);
+}
+
+.es-modal .es-campos{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:16px;
+}
+
+.es-modal .form-group--full{
+  grid-column:1 / -1;
+}
+
+/* neutraliza o .form-group do input.css (flex + margin-bottom:20px) */
+.es-modal .form-group{
+  display:block;
+  min-width:0;
+  margin:0;
+}
+
+.es-modal .form-group label{
+  display:block;
+  margin:0 0 6px;
+  font-size:.8125rem;
+  font-weight:600;
+  line-height:1.3;
+  color:var(--es-texto);
+}
+
+.es-modal .form-group input,
+.es-modal .form-group select,
+.es-modal .form-group textarea{
+  display:block;
+  width:100%;
+  min-height:44px;
+  padding:0 12px;
+
+  font:inherit;
+  font-size:.9375rem;
+  color:var(--es-texto);
+  background-color:var(--es-card);
+  border:1px solid var(--es-borda-campo);
+  border-radius:10px;
+  box-shadow:none;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+
+.es-modal .form-group textarea{
+  min-height:96px;
+  padding:10px 12px;
+  line-height:1.45;
+  resize:vertical;
+}
+
+.es-modal .form-group select{
+  padding-right:36px;
+  -webkit-appearance:none;
+  appearance:none;
+  cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%236b6b6b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+}
+
+.es-modal .form-group input::placeholder,
+.es-modal .form-group textarea::placeholder{
+  color:#9a9a9a;
+}
+
+.es-modal .form-group input:hover,
+.es-modal .form-group select:hover,
+.es-modal .form-group textarea:hover{
+  border-color:#b9b5ad;
+}
+
+.es-modal .form-group input:focus,
+.es-modal .form-group select:focus,
+.es-modal .form-group textarea:focus{
+  outline:none;
+  border-color:var(--es-preto);
+  box-shadow:var(--es-anel);
+}
+
+/* Campos que começam ocultos (o JS os exibe com style.display).
+ Regra com ID mantida de propósito: continua vencendo qualquer
+ display de classe, exatamente como antes. */
+#local-group,
+#fornecedor-group,
+#preco-group{
+  display:none;
+}
+
+/* ---------- responsividade ---------- */
+
+@media (max-width:1100px){
+
+  .es .cards-estoque{
+      grid-template-columns:repeat(2, minmax(0, 1fr));
   }
+}
 
-  .sr-only{
-    position:absolute;
-    width:1px;
-    height:1px;
-    padding:0;
-    margin:-1px;
-    overflow:hidden;
-    clip:rect(0,0,0,0);
-    white-space:nowrap;
-    border:0;
-  }
+@media (max-width:600px){
 
-  /* ==========================
-     TÍTULO
-  ========================== */
-
-  .page-title{
-    margin-bottom:var(--space-6);
-  }
-
-  .page-title h1{
-    margin:0;
-    font-size:1.75rem;
-    font-weight:700;
-    color:var(--text);
-    letter-spacing:-0.02em;
-  }
-
-  .page-subtitle{
-    margin:6px 0 0;
-    color:var(--text-muted);
-    font-size:.95rem;
-  }
-
-  /* ==========================
-     PESQUISA
-  ========================== */
-
-  .estoque-pesquisa{
-    margin-bottom:var(--space-5);
-  }
-
-  /* ==========================
-     GRID DE AÇÕES (NOVA ENTRADA / MOVIMENTAÇÃO / ETC.)
-  ========================== */
-
-  .cards-estoque{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:var(--space-4);
-  }
-
-  .nova-entrada-card{
-    display:flex;
-    align-items:center;
-    gap:var(--space-4);
-    width:100%;
-    height:auto;
-    margin:0;
-    padding:var(--space-5);
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:var(--radius-lg);
-    cursor:pointer;
-    text-align:left;
-    text-decoration:none;
-    color:inherit;
-    box-shadow:var(--shadow);
-    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-  }
-
-  .nova-entrada-card:hover{
-    transform:translateY(-2px);
-    box-shadow:var(--shadow-md);
-  }
-
-  .nova-entrada-card:focus-visible{
-    outline:2px solid var(--primary);
-    outline-offset:2px;
-  }
-
-  .nova-entrada-icon{
-    flex-shrink:0;
-    width:48px;
-    height:48px;
-    border-radius:var(--radius-md);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-    background:var(--card);
-    color:var(--primary);
-  }
-
-  .nova-entrada-card--primary{
-    border-color:var(--primary);
-  }
-
-  .nova-entrada-card--primary .nova-entrada-icon{
-    background:var(--primary);
-    color:#fff;
-  }
-
-  .nova-entrada-card--warning .nova-entrada-icon{
-    background:var(--warning-light);
-    color:var(--warning);
-  }
-
-  .nova-entrada-card--info .nova-entrada-icon{
-    background:var(--info-light);
-    color:var(--info);
-  }
-
-  .nova-entrada-card--neutral .nova-entrada-icon{
-    background:var(--neutral-light);
-    color:var(--secondary);
-  }
-
-  .nova-entrada-card__body{
-    flex:1;
-    min-width:0;
-  }
-
-  .nova-entrada-card h3{
-    margin:0;
-    font-size:1rem;
-    font-weight:600;
-    color:var(--text);
-  }
-
-  .nova-entrada-card p{
-    margin:4px 0 0;
-    font-size:.85rem;
-    color:var(--text-muted);
-  }
-
-  .nova-entrada-card__arrow{
-    flex-shrink:0;
-    color:var(--text-tertiary);
-    font-size:.85rem;
-    transition:transform .15s ease;
-  }
-
-  .nova-entrada-card:hover .nova-entrada-card__arrow{
-    transform:translateX(3px);
-    color:var(--text-secondary);
-  }
-
-  /* ==========================
-     GRID GENÉRICO DE CARDS (histórico e outras listagens)
-  ========================== */
-
-  .estoque-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-    gap:var(--space-5);
-  }
-
-  .estoque-card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:var(--radius-lg);
-    padding:var(--space-5);
-    box-shadow:var(--shadow);
-    transition:transform .15s ease, box-shadow .15s ease;
-  }
-
-  .estoque-card:hover{
-    transform:translateY(-2px);
-    box-shadow:var(--shadow-md);
-  }
-
-  .estoque-card h3{
-    margin:0 0 var(--space-3);
-    font-size:1.05rem;
-    font-weight:700;
-    color:var(--text);
-  }
-
-  .estoque-info{
-    display:flex;
-    flex-direction:column;
-    gap:var(--space-2);
-  }
-
-  .estoque-info span{
-    color:var(--text-muted);
-    font-size:.9rem;
-  }
-
-  /* ==========================
-     RESPONSIVO
-  ========================== */
-
-  @media(max-width:768px){
-    .estoque-grid{
+  .es .cards-estoque{
       grid-template-columns:1fr;
-    }
-    .cards-estoque{
+      gap:12px;
+  }
+
+  .es .nova-entrada-card{
+      min-height:0;
+      padding:16px;
+  }
+
+  .es-modal .es-campos{
       grid-template-columns:1fr;
-    }
+      gap:14px;
   }
 
-  /* ==========================
-     MODAL
-  ========================== */
-
-  .modal-content.large{
-    width:100%;
-    max-width:95%;
+  .es-modal .modal-header,
+  .es-modal .modal-footer{
+      padding-left:18px;
+      padding-right:18px;
   }
 
-  .modal-body{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:var(--space-5);
-    padding:var(--space-5);
+  .es-modal .modal-body{
+      padding:18px;
+  }
+}
+
+@media (max-width:420px){
+
+  .es-modal .modal-footer{
+      flex-direction:column-reverse;
   }
 
-  .form-group{
-    display:flex;
-    flex-direction:column;
-    gap:var(--space-2);
+  .es-modal .modal-footer .btn{
+      width:100%;
   }
-
-  .form-group--full{
-    grid-column:1 / -1;
-  }
-
-  .form-group label{
-    font-weight:600;
-    font-size:.85rem;
-    color:var(--text);
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea{
-    width:100%;
-    padding:10px 12px;
-    border:1px solid var(--border);
-    border-radius:var(--radius-sm);
-    font-size:.9rem;
-    font-family:var(--font-family);
-    box-sizing:border-box;
-    background:var(--card);
-    color:var(--text);
-    transition:border-color .15s ease, box-shadow .15s ease;
-  }
-
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus{
-    outline:none;
-    border-color:var(--primary);
-    box-shadow:0 0 0 3px var(--primary-light);
-  }
-
-  #local-group,
-  #fornecedor-group,
-  #preco-group{
-    display:none;
-  }
-
-  .modal-footer{
-    display:flex;
-    justify-content:flex-end;
-    gap:var(--space-3);
-    padding:var(--space-4) var(--space-5);
-    border-top:1px solid var(--border);
-  }
-
-  #movimentacao-modal .modal-body{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:var(--space-5);
-  }
-
-  #movimentacao-modal .form-group{
-    width:100%;
-  }
-
-  #movimentacao-modal textarea{
-    min-height:45px;
-  }
-
-  @media(max-width:600px){
-    .modal-body,
-    #movimentacao-modal .modal-body{
-      grid-template-columns:1fr;
-    }
-  }
+}

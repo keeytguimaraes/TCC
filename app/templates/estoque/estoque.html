@@ -10,6 +10,14 @@ Estoque
     rel="stylesheet"
     href="{{ url_for(
         'static',
+        filename='css/components/acoes.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
         filename='css/pages/estoque.css'
     ) }}"
 >
@@ -17,6 +25,8 @@ Estoque
 {% endblock %}
 
 {% block conteudo %}
+
+<div class="es">
 
 <div class="page-title">
     <h1>Estoque</h1>
@@ -38,6 +48,7 @@ Estoque
         </div>
 
         <div class="nova-entrada-card__body">
+            <span class="es-eyebrow">Registrar</span>
             <h3>Movimentação</h3>
             <p>Registrar perdas e ajustes</p>
         </div>
@@ -58,6 +69,7 @@ Estoque
         </div>
 
         <div class="nova-entrada-card__body">
+            <span class="es-eyebrow">Registrar</span>
             <h3>Nova Entrada</h3>
             <p>Registrar entrada de produtos</p>
         </div>
@@ -73,6 +85,7 @@ Estoque
         </div>
 
         <div class="nova-entrada-card__body">
+            <span class="es-eyebrow">Consultar</span>
             <h3>Estoque Atual</h3>
             <p>Consultar quantidade disponível</p>
         </div>
@@ -89,6 +102,7 @@ Estoque
         </div>
 
         <div class="nova-entrada-card__body">
+            <span class="es-eyebrow">Consultar</span>
             <h3>Histórico</h3>
             <p>Consultar movimentações</p>
         </div>
@@ -102,81 +116,88 @@ Estoque
 
 <!-- MODAL MOVIMENTAÇÃO -->
 
-<div class="modal" id="movimentacao-modal">
+<div class="modal es-modal" id="movimentacao-modal">
 
     <div class="modal-content">
 
         <div class="modal-header">
-            <h2>Movimentação de Estoque</h2>
-            <button class="modal-close" data-close-modal>×</button>
+            <div class="es-modal-titulo">
+                <h2>Movimentação de Estoque</h2>
+                <p>Registrar perdas e ajustes</p>
+            </div>
+            <button type="button" class="modal-close" data-close-modal aria-label="Fechar">×</button>
         </div>
 
         <form id="form-movimentacao" action="/movimentacao/cadastrar" method="POST">
 
             <div class="modal-body">
 
-                <div class="form-group">
+                <div class="es-campos">
 
-                    <label for="produto_movimentacao">Produto</label>
+                    <div class="form-group">
 
-                    <select name="produto_id" id="produto_movimentacao" required>
+                        <label for="produto_movimentacao">Produto</label>
 
-                        {% for produto in produtos %}
+                        <select name="produto_id" id="produto_movimentacao" required>
 
-                        <option
-                            value="{{ produto.id }}"
-                            data-caixa="{{ produto.quantidade_por_caixa }}"
-                            data-unidade="{{ produto.vende_por_unidade }}"
-                            data-dose="{{ produto.vende_por_dose }}"
-                            data-categoria="{{ produto.categoria }}"
-                        >
-                            {{ produto.nome }}
-                        </option>
+                            {% for produto in produtos %}
 
-                        {% endfor %}
+                            <option
+                                value="{{ produto.id }}"
+                                data-caixa="{{ produto.quantidade_por_caixa }}"
+                                data-unidade="{{ produto.vende_por_unidade }}"
+                                data-dose="{{ produto.vende_por_dose }}"
+                                data-categoria="{{ produto.categoria }}"
+                            >
+                                {{ produto.nome }}
+                            </option>
 
-                    </select>
+                            {% endfor %}
 
-                </div>
+                        </select>
 
-                <div class="form-group">
+                    </div>
 
-                    <label>Tipo</label>
+                    <div class="form-group">
 
-                    <select name="tipo_movimentacao" required>
-                        <option value="quebra">Quebra</option>
-                        <option value="vencido">Vencido</option>
-                        <option value="uso_interno">Uso Interno</option>
-                        <option value="ajuste_manual">Ajuste Manual</option>
-                    </select>
+                        <label for="mov-tipo">Tipo</label>
 
-                </div>
+                        <select name="tipo_movimentacao" id="mov-tipo" required>
+                            <option value="quebra">Quebra</option>
+                            <option value="vencido">Vencido</option>
+                            <option value="uso_interno">Uso Interno</option>
+                            <option value="ajuste_manual">Ajuste Manual</option>
+                        </select>
 
-                <div class="form-group" id="grupo-caixa">
-                    <label id="label-caixa">Caixas</label>
-                    <input type="number" name="quantidade_caixa" value="0">
-                </div>
+                    </div>
 
-                <div class="form-group" id="grupo-unidade">
-                    <label id="label-unidade">Unidades</label>
-                    <input type="number" name="quantidade_unidade" value="0">
-                </div>
+                    <div class="form-group" id="grupo-caixa">
+                        <label id="label-caixa" for="mov-caixa">Caixas</label>
+                        <input type="number" id="mov-caixa" name="quantidade_caixa" value="0">
+                    </div>
 
-                <div class="form-group" id="grupo-fracionado">
-                    <label id="label-fracionado">Quantidade Avulsa</label>
-                    <input type="number" name="quantidade_fracionada" value="0">
-                </div>
+                    <div class="form-group" id="grupo-unidade">
+                        <label id="label-unidade" for="mov-unidade">Unidades</label>
+                        <input type="number" id="mov-unidade" name="quantidade_unidade" value="0">
+                    </div>
 
-                <div class="form-group form-group--full" id="grupo-motivo">
-                    <label>Motivo</label>
-                    <textarea name="motivo" id="motivo"></textarea>
+                    <div class="form-group" id="grupo-fracionado">
+                        <label id="label-fracionado" for="mov-fracionada">Quantidade Avulsa</label>
+                        <input type="number" id="mov-fracionada" name="quantidade_fracionada" value="0">
+                    </div>
+
+                    <div class="form-group form-group--full" id="grupo-motivo">
+                        <label for="motivo">Motivo</label>
+                        <textarea name="motivo" id="motivo"></textarea>
+                    </div>
+
                 </div>
 
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="button button-secondary" data-close-modal>Cancelar</button>
-                <button type="submit" class="button button-success">Salvar Movimentação</button>
+                <button type="button" class="btn btn-cancelar" data-close-modal>Cancelar</button>
+                <button type="submit" class="btn btn-salvar">Salvar Movimentação</button>
             </div>
 
         </form>
@@ -187,121 +208,160 @@ Estoque
 
 <!-- MODAL ESTOQUE -->
 
-<div class="modal" id="estoque-modal">
+<div class="modal es-modal" id="estoque-modal">
 
     <div class="modal-content large">
 
         <div class="modal-header">
-            <h2>Nova Entrada de Estoque</h2>
-            <button class="modal-close" data-close-modal>×</button>
+            <div class="es-modal-titulo">
+                <h2>Nova Entrada de Estoque</h2>
+                <p>Registrar entrada de produtos</p>
+            </div>
+            <button type="button" class="modal-close" data-close-modal aria-label="Fechar">×</button>
         </div>
 
         <form id="form-entrada-estoque" action="/estoque/cadastrar" method="POST">
 
             <div class="modal-body">
 
-                <!-- Categoria -->
-                <div class="form-group">
+                <!-- PRODUTO -->
 
-                    <label for="categoria">Categoria</label>
+                <div class="es-secao">
 
-                    <select id="categoria">
+                    <h3 class="es-secao-titulo">Produto</h3>
 
-                        <option value="">Escolha a categoria</option>
+                    <div class="es-campos">
 
-                        {% for categoria in categorias %}
-                        <option value="{{ categoria.categoria }}">{{ categoria.categoria }}</option>
-                        {% endfor %}
+                        <!-- Categoria -->
+                        <div class="form-group">
 
-                    </select>
+                            <label for="categoria">Categoria</label>
 
-                </div>
+                            <select id="categoria">
 
-                <div class="form-group">
+                                <option value="">Escolha a categoria</option>
 
-                    <label for="produto">Produto</label>
+                                {% for categoria in categorias %}
+                                <option value="{{ categoria.categoria }}">{{ categoria.categoria }}</option>
+                                {% endfor %}
 
-                    <select name="produto_id" id="produto" required>
+                            </select>
 
-                        <option value="">Escolha um produto</option>
+                        </div>
 
-                        {% for produto in produtos %}
-                        <option value="{{ produto.id }}" data-categoria="{{ produto.categoria }}">
-                            {{ produto.nome }}
-                        </option>
-                        {% endfor %}
+                        <div class="form-group">
 
-                    </select>
+                            <label for="produto">Produto</label>
 
-                </div>
+                            <select name="produto_id" id="produto" required>
 
-                <div class="form-group">
+                                <option value="">Escolha um produto</option>
 
-                    <label for="origem_compra">Origem da compra</label>
+                                {% for produto in produtos %}
+                                <option value="{{ produto.id }}" data-categoria="{{ produto.categoria }}">
+                                    {{ produto.nome }}
+                                </option>
+                                {% endfor %}
 
-                    <select id="origem_compra" name="origem_compra_id" required>
-                        <option value="">Escolha uma opção</option>
-                        <option value="1">Fornecedor</option>
-                        <option value="2">Mercado</option>
-                        <option value="3">Compra Avulsa</option>
-                    </select>
+                            </select>
 
-                </div>
+                        </div>
 
-                <div class="form-group" id="local-group">
-                    <label>Nome do local</label>
-                    <input type="text" name="nome_origem" placeholder="Ex: Atacadão">
-                </div>
-
-                <div class="form-group" id="fornecedor-group">
-
-                    <label>Fornecedor</label>
-
-                    <select name="fornecedor_id">
-                        <option value="">Escolha o fornecedor</option>
-                        {% for fornecedor in fornecedores %}
-                        <option value="{{ fornecedor.id }}">{{ fornecedor.nome }}</option>
-                        {% endfor %}
-                    </select>
+                    </div>
 
                 </div>
 
-                <div class="form-group">
+                <!-- ORIGEM -->
 
-                    <label>Tipo de entrada</label>
+                <div class="es-secao">
 
-                    <select id="tipo_entrada" name="tipo_entrada" required>
-                        <option value="compra">Compra</option>
-                        <option value="bonificacao">Bonificação</option>
-                    </select>
+                    <h3 class="es-secao-titulo">Origem</h3>
+
+                    <div class="es-campos">
+
+                        <div class="form-group">
+
+                            <label for="origem_compra">Origem da compra</label>
+
+                            <select id="origem_compra" name="origem_compra_id" required>
+                                <option value="">Escolha uma opção</option>
+                                <option value="1">Fornecedor</option>
+                                <option value="2">Mercado</option>
+                                <option value="3">Compra Avulsa</option>
+                            </select>
+
+                        </div>
+
+                        <div class="form-group" id="local-group">
+                            <label for="ent-local">Nome do local</label>
+                            <input type="text" id="ent-local" name="nome_origem" placeholder="Ex: Atacadão">
+                        </div>
+
+                        <div class="form-group" id="fornecedor-group">
+
+                            <label for="ent-fornecedor">Fornecedor</label>
+
+                            <select name="fornecedor_id" id="ent-fornecedor">
+                                <option value="">Escolha o fornecedor</option>
+                                {% for fornecedor in fornecedores %}
+                                <option value="{{ fornecedor.id }}">{{ fornecedor.nome }}</option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="tipo_entrada">Tipo de entrada</label>
+
+                            <select id="tipo_entrada" name="tipo_entrada" required>
+                                <option value="compra">Compra</option>
+                                <option value="bonificacao">Bonificação</option>
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ent-data">Data da entrada</label>
+                            <input type="date" id="ent-data" name="data_entrada" required>
+                        </div>
+
+                    </div>
 
                 </div>
 
-                <div class="form-group">
-                    <label>Quantidade recebida (CAIXA)</label>
-                    <input type="number" name="quantidade_recebida_caixa" value="0">
-                </div>
+                <!-- QUANTIDADE -->
 
-                <div class="form-group">
-                    <label>Quantidade recebida (UNIDADE)</label>
-                    <input type="number" name="quantidade_recebida_unidade" value="0">
-                </div>
+                <div class="es-secao">
 
-                <div class="form-group" id="preco-group">
-                    <label>Preço total pago</label>
-                    <input type="number" step="0.01" name="preco_total_compra" value="0">
-                </div>
+                    <h3 class="es-secao-titulo">Quantidade recebida</h3>
 
-                <div class="form-group">
-                    <label>Data da entrada</label>
-                    <input type="date" name="data_entrada" required>
+                    <div class="es-campos">
+
+                        <div class="form-group">
+                            <label for="ent-caixa">Quantidade recebida (CAIXA)</label>
+                            <input type="number" id="ent-caixa" name="quantidade_recebida_caixa" value="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ent-unidade">Quantidade recebida (UNIDADE)</label>
+                            <input type="number" id="ent-unidade" name="quantidade_recebida_unidade" value="0">
+                        </div>
+
+                        <div class="form-group" id="preco-group">
+                            <label for="ent-preco">Preço total pago</label>
+                            <input type="number" id="ent-preco" step="0.01" name="preco_total_compra" value="0">
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="button button-secondary" data-close-modal>Cancelar</button>
-                <button type="submit" class="button button-success">Salvar Entrada</button>
+                <button type="button" class="btn btn-cancelar" data-close-modal>Cancelar</button>
+                <button type="submit" class="btn btn-salvar">Salvar Entrada</button>
             </div>
 
         </form>
@@ -310,6 +370,7 @@ Estoque
 
 </div>
 
+</div>
 
 {% endblock %}
 

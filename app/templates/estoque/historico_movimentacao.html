@@ -4,7 +4,7 @@
 Histórico de Movimentação
 {% endblock %}
 
-{% block conteudo %}
+{% block css %}
 
 <link
     rel="stylesheet"
@@ -18,44 +18,68 @@ Histórico de Movimentação
     rel="stylesheet"
     href="{{ url_for(
         'static',
+        filename='css/components/acoes.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
         filename='css/pages/historico_movimentacao.css'
     ) }}"
 >
 
-<div class="historico-container">
+{% endblock %}
 
-    <div class="historico-topo">
+{#
+    Dado ausente (somente visual): vazio, só espaços ou "None" viram "—".
+#}
+{% macro dado(valor) -%}
+    {%- if not valor or (valor | string | trim | lower) in ['', 'none'] -%}
+        <span class="hm-nulo"><span aria-hidden="true">—</span><span class="sr-only">Não informado</span></span>
+    {%- else -%}
+        {{ valor }}
+    {%- endif -%}
+{%- endmacro %}
 
-        <a
-            href="/estoque"
-            class="button button-secondary"
-        >
-            ← Voltar
+{% block conteudo %}
+
+<div class="historico-container hm">
+
+    <div class="historico-topo hm-topo">
+
+        <div>
+            <h1 class="historico-titulo hm-titulo">Histórico de Movimentação</h1>
+            <p class="hm-subtitulo">Consulte as movimentações de estoque registradas</p>
+        </div>
+
+        <a href="/estoque" class="btn btn-cancelar">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Voltar
         </a>
-
-        <h2 class="historico-titulo">
-            Histórico de Movimentação
-        </h2>
 
     </div>
 
     <!-- PESQUISA -->
 
-<div class="estoque-pesquisa">
+    <div class="estoque-pesquisa hm-barra">
 
-    <div class="search-box">
+        <div class="search-box">
 
-        <i class="fa-solid fa-magnifying-glass"></i>
+            <label for="search-input" class="sr-only">Pesquisar produto</label>
 
-        <input
-            type="text"
-            id="search-input"
-            placeholder="Pesquisar Produto..."
-        >
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Pesquisar Produto..."
+            >
+
+        </div>
 
     </div>
-
-</div>
 
     <div class="tabela-container">
 
@@ -84,16 +108,24 @@ Histórico de Movimentação
 
                 {% for item in movimentacoes %}
 
+                {% set caixas = item.quantidade_caixa or 0 %}
+                {% set unidades = item.quantidade_unidade or 0 %}
+                {% set fracionadas = item.quantidade_fracionada or 0 %}
+
                 <tr class="linha-movimentacao">
-                    <td>
-                        {{ item.data_movimentacao.strftime('%d/%m/%Y') }}
+                    <td data-label="Data" class="hm-data">
+                        {% if item.data_movimentacao and item.data_movimentacao.strftime is defined %}
+                            {{ item.data_movimentacao.strftime('%d/%m/%Y') }}
+                        {% else %}
+                            {{ dado(item.data_movimentacao) }}
+                        {% endif %}
                     </td>
 
-                    <td class="produto">
+                    <td data-label="Produto" class="produto">
                         {{ item.nome }}
                     </td>
 
-                    <td>
+                    <td data-label="Tipo">
 
                         <span
                             class="tipo-movimentacao {{ item.tipo_movimentacao }}"
@@ -103,39 +135,49 @@ Histórico de Movimentação
                                 | title
                             }}
                         </span>
-                    
+
                     </td>
 
-                    <td>
+                    <td data-label="Quantidade" class="hm-qtd">
 
-                        {% if item.quantidade_caixa > 0 %}
-                    
-                            {{ item.quantidade_caixa }} Caixa(s)
-                    
-                        {% elif item.quantidade_unidade > 0 %}
-                    
-                            {{ item.quantidade_unidade }} Unidade(s)
-                    
-                        {% elif item.quantidade_fracionada > 0 %}
-                    
-                            {{ item.quantidade_fracionada }} Avulso
-                    
+                        {% if caixas > 0 %}
+
+                            <span><strong>{{ caixas }}</strong> {{ 'Caixa' if caixas == 1 else 'Caixas' }}</span>
+
+                        {% elif unidades > 0 %}
+
+                            <span><strong>{{ unidades }}</strong> {{ 'Unidade' if unidades == 1 else 'Unidades' }}</span>
+
+                        {% elif fracionadas > 0 %}
+
+                            <span><strong>{{ fracionadas }}</strong> {{ 'Avulso' if fracionadas == 1 else 'Avulsos' }}</span>
+
                         {% else %}
-                    
-                            -
-                    
+
+                            <span class="hm-nulo">-</span>
+
                         {% endif %}
-                    
+
                     </td>
 
-                    <td>
-                        {{ item.motivo }}
+                    <td data-label="Motivo" class="hm-motivo">
+                        <span class="hm-texto" {% if item.motivo %}title="{{ item.motivo }}"{% endif %}>{{ dado(item.motivo) }}</span>
                     </td>
 
-                    <td>
-                        {{ item.usuario or "Não informado" }}
+                    <td data-label="Responsável" class="hm-resp">
+                        {% if item.usuario %}
+                            <span class="hm-texto" title="{{ item.usuario }}">{{ item.usuario }}</span>
+                        {% else %}
+                            <span class="hm-nulo">Não informado</span>
+                        {% endif %}
                     </td>
 
+                </tr>
+
+                {% else %}
+
+                <tr class="hm-linha-vazia">
+                    <td colspan="6">Nenhuma movimentação registrada.</td>
                 </tr>
 
                 {% endfor %}

@@ -1,59 +1,362 @@
-.historico-container{
-    max-height: 600px;
-    overflow-y: auto;
-    background: var(--bg);
-    padding: var(--space-5);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+/* ==========================================================
+   HISTÓRICO DE MOVIMENTAÇÃO — SIGC
+   Página: templates/estoque/historico_movimentacao.html
+
+   - Tudo vive dentro de .hm (vence o .search-box global do
+     search.css sem usar !important).
+   - Tokens locais (--hm-*), com as cores globais do base.css e
+     valor de reserva, igual às outras páginas do Estoque.
+   - Contrato com o JavaScript (não renomear): #search-input,
+     #tabelaMovimentacao, .linha-movimentacao e a célula .produto.
+     O JS grava display:"" ou "none" nas linhas, então o layout da
+     linha não pode depender de style inline.
+   ========================================================== */
+
+   .hm{
+    --hm-vermelho:var(--cor-vermelha, #c62828);
+    --hm-preto:var(--cor-preta, #1f1f1f);
+    --hm-amarelo:var(--cor-amarela, #fbc02d);
+
+    --hm-texto:#1f1f1f;
+    --hm-suave:#6b6b6b;
+    --hm-borda:#e3e0da;
+    --hm-fundo-suave:#f7f6f4;
+    --hm-card:#fff;
+
+    --hm-sombra:0 1px 3px rgba(0, 0, 0, .06), 0 2px 8px rgba(0, 0, 0, .04);
+
+    width:100%;
+    color:var(--hm-texto);
 }
 
-.historico-titulo{
-    text-align: center;
-    color: var(--primary);
-    margin-bottom: var(--space-5);
+.hm *,
+.hm *::before,
+.hm *::after{
+    box-sizing:border-box;
 }
 
-.tabela-historico{
-    width: 100%;
-    border-collapse: collapse;
+.hm .sr-only{
+    position:absolute;
+    width:1px;
+    height:1px;
+    margin:-1px;
+    padding:0;
+    overflow:hidden;
+    clip:rect(0, 0, 0, 0);
+    white-space:nowrap;
+    border:0;
 }
 
-.tabela-historico th{
-    background: var(--primary);
-    color: white;
-    padding: var(--space-3);
+/* ---------- cabeçalho ---------- */
+
+.hm-topo{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:24px;
 }
 
-.tabela-historico td{
-    padding: var(--space-3);
-    border-bottom: 1px solid var(--border);
+.hm-titulo{
+    margin:0;
+    font-size:1.75rem;
+    font-weight:700;
+    letter-spacing:-.02em;
+    line-height:1.2;
+    color:var(--hm-texto);
+    text-align:left;
 }
 
-.tabela-historico tr:hover{
-    background: var(--bg);
+.hm-subtitulo{
+    margin:6px 0 0;
+    font-size:.9375rem;
+    color:var(--hm-suave);
 }
 
-.tipo-movimentacao{
-    padding: var(--space-2) var(--space-3);
-    border-radius: 20px;
-    color: white;
-    font-size: 13px;
-    font-weight: bold;
-    text-transform: none;
+.hm-topo .btn{
+    flex-shrink:0;
 }
 
-.quebra{
-    background: var(--danger);
+/* ---------- pesquisa ---------- */
+
+.hm-barra{
+    margin-bottom:20px;
 }
 
-.vencido{
-    background: var(--warning);
+/* O .search-box global (search.css) já é o campo: flex, borda e padding.
+   Aqui só ajustamos medidas e cores, sem criar uma segunda caixa. */
+.hm .search-box{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+    max-width:380px;
+    min-height:44px;
+    margin:0;
+    padding:0 14px;
+
+    background:var(--hm-card);
+    border:1px solid var(--hm-borda);
+    border-radius:12px;
+    box-shadow:var(--hm-sombra);
+    transition:border-color .15s ease, box-shadow .15s ease;
 }
 
-.uso_interno{
-    background: var(--primary);
+.hm .search-box:focus-within{
+    border-color:var(--hm-preto);
+    box-shadow:0 0 0 3px rgba(251, 192, 45, .5);
 }
 
-.ajuste_manual{
-    background: var(--success);
+.hm .search-box i{
+    position:static;
+    flex-shrink:0;
+    font-size:.9rem;
+    color:var(--hm-suave);
+}
+
+.hm .search-box input{
+    flex:1;
+    min-width:0;
+    width:100%;
+    height:42px;
+    padding:0;
+
+    font:inherit;
+    font-size:.9375rem;
+    color:var(--hm-texto);
+    background:transparent;
+    border:0;
+    outline:0;
+    box-shadow:none;
+}
+
+.hm .search-box input::placeholder{
+    color:#9a9a9a;
+}
+
+/* ---------- tabela ---------- */
+
+.hm .tabela-container{
+    overflow-x:auto;
+    background:var(--hm-card);
+    border:1px solid var(--hm-borda);
+    border-radius:14px;
+    box-shadow:var(--hm-sombra);
+}
+
+.hm .tabela-historico{
+    width:100%;
+    border-collapse:collapse;
+    font-size:.9375rem;
+}
+
+.hm .tabela-historico th{
+    padding:13px 16px;
+    text-align:left;
+    white-space:nowrap;
+
+    font-size:.6875rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--hm-suave);
+
+    background:var(--hm-fundo-suave);
+    border-bottom:1px solid var(--hm-borda);
+}
+
+.hm .tabela-historico td{
+    padding:14px 16px;
+    text-align:left;
+    vertical-align:middle;
+    border-bottom:1px solid var(--hm-borda);
+}
+
+.hm .tabela-historico tbody tr:last-child td{
+    border-bottom:0;
+}
+
+.hm .tabela-historico tbody tr:hover{
+    background:#faf9f7;
+}
+
+.hm .hm-data,
+.hm .hm-qtd{
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+}
+
+.hm .tabela-historico td.produto{
+    font-weight:600;
+}
+
+.hm .hm-qtd strong{
+    font-weight:700;
+}
+
+.hm .hm-motivo{
+    min-width:180px;
+    max-width:340px;
+}
+
+.hm .hm-resp{
+    min-width:140px;
+    max-width:240px;
+}
+
+/* textos longos: no máximo 2 linhas, texto completo no title */
+.hm .hm-texto{
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    line-clamp: 2;
+    overflow:hidden;
+    overflow-wrap:anywhere;
+}
+
+.hm .hm-nulo{
+    color:#9a9a9a;
+}
+
+.hm .hm-linha-vazia td{
+    padding:40px 16px;
+    text-align:center;
+    color:var(--hm-suave);
+}
+
+/* ---------- badges de tipo ---------- */
+
+.hm .tipo-movimentacao{
+    display:inline-flex;
+    align-items:center;
+    padding:4px 11px;
+
+    font-size:.75rem;
+    font-weight:700;
+    line-height:1.3;
+    white-space:nowrap;
+
+    color:var(--hm-texto);
+    background:#eeeeec;
+    border-radius:999px;
+}
+
+.hm .tipo-movimentacao.quebra,
+.hm .tipo-movimentacao.roubo{
+    color:#b3261e;
+    background:#fbeaea;
+}
+
+.hm .tipo-movimentacao.vencido{
+    color:#7a5600;
+    background:#fff3cd;
+}
+
+.hm .tipo-movimentacao.uso_interno{
+    color:var(--hm-texto);
+    background:#eeeeec;
+}
+
+.hm .tipo-movimentacao.ajuste_manual{
+    color:var(--hm-texto);
+    background:#fff;
+    box-shadow:inset 0 0 0 1px #cfcbc3;
+}
+
+/* ---------- celular: cada linha vira um cartão ---------- */
+
+@media (max-width:760px){
+
+    .hm .tabela-container{
+        overflow:visible;
+        background:transparent;
+        border:0;
+        box-shadow:none;
+    }
+
+    .hm .tabela-historico,
+    .hm .tabela-historico tbody{
+        display:block;
+        width:100%;
+    }
+
+    .hm .tabela-historico thead{
+        position:absolute;
+        width:1px;
+        height:1px;
+        overflow:hidden;
+        clip:rect(0, 0, 0, 0);
+    }
+
+    .hm .tabela-historico tr.linha-movimentacao{
+        display:block;
+        margin-bottom:12px;
+        padding:6px 16px;
+        background:var(--hm-card);
+        border:1px solid var(--hm-borda);
+        border-radius:14px;
+        box-shadow:var(--hm-sombra);
+    }
+
+    .hm .tabela-historico tr.hm-linha-vazia{
+        display:block;
+        background:var(--hm-card);
+        border:1px dashed #cfcbc3;
+        border-radius:14px;
+    }
+
+    .hm .tabela-historico tr.hm-linha-vazia td{
+        display:block;
+    }
+
+    .hm .tabela-historico tr.linha-movimentacao td{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:16px;
+        max-width:none;
+        min-width:0;
+        padding:10px 0;
+        text-align:right;
+        border-bottom:1px solid var(--hm-borda);
+    }
+
+    .hm .tabela-historico tr.linha-movimentacao td:last-child{
+        border-bottom:0;
+    }
+
+    .hm .tabela-historico td[data-label]::before{
+        content:attr(data-label);
+        flex-shrink:0;
+        font-size:.6875rem;
+        font-weight:700;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+        color:var(--hm-suave);
+    }
+
+    .hm .hm-texto{
+        text-align:right;
+    }
+}
+
+@media (max-width:520px){
+
+    .hm-topo{
+        flex-direction:column-reverse;
+        align-items:stretch;
+    }
+
+    .hm-topo .btn{
+        align-self:flex-start;
+    }
+
+    .hm-titulo{
+        font-size:1.5rem;
+    }
+
+    .hm .search-box{
+        max-width:none;
+    }
 }
