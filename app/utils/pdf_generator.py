@@ -17,30 +17,38 @@ de secao), garantindo consistencia visual entre os dois relatorios.
 """
 
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
+import io
 from datetime import datetime
 
 
 # ============================================================
-# PALETA DE CORES (mesma paleta do Design System web do SIGC)
+# PALETA DE CORES (identidade SIGC: preto, vermelho e amarelo)
 # ============================================================
 
-COR_PRIMARIA        = colors.HexColor("#0F7A4F")
-COR_PRIMARIA_CLARA  = colors.HexColor("#E6F4EE")
+# Identidade principal
+COR_PRETO           = colors.HexColor("#1F1F1F")
+COR_PRIMARIA        = colors.HexColor("#C62828")   # vermelho SIGC
+COR_PRIMARIA_CLARA  = colors.HexColor("#F3F1ED")   # fundo neutro de cabecalho de tabela
+COR_AMARELO         = colors.HexColor("#FBC02D")   # amarelo SIGC (detalhe)
 
-COR_SUCESSO         = colors.HexColor("#15803D")
-COR_SUCESSO_CLARA   = colors.HexColor("#E7F6EC")
+# Cores semanticas (mesmas do sistema web)
+COR_SUCESSO         = colors.HexColor("#2E7D32")
+COR_SUCESSO_CLARA   = colors.HexColor("#E8F3E9")
 
-COR_ALERTA          = colors.HexColor("#B45309")
-COR_ALERTA_CLARA    = colors.HexColor("#FEF3E2")
+COR_ALERTA          = colors.HexColor("#7A5600")
+COR_ALERTA_CLARA    = colors.HexColor("#FFF3CD")
 
-COR_TEXTO           = colors.HexColor("#111827")
-COR_TEXTO_SECUNDARIO= colors.HexColor("#6B7280")
-COR_TEXTO_TERCIARIO = colors.HexColor("#9CA3AF")
+COR_FIADO           = colors.HexColor("#1E4FA3")
+COR_FIADO_CLARA     = colors.HexColor("#E3EDFB")
 
-COR_BORDA           = colors.HexColor("#E5E7EB")
-COR_FUNDO_SUAVE     = colors.HexColor("#FAFBFC")
+COR_TEXTO           = colors.HexColor("#1F1F1F")
+COR_TEXTO_SECUNDARIO= colors.HexColor("#6B6B6B")
+COR_TEXTO_TERCIARIO = colors.HexColor("#8A8A8A")
+
+COR_BORDA           = colors.HexColor("#E3E0DA")
+COR_FUNDO_SUAVE     = colors.HexColor("#F7F6F4")
 COR_BRANCO          = colors.white
 
 
@@ -48,7 +56,7 @@ COR_BRANCO          = colors.white
 # LAYOUT (tamanhos de pagina, margens e espacamentos)
 # ============================================================
 
-LARGURA_PAGINA, ALTURA_PAGINA = letter
+LARGURA_PAGINA, ALTURA_PAGINA = A4   # A4 (210 x 297 mm)
 
 MARGEM_ESQUERDA = 50
 MARGEM_DIREITA  = 50
@@ -63,23 +71,30 @@ ESPACO_KPI             = 10
 ESPACO_SECAO           = 20
 BUFFER_RODAPE          = 10
 
-# Posicoes horizontais das colunas da tabela do RELATORIO DE VENDAS
-# (4 colunas). Definidas uma unica vez e usadas tanto no cabecalho
-# quanto nas linhas de dados, eliminando o desalinhamento que
-# existia entre o cabecalho "STATUS" (x=430) e os dados (x=400).
-COL_DATA_X     = MARGEM_ESQUERDA + 8
-COL_CLIENTE_X  = MARGEM_ESQUERDA + 80
-COL_VALOR_X    = MARGEM_ESQUERDA + 370
-COL_STATUS_X   = MARGEM_ESQUERDA + 400
+# Tabelas: cada coluna e (titulo, largura em pontos, alinhamento).
+# A coluna "CLIENTE" (largura None) recebe todo o espaco que sobra, de
+# modo que a soma das colunas e SEMPRE igual a area util da pagina.
+# Cabecalho e celulas usam as mesmas posicoes (calculadas uma unica
+# vez em _posicoes_colunas), entao nunca ficam desalinhados.
+PADDING_CELULA = 8      # espaco horizontal interno de cada celula
+ENTRELINHA     = 11     # altura de cada linha de texto dentro da celula
+TAM_FONTE_CELULA = 9
 
-# Posicoes horizontais das colunas da tabela do FECHAMENTO DIARIO
-# (6 colunas: HORA, CLIENTE, VALOR, RECEBIDO, TROCO, STATUS).
-COL_HORA_X_FECH     = MARGEM_ESQUERDA + 8
-COL_CLIENTE_X_FECH  = MARGEM_ESQUERDA + 45
-COL_VALOR_X_FECH    = MARGEM_ESQUERDA + 280
-COL_RECEBIDO_X_FECH = MARGEM_ESQUERDA + 350
-COL_TROCO_X_FECH    = MARGEM_ESQUERDA + 410
-COL_STATUS_X_FECH   = MARGEM_ESQUERDA + 420
+COLUNAS_VENDAS = [
+    ("DATA",    72,   "esq"),
+    ("CLIENTE", None, "esq"),
+    ("VALOR",   96,   "dir"),
+    ("STATUS",  84,   "esq"),
+]
+
+COLUNAS_FECHAMENTO = [
+    ("HORA",     40,   "esq"),
+    ("CLIENTE",  None, "esq"),
+    ("VALOR",    78,   "dir"),
+    ("RECEBIDO", 80,   "dir"),
+    ("TROCO",    74,   "dir"),
+    ("STATUS",   66,   "esq"),
+]
 
 
 # ============================================================
@@ -88,15 +103,87 @@ COL_STATUS_X_FECH   = MARGEM_ESQUERDA + 420
 
 def moeda(valor):
 
+    # Mesmo valor e mesmo arredondamento de antes; apenas passa a
+    # usar ponto como separador de milhar (1.234,50).
     return (
-        f"R$ {float(valor):.2f}"
+        "R$ " + f"{float(valor):,.2f}"
+        .replace(",", "#")
         .replace(".", ",")
+        .replace("#", ".")
     )
 
 
-# ============================================================
-# FUNCOES AUXILIARES DE DESENHO (compartilhadas pelos 2 relatorios)
-# ============================================================
+def _quebrar_texto(pdf, texto, fonte, tamanho, largura_max):
+    """
+    Quebra automatica de linha: devolve a lista de linhas que cabem em
+    `largura_max` pontos. Nada e cortado nem substituido por
+    reticencias; palavras maiores que a coluna sao divididas.
+    """
+
+    texto = "" if texto is None else str(texto)
+
+    if not texto.strip():
+        return [""]
+
+    linhas = []
+    atual = ""
+
+    for palavra in texto.split():
+
+        candidata = palavra if not atual else atual + " " + palavra
+
+        if pdf.stringWidth(candidata, fonte, tamanho) <= largura_max:
+            atual = candidata
+            continue
+
+        if atual:
+            linhas.append(atual)
+            atual = ""
+
+        # palavra sozinha maior que a coluna: divide por caracteres
+        while pdf.stringWidth(palavra, fonte, tamanho) > largura_max:
+            corte = len(palavra) - 1
+            while corte > 1 and pdf.stringWidth(
+                palavra[:corte], fonte, tamanho
+            ) > largura_max:
+                corte -= 1
+            linhas.append(palavra[:corte])
+            palavra = palavra[corte:]
+
+        atual = palavra
+
+    if atual:
+        linhas.append(atual)
+
+    return linhas
+
+
+def _tamanho_que_cabe(pdf, texto, fonte, tamanho, largura_max):
+    """Reduz a fonte (so se preciso) para o texto caber na largura."""
+
+    while tamanho > 6 and pdf.stringWidth(texto, fonte, tamanho) > largura_max:
+        tamanho -= 0.5
+
+    return tamanho
+
+
+def _posicoes_colunas(colunas):
+    """Devolve [(x_esquerda, largura)] com a soma == LARGURA_UTIL."""
+
+    fixas = sum(c[1] for c in colunas if c[1] is not None)
+    flexivel = LARGURA_UTIL - fixas
+
+    posicoes = []
+    x = MARGEM_ESQUERDA
+
+    for _titulo, largura, _alinh in colunas:
+
+        largura = flexivel if largura is None else largura
+        posicoes.append((x, largura))
+        x += largura
+
+    return posicoes
+
 
 def _status_cores(status):
     """
@@ -123,10 +210,13 @@ def _status_cores(status):
     if status_normalizado == "pendente":
         return COR_ALERTA, COR_ALERTA_CLARA
 
+    if status_normalizado == "fiado":
+        return COR_FIADO, COR_FIADO_CLARA
+
     return COR_TEXTO_SECUNDARIO, COR_FUNDO_SUAVE
 
 
-def _desenhar_cabecalho(pdf, titulo_documento="Relatorio de Vendas"):
+def _desenhar_cabecalho(pdf, titulo_documento="Relatório de Vendas"):
     """
     Faixa de identidade visual. Chamada em TODAS as paginas
     (inclusive na pagina 2, 3...), corrigindo o bug em que "SIGC"
@@ -137,7 +227,8 @@ def _desenhar_cabecalho(pdf, titulo_documento="Relatorio de Vendas"):
     preserva o comportamento original) ou "Fechamento Diario".
     """
 
-    pdf.setFillColor(COR_PRIMARIA)
+    # faixa preta + filete vermelho com detalhe amarelo na base
+    pdf.setFillColor(COR_PRETO)
     pdf.rect(
         0,
         ALTURA_PAGINA - ALTURA_FAIXA_CABECALHO,
@@ -147,18 +238,40 @@ def _desenhar_cabecalho(pdf, titulo_documento="Relatorio de Vendas"):
         stroke=0
     )
 
+    pdf.setFillColor(COR_PRIMARIA)
+    pdf.rect(
+        0,
+        ALTURA_PAGINA - ALTURA_FAIXA_CABECALHO,
+        LARGURA_PAGINA,
+        4,
+        fill=1,
+        stroke=0
+    )
+
+    pdf.setFillColor(COR_AMARELO)
+    pdf.rect(
+        MARGEM_ESQUERDA,
+        ALTURA_PAGINA - ALTURA_FAIXA_CABECALHO,
+        60,
+        4,
+        fill=1,
+        stroke=0
+    )
+
     pdf.setFillColor(COR_BRANCO)
-    pdf.setFont("Helvetica-Bold", 16)
+    pdf.setFont("Helvetica-Bold", 18)
     pdf.drawString(MARGEM_ESQUERDA, ALTURA_PAGINA - 32, "SIGC")
 
+    pdf.setFillColor(colors.HexColor("#C9C6BF"))
     pdf.setFont("Helvetica", 9)
     pdf.drawString(
         MARGEM_ESQUERDA,
         ALTURA_PAGINA - 48,
-        "Sistema Integrado de Gestao Comercial"
+        "Sistema Integrado de Gestão Comercial"
     )
 
-    pdf.setFont("Helvetica-Bold", 11)
+    pdf.setFillColor(COR_BRANCO)
+    pdf.setFont("Helvetica-Bold", 12)
     pdf.drawRightString(
         LARGURA_PAGINA - MARGEM_DIREITA,
         ALTURA_PAGINA - 40,
@@ -289,13 +402,34 @@ def _desenhar_grade_indicadores(pdf, y, indicadores):
                 stroke=1
             )
 
-            pdf.setFillColor(COR_TEXTO_TERCIARIO)
+            cor_barra = {
+                "sucesso": COR_SUCESSO,
+                "alerta": COR_AMARELO,
+                "neutro": COR_PRETO,
+            }[tom]
+
+            pdf.setFillColor(cor_barra)
+            pdf.rect(
+                x,
+                y_topo_caixa - ALTURA_CAIXA_KPI,
+                3,
+                ALTURA_CAIXA_KPI,
+                fill=1,
+                stroke=0
+            )
+
+            pdf.setFillColor(COR_TEXTO_SECUNDARIO)
             pdf.setFont("Helvetica-Bold", 7.5)
-            pdf.drawString(x + 10, y_topo_caixa - 16, label)
+            pdf.drawString(x + 12, y_topo_caixa - 16, label)
 
             pdf.setFillColor(cores_valor[tom])
-            pdf.setFont("Helvetica-Bold", 15)
-            pdf.drawString(x + 10, y_topo_caixa - 36, valor)
+            pdf.setFont(
+                "Helvetica-Bold",
+                _tamanho_que_cabe(
+                    pdf, valor, "Helvetica-Bold", 15, largura_caixa - 20
+                )
+            )
+            pdf.drawString(x + 12, y_topo_caixa - 36, valor)
 
     altura_grade = _altura_grade_indicadores(len(indicadores))
 
@@ -306,7 +440,7 @@ def _desenhar_estado_vazio(
     pdf,
     y,
     linha1="Nenhuma venda encontrada",
-    linha2="para o periodo e filtro selecionados"
+    linha2="para o período e filtro selecionados"
 ):
     """
     Exibido quando a lista de vendas esta vazia. Antes, a tabela
@@ -375,16 +509,63 @@ def _desenhar_rodape(pdf, pagina_atual, total_paginas, data_geracao):
     pdf.drawCentredString(
         LARGURA_PAGINA / 2,
         ALTURA_RODAPE - 14,
-        f"SIGC (c) {data_geracao.year}"
+        f"SIGC © {data_geracao.year}"
     )
 
     pdf.drawRightString(
         LARGURA_PAGINA - MARGEM_DIREITA,
         ALTURA_RODAPE - 14,
-        f"Pagina {pagina_atual} de {total_paginas}"
+        f"Página {pagina_atual} de {total_paginas}"
     )
 
-    # ============================================================
+def _desenhar_tabela(
+    pdf, y, vendas, colunas, celulas_da_venda,
+    titulo_documento, pagina_atual, total_paginas, data_geracao,
+    cabecalho_tabela
+):
+    """
+    Desenha as linhas com quebra de pagina automatica. Repete cabecalho
+    do documento, titulo de secao e cabecalho da tabela a cada pagina e
+    desenha o rodape em todas. Devolve a ultima pagina usada.
+    `y` e o topo da primeira linha.
+    """
+
+    limite_inferior = ALTURA_RODAPE + BUFFER_RODAPE
+    primeira_da_pagina = True
+
+    for indice, venda in enumerate(vendas):
+
+        linhas_cliente = _linhas_cliente(pdf, venda, colunas)
+        altura = _altura_linha(pdf, venda, colunas)
+
+        if y - altura < limite_inferior and not primeira_da_pagina:
+
+            _desenhar_rodape(
+                pdf, pagina_atual, total_paginas, data_geracao
+            )
+
+            pdf.showPage()
+            pagina_atual += 1
+
+            y = _desenhar_cabecalho(pdf, titulo_documento)
+            y = _desenhar_titulo_secao(
+                pdf, y, "Detalhamento (continuação)"
+            )
+            y = cabecalho_tabela(pdf, y)
+            primeira_da_pagina = True
+
+        _desenhar_linha(
+            pdf, colunas, celulas_da_venda(venda),
+            linhas_cliente, y, altura, indice
+        )
+
+        y -= altura
+        primeira_da_pagina = False
+
+    return pagina_atual
+
+
+# ============================================================
 # RELATORIO DE VENDAS
 # ============================================================
 
@@ -421,7 +602,7 @@ def _montar_indicadores(resumo, tipo_vendas):
         ))
 
     indicadores.append(
-        ("TICKET MEDIO", moeda(resumo["ticket_medio"]), "neutro")
+        ("TICKET MÉDIO", moeda(resumo["ticket_medio"]), "neutro")
     )
 
     return indicadores
@@ -435,13 +616,14 @@ def _desenhar_resumo(pdf, y, resumo, tipo_vendas):
     return _desenhar_grade_indicadores(pdf, y, indicadores)
 
 
-def _desenhar_cabecalho_tabela(pdf, y):
+def _desenhar_cabecalho_tabela(pdf, y, colunas=None):
     """
-    Cabecalho da tabela do relatorio de vendas, com fundo colorido.
-    Isolado em funcao propria para eliminar a duplicacao de codigo
-    que existia na versao anterior (o mesmo bloco estava copiado
-    dentro do tratamento de quebra de pagina).
+    Cabecalho de tabela (mesmo visual de antes). `y` e a linha-base
+    onde o cabecalho comeca; devolve o Y do TOPO da primeira linha de
+    dados. Titulos usam as mesmas posicoes/alinhamentos das celulas.
     """
+
+    colunas = COLUNAS_VENDAS if colunas is None else colunas
 
     pdf.setFillColor(COR_PRIMARIA_CLARA)
     pdf.rect(
@@ -453,131 +635,168 @@ def _desenhar_cabecalho_tabela(pdf, y):
         stroke=0
     )
 
-    pdf.setFillColor(COR_PRIMARIA)
+    pdf.setFillColor(COR_TEXTO_SECUNDARIO)
     pdf.setFont("Helvetica-Bold", 8.5)
-    pdf.drawString(COL_DATA_X, y - 6, "DATA")
-    pdf.drawString(COL_CLIENTE_X, y - 6, "CLIENTE")
-    pdf.drawRightString(COL_VALOR_X, y - 6, "VALOR")
-    pdf.drawString(COL_STATUS_X, y - 6, "STATUS")
 
-    return y - ALTURA_CABECALHO_TABELA
+    for (titulo, _l, alinh), (x, largura) in zip(
+        colunas, _posicoes_colunas(colunas)
+    ):
+        if alinh == "dir":
+            pdf.drawRightString(x + largura - PADDING_CELULA, y - 8, titulo)
+        else:
+            pdf.drawString(x + PADDING_CELULA, y - 8, titulo)
+
+    return y - ALTURA_CABECALHO_TABELA + 6
 
 
-def _desenhar_linha_tabela(pdf, venda, y, indice):
+def _linhas_cliente(pdf, venda, colunas):
+    """Linhas (apos quebra automatica) do nome do cliente."""
+
+    posicoes = _posicoes_colunas(colunas)
+    indice = [c[0] for c in colunas].index("CLIENTE")
+    largura = posicoes[indice][1] - 2 * PADDING_CELULA
+
+    return _quebrar_texto(
+        pdf, venda["cliente"], "Helvetica", TAM_FONTE_CELULA, largura
+    )
+
+
+def _altura_linha(pdf, venda, colunas):
+    """Altura da linha: cresce se o nome do cliente ocupar varias linhas."""
+
+    qtd = len(_linhas_cliente(pdf, venda, colunas))
+
+    return max(ALTURA_LINHA_TABELA, qtd * ENTRELINHA + 9)
+
+
+def _desenhar_linha(pdf, colunas, celulas, linhas_cliente, y_topo, altura, indice):
     """
-    Uma linha de dados da tabela do relatorio de vendas. Mesma
-    fonte de dados da versao anterior (venda["data_venda"],
-    venda["cliente"], venda["valor_total"],
-    venda["status_pagamento"]) - nenhum campo novo, nenhum campo
-    removido.
+    Desenha UMA linha de tabela. `celulas` traz, na ordem das colunas,
+    (tipo, valor, cor) com tipo "texto" | "cliente" | "numero" | "status".
+    O fundo alternado cobre a largura toda e a altura real da linha.
     """
 
     if indice % 2 == 1:
         pdf.setFillColor(COR_FUNDO_SUAVE)
         pdf.rect(
             MARGEM_ESQUERDA,
-            y - 14,
+            y_topo - altura,
             LARGURA_UTIL,
-            ALTURA_LINHA_TABELA,
+            altura,
             fill=1,
             stroke=0
         )
 
-    data_formatada = venda["data_venda"].strftime("%d/%m/%Y")
+    base = y_topo - 13   # linha-base da 1a linha de texto (centrada na linha minima)
 
-    pdf.setFillColor(COR_TEXTO)
-    pdf.setFont("Helvetica", 9)
-    pdf.drawString(COL_DATA_X, y, data_formatada)
-    pdf.drawString(COL_CLIENTE_X, y, venda["cliente"][:25])
-    pdf.drawRightString(COL_VALOR_X, y, moeda(venda["valor_total"]))
+    for (tipo, valor, cor), (x, largura) in zip(
+        celulas, _posicoes_colunas(colunas)
+    ):
+        disponivel = largura - 2 * PADDING_CELULA
 
-    status_texto = venda["status_pagamento"]
-    cor_texto, cor_fundo = _status_cores(status_texto)
+        if tipo == "cliente":
 
-    largura_badge = pdf.stringWidth(
-        status_texto, "Helvetica-Bold", 7.5
-    ) + 16
+            pdf.setFillColor(COR_TEXTO)
+            pdf.setFont("Helvetica", TAM_FONTE_CELULA)
 
-    pdf.setFillColor(cor_fundo)
-    pdf.roundRect(
-        COL_STATUS_X,
-        y - 4,
-        largura_badge,
-        13,
-        6,
-        fill=1,
-        stroke=0
+            for i, linha in enumerate(linhas_cliente):
+                pdf.drawString(
+                    x + PADDING_CELULA, base - i * ENTRELINHA, linha
+                )
+
+        elif tipo == "numero":
+
+            tamanho = _tamanho_que_cabe(
+                pdf, valor, "Helvetica", TAM_FONTE_CELULA, disponivel
+            )
+            pdf.setFillColor(cor)
+            pdf.setFont("Helvetica", tamanho)
+            pdf.drawRightString(x + largura - PADDING_CELULA, base, valor)
+
+        elif tipo == "status":
+
+            cor_texto, cor_fundo = _status_cores(valor)
+
+            tamanho = _tamanho_que_cabe(
+                pdf, valor, "Helvetica-Bold", 7.5, disponivel - 16
+            )
+            largura_badge = pdf.stringWidth(
+                valor, "Helvetica-Bold", tamanho
+            ) + 16
+
+            pdf.setFillColor(cor_fundo)
+            pdf.roundRect(
+                x + PADDING_CELULA,
+                base - 4,
+                largura_badge,
+                13,
+                6,
+                fill=1,
+                stroke=0
+            )
+
+            pdf.setFillColor(cor_texto)
+            pdf.setFont("Helvetica-Bold", tamanho)
+            pdf.drawString(x + PADDING_CELULA + 8, base, valor)
+
+        else:
+
+            pdf.setFillColor(COR_TEXTO)
+            pdf.setFont("Helvetica", TAM_FONTE_CELULA)
+            pdf.drawString(x + PADDING_CELULA, base, valor)
+
+
+def _celulas_vendas(venda):
+    """Mesmos campos de antes: data, cliente, valor_total, status_pagamento."""
+
+    return [
+        ("texto", venda["data_venda"].strftime("%d/%m/%Y"), None),
+        ("cliente", None, None),
+        ("numero", moeda(venda["valor_total"]), COR_TEXTO),
+        ("status", venda["status_pagamento"], None),
+    ]
+
+
+
+def _montar_relatorio_vendas(
+    pdf, total_paginas, data_geracao,
+    data_inicial_formatada, data_final_formatada, filtro_label,
+    tipo_vendas, resumo, vendas
+):
+    """Desenha o documento inteiro e devolve o numero de paginas usadas."""
+
+    pagina_atual = 1
+
+    # ---- Primeira pagina: cabecalho + metadados + resumo + tabela ----
+
+    y = _desenhar_cabecalho(pdf, "Relatório de Vendas")
+    y = _desenhar_metadados(
+        pdf,
+        y,
+        [
+            ("PERÍODO", f"{data_inicial_formatada} até {data_final_formatada}"),
+            ("FILTRO", filtro_label),
+        ]
     )
+    y = _desenhar_resumo(pdf, y, resumo, tipo_vendas)
+    y = _desenhar_titulo_secao(pdf, y, "Detalhamento")
+    y = _desenhar_cabecalho_tabela(pdf, y)
 
-    pdf.setFillColor(cor_texto)
-    pdf.setFont("Helvetica-Bold", 7.5)
-    pdf.drawString(COL_STATUS_X + 8, y, status_texto)
+    if not vendas:
 
+        _desenhar_estado_vazio(pdf, y - 6)
 
-def _calcular_total_paginas(qtd_vendas, tipo_vendas):
-    """
-    Estima o total de paginas ANTES de desenhar, usando as mesmas
-    constantes de layout do desenho real, para permitir exibir
-    "Pagina X de Y" em uma unica passada.
-    """
+    else:
 
-    indicadores_exemplo = _montar_indicadores(
-        {
-            "total_vendas": 0,
-            "pagas": 0,
-            "pendentes": 0,
-            "recebido": 0,
-            "pendente": 0,
-            "ticket_medio": 0,
-        },
-        tipo_vendas
-    )
-
-    altura_cabecalho  = ALTURA_FAIXA_CABECALHO + ESPACO_SECAO
-    altura_metadados  = 14 + 12 + ESPACO_SECAO
-    altura_titulo     = ESPACO_SECAO
-    altura_grade      = _altura_grade_indicadores(len(indicadores_exemplo))
-
-    y_apos_tabela_pagina1 = (
-        ALTURA_PAGINA
-        - altura_cabecalho
-        - altura_metadados
-        - altura_titulo
-        - altura_grade
-        - altura_titulo
-        - ALTURA_CABECALHO_TABELA
-    )
-
-    linhas_pagina1 = max(
-        1,
-        int(
-            (y_apos_tabela_pagina1 - ALTURA_RODAPE - BUFFER_RODAPE)
-            / ALTURA_LINHA_TABELA
+        pagina_atual = _desenhar_tabela(
+            pdf, y, vendas, COLUNAS_VENDAS, _celulas_vendas,
+            "Relatório de Vendas", pagina_atual, total_paginas,
+            data_geracao, _desenhar_cabecalho_tabela
         )
-    )
 
-    y_apos_tabela_seguinte = (
-        ALTURA_PAGINA
-        - altura_cabecalho
-        - altura_titulo
-        - ALTURA_CABECALHO_TABELA
-    )
+    _desenhar_rodape(pdf, pagina_atual, total_paginas, data_geracao)
 
-    linhas_pagina_seguinte = max(
-        1,
-        int(
-            (y_apos_tabela_seguinte - ALTURA_RODAPE - BUFFER_RODAPE)
-            / ALTURA_LINHA_TABELA
-        )
-    )
-
-    if qtd_vendas <= linhas_pagina1:
-        return 1
-
-    restantes = qtd_vendas - linhas_pagina1
-    paginas_extras = -(-restantes // linhas_pagina_seguinte)
-
-    return 1 + paginas_extras
+    return pagina_atual
 
 
 def gerar_relatorio_vendas_pdf(
@@ -588,9 +807,6 @@ def gerar_relatorio_vendas_pdf(
     resumo,
     vendas
 ):
-
-    pdf = canvas.Canvas(caminho_pdf, pagesize=letter)
-    pdf.setTitle("Relatorio de Vendas")
 
     data_inicial_formatada = datetime.strptime(
         data_inicial, "%Y-%m-%d"
@@ -607,60 +823,30 @@ def gerar_relatorio_vendas_pdf(
     }.get(tipo_vendas, "Todas as vendas")
 
     data_geracao = datetime.now()
-    total_paginas = _calcular_total_paginas(len(vendas), tipo_vendas)
-    pagina_atual = 1
 
-    # ---- Primeira pagina: cabecalho + metadados + resumo + tabela ----
-
-    y = _desenhar_cabecalho(pdf, "Relatorio de Vendas")
-    y = _desenhar_metadados(
-        pdf,
-        y,
-        [
-            ("PERIODO", f"{data_inicial_formatada} ate {data_final_formatada}"),
-            ("FILTRO", filtro_label),
-        ]
+    argumentos = (
+        data_geracao,
+        data_inicial_formatada,
+        data_final_formatada,
+        filtro_label,
+        tipo_vendas,
+        resumo,
+        vendas,
     )
-    y = _desenhar_resumo(pdf, y, resumo, tipo_vendas)
-    y = _desenhar_titulo_secao(pdf, y, "Detalhamento")
-    y = _desenhar_cabecalho_tabela(pdf, y)
 
-    if not vendas:
+    # Passada de medicao (em memoria): descobre o numero real de paginas,
+    # ja considerando nomes que ocupam varias linhas, para "Pagina X de Y".
+    medicao = canvas.Canvas(io.BytesIO(), pagesize=A4)
+    total_paginas = _montar_relatorio_vendas(medicao, 0, *argumentos)
 
-        _desenhar_estado_vazio(pdf, y)
+    pdf = canvas.Canvas(caminho_pdf, pagesize=A4)
+    pdf.setTitle("Relatório de Vendas")
 
-    else:
-
-        for indice, venda in enumerate(vendas):
-
-            limite_pagina = (
-                ALTURA_RODAPE + ALTURA_LINHA_TABELA + BUFFER_RODAPE
-            )
-
-            if y < limite_pagina:
-
-                _desenhar_rodape(
-                    pdf, pagina_atual, total_paginas, data_geracao
-                )
-
-                pdf.showPage()
-                pagina_atual += 1
-
-                y = _desenhar_cabecalho(pdf, "Relatorio de Vendas")
-                y = _desenhar_titulo_secao(
-                    pdf, y, "Detalhamento (continuacao)"
-                )
-                y = _desenhar_cabecalho_tabela(pdf, y)
-
-            _desenhar_linha_tabela(pdf, venda, y, indice)
-            y -= ALTURA_LINHA_TABELA
-
-    _desenhar_rodape(pdf, pagina_atual, total_paginas, data_geracao)
+    _montar_relatorio_vendas(pdf, total_paginas, *argumentos)
 
     pdf.save()
 
-    # ============================================================
-# FECHAMENTO DIARIO
+
 # ============================================================
 
 def _montar_indicadores_fechamento(resumo):
@@ -709,7 +895,7 @@ def _montar_indicadores_fechamento(resumo):
             moeda(resumo["total_troco"]),
             "alerta" if total_troco < 0 else "neutro"
         ),
-        ("TICKET MEDIO", moeda(resumo["ticket_medio"]), "neutro"),
+        ("TICKET MÉDIO", moeda(resumo["ticket_medio"]), "neutro"),
     ]
 
 
@@ -722,173 +908,41 @@ def _desenhar_resumo_fechamento(pdf, y, resumo):
 
 
 def _desenhar_cabecalho_tabela_fechamento(pdf, y):
+    """Cabecalho da tabela do fechamento diario (6 colunas)."""
+
+    return _desenhar_cabecalho_tabela(pdf, y, COLUNAS_FECHAMENTO)
+
+
+def _celulas_fechamento(venda):
     """
-    Cabecalho da tabela do fechamento diario (6 colunas), com
-    fundo colorido - mesmo tratamento visual do relatorio de
-    vendas, adaptado para as colunas HORA/CLIENTE/VALOR/
-    RECEBIDO/TROCO/STATUS.
+    Mesmos campos de antes: hora, cliente, valor_total, valor_recebido,
+    troco (cor de alerta quando negativo) e status_pagamento.
     """
-
-    pdf.setFillColor(COR_PRIMARIA_CLARA)
-    pdf.rect(
-        MARGEM_ESQUERDA,
-        y - ALTURA_CABECALHO_TABELA + 6,
-        LARGURA_UTIL,
-        ALTURA_CABECALHO_TABELA,
-        fill=1,
-        stroke=0
-    )
-
-    pdf.setFillColor(COR_PRIMARIA)
-    pdf.setFont("Helvetica-Bold", 8.5)
-    pdf.drawString(COL_HORA_X_FECH, y - 6, "HORA")
-    pdf.drawString(COL_CLIENTE_X_FECH, y - 6, "CLIENTE")
-    pdf.drawRightString(COL_VALOR_X_FECH, y - 6, "VALOR")
-    pdf.drawRightString(COL_RECEBIDO_X_FECH, y - 6, "RECEBIDO")
-    pdf.drawRightString(COL_TROCO_X_FECH, y - 6, "TROCO")
-    pdf.drawString(COL_STATUS_X_FECH, y - 6, "STATUS")
-
-    return y - ALTURA_CABECALHO_TABELA
-
-
-def _desenhar_linha_tabela_fechamento(pdf, venda, y, indice):
-    """
-    Uma linha de dados da tabela do fechamento diario. Mesma fonte
-    de dados da versao anterior (venda["data_venda"],
-    venda["cliente"], venda["valor_total"],
-    venda["valor_recebido"], venda["troco"],
-    venda["status_pagamento"]) - nenhum campo novo, nenhum campo
-    removido.
-
-    O valor de TROCO recebe a cor de alerta quando negativo - o
-    sinal ja vem do dado original, aqui so escolhemos a cor com
-    base nele.
-    """
-
-    if indice % 2 == 1:
-        pdf.setFillColor(COR_FUNDO_SUAVE)
-        pdf.rect(
-            MARGEM_ESQUERDA,
-            y - 14,
-            LARGURA_UTIL,
-            ALTURA_LINHA_TABELA,
-            fill=1,
-            stroke=0
-        )
-
-    hora_formatada = venda["data_venda"].strftime("%H:%M")
-
-    pdf.setFillColor(COR_TEXTO)
-    pdf.setFont("Helvetica", 9)
-    pdf.drawString(COL_HORA_X_FECH, y, hora_formatada)
-    pdf.drawString(COL_CLIENTE_X_FECH, y, venda["cliente"][:20])
-    pdf.drawRightString(COL_VALOR_X_FECH, y, moeda(venda["valor_total"]))
-    pdf.drawRightString(
-        COL_RECEBIDO_X_FECH, y, moeda(venda["valor_recebido"])
-    )
 
     troco_valor = float(venda["troco"])
-    pdf.setFillColor(COR_ALERTA if troco_valor < 0 else COR_TEXTO)
-    pdf.drawRightString(COL_TROCO_X_FECH, y, moeda(venda["troco"]))
 
-    status_texto = venda["status_pagamento"]
-    cor_texto, cor_fundo = _status_cores(status_texto)
-
-    largura_badge = pdf.stringWidth(
-        status_texto, "Helvetica-Bold", 7.5
-    ) + 16
-
-    pdf.setFillColor(cor_fundo)
-    pdf.roundRect(
-        COL_STATUS_X_FECH,
-        y - 4,
-        largura_badge,
-        13,
-        6,
-        fill=1,
-        stroke=0
-    )
-
-    pdf.setFillColor(cor_texto)
-    pdf.setFont("Helvetica-Bold", 7.5)
-    pdf.drawString(COL_STATUS_X_FECH + 8, y, status_texto)
+    return [
+        ("texto", venda["data_venda"].strftime("%H:%M"), None),
+        ("cliente", None, None),
+        ("numero", moeda(venda["valor_total"]), COR_TEXTO),
+        ("numero", moeda(venda["valor_recebido"]), COR_TEXTO),
+        ("numero", moeda(venda["troco"]),
+         COR_ALERTA if troco_valor < 0 else COR_TEXTO),
+        ("status", venda["status_pagamento"], None),
+    ]
 
 
-def _calcular_total_paginas_fechamento(qtd_vendas):
-    """
-    Mesma logica de _calcular_total_paginas, adaptada ao
-    fechamento diario: o resumo sempre tem 7 indicadores fixos
-    (sem variacao por filtro), entao a altura da grade e constante.
-    """
 
-    altura_cabecalho  = ALTURA_FAIXA_CABECALHO + ESPACO_SECAO
-    altura_metadados  = 14 + 12 + ESPACO_SECAO
-    altura_titulo     = ESPACO_SECAO
-    altura_grade      = _altura_grade_indicadores(7)
-
-    y_apos_tabela_pagina1 = (
-        ALTURA_PAGINA
-        - altura_cabecalho
-        - altura_metadados
-        - altura_titulo
-        - altura_grade
-        - altura_titulo
-        - ALTURA_CABECALHO_TABELA
-    )
-
-    linhas_pagina1 = max(
-        1,
-        int(
-            (y_apos_tabela_pagina1 - ALTURA_RODAPE - BUFFER_RODAPE)
-            / ALTURA_LINHA_TABELA
-        )
-    )
-
-    y_apos_tabela_seguinte = (
-        ALTURA_PAGINA
-        - altura_cabecalho
-        - altura_titulo
-        - ALTURA_CABECALHO_TABELA
-    )
-
-    linhas_pagina_seguinte = max(
-        1,
-        int(
-            (y_apos_tabela_seguinte - ALTURA_RODAPE - BUFFER_RODAPE)
-            / ALTURA_LINHA_TABELA
-        )
-    )
-
-    if qtd_vendas <= linhas_pagina1:
-        return 1
-
-    restantes = qtd_vendas - linhas_pagina1
-    paginas_extras = -(-restantes // linhas_pagina_seguinte)
-
-    return 1 + paginas_extras
-
-
-def gerar_fechamento_diario_pdf(
-    caminho_pdf,
-    data,
-    resumo,
-    vendas
+def _montar_fechamento_diario(
+    pdf, total_paginas, data_geracao, data_formatada, resumo, vendas
 ):
+    """Desenha o documento inteiro e devolve o numero de paginas usadas."""
 
-    pdf = canvas.Canvas(caminho_pdf, pagesize=letter)
-    pdf.setTitle("Fechamento Diario")
-
-    data_formatada = datetime.strptime(
-        data, "%Y-%m-%d"
-    ).strftime("%d/%m/%Y")
-
-    data_geracao = datetime.now()
-    total_paginas = _calcular_total_paginas_fechamento(len(vendas))
     pagina_atual = 1
 
     # ---- Primeira pagina: cabecalho + data + resumo + tabela ----
 
-    y = _desenhar_cabecalho(pdf, "Fechamento Diario")
+    y = _desenhar_cabecalho(pdf, "Fechamento Diário")
     y = _desenhar_metadados(pdf, y, [("DATA", data_formatada)])
     y = _desenhar_resumo_fechamento(pdf, y, resumo)
     y = _desenhar_titulo_secao(pdf, y, "Detalhamento")
@@ -898,37 +952,48 @@ def gerar_fechamento_diario_pdf(
 
         _desenhar_estado_vazio(
             pdf,
-            y,
+            y - 6,
             "Nenhuma venda registrada",
             "para a data selecionada"
         )
 
     else:
 
-        for indice, venda in enumerate(vendas):
-
-            limite_pagina = (
-                ALTURA_RODAPE + ALTURA_LINHA_TABELA + BUFFER_RODAPE
-            )
-
-            if y < limite_pagina:
-
-                _desenhar_rodape(
-                    pdf, pagina_atual, total_paginas, data_geracao
-                )
-
-                pdf.showPage()
-                pagina_atual += 1
-
-                y = _desenhar_cabecalho(pdf, "Fechamento Diario")
-                y = _desenhar_titulo_secao(
-                    pdf, y, "Detalhamento (continuacao)"
-                )
-                y = _desenhar_cabecalho_tabela_fechamento(pdf, y)
-
-            _desenhar_linha_tabela_fechamento(pdf, venda, y, indice)
-            y -= ALTURA_LINHA_TABELA
+        pagina_atual = _desenhar_tabela(
+            pdf, y, vendas, COLUNAS_FECHAMENTO, _celulas_fechamento,
+            "Fechamento Diário", pagina_atual, total_paginas,
+            data_geracao, _desenhar_cabecalho_tabela_fechamento
+        )
 
     _desenhar_rodape(pdf, pagina_atual, total_paginas, data_geracao)
+
+    return pagina_atual
+
+
+def gerar_fechamento_diario_pdf(
+    caminho_pdf,
+    data,
+    resumo,
+    vendas
+):
+
+    data_formatada = datetime.strptime(
+        data, "%Y-%m-%d"
+    ).strftime("%d/%m/%Y")
+
+    data_geracao = datetime.now()
+
+    # Passada de medicao (em memoria) para o total real de paginas.
+    medicao = canvas.Canvas(io.BytesIO(), pagesize=A4)
+    total_paginas = _montar_fechamento_diario(
+        medicao, 0, data_geracao, data_formatada, resumo, vendas
+    )
+
+    pdf = canvas.Canvas(caminho_pdf, pagesize=A4)
+    pdf.setTitle("Fechamento Diário")
+
+    _montar_fechamento_diario(
+        pdf, total_paginas, data_geracao, data_formatada, resumo, vendas
+    )
 
     pdf.save()
