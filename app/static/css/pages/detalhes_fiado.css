@@ -1,206 +1,466 @@
-/* ==========================
-   HEADER
-========================== */
+/* ==========================================================
+   DETALHES DA CONTA / DETALHES DO FIADO — SIGC
+   CSS compartilhado pelas duas páginas (como já era):
+     conta_pendente_detalhes.html  e  detalhes_fiado.html
 
-.page-header{
+   - Escopo .dt. Tokens --dt-* com as cores globais (--cor-*).
+   - Classes originais mantidas: .page-header, .detalhes-grid,
+     .detalhe-card, .cliente-card, .financeiro-card, .produtos-card,
+     .recebimentos-card, .pagamento-card, .pagamento-form.
+   ========================================================== */
 
+   .dt{
+    --dt-vermelho:var(--cor-vermelha, #c62828);
+    --dt-preto:var(--cor-preta, #1f1f1f);
+    --dt-amarelo:var(--cor-amarela, #fbc02d);
+
+    --dt-texto:#1f1f1f;
+    --dt-suave:#6b6b6b;
+    --dt-borda:#e3e0da;
+    --dt-borda-campo:#cfcbc3;
+    --dt-fundo-suave:#f7f6f4;
+    --dt-card:#fff;
+    --dt-sombra:0 1px 3px rgba(0, 0, 0, .06), 0 2px 8px rgba(0, 0, 0, .04);
+    --dt-anel:0 0 0 3px rgba(251, 192, 45, .55);
+
+    width:100%;
+    max-width:1100px;
+    margin:0 auto;
+    color:var(--dt-texto);
+}
+
+.dt *,
+.dt *::before,
+.dt *::after{
+    box-sizing:border-box;
+}
+
+/* ---------- cabeçalho ---------- */
+
+.dt .page-header{
     display:flex;
-
+    align-items:flex-start;
     justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:30px;
-
+    gap:16px;
+    margin:0 0 24px;
 }
 
-.page-header h1{
-
+.dt .page-header h1{
     margin:0;
-
-    font-size:2.4rem;
-
+    font-size:1.75rem;
     font-weight:700;
-
+    letter-spacing:-.02em;
+    line-height:1.2;
+    color:var(--dt-texto);
 }
 
-/* ==========================
-   GRID
-========================== */
+.dt-subtitulo{
+    margin:6px 0 0;
+    font-size:.9375rem;
+    color:var(--dt-suave);
+}
 
-.detalhes-grid{
+.dt .page-header .btn{
+    flex-shrink:0;
+}
 
+/* ---------- grade de cards ---------- */
+
+.dt .detalhes-grid{
     display:grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(450px,1fr)
-        );
-
-    gap:28px;
-
-    margin-bottom:30px;
-
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:16px;
+    margin:0 0 16px;
 }
 
-/* ==========================
-   CARD PADRÃO
-========================== */
-
-.detalhe-card{
-
-    background:#fff;
-
-    padding:25px;
-
-    border-radius:24px;
-
-    box-shadow:
-        0 4px 12px rgba(0,0,0,.08);
-
+.dt .detalhe-card{
+    min-width:0;
+    min-height:0;
+    padding:22px 24px 24px;
+    background:var(--dt-card);
+    border:1px solid var(--dt-borda);
+    border-radius:14px;
+    box-shadow:var(--dt-sombra);
 }
 
-.detalhe-card{
-
-    min-height:220px;
-
-}
-
-.detalhe-card h2{
-
-    margin-top:0;
-
-    margin-bottom:25px;
-
-    font-size:1.6rem;
-
-}
-
-.detalhe-card p{
-
-    font-size:1.1rem;
-
-    margin:12px 0;
-
-    color:#444;
-
-}
-
-/* ==========================
-   CORES DOS CARDS
-========================== */
-
-.cliente-card{
-
-    border-left:
-        8px solid #2196f3;
-
-}
-
-.financeiro-card{
-
-    border-left:
-        8px solid #4caf50;
-
-}
-
-.produtos-card{
-
-    border-left:
-        8px solid #ff9800;
-
-}
-
-.recebimentos-card{
-
-    border-left:
-        8px solid #9c27b0;
-
-}
-
-.pagamento-card{
-
-    border-left:
-        8px solid #2e7d32;
-        min-height:auto;
-
-}
-
-/* ==========================
-   PAGAMENTO
-========================== */
-
-.pagamento-form{
-
+.dt .detalhe-card h2{
     display:flex;
-
-    gap:15px;
-
     align-items:center;
-
-    flex-wrap:wrap;
-
+    gap:12px;
+    margin:0 0 18px;
+    font-size:1.0625rem;
+    font-weight:700;
+    letter-spacing:-.01em;
+    color:var(--dt-texto);
 }
 
-.pagamento-form input{
-
-    width:250px;
-
-    padding:12px;
-
-    border:1px solid #ddd;
-
+.dt .dt-icone{
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    font-size:.95rem;
+    color:var(--dt-preto);
+    background:var(--dt-fundo-suave);
+    border:1px solid var(--dt-borda);
     border-radius:10px;
-
-    font-size:15px;
-
 }
 
-/* ==========================
-   RESPONSIVO
-========================== */
+/* ---------- informações (rótulo / valor) ---------- */
 
-@media(max-width:768px){
+.dt .dt-info{
+    display:grid;
+    gap:0;
+    margin:0;
+}
 
-    .page-header{
+.dt .dt-info-linha{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+    padding:11px 0;
+    border-bottom:1px solid var(--dt-borda);
+}
 
-        flex-direction:column;
+.dt .dt-info-linha:first-child{
+    padding-top:0;
+}
 
-        gap:15px;
+.dt .dt-info-linha:last-child{
+    padding-bottom:0;
+    border-bottom:0;
+}
 
-        align-items:flex-start;
+.dt .dt-info dt,
+.dt .dt-rotulo{
+    margin:0;
+    font-size:.6875rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--dt-suave);
+}
 
-    }
+.dt .dt-info dd{
+    margin:0;
+    min-width:0;
+    font-size:.9375rem;
+    font-weight:600;
+    text-align:right;
+    overflow-wrap:anywhere;
+}
 
-    .detalhes-grid{
+.dt .dt-status{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:4px 11px;
+    font-size:.75rem;
+    font-weight:700;
+    line-height:1.3;
+    white-space:nowrap;
+    color:var(--dt-texto);
+    background:#eeeeec;
+    border-radius:999px;
+}
 
-        grid-template-columns:1fr;
+.dt .dt-status::before{
+    content:"";
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:currentColor;
+    opacity:.85;
+}
 
-    }
+.dt .dt-status--aberta,
+.dt .dt-status--aberto{
+    color:#7a5600;
+    background:#fff3cd;
+}
 
-    .pagamento-form{
+.dt .dt-status--paga,
+.dt .dt-status--pago,
+.dt .dt-status--quitada,
+.dt .dt-status--quitado,
+.dt .dt-status--fechada,
+.dt .dt-status--fechado{
+    color:#2e7d32;
+    background:#e8f3e9;
+}
 
-        flex-direction:column;
+/* ---------- financeiro (destaque) ---------- */
 
+.dt .financeiro-card{
+    display:flex;
+    flex-direction:column;
+    background:var(--dt-preto);
+    border-color:var(--dt-preto);
+    border-top:3px solid var(--dt-amarelo);
+}
+
+.dt .financeiro-card h2{
+    color:#fff;
+}
+
+.dt .financeiro-card .dt-icone{
+    color:var(--dt-amarelo);
+    background:rgba(255, 255, 255, .08);
+    border-color:rgba(255, 255, 255, .14);
+}
+
+.dt .dt-total{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.dt .financeiro-card .dt-rotulo{
+    color:#c9c6bf;
+}
+
+.dt .dt-total-valor{
+    font-size:2.25rem;
+    font-weight:700;
+    line-height:1.1;
+    letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums;
+    overflow-wrap:anywhere;
+    color:#fff;
+}
+
+.dt .dt-total-extra{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+    margin-top:auto;
+    padding-top:18px;
+}
+
+.dt .dt-total-extra .dt-rotulo{
+    color:#c9c6bf;
+}
+
+.dt .dt-total-extra strong{
+    font-size:1rem;
+    color:#fff;
+}
+
+/* ---------- listas: produtos e recebimentos ---------- */
+
+.dt .dt-lista{
+    display:grid;
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.dt .dt-lista li{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+    padding:11px 0;
+    border-bottom:1px solid var(--dt-borda);
+}
+
+.dt .dt-lista li:first-child{
+    padding-top:0;
+}
+
+.dt .dt-lista li:last-child{
+    padding-bottom:0;
+    border-bottom:0;
+}
+
+.dt .dt-qtd{
+    flex-shrink:0;
+    min-width:42px;
+    padding:3px 9px;
+    font-size:.8125rem;
+    font-weight:700;
+    text-align:center;
+    font-variant-numeric:tabular-nums;
+    color:var(--dt-texto);
+    background:#eeeeec;
+    border-radius:8px;
+}
+
+.dt .dt-nome{
+    flex:1;
+    min-width:0;
+    font-size:.9375rem;
+    font-weight:600;
+    overflow-wrap:anywhere;
+}
+
+.dt .dt-tipo{
+    flex-shrink:0;
+    font-size:.8125rem;
+    color:var(--dt-suave);
+}
+
+.dt .dt-valor{
+    font-size:1rem;
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+}
+
+.dt .dt-data{
+    margin-left:auto;
+    font-size:.8125rem;
+    text-align:right;
+    color:var(--dt-suave);
+    font-variant-numeric:tabular-nums;
+}
+
+.dt .dt-vazio{
+    margin:0;
+    padding:18px;
+    font-size:.9rem;
+    text-align:center;
+    color:var(--dt-suave);
+    background:var(--dt-fundo-suave);
+    border:1px dashed var(--dt-borda-campo);
+    border-radius:12px;
+}
+
+/* ---------- receber pagamento (ação principal) ---------- */
+
+.dt .pagamento-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:16px 24px;
+    border-top:3px solid var(--dt-amarelo);
+}
+
+.dt .pagamento-card h2{
+    margin:0;
+}
+
+.dt .pagamento-card form{
+    flex:1 1 320px;
+    display:flex;
+    justify-content:flex-end;
+}
+
+.dt .pagamento-form{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    justify-content:flex-end;
+}
+
+.dt .pagamento-form input{
+    flex:1 1 200px;
+    min-width:0;
+    max-width:280px;
+    width:auto;
+    height:auto;
+    min-height:48px;
+    margin:0;
+    padding:0 14px;
+    font:inherit;
+    font-size:1rem;
+    color:var(--dt-texto);
+    background:var(--dt-card);
+    border:1px solid var(--dt-borda-campo);
+    border-radius:10px;
+    box-shadow:none;
+    transition:border-color .15s ease, box-shadow .15s ease;
+}
+
+.dt .pagamento-form input:hover{
+    border-color:#b9b5ad;
+}
+
+.dt .pagamento-form input:focus{
+    outline:none;
+    border-color:var(--dt-preto);
+    box-shadow:var(--dt-anel);
+}
+
+.dt .pagamento-card .btn{
+    min-height:48px;
+    padding:0 26px;
+    font-size:1rem;
+}
+
+/* ---------- responsividade ---------- */
+
+@media (max-width:760px){
+
+    .dt .page-header{
+        flex-direction:column-reverse;
         align-items:stretch;
-
     }
 
-    .pagamento-form input{
+    .dt .page-header .btn{
+        align-self:flex-start;
+    }
 
+    .dt .detalhes-grid{
+        grid-template-columns:1fr;
+    }
+
+    .dt .detalhe-card{
+        padding:18px 16px 20px;
+    }
+
+    .dt .pagamento-card{
+        align-items:stretch;
+        flex-direction:column;
+    }
+
+    .dt .pagamento-card form{
+        flex-basis:auto;
         width:100%;
-
     }
 
+    .dt .pagamento-form{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .dt .pagamento-form input{
+        max-width:none;
+        flex-basis:auto;
+        width:100%;
+    }
+
+    .dt .pagamento-card .btn{
+        width:100%;
+    }
 }
 
-.detalhes-grid{
+@media (max-width:520px){
 
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(380px,1fr)
-        );
+    .dt .page-header h1{
+        font-size:1.5rem;
+    }
 
+    .dt .dt-total-valor{
+        font-size:1.875rem;
+    }
+
+    .dt .dt-lista li{
+        flex-wrap:wrap;
+        row-gap:2px;
+    }
+
+    .dt .dt-nome{
+        flex-basis:calc(100% - 60px);
+    }
+
+    .dt .dt-tipo{
+        flex-basis:100%;
+        padding-left:54px;
+    }
 }

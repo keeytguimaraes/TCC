@@ -4,68 +4,63 @@
 Transferir para Fiado
 {% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/conta.css') }}">
+{% endblock %}
+
 {% block conteudo %}
 
-<div class="page-header">
+<div class="ct">
 
-    <h1>
-        Transferir para Fiado
-    </h1>
+    <header class="ct-topo page-header">
+        <h1>Transferir para Fiado</h1>
+        <p class="ct-subtitulo">Escolha o cliente que ficará com esta conta.</p>
+    </header>
+
+    <form
+        class="ct-form-card"
+        action="/conta/transferir/confirmar/{{ conta_id }}"
+        method="POST"
+    >
+
+        <div class="ct-campo">
+
+            <label for="ct-cliente-pagina">Cliente</label>
+
+            <select id="ct-cliente-pagina" name="cliente_id" required>
+
+                <option value="">Selecione...</option>
+
+                {% for cliente in clientes %}
+
+                <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="ct-form-acoes">
+
+            {% if session.get("perfil") != "funcionario" %}
+
+            <a href="/cliente" class="btn btn-cancelar">
+                <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+                Cadastrar Novo Cliente
+            </a>
+
+            {% endif %}
+
+            <button type="submit" class="btn btn-salvar">
+                Transferir para Fiado
+            </button>
+
+        </div>
+
+    </form>
 
 </div>
-
-<form
-    action="/conta/transferir/confirmar/{{ conta_id }}"
-    method="POST"
->
-
-    <label>
-        Cliente
-    </label>
-
-    <select
-        name="cliente_id"
-        required
-    >
-
-        <option value="">
-            Selecione...
-        </option>
-
-        {% for cliente in clientes %}
-
-        <option value="{{ cliente.id }}">
-
-            {{ cliente.nome }}
-
-        </option>
-
-        {% endfor %}
-
-    </select>
-
-    <br><br>
-
-    {% if session.get("perfil") != "funcionario" %}
-
-<a
-    href="/cliente"
-    class="button button-success"
->
-    <i class="fa-solid fa-user-plus"></i>
-
-    Cadastrar Novo Cliente
-</a>
-
-{% endif %}
-
-    <button
-        type="submit"
-        class="button button-warning"
-    >
-        Transferir para Fiado
-    </button>
-
-</form>
 
 {% endblock %}

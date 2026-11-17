@@ -5,51 +5,46 @@ Contas Pendentes
 {% endblock %}
 
 {% block css %}
-
-<link
-    rel="stylesheet"
-    href="{{ url_for(
-        'static',
-        filename='css/pages/conta.css'
-    ) }}"
->
-
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/search.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/conta.css') }}">
 {% endblock %}
 
 {% block conteudo %}
 
-<div class="conta-container">
+<div class="conta-container ct">
 
-    <h1 class="pagina-titulo">
-        Contas Pendentes
-    </h1>
+    <header class="ct-topo">
+        <h1 class="pagina-titulo">Contas Pendentes</h1>
+        <p class="ct-subtitulo">Acompanhe as contas em aberto e transfira as mais antigas para Fiado.</p>
+    </header>
 
-    <!-- PESQUISA -->
+    <div class="ct-barra">
 
-    <div class="conta-pesquisa">
+        <!-- PESQUISA -->
 
-        <div class="search-box">
+        <div class="conta-pesquisa">
 
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <div class="search-box">
 
-            <input
-                type="text"
-                id="search-input"
-                placeholder="Pesquisar cliente..."
-            >
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Pesquisar cliente..."
+                    aria-label="Pesquisar cliente"
+                >
+
+            </div>
 
         </div>
 
+        <!-- CONTADOR -->
+
+        <p id="search-count" class="total-contas">{{ contas|length }} conta(s) pendente(s)</p>
+
     </div>
-
-    <!-- CONTADOR -->
-
-    <p
-        id="search-count"
-        class="total-contas"
-    >
-        {{ contas|length }} conta(s) pendente(s)
-    </p>
 
     <!-- GRID -->
 
@@ -59,41 +54,27 @@ Contas Pendentes
 
         <div class="conta-card {% if conta.dias_pendente >= 5 %}atrasada{% endif %}">
 
-            <h3 class="cliente-nome">
-                {{ conta.nome_cliente_temporario }}
-            </h3>
+            <h3 class="cliente-nome">{{ conta.nome_cliente_temporario }}</h3>
 
-            <p>
+            <div class="ct-saldo">
+                <span class="ct-rotulo">Saldo Atual</span>
+                <strong class="ct-saldo-valor">R$ {{ "%.2f"|format(conta.valor_total) }}</strong>
+            </div>
 
-                <strong>
-                    Saldo Atual:
-                </strong>
-
-                R$ {{ "%.2f"|format(conta.valor_total) }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Aberta em:
-                </strong>
-
-                {{ conta.data_abertura.strftime('%d/%m/%Y') }}
-
+            <p class="ct-data">
+                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                <span><strong>Aberta em:</strong> {{ conta.data_abertura.strftime('%d/%m/%Y') }}</span>
             </p>
 
             {% if conta.dias_pendente >= 5 %}
 
             <div class="alerta-transferencia">
 
-                <i class="fa-solid fa-triangle-exclamation"></i>
+                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
 
                 <span>
-
                     Conta pendente há
                     <strong>{{ conta.dias_pendente }} dias</strong>
-
                 </span>
 
             </div>
@@ -102,41 +83,36 @@ Contas Pendentes
 
                 <button
                     type="button"
-                    class="button button-success"
-                    onclick="abrirModalTransferir({{ conta.id }})"
+                    class="btn btn-salvar"
+                    onclick="abrirModalTransferir({ conta.id })"
                 >
-
-                    <i class="fa-solid fa-user-plus"></i>
-
+                    <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
                     Transferir para Fiado
-
                 </button>
 
                 <a
                     href="/conta/conta_pendente_detalhes/{{ conta.id }}"
-                    class="button button-secondary"
+                    class="btn btn-cancelar"
                 >
-
-                    <i class="fa-solid fa-eye"></i>
-
+                    <i class="fa-solid fa-eye" aria-hidden="true"></i>
                     Detalhes
-
                 </a>
 
             </div>
 
             {% else %}
 
-            <a
-                href="/conta/conta_pendente_detalhes/{{ conta.id }}"
-                class="button button-secondary"
-            >
+            <div class="acoes-conta">
 
-                <i class="fa-solid fa-eye"></i>
+                <a
+                    href="/conta/conta_pendente_detalhes/{{ conta.id }}"
+                    class="btn btn-cancelar"
+                >
+                    <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                    Detalhes
+                </a>
 
-                Detalhes
-
-            </a>
+            </div>
 
             {% endif %}
 
@@ -152,58 +128,49 @@ Contas Pendentes
      MODAL TRANSFERIR FIADO
 ========================== -->
 
-<div
-    id="modal-transferir"
-    class="modal-overlay"
->
+<div id="modal-transferir" class="modal-overlay ct-modal">
 
-    <div class="modal-container">
+    <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="ct-modal-titulo">
 
         <div class="modal-header">
 
-            <h2>
-                Transferir para Fiado
-            </h2>
+            <div class="ct-modal-titulo">
+                <h2 id="ct-modal-titulo">Transferir para Fiado</h2>
+                <p>Escolha o cliente que ficará com esta conta.</p>
+            </div>
 
             <button
                 type="button"
                 class="modal-close"
                 onclick="fecharModalTransferir()"
+                aria-label="Fechar"
             >
-                <i class="fa-solid fa-xmark"></i>
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
             </button>
 
         </div>
 
-        <form
-            id="form-transferir"
-            method="POST"
-        >
+        <form id="form-transferir" method="POST">
 
-            <div class="form-group">
+            <div class="ct-modal-corpo">
 
-                <label>
-                    Cliente
-                </label>
+                <div class="form-group">
 
-                <select
-                    name="cliente_id"
-                    required
-                >
+                    <label for="ct-cliente">Cliente</label>
 
-                    <option value="">
-                        Selecione...
-                    </option>
+                    <select id="ct-cliente" name="cliente_id" required>
 
-                    {% for cliente in clientes %}
+                        <option value="">Selecione...</option>
 
-                    <option value="{{ cliente.id }}">
-                        {{ cliente.nome }}
-                    </option>
+                        {% for cliente in clientes %}
 
-                    {% endfor %}
+                        <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
 
-                </select>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
 
             </div>
 
@@ -211,26 +178,15 @@ Contas Pendentes
 
                 {% if session.get("perfil") != "funcionario" %}
 
-<a
-    href="/cliente"
-    class="button button-success"
->
+                <a href="/cliente" class="btn btn-cancelar">
+                    <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+                    Cadastrar Novo Cliente
+                </a>
 
-    <i class="fa-solid fa-user-plus"></i>
+                {% endif %}
 
-    Cadastrar Novo Cliente
-
-</a>
-
-{% endif %}
-
-                <button
-                    type="submit"
-                    class="button button-primary"
-                >
-
+                <button type="submit" class="btn btn-salvar">
                     Transferir para Fiado
-
                 </button>
 
             </div>
@@ -245,18 +201,8 @@ Contas Pendentes
 
 {% block scripts %}
 
-<script
-    src="{{ url_for(
-        'static',
-        filename='js/components/search_conta.js'
-    ) }}"
-></script>
+<script src="{{ url_for('static', filename='js/components/search_conta.js') }}"></script>
 
-<script
-    src="{{ url_for(
-        'static',
-        filename='js/pages/conta.js'
-    ) }}"
-></script>
+<script src="{{ url_for('static', filename='js/pages/conta.js') }}"></script>
 
 {% endblock %}

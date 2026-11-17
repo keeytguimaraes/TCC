@@ -4,174 +4,154 @@
 Detalhes da Conta
 {% endblock %}
 
-{% block conteudo %}
 {% block css %}
-
-<link
-    rel="stylesheet"
-    href="{{ url_for(
-        'static',
-        filename='css/pages/detalhes_fiado.css'
-    ) }}"
->
-
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/detalhes_fiado.css') }}">
 {% endblock %}
 
-<div class="page-header">
+{% block conteudo %}
 
-    <h1>
-        Detalhes da Conta
-    </h1>
+<div class="dt">
 
-    <a
-        href="/conta"
-        class="button button-secondary"
-    >
-        <i class="fa-solid fa-arrow-left"></i>
-        Voltar
-    </a>
+    <div class="page-header">
 
-</div>
+        <div>
+            <h1>Detalhes da Conta</h1>
+            <p class="dt-subtitulo">Informações, produtos e recebimentos desta conta.</p>
+        </div>
 
-<div class="detalhes-grid">
-
-    <!-- CLIENTE -->
-
-    <div class="detalhe-card cliente-card">
-
-        <h2>
-            👤 {{ conta.nome_cliente_temporario }}
-        </h2>
-
-        <p>
-            <strong>Status:</strong>
-            {{ conta.status }}
-        </p>
-
-        <p>
-            <strong>Responsável:</strong>
-            {{ conta.usuario or "Não informado" }}
-        </p>
-
-        <p>
-            <strong>Aberta em:</strong>
-
-            {{ conta.data_abertura.strftime('%d/%m/%Y %H:%M') }}
-        </p>
+        <a href="/conta" class="btn btn-cancelar">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Voltar
+        </a>
 
     </div>
 
-    <!-- FINANCEIRO -->
+    <div class="detalhes-grid">
 
-    <div class="detalhe-card financeiro-card">
+        <!-- CLIENTE -->
 
-        <h2>
-            💰 Financeiro
-        </h2>
+        <div class="detalhe-card cliente-card">
 
-        <p>
+            <h2>
+                <span class="dt-icone" aria-hidden="true"><i class="fa-solid fa-user"></i></span>
+                {{ conta.nome_cliente_temporario }}
+            </h2>
 
-            <strong>
-                Total da Conta:
-            </strong>
+            <dl class="dt-info">
 
-            R$ {{ conta.valor_total }}
+                <div class="dt-info-linha">
+                    <dt>Status</dt>
+                    <dd><span class="dt-status dt-status--{{ conta.status|string|lower }}">{{ conta.status }}</span></dd>
+                </div>
 
-        </p>
+                <div class="dt-info-linha">
+                    <dt>Responsável</dt>
+                    <dd>{{ conta.usuario or "Não informado" }}</dd>
+                </div>
 
-        <p>
+                <div class="dt-info-linha">
+                    <dt>Aberta em</dt>
+                    <dd>{{ conta.data_abertura.strftime('%d/%m/%Y %H:%M') }}</dd>
+                </div>
 
-            <strong>
-                Vendas:
-            </strong>
+            </dl>
 
-            {{ conta.vendas|length }}
+        </div>
 
-        </p>
+        <!-- FINANCEIRO -->
+
+        <div class="detalhe-card financeiro-card">
+
+            <h2>
+                <span class="dt-icone" aria-hidden="true"><i class="fa-solid fa-coins"></i></span>
+                Financeiro
+            </h2>
+
+            <div class="dt-total">
+                <span class="dt-rotulo">Total da Conta</span>
+                <strong class="dt-total-valor">R$ {{ conta.valor_total }}</strong>
+            </div>
+
+            <div class="dt-total-extra">
+                <span class="dt-rotulo">Vendas</span>
+                <strong>{{ conta.vendas|length }}</strong>
+            </div>
+
+        </div>
+
+        <!-- PRODUTOS -->
+
+        <div class="detalhe-card produtos-card">
+
+            <h2>
+                <span class="dt-icone" aria-hidden="true"><i class="fa-solid fa-box"></i></span>
+                Produtos
+            </h2>
+
+            <ul class="dt-lista">
+
+                {% for venda in conta.vendas %}
+
+                    {% for produto in venda.produtos %}
+
+                    <li>
+                        <span class="dt-qtd">{{ produto.quantidade }}x</span>
+                        <span class="dt-nome">{{ produto.nome }}</span>
+                        <span class="dt-tipo">({{ produto.tipo_venda }})</span>
+                    </li>
+
+                    {% endfor %}
+
+                    {% for ficha in venda.fichas %}
+
+                    <li>
+                        <span class="dt-qtd">{{ ficha.quantidade_fichas }}x</span>
+                        <span class="dt-nome">Ficha (Sinuca)</span>
+                    </li>
+
+                    {% endfor %}
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- RECEBIMENTOS -->
+
+        <div class="detalhe-card recebimentos-card">
+
+            <h2>
+                <span class="dt-icone" aria-hidden="true"><i class="fa-solid fa-hand-holding-dollar"></i></span>
+                Recebimentos
+            </h2>
+
+            <p class="dt-vazio">Nenhum recebimento registrado.</p>
+
+        </div>
 
     </div>
 
-    <!-- PRODUTOS -->
+    <!-- PAGAMENTO -->
 
-    <div class="detalhe-card produtos-card">
-
-        <h2>
-            📦 Produtos
-        </h2>
-
-        {% for venda in conta.vendas %}
-
-            {% for produto in venda.produtos %}
-
-                <p>
-
-                    {{ produto.quantidade }}x
-
-                    {{ produto.nome }}
-
-                    ({{ produto.tipo_venda }})
-
-                </p>
-
-            {% endfor %}
-
-            {% for ficha in venda.fichas %}
-
-                <p>
-
-                    {{ ficha.quantidade_fichas }}x
-
-                    Ficha (Sinuca)
-
-                </p>
-
-            {% endfor %}
-
-        {% endfor %}
-
-    </div>
-
-    <!-- RECEBIMENTOS -->
-
-    <div class="detalhe-card recebimentos-card">
+    <div class="detalhe-card pagamento-card">
 
         <h2>
-            💵 Recebimentos
+            <span class="dt-icone" aria-hidden="true"><i class="fa-solid fa-money-bill-wave"></i></span>
+            Receber Pagamento
         </h2>
 
-        <p>
-            Nenhum recebimento registrado.
-        </p>
+        <form action="/conta/pagar/{{ conta.id }}" method="POST">
+
+            <button type="submit" class="btn btn-reativar">
+                <i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i>
+                Quitar Conta
+            </button>
+
+        </form>
 
     </div>
-
-</div>
-
-<!-- PAGAMENTO -->
-
-<div class="detalhe-card pagamento-card">
-
-    <h2>
-        💵 Receber Pagamento
-    </h2>
-
-    <form
-        action="/conta/pagar/{{ conta.id }}"
-        method="POST"
-    >
-
-        <button
-            type="submit"
-            class="button button-success"
-        >
-
-            <i class="fa-solid fa-money-bill-wave"></i>
-
-            Quitar Conta
-
-        </button>
-
-    </form>
 
 </div>
 

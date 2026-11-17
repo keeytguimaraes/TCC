@@ -5,155 +5,117 @@ Fiados
 {% endblock %}
 
 {% block css %}
-
-<link
-    rel="stylesheet"
-    href="{{ url_for(
-        'static',
-        filename='css/pages/fiado.css'
-    ) }}"
->
-
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/search.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/fiado.css') }}">
 {% endblock %}
 
 {% block conteudo %}
 
-<div class="page-title">
+<div class="fd">
 
-    <h1>
-        Fiados
-    </h1>
+    <div class="page-title">
 
-</div>
+        <h1>Fiados</h1>
 
-<div class="fiado-pesquisa">
-
-    <div class="search-box">
-
-        <i class="fa-solid fa-magnifying-glass"></i>
-
-        <input
-            type="text"
-            id="search-input"
-            placeholder="Pesquisar cliente..."
-        >
+        <p class="fd-subtitulo">Contas de clientes com saldo devedor.</p>
 
     </div>
 
-    <div class="search-info">
+    <div class="fiado-pesquisa">
 
-        <span id="search-count">
+        <div class="search-box">
 
-            {{ fiados|length }} fiado(s)
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
 
-        </span>
-
-    </div>
-
-</div>
-
-<div
-    class="search-empty search-hidden"
-    id="search-empty"
->
-
-    <h3>
-        Nenhum fiado encontrado
-    </h3>
-
-    <p>
-        Nenhum cliente corresponde à pesquisa.
-    </p>
-
-</div>
-
-{% if fiados %}
-
-<div class="fiado-grid">
-
-    {% for fiado in fiados %}
-
-    <div class="fiado-card search-item">
-
-        <div class="fiado-card-header">
-
-            <h3 class="search-text">
-                {{ fiado.nome }}
-            </h3>
-
-        </div>
-
-        <div class="fiado-card-body">
-
-            <p>
-
-                <strong>
-                    Saldo Devedor:
-                </strong>
-
-                R$ {{ fiado.saldo_devedor }}
-
-            </p>
-
-            <p>
-
-                <strong>
-                    Aberto em:
-                </strong>
-
-                {{ fiado.data_abertura.strftime('%d/%m/%Y') }}
-
-            </p>
-
-        </div>
-
-        <div class="fiado-card-footer">
-
-            <a
-                href="/fiado/detalhes/{{ fiado.id }}"
-                class="button button-secondary"
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Pesquisar cliente..."
+                aria-label="Pesquisar cliente"
             >
 
-                <i class="fa-solid fa-eye"></i>
+        </div>
 
-                Detalhes
+        <div class="search-info">
 
-            </a>
+            <span id="search-count">{{ fiados|length }} fiado(s)</span>
 
         </div>
 
     </div>
 
-    {% endfor %}
+    <div class="search-empty search-hidden" id="search-empty">
+
+        <h3>Nenhum fiado encontrado</h3>
+
+        <p>Nenhum cliente corresponde à pesquisa.</p>
+
+    </div>
+
+    {% if fiados %}
+
+    <div class="fiado-grid">
+
+        {% for fiado in fiados %}
+
+        <div class="fiado-card search-item">
+
+            <div class="fiado-card-header">
+
+                <h3 class="search-text">{{ fiado.nome }}</h3>
+
+            </div>
+
+            <div class="fiado-card-body">
+
+                <div class="fd-saldo">
+                    <span class="fd-rotulo">Saldo Devedor</span>
+                    <strong class="fd-saldo-valor">R$ {{ fiado.saldo_devedor }}</strong>
+                </div>
+
+                <p class="fd-data">
+                    <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                    <span><strong>Aberto em:</strong> {{ fiado.data_abertura.strftime('%d/%m/%Y') }}</span>
+                </p>
+
+            </div>
+
+            <div class="fiado-card-footer">
+
+                <a href="/fiado/detalhes/{{ fiado.id }}" class="btn btn-cancelar">
+                    <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                    Detalhes
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="search-empty">
+
+        <i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i>
+
+        <h3>Nenhum fiado encontrado</h3>
+
+        <p>Não existem contas abertas no momento.</p>
+
+    </div>
+
+    {% endif %}
 
 </div>
-
-{% else %}
-
-<div class="search-empty">
-
-    <i class="fa-solid fa-money-bill-wave"></i>
-
-    <h3>
-        Nenhum fiado encontrado
-    </h3>
-
-    <p>
-        Não existem contas abertas no momento.
-    </p>
-
-</div>
-
-{% endif %}
-{% block scripts %}
-
-<script
-    src="{{ url_for(
-        'static',
-        filename='js/components/search_fiado.js'
-    ) }}"
-></script>
 
 {% endblock %}
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/components/search_fiado.js') }}"></script>
 
 {% endblock %}

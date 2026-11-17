@@ -4,184 +4,171 @@
 Detalhes do Fiado
 {% endblock %}
 
-{% block conteudo %}
 {% block css %}
-
-<link
-    rel="stylesheet"
-    href="{{ url_for(
-        'static',
-        filename='css/pages/detalhes_fiado.css'
-    ) }}"
->
-
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/detalhes_fiado.css') }}">
 {% endblock %}
 
-<div class="page-header">
+{% block conteudo %}
 
-    <h1>
-        Detalhes do Fiado
-    </h1>
+<div class="dt">
 
-    <a
-        href="/fiado"
-        class="button button-secondary"
-    >
-        <i class="fa-solid fa-arrow-left"></i>
-        Voltar
-    </a>
+    <div class="page-header">
 
-</div>
+        <div>
+            <h1>Detalhes do Fiado</h1>
+            <p class="dt-subtitulo">Saldo, produtos e recebimentos deste cliente.</p>
+        </div>
 
-<div class="detalhes-grid">
-
-    <!-- CLIENTE -->
-
-    <div class="detalhe-card cliente-card">
-
-        <h2>
-            👤 {{ fiado.nome }}
-        </h2>
-
-        <p>
-            <strong>Status:</strong>
-            {{ fiado.status_conta }}
-        </p>
-
-        <p>
-            <strong>Aberta em:</strong>
-
-            {{ fiado.data_abertura.strftime('%d/%m/%Y %H:%M') }}
-        </p>
+        <a href="/fiado" class="btn btn-cancelar">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Voltar
+        </a>
 
     </div>
 
-    <!-- FINANCEIRO -->
+    <div class="detalhes-grid">
 
-    <div class="detalhe-card financeiro-card">
+        <!-- CLIENTE -->
 
-        <h2>
-            💰 Financeiro
-        </h2>
+        <div class="detalhe-card cliente-card">
 
-        <p>
-            <strong>
-                Saldo Devedor:
-            </strong>
+            <h2>
+                <span class="dt-icone" aria-hidden="true"><i class="fa-solid fa-user"></i></span>
+                {{ fiado.nome }}
+            </h2>
 
-            R$ {{ fiado.saldo_devedor }}
-        </p>
+            <dl class="dt-info">
 
-    </div>
+                <div class="dt-info-linha">
+                    <dt>Status</dt>
+                    <dd><span class="dt-status dt-status--{{ fiado.status_conta|string|lower }}">{{ fiado.status_conta }}</span></dd>
+                </div>
 
-    <!-- PRODUTOS -->
+                <div class="dt-info-linha">
+                    <dt>Aberta em</dt>
+                    <dd>{{ fiado.data_abertura.strftime('%d/%m/%Y %H:%M') }}</dd>
+                </div>
 
-    <div class="detalhe-card produtos-card">
-
-        <h2>
-            📦 Produtos
-        </h2>
-    
-        {% if fiado.produtos %}
-    
-            {% for produto in fiado.produtos %}
-    
-                <p>
-    
-                    {{ produto.quantidade }}x
-    
-                    {{ produto.nome }}
-    
-                    ({{ produto.tipo_venda }})
-    
-                </p>
-    
-            {% endfor %}
-    
-        {% else %}
-    
-            <p>
-                Nenhum produto encontrado.
-            </p>
-    
-        {% endif %}
-    
-    </div>
-
-    <!-- RECEBIMENTOS -->
-
-    <div class="detalhe-card recebimentos-card">
-
-        <h2>
-            💵 Recebimentos
-        </h2>
-
-        {% if fiado.recebimentos %}
-
-            {% for recebimento in fiado.recebimentos %}
-
-                <p>
-
-                    R$
-                    {{ recebimento.valor_recebido }}
-
-                    -
-
-                    {{ recebimento.data_recebimento.strftime('%d/%m/%Y %H:%M') }}
-
-                </p>
-
-            {% endfor %}
-
-        {% else %}
-
-            <p>
-                Nenhum recebimento registrado.
-            </p>
-
-        {% endif %}
-
-    </div>
-
-</div>
-
-<!-- RECEBER PAGAMENTO -->
-
-<div class="detalhe-card pagamento-card">
-
-    <h2>
-        💵 Receber Pagamento
-    </h2>
-
-    <form
-        action="/fiado/receber/{{ fiado.id }}"
-        method="POST"
-    >
-
-        <div class="pagamento-form">
-
-            <input
-                type="number"
-                step="0.01"
-                name="valor_recebido"
-                placeholder="Valor recebido"
-                required
-            >
-
-            <button
-                type="submit"
-                class="button button-success"
-            >
-
-                <i class="fa-solid fa-money-bill-wave"></i>
-
-                Receber Parcial
-
-            </button>
+            </dl>
 
         </div>
 
-    </form>
+        <!-- FINANCEIRO -->
+
+        <div class="detalhe-card financeiro-card">
+
+            <h2>
+                <span class="dt-icone" aria-hidden="true"><i class="fa-solid fa-coins"></i></span>
+                Financeiro
+            </h2>
+
+            <div class="dt-total">
+                <span class="dt-rotulo">Saldo Devedor</span>
+                <strong class="dt-total-valor">R$ {{ fiado.saldo_devedor }}</strong>
+            </div>
+
+        </div>
+
+        <!-- PRODUTOS -->
+
+        <div class="detalhe-card produtos-card">
+
+            <h2>
+                <span class="dt-icone" aria-hidden="true"><i class="fa-solid fa-box"></i></span>
+                Produtos
+            </h2>
+
+            {% if fiado.produtos %}
+
+            <ul class="dt-lista">
+
+                {% for produto in fiado.produtos %}
+
+                <li>
+                    <span class="dt-qtd">{{ produto.quantidade }}x</span>
+                    <span class="dt-nome">{{ produto.nome }}</span>
+                    <span class="dt-tipo">({{ produto.tipo_venda }})</span>
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+
+            <p class="dt-vazio">Nenhum produto encontrado.</p>
+
+            {% endif %}
+
+        </div>
+
+        <!-- RECEBIMENTOS -->
+
+        <div class="detalhe-card recebimentos-card">
+
+            <h2>
+                <span class="dt-icone" aria-hidden="true"><i class="fa-solid fa-hand-holding-dollar"></i></span>
+                Recebimentos
+            </h2>
+
+            {% if fiado.recebimentos %}
+
+            <ul class="dt-lista">
+
+                {% for recebimento in fiado.recebimentos %}
+
+                <li>
+                    <span class="dt-valor">R$ {{ recebimento.valor_recebido }}</span>
+                    <span class="dt-data">{{ recebimento.data_recebimento.strftime('%d/%m/%Y %H:%M') }}</span>
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+
+            <p class="dt-vazio">Nenhum recebimento registrado.</p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- RECEBER PAGAMENTO -->
+
+    <div class="detalhe-card pagamento-card">
+
+        <h2>
+            <span class="dt-icone" aria-hidden="true"><i class="fa-solid fa-money-bill-wave"></i></span>
+            Receber Pagamento
+        </h2>
+
+        <form action="/fiado/receber/{{ fiado.id }}" method="POST">
+
+            <div class="pagamento-form">
+
+                <input
+                    type="number"
+                    step="0.01"
+                    name="valor_recebido"
+                    placeholder="Valor recebido"
+                    aria-label="Valor recebido"
+                    required
+                >
+
+                <button type="submit" class="btn btn-reativar">
+                    <i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i>
+                    Receber Parcial
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 
