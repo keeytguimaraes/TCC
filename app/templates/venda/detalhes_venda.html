@@ -4,88 +4,91 @@
 Detalhes da Venda
 {% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/detalhes_venda.css') }}">
+{% endblock %}
+
 {% block conteudo %}
 
-<link
-    rel="stylesheet"
-    href="{{ url_for(
-        'static',
-        filename='css/pages/detalhes_venda.css'
-    ) }}"
->
+{# Valor monetário só para exibição: 1234.5 -> R$ 1.234,50 #}
+{% macro moeda(valor) -%}
+{%- if valor is none or (valor|string|trim) == '' -%}
+<span class="vd-nulo">—</span><span class="sr-only">Não informado</span>
+{%- else -%}
+R$ {{ '{:,.2f}'.format(valor|float).replace(',', '#').replace('.', ',').replace('#', '.') }}
+{%- endif -%}
+{%- endmacro %}
 
-<div class="detalhes-container">
+<div class="detalhes-container vd">
 
-    <a
-        href="/venda/historico"
-        class="button button-secondary"
-    >
-        ← Voltar
-    </a>
+    <header class="vd-topo detalhes-topo">
+        <div>
+            <h1 class="detalhes-titulo vd-titulo">Detalhes da Venda</h1>
+            <p class="vd-subtitulo">Produtos incluídos nesta venda.</p>
+        </div>
 
-    <h2 class="detalhes-titulo">
-        Detalhes da Venda
-    </h2>
+        <a href="/venda/historico" class="btn btn-cancelar">← Voltar</a>
+    </header>
 
-    {% if produtos %}
-    
-        <table class="tabela-produtos">
+    <section class="vd-painel">
 
-            <thead>
+        <div class="vd-painel-topo">
+            <h2 class="vd-painel-titulo">Produtos</h2>
+            {% if produtos %}
+            <span class="vd-contagem">{{ produtos|length }} {{ 'item' if produtos|length == 1 else 'itens' }}</span>
+            {% endif %}
+        </div>
 
-                <tr>
+        {% if produtos %}
 
-                    <th>Produto</th>
+        <div class="card-detalhes">
 
-                    <th>Quantidade</th>
+            <table class="tabela-produtos">
 
-                    <th>Tipo</th>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th class="vd-num">Quantidade</th>
+                        <th>Tipo</th>
+                        <th class="vd-num">Preço Unitário</th>
+                        <th class="vd-num">Subtotal</th>
+                    </tr>
+                </thead>
 
-                    <th>Preço Unitário</th>
+                <tbody>
 
-                    <th>Subtotal</th>
+                    {% for produto in produtos %}
 
-                </tr>
+                    <tr>
+                        <td data-label="Produto" class="vd-produto">{{ produto.nome }}</td>
 
-            </thead>
+                        <td data-label="Quantidade" class="vd-num">{{ produto.quantidade }}</td>
 
-            <tbody>
+                        <td data-label="Tipo">
+                            <span class="vd-tipo">{{ produto.tipo_venda }}</span>
+                        </td>
 
-                {% for produto in produtos %}
+                        <td data-label="Preço Unitário" class="vd-num">{{ moeda(produto.preco_unitario) }}</td>
 
-                <tr>
+                        <td data-label="Subtotal" class="vd-num vd-subtotal">{{ moeda(produto.subtotal) }}</td>
+                    </tr>
 
-                    <td>
-                        {{ produto.nome }}
-                    </td>
+                    {% endfor %}
 
-                    <td>
-                        {{ produto.quantidade }}
-                    </td>
+                </tbody>
 
-                    <td>
-                        {{ produto.tipo_venda }}
-                    </td>
+            </table>
 
-                    <td>
-                        R$ {{ produto.preco_unitario }}
-                    </td>
+        </div>
 
-                    <td>
-                        R$ {{ produto.subtotal }}
-                    </td>
+        {% else %}
 
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
+        <p class="vd-vazio">Nenhum produto registrado para esta venda.</p>
 
         {% endif %}
-        
-    </div>
+
+    </section>
 
 </div>
 
