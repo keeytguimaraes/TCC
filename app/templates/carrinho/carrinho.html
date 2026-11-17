@@ -544,13 +544,24 @@ Carrinho
 
 <div class="carrinho-vazio">
 
-    <i class="fa-solid fa-cart-shopping"></i>
+    <span class="carrinho-vazio-icone" aria-hidden="true">
+        <i class="fa-solid fa-cart-shopping"></i>
+    </span>
 
-    <h2>Carrinho vazio</h2>
+    <h2>Seu carrinho está vazio</h2>
 
     <p>
-        Nenhum produto foi adicionado à venda.
+        Ainda não há produtos adicionados à venda.
+        Escolha os itens na tela de vendas para começar.
     </p>
+
+    <a
+        href="/venda"
+        class="button button-primary"
+    >
+        <i class="fa-solid fa-plus"></i>
+        Adicionar produtos
+    </a>
 
 </div>
 
@@ -609,8 +620,6 @@ id="modal-limpar-carrinho"
         </form>
 
     </div>
-
-</div>
 
 </div>
 

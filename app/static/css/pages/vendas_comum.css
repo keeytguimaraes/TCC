@@ -10,6 +10,8 @@
    .vendas-pagina {
     --v-azul: #1A5FC0;
     --v-amarelo-texto: #7A5B00;
+    --btn-altura: 44px;
+    --btn-altura-grande: 48px;
     width: 100%;
     min-width: 0;
     font-family: var(--font-primary);
@@ -192,6 +194,130 @@
 .vendas-pagina :is(a, button):focus-visible {
     outline: none;
     box-shadow: var(--shadow-focus);
+}
+
+/* ============================================================
+   BOTÕES DO MÓDULO DE VENDAS (padrão visual)
+   Escopado em .vendas-pagina: não altera o button.css global.
+   Mesmas classes de antes (.button, .button-primary ...); só muda
+   a aparência. Tamanhos: padrão 44px | grande 48px (confirmações)
+   | compacto 36px (linhas de tabela, definido no histórico).
+
+   Hierarquia
+     primary    vermelho da marca      ação principal
+     success    verde                  confirmar / adicionar
+     secondary  branco com borda       voltar, cancelar, apoio
+     danger     vermelho suave         excluir/limpar (confirmação
+                                       dentro do modal: sólido)
+   ============================================================ */
+
+.vendas-pagina .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: var(--btn-altura);
+    padding: 0 var(--space-4);
+    font-family: inherit;
+    font-size: .9375rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    white-space: normal;
+    color: var(--btn-texto, #fff);
+    background: var(--btn-fundo, var(--black));
+    border: 1px solid var(--btn-borda, var(--btn-fundo, var(--black)));
+    border-radius: var(--input-radius);
+    box-shadow: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color .15s ease, border-color .15s ease,
+                color .15s ease, filter .15s ease, transform .1s ease,
+                box-shadow .15s ease;
+}
+
+.vendas-pagina .button i {
+    font-size: .9em;
+}
+
+/* ---- variações ---- */
+
+.vendas-pagina .button-primary {
+    --btn-fundo: var(--primary);
+}
+
+.vendas-pagina .button-success {
+    --btn-fundo: var(--success);
+}
+
+.vendas-pagina .button-secondary {
+    --btn-fundo: var(--card);
+    --btn-texto: var(--text);
+    --btn-borda: #CFCBC3;
+}
+
+.vendas-pagina .button-danger {
+    --btn-fundo: var(--danger-bg);
+    --btn-texto: var(--danger-text);
+    --btn-borda: var(--danger-border);
+}
+
+/* confirmação destrutiva dentro do modal: vermelho sólido */
+.vendas-pagina .modal .button-danger {
+    --btn-fundo: var(--danger);
+    --btn-texto: #fff;
+    --btn-borda: var(--danger);
+}
+
+/* ---- estados ---- */
+
+.vendas-pagina .button:hover {
+    filter: brightness(.92);
+}
+
+.vendas-pagina .button-secondary:hover {
+    --btn-fundo: var(--bg);
+    --btn-borda: var(--black);
+    filter: none;
+}
+
+.vendas-pagina .button-danger:hover {
+    --btn-fundo: var(--danger);
+    --btn-texto: #fff;
+    --btn-borda: var(--danger);
+    filter: none;
+}
+
+.vendas-pagina .modal .button-danger:hover {
+    filter: brightness(.92);
+}
+
+.vendas-pagina .button:active {
+    transform: translateY(1px);
+    filter: brightness(.86);
+}
+
+.vendas-pagina .button:focus-visible {
+    outline: 2px solid var(--black);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px rgba(244, 180, 0, .6);
+}
+
+.vendas-pagina .button:disabled,
+.vendas-pagina .button[disabled],
+.vendas-pagina .button[aria-disabled="true"] {
+    opacity: .5;
+    cursor: not-allowed;
+    filter: none;
+    transform: none;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vendas-pagina .button {
+        transition: none;
+    }
 }
 
 @media (max-width: 600px) {

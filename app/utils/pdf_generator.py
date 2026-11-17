@@ -87,6 +87,13 @@ COLUNAS_VENDAS = [
     ("STATUS",  84,   "esq"),
 ]
 
+COLUNAS_DESEMPENHO = [
+    ("FUNCIONÁRIO",   None, "esq"),
+    ("VENDAS",        70,   "dir"),
+    ("TOTAL VENDIDO", 110,  "dir"),
+    ("TICKET MÉDIO",  100,  "dir"),
+]
+
 COLUNAS_FECHAMENTO = [
     ("HORA",     40,   "esq"),
     ("CLIENTE",  None, "esq"),
@@ -650,14 +657,24 @@ def _desenhar_cabecalho_tabela(pdf, y, colunas=None):
 
 
 def _linhas_cliente(pdf, venda, colunas):
-    """Linhas (apos quebra automatica) do nome do cliente."""
+    """
+    Linhas (apos quebra automatica) do texto da coluna que quebra
+    linha: "CLIENTE" (venda["cliente"]) nos relatorios de vendas e
+    "FUNCIONÁRIO" (venda["funcionario"]) no desempenho de funcionarios.
+    """
 
     posicoes = _posicoes_colunas(colunas)
-    indice = [c[0] for c in colunas].index("CLIENTE")
+    titulos = [c[0] for c in colunas]
+
+    if "CLIENTE" in titulos:
+        indice, campo = titulos.index("CLIENTE"), "cliente"
+    else:
+        indice, campo = titulos.index("FUNCIONÁRIO"), "funcionario"
+
     largura = posicoes[indice][1] - 2 * PADDING_CELULA
 
     return _quebrar_texto(
-        pdf, venda["cliente"], "Helvetica", TAM_FONTE_CELULA, largura
+        pdf, venda[campo], "Helvetica", TAM_FONTE_CELULA, largura
     )
 
 
@@ -995,5 +1012,123 @@ def gerar_fechamento_diario_pdf(
     _montar_fechamento_diario(
         pdf, total_paginas, data_geracao, data_formatada, resumo, vendas
     )
+
+    pdf.save()
+
+
+# ============================================================
+# DESEMPENHO DE FUNCIONARIOS
+# ============================================================
+# Mesmo padrao dos outros relatorios: cabecalho, metadados,
+# grade de indicadores, tabela com quebra de pagina e rodape.
+# Os dados chegam prontos (resumo e funcionarios); aqui so ha
+# apresentacao.
+
+def _montar_indicadores_desempenho(resumo):
+
+    return [
+        ("FUNCIONÁRIOS", str(resumo["funcionarios"]), "neutro"),
+        ("QUANTIDADE DE VENDAS", str(resumo["total_vendas"]), "neutro"),
+        ("TOTAL VENDIDO", moeda(resumo["total_vendido"]), "neutro"),
+        ("TICKET MÉDIO", moeda(resumo["ticket_medio"]), "neutro"),
+    ]
+
+
+def _desenhar_cabecalho_tabela_desempenho(pdf, y):
+
+    return _desenhar_cabecalho_tabela(pdf, y, COLUNAS_DESEMPENHO)
+
+
+def _celulas_desempenho(funcionario):
+
+    return [
+        ("cliente", None, None),
+        ("numero", str(funcionario["quantidade_vendas"]), COR_TEXTO),
+        ("numero", moeda(funcionario["total_vendido"]), COR_TEXTO),
+        ("numero", moeda(funcionario["ticket_medio"]), COR_TEXTO),
+    ]
+
+
+def _montar_desempenho_funcionarios(
+    pdf, total_paginas, data_geracao,
+    data_inicial_formatada, data_final_formatada, resumo, funcionarios
+):
+    """Desenha o documento inteiro e devolve o numero de paginas usadas."""
+
+    pagina_atual = 1
+
+    y = _desenhar_cabecalho(pdf, "Desempenho de Funcionários")
+    y = _desenhar_metadados(
+        pdf,
+        y,
+        [("PERÍODO", f"{data_inicial_formatada} até {data_final_formatada}")]
+    )
+
+    y = _desenhar_titulo_secao(pdf, y, "Resumo")
+    y = _desenhar_grade_indicadores(
+        pdf, y, _montar_indicadores_desempenho(resumo)
+    )
+
+    y = _desenhar_titulo_secao(pdf, y, "Detalhamento por Funcionário")
+    y = _desenhar_cabecalho_tabela_desempenho(pdf, y)
+
+    if not funcionarios:
+
+        _desenhar_estado_vazio(
+            pdf,
+            y - 6,
+            "Nenhuma venda registrada",
+            "no período selecionado"
+        )
+
+    else:
+
+        pagina_atual = _desenhar_tabela(
+            pdf, y, funcionarios, COLUNAS_DESEMPENHO, _celulas_desempenho,
+            "Desempenho de Funcionários", pagina_atual, total_paginas,
+            data_geracao, _desenhar_cabecalho_tabela_desempenho
+        )
+
+    _desenhar_rodape(pdf, pagina_atual, total_paginas, data_geracao)
+
+    return pagina_atual
+
+
+def gerar_desempenho_funcionarios_pdf(
+    caminho_pdf,
+    data_inicial,
+    data_final,
+    resumo,
+    funcionarios
+):
+
+    data_inicial_formatada = datetime.strptime(
+        data_inicial, "%Y-%m-%d"
+    ).strftime("%d/%m/%Y")
+
+    data_final_formatada = datetime.strptime(
+        data_final, "%Y-%m-%d"
+    ).strftime("%d/%m/%Y")
+
+    data_geracao = datetime.now()
+
+    argumentos = (
+        data_geracao,
+        data_inicial_formatada,
+        data_final_formatada,
+        resumo,
+        funcionarios,
+    )
+
+    # Passada de medicao (em memoria) para o total real de paginas.
+    medicao = canvas.Canvas(io.BytesIO(), pagesize=A4)
+    total_paginas = _montar_desempenho_funcionarios(
+        medicao, 0, *argumentos
+    )
+
+    pdf = canvas.Canvas(caminho_pdf, pagesize=A4)
+    pdf.setTitle("Desempenho de Funcionários")
+
+    _montar_desempenho_funcionarios(pdf, total_paginas, *argumentos)
 
     pdf.save()

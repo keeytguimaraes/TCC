@@ -229,42 +229,26 @@
     text-align:center;
 }
 
-/* estado: em breve */
-.rl-rel--breve{
-    background:var(--rl-fundo-suave);
-    box-shadow:none;
-    border-style:dashed;
-    border-color:var(--rl-borda-campo);
-}
-
-.rl-rel--breve:hover{
-    border-color:var(--rl-borda-campo);
-    box-shadow:none;
-    transform:none;
-}
-
-.rl-rel--breve .rl-rel-icone{
-    color:var(--rl-suave);
-    background:#e7e5e0;
-}
-
-.rl-rel--breve:hover .rl-rel-icone{
-    color:var(--rl-suave);
-}
-
 /* ---------- formulários ---------- */
 
-.rl-form-card{
+/* Páginas de formulário: o contêiner .rl (título + card) passa a ter a
+   largura do card e fica centralizado na área de conteúdo; assim o
+   título e o subtítulo começam exatamente na borda esquerda do card. */
+.rl--form{
     max-width:640px;
+}
+
+.rl--form-estreito{
+    max-width:480px;
+}
+
+.rl-form-card{
+    width:100%;
     padding:24px;
     background:var(--rl-card);
     border:1px solid var(--rl-borda);
     border-radius:14px;
     box-shadow:var(--rl-sombra);
-}
-
-.rl-form-card--estreito{
-    max-width:480px;
 }
 
 .rl-campos{

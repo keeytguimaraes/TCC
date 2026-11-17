@@ -1,0 +1,54 @@
+{% extends "base/base.html" %}
+
+{% block titulo %}
+Desempenho de Funcionários
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/relatorio.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="rl rl--form">
+
+    <header class="rl-topo">
+        <div>
+            <h1 class="rl-titulo">Desempenho de Funcionários</h1>
+            <p class="rl-subtitulo">Escolha o período para gerar o PDF com as vendas de cada funcionário.</p>
+        </div>
+
+        <a href="/relatorio" class="btn btn-cancelar">← Voltar</a>
+    </header>
+
+    <form
+        class="rl-form-card"
+        method="POST"
+        action="/relatorio/desempenho/pdf"
+        target="_blank"
+    >
+
+        <div class="rl-campos">
+
+            <div class="rl-campo">
+                <label for="rl-data-inicial">Data Inicial</label>
+                <input type="date" id="rl-data-inicial" name="data_inicial" required>
+            </div>
+
+            <div class="rl-campo">
+                <label for="rl-data-final">Data Final</label>
+                <input type="date" id="rl-data-final" name="data_final" required>
+            </div>
+
+        </div>
+
+        <div class="rl-acoes">
+            <button type="submit" class="btn btn-salvar">Gerar PDF</button>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
