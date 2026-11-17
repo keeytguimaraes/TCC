@@ -4,182 +4,112 @@
 Sinuca
 {% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/sinuca.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/modal.css') }}">
+{% endblock %}
+
 {% block conteudo %}
 
-<link
-    rel="stylesheet"
-    href="{{ url_for(
-        'static',
-        filename='css/pages/sinuca.css'
-    ) }}"
->
+<div class="sinuca-container sn">
 
-<link
-    rel="stylesheet"
-    href="{{ url_for(
-        'static',
-        filename='css/components/modal.css'
-    ) }}"
->
-
-<div class="sinuca-container">
-
-    <h1 class="page-title">
-         Sinuca
-    </h1>
+    <header class="sn-topo">
+        <h1 class="page-title">Sinuca</h1>
+        <p class="sn-subtitulo">Configuração da ficha e resultado da mesa.</p>
+    </header>
 
     <!-- CONFIGURAÇÃO -->
 
-    {% if config %}
+    <section class="sinuca-card">
 
-    <div class="sinuca-card">
+        <div class="sn-secao-topo">
+            <span class="sn-icone" aria-hidden="true"><i class="fa-solid fa-gear"></i></span>
+            <h2>Configuração Atual</h2>
+        </div>
 
-        <h2>
-            ⚙️ Configuração Atual
-        </h2>
+        {% if config %}
 
         <div class="config-info">
 
             <div class="config-item">
-
-                <span class="config-label">
-                    Nome
-                </span>
-
-                <span class="config-value">
-                    {{ config.nome }}
-                </span>
-
+                <span class="config-label">Nome</span>
+                <span class="config-value">{{ config.nome }}</span>
             </div>
 
             <div class="config-item">
-
-                <span class="config-label">
-                    Valor da Ficha
-                </span>
-
-                <span class="config-value">
-                    R$ {{ "%.2f"|format(config.valor_ficha) }}
-                </span>
-
+                <span class="config-label">Valor da Ficha</span>
+                <span class="config-value">R$ {{ "%.2f"|format(config.valor_ficha) }}</span>
             </div>
 
             <div class="config-item">
-
-                <span class="config-label">
-                    Percentual Comércio
-                </span>
-
-                <span class="config-value">
-                    {{ config.percentual_comercio|int }}%
-                </span>
-
+                <span class="config-label">Percentual Comércio</span>
+                <span class="config-value">{{ config.percentual_comercio|int }}%</span>
             </div>
 
         </div>
 
-    </div>
+        {% else %}
 
-    {% else %}
+        <p class="sn-vazio">Nenhuma configuração cadastrada.</p>
 
-    <div class="sinuca-card">
+        {% endif %}
 
-        <h2>
-            ⚙️ Configuração Atual
-        </h2>
-
-        <p>
-            Nenhuma configuração cadastrada.
-        </p>
-
-    </div>
-
-    {% endif %}
+    </section>
 
     <!-- RELATÓRIO -->
 
-    <div class="sinuca-card">
+    <section class="sinuca-card">
 
-        <h2>
-            📊 Relatório
-        </h2>
+        <div class="sn-secao-topo">
+            <span class="sn-icone" aria-hidden="true"><i class="fa-solid fa-chart-column"></i></span>
+            <h2>Relatório</h2>
+        </div>
 
         <div class="cards-relatorio">
 
             <div class="relatorio-card">
-
-                <span>
-                    Total de Fichas Vendidas
-                </span>
-
-                <strong>
-                    {{ dados.total_fichas if dados else 0 }}
-                </strong>
-
+                <span>Total de Fichas Vendidas</span>
+                <strong>{{ dados.total_fichas if dados else 0 }}</strong>
             </div>
 
             <div class="relatorio-card">
-
-                <span>
-                    Valor Arrecadado
-                </span>
-
-                <strong>
-                    R$ {{ "%.2f"|format(dados.valor_arrecadado if dados else 0) }}
-                </strong>
-
+                <span>Valor Arrecadado</span>
+                <strong>R$ {{ "%.2f"|format(dados.valor_arrecadado if dados else 0) }}</strong>
             </div>
 
             <div class="relatorio-card">
-
-                <span>
-                    Parte Comércio
-                </span>
-
-                <strong>
-                    R$ {{ "%.2f"|format(dados.valor_comercio if dados else 0) }}
-                </strong>
-
+                <span>Parte Comércio</span>
+                <strong>R$ {{ "%.2f"|format(dados.valor_comercio if dados else 0) }}</strong>
             </div>
 
             <div class="relatorio-card">
-
-                <span>
-                    Dono da Mesa
-                </span>
-
-                <strong>
-                    R$ {{ "%.2f"|format(dados.valor_dono if dados else 0) }}
-                </strong>
-
+                <span>Dono da Mesa</span>
+                <strong>R$ {{ "%.2f"|format(dados.valor_dono if dados else 0) }}</strong>
             </div>
 
         </div>
 
-    </div>
+    </section>
 
     <!-- AÇÕES -->
 
     <div class="acoes-grid">
 
-        <div
-            class="acao-card"
-            data-modal="modal-configuracao"
-        >
+        <button type="button" class="acao-card" data-modal="modal-configuracao">
 
-            <div class="acao-icon">
+            <span class="acao-icon" aria-hidden="true">
                 <i class="fa-solid fa-gear"></i>
-            </div>
+            </span>
 
-            <h3>
-                Alterar Configuração
-            </h3>
+            <span class="acao-texto">
+                <span class="acao-titulo">Alterar Configuração</span>
+                <span class="acao-desc">Alterar valor da ficha e percentual</span>
+            </span>
 
-            <p>
-                Alterar valor da ficha e percentual
-            </p>
+            <i class="fa-solid fa-chevron-right acao-seta" aria-hidden="true"></i>
 
-        </div>
+        </button>
 
     </div>
 
@@ -187,76 +117,54 @@ Sinuca
 
 <!-- MODAL CONFIGURAÇÃO -->
 
-<div
-    class="modal"
-    id="modal-configuracao"
->
+<div class="modal sn-modal" id="modal-configuracao">
 
-    <div class="modal-content">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="sn-modal-titulo">
 
         <div class="modal-header">
 
-            <h2 class="modal-title">
-                Alterar Configuração
-            </h2>
+            <div class="sn-modal-titulo">
+                <h2 class="modal-title" id="sn-modal-titulo">Alterar Configuração</h2>
+                <p>Valor da ficha e divisão com o comércio.</p>
+            </div>
 
-            <button
-                type="button"
-                class="modal-close"
-                data-close-modal
-            >
-                ✕
-            </button>
+            <button type="button" class="modal-close" data-close-modal aria-label="Fechar">✕</button>
 
         </div>
 
-        <form
-            action="/sinuca/salvar"
-            method="POST"
-        >
+        <form action="/sinuca/salvar" method="POST">
 
             <div class="modal-body">
 
                 <div class="form-group">
-
-                    <label>
-                        Nome
-                    </label>
-
+                    <label for="sn-nome">Nome</label>
                     <input
                         type="text"
+                        id="sn-nome"
                         name="nome"
                         value="{{ config.nome if config else '' }}"
                         required
                     >
-
                 </div>
 
                 <div class="form-group">
-
-                    <label>
-                        Valor da Ficha
-                    </label>
-
+                    <label for="sn-valor-ficha">Valor da Ficha</label>
                     <input
                         type="number"
+                        id="sn-valor-ficha"
                         step="0.01"
                         min="0"
                         name="valor_ficha"
                         value="{{ config.valor_ficha if config else '' }}"
                         required
                     >
-
                 </div>
 
                 <div class="form-group">
-
-                    <label>
-                        Percentual Comércio (%)
-                    </label>
-
+                    <label for="sn-percentual">Percentual Comércio (%)</label>
                     <input
                         type="number"
+                        id="sn-percentual"
                         min="0"
                         max="100"
                         step="1"
@@ -264,27 +172,15 @@ Sinuca
                         value="{{ config.percentual_comercio|int if config else '' }}"
                         required
                     >
-
                 </div>
 
             </div>
 
             <div class="modal-footer">
 
-                <button
-                    type="button"
-                    class="button button-secondary"
-                    data-close-modal
-                >
-                    Cancelar
-                </button>
+                <button type="button" class="btn btn-cancelar" data-close-modal>Cancelar</button>
 
-                <button
-                    type="submit"
-                    class="button button-success"
-                >
-                    Salvar
-                </button>
+                <button type="submit" class="btn btn-salvar">Salvar</button>
 
             </div>
 
@@ -294,11 +190,10 @@ Sinuca
 
 </div>
 
-<script
-    src="{{ url_for(
-        'static',
-        filename='js/components/modal.js'
-    ) }}"
-></script>
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/components/modal.js') }}"></script>
 
 {% endblock %}

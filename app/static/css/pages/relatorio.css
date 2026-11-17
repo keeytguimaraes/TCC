@@ -1,0 +1,433 @@
+/* ==========================================================
+   RELATÓRIOS — SIGC
+   Páginas: relatorio.html (principal), vendas.html (Relatório de
+   Vendas) e fechamento_diario.html (Fechamento Diário).
+
+   - Tudo escopado em .rl.
+   - Tokens locais --rl-* com as cores globais do base.css
+     (--cor-vermelha, --cor-preta, --cor-amarela) e valor de reserva.
+   - Cores semânticas iguais às do histórico de Vendas:
+     Fiado = azul, Pendente = âmbar.
+   ========================================================== */
+
+   .rl{
+    --rl-vermelho:var(--cor-vermelha, #c62828);
+    --rl-preto:var(--cor-preta, #1f1f1f);
+    --rl-amarelo:var(--cor-amarela, #fbc02d);
+
+    --rl-texto:#1f1f1f;
+    --rl-suave:#6b6b6b;
+    --rl-borda:#e3e0da;
+    --rl-borda-campo:#cfcbc3;
+    --rl-fundo-suave:#f7f6f4;
+    --rl-card:#fff;
+    --rl-sombra:0 1px 3px rgba(0, 0, 0, .06), 0 2px 8px rgba(0, 0, 0, .04);
+    --rl-anel:0 0 0 3px rgba(251, 192, 45, .55);
+
+    max-width:1100px;
+    margin:0 auto;
+    color:var(--rl-texto);
+}
+
+.rl *,
+.rl *::before,
+.rl *::after{
+    box-sizing:border-box;
+}
+
+.rl .sr-only{
+    position:absolute;
+    width:1px;
+    height:1px;
+    margin:-1px;
+    padding:0;
+    overflow:hidden;
+    clip:rect(0, 0, 0, 0);
+    white-space:nowrap;
+    border:0;
+}
+
+/* ---------- cabeçalho ---------- */
+
+.rl-topo{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:24px;
+}
+
+.rl-titulo{
+    margin:0;
+    font-size:1.75rem;
+    font-weight:700;
+    letter-spacing:-.02em;
+    line-height:1.2;
+    color:var(--rl-texto);
+}
+
+.rl-subtitulo{
+    margin:6px 0 0;
+    font-size:.9375rem;
+    color:var(--rl-suave);
+}
+
+.rl-topo .btn{
+    flex-shrink:0;
+}
+
+/* ---------- seções ---------- */
+
+.rl-secao + .rl-secao{
+    margin-top:32px;
+}
+
+.rl-secao-titulo{
+    margin:0 0 14px;
+    font-size:1.0625rem;
+    font-weight:700;
+    letter-spacing:-.01em;
+    color:var(--rl-texto);
+}
+
+/* ---------- indicadores ---------- */
+
+.rl-indicadores{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:12px;
+}
+
+.rl-ind{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    min-width:0;
+    padding:16px 18px 18px;
+    background:var(--rl-card);
+    border:1px solid var(--rl-borda);
+    border-radius:14px;
+    box-shadow:var(--rl-sombra);
+}
+
+.rl-ind-topo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.rl-ind-icone{
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    font-size:.95rem;
+    color:var(--rl-preto);
+    background:var(--rl-fundo-suave);
+    border-radius:10px;
+}
+
+.rl-ind-nome{
+    margin:0;
+    font-size:.6875rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    line-height:1.35;
+    text-transform:uppercase;
+    color:var(--rl-suave);
+}
+
+.rl-ind-valor{
+    margin:0;
+    font-size:1.625rem;
+    font-weight:700;
+    line-height:1.15;
+    letter-spacing:-.01em;
+    font-variant-numeric:tabular-nums;
+    overflow-wrap:anywhere;
+    color:var(--rl-texto);
+}
+
+.rl-ind--fiado .rl-ind-icone{
+    color:#1e4fa3;
+    background:#e3edfb;
+}
+
+.rl-ind--pendente .rl-ind-icone{
+    color:#7a5600;
+    background:#fff3cd;
+}
+
+/* ---------- relatórios disponíveis ---------- */
+
+.rl-relatorios{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:16px;
+}
+
+.rl-rel{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    min-width:0;
+    padding:22px;
+    background:var(--rl-card);
+    border:1px solid var(--rl-borda);
+    border-radius:14px;
+    box-shadow:var(--rl-sombra);
+    transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+
+.rl-rel:hover{
+    border-color:var(--rl-preto);
+    box-shadow:0 6px 18px rgba(0, 0, 0, .1);
+    transform:translateY(-2px);
+}
+
+.rl-rel-icone{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:48px;
+    height:48px;
+    font-size:1.2rem;
+    color:#fff;
+    background:var(--rl-preto);
+    border-radius:14px;
+    transition:color .15s ease;
+}
+
+.rl-rel:hover .rl-rel-icone{
+    color:var(--rl-amarelo);
+}
+
+.rl-rel-corpo{
+    flex:1;
+}
+
+.rl-rel-nome{
+    margin:0 0 6px;
+    font-size:1.0625rem;
+    font-weight:700;
+    color:var(--rl-texto);
+}
+
+.rl-rel-desc{
+    margin:0;
+    font-size:.9rem;
+    line-height:1.45;
+    color:var(--rl-suave);
+}
+
+.rl-rel .btn{
+    align-self:flex-start;
+    min-height:44px;
+    white-space:normal;
+    text-align:center;
+}
+
+/* estado: em breve */
+.rl-rel--breve{
+    background:var(--rl-fundo-suave);
+    box-shadow:none;
+    border-style:dashed;
+    border-color:var(--rl-borda-campo);
+}
+
+.rl-rel--breve:hover{
+    border-color:var(--rl-borda-campo);
+    box-shadow:none;
+    transform:none;
+}
+
+.rl-rel--breve .rl-rel-icone{
+    color:var(--rl-suave);
+    background:#e7e5e0;
+}
+
+.rl-rel--breve:hover .rl-rel-icone{
+    color:var(--rl-suave);
+}
+
+/* ---------- formulários ---------- */
+
+.rl-form-card{
+    max-width:640px;
+    padding:24px;
+    background:var(--rl-card);
+    border:1px solid var(--rl-borda);
+    border-radius:14px;
+    box-shadow:var(--rl-sombra);
+}
+
+.rl-form-card--estreito{
+    max-width:480px;
+}
+
+.rl-campos{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:16px;
+}
+
+.rl-campo{
+    min-width:0;
+}
+
+.rl-campo--cheio{
+    grid-column:1 / -1;
+}
+
+.rl .rl-campo label{
+    display:block;
+    margin:0 0 6px;
+    font-size:.8125rem;
+    font-weight:600;
+    line-height:1.3;
+    color:var(--rl-texto);
+}
+
+.rl .rl-campo input,
+.rl .rl-campo select{
+    display:block;
+    width:100%;
+    height:auto;
+    min-height:46px;
+    margin:0;
+    padding:0 14px;
+    font:inherit;
+    font-size:1rem;
+    color:var(--rl-texto);
+    background-color:var(--rl-card);
+    border:1px solid var(--rl-borda-campo);
+    border-radius:10px;
+    box-shadow:none;
+    transition:border-color .15s ease, box-shadow .15s ease;
+}
+
+.rl .rl-campo select{
+    padding-right:38px;
+    -webkit-appearance:none;
+    appearance:none;
+    cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%236b6b6b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+}
+
+.rl .rl-campo input:hover,
+.rl .rl-campo select:hover{
+    border-color:#b9b5ad;
+}
+
+.rl .rl-campo input:focus,
+.rl .rl-campo select:focus{
+    outline:none;
+    border-color:var(--rl-preto);
+    box-shadow:var(--rl-anel);
+}
+
+.rl-acoes{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:24px;
+    padding-top:20px;
+    border-top:1px solid var(--rl-borda);
+}
+
+.rl-acoes .btn{
+    min-height:46px;
+    padding:0 24px;
+}
+
+/* ---------- responsividade ---------- */
+
+@media (max-width:1000px){
+
+    .rl-indicadores{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+
+    .rl-relatorios{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width:640px){
+
+    .rl-topo{
+        flex-direction:column-reverse;
+        align-items:stretch;
+    }
+
+    .rl-topo .btn{
+        align-self:flex-start;
+    }
+
+    .rl-relatorios{
+        grid-template-columns:1fr;
+        gap:12px;
+    }
+
+    .rl-rel{
+        padding:18px;
+    }
+
+    .rl-rel .btn{
+        align-self:stretch;
+    }
+
+    .rl-form-card{
+        padding:18px 16px;
+    }
+
+    .rl-campos{
+        grid-template-columns:1fr;
+    }
+
+    .rl-acoes{
+        justify-content:stretch;
+    }
+
+    .rl-acoes .btn{
+        width:100%;
+    }
+}
+
+@media (max-width:520px){
+
+    .rl-titulo{
+        font-size:1.5rem;
+    }
+
+    .rl-indicadores{
+        gap:10px;
+    }
+
+    .rl-ind{
+        padding:14px;
+    }
+
+    .rl-ind-valor{
+        font-size:1.375rem;
+    }
+}
+
+@media (max-width:340px){
+
+    .rl-indicadores{
+        grid-template-columns:1fr;
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+
+    .rl-rel,
+    .rl-rel:hover{
+        transition:none;
+        transform:none;
+    }
+}

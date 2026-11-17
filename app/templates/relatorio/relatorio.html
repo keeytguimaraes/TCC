@@ -4,122 +4,104 @@
 Relatórios
 {% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/relatorio.css') }}">
+{% endblock %}
+
 {% block conteudo %}
 
-<h1>
-    Relatórios
-</h1>
+<div class="rl">
 
-<p>
-    Visualize indicadores e gere relatórios do sistema.
-</p>
+    <header class="rl-topo">
+        <div>
+            <h1 class="rl-titulo">Relatórios</h1>
+            <p class="rl-subtitulo">Visualize indicadores e gere relatórios do sistema.</p>
+        </div>
+    </header>
 
-<hr>
+    <!-- INDICADORES -->
 
-<!-- INDICADORES -->
+    <section class="rl-secao">
 
-<h2>
-    Indicadores
-</h2>
+        <h2 class="rl-secao-titulo">Indicadores</h2>
 
-<div>
+        <div class="rl-indicadores">
 
-    <h3>
-        Total vendido hoje
-    </h3>
+            <div class="rl-ind">
+                <div class="rl-ind-topo">
+                    <span class="rl-ind-icone" aria-hidden="true"><i class="fa-solid fa-calendar-day"></i></span>
+                    <h3 class="rl-ind-nome">Total vendido hoje</h3>
+                </div>
+                <p class="rl-ind-valor">R$ {{ dados.vendido_hoje }}</p>
+            </div>
 
-    <p>
-        R$ {{ dados.vendido_hoje }}
-    </p>
+            <div class="rl-ind">
+                <div class="rl-ind-topo">
+                    <span class="rl-ind-icone" aria-hidden="true"><i class="fa-solid fa-calendar-days"></i></span>
+                    <h3 class="rl-ind-nome">Total vendido no mês</h3>
+                </div>
+                <p class="rl-ind-valor">R$ {{ dados.vendido_mes }}</p>
+            </div>
 
-    <h3>
-        Total vendido no mês
-    </h3>
+            <div class="rl-ind rl-ind--fiado">
+                <div class="rl-ind-topo">
+                    <span class="rl-ind-icone" aria-hidden="true"><i class="fa-solid fa-handshake"></i></span>
+                    <h3 class="rl-ind-nome">Total em fiados</h3>
+                </div>
+                <p class="rl-ind-valor">R$ {{ dados.fiados }}</p>
+            </div>
 
-    <p>
-        R$ {{ dados.vendido_mes }}
-    </p>
+            <div class="rl-ind rl-ind--pendente">
+                <div class="rl-ind-topo">
+                    <span class="rl-ind-icone" aria-hidden="true"><i class="fa-solid fa-clock"></i></span>
+                    <h3 class="rl-ind-nome">Total em pendências</h3>
+                </div>
+                <p class="rl-ind-valor">R$ {{ dados.pendencias }}</p>
+            </div>
 
-    <h3>
-        Total em fiados
-    </h3>
+        </div>
 
-    <p>
-        R$ {{ dados.fiados }}
-    </p>
+    </section>
 
-    <h3>
-        Total em pendências
-    </h3>
+    <!-- RELATÓRIOS -->
 
-    <p>
-        R$ {{ dados.pendencias }}
-    </p>
+    <section class="rl-secao">
 
-</div>
+        <h2 class="rl-secao-titulo">Relatórios Disponíveis</h2>
 
-<hr>
+        <div class="rl-relatorios">
 
-<!-- RELATÓRIOS -->
+            <article class="rl-rel">
+                <span class="rl-rel-icone" aria-hidden="true"><i class="fa-solid fa-chart-line"></i></span>
+                <div class="rl-rel-corpo">
+                    <h3 class="rl-rel-nome">Relatório de Vendas</h3>
+                    <p class="rl-rel-desc">Resumo completo das vendas por período.</p>
+                </div>
+                <a href="/relatorio/vendas" class="btn btn-salvar">Gerar Relatório</a>
+            </article>
 
-<h2>
-    Relatórios Disponíveis
-</h2>
+            <article class="rl-rel">
+                <span class="rl-rel-icone" aria-hidden="true"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+                <div class="rl-rel-corpo">
+                    <h3 class="rl-rel-nome">Fechamento Diário</h3>
+                    <p class="rl-rel-desc">Resumo financeiro de um dia específico.</p>
+                </div>
+                <a href="/relatorio/fechamento" class="btn btn-salvar">Gerar Fechamento Diário</a>
+            </article>
 
-<div>
+            <article class="rl-rel rl-rel--breve">
+                <span class="rl-rel-icone" aria-hidden="true"><i class="fa-solid fa-users"></i></span>
+                <div class="rl-rel-corpo">
+                    <h3 class="rl-rel-nome">Desempenho de Funcionários</h3>
+                    <p class="rl-rel-desc">Vendas realizadas por cada usuário.</p>
+                </div>
+                <button type="button" class="btn btn-cancelar" disabled>Em breve</button>
+            </article>
 
-    <h3>
-        Relatório de Vendas
-    </h3>
+        </div>
 
-    <p>
-        Resumo completo das vendas por período.
-    </p>
-
-    <a
-    href="/relatorio/vendas"
-    class="btn btn-primary"
->
-    Gerar Relatório
-</a>
-
-</div>
-
-<hr>
-
-<div>
-
-    <h3>
-        Fechamento Diário
-    </h3>
-
-    <p>
-        Resumo financeiro de um dia específico.
-    </p>
-
-    <a
-    href="/relatorio/fechamento"
-    class="btn btn-primary"
->
-    Gerar Fechamento Diário
-</a>
-</div>
-
-<hr>
-
-<div>
-
-    <h3>
-        Desempenho de Funcionários
-    </h3>
-
-    <p>
-        Vendas realizadas por cada usuário.
-    </p>
-
-    <button disabled>
-        Em breve
-    </button>
+    </section>
 
 </div>
 

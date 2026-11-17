@@ -1,289 +1,515 @@
-.sinuca-container {
-
-    max-width: 1200px;
-
-    margin: 0 auto;
-}
-
-.page-title {
-
-    margin-bottom: 25px;
-}
-
-/* ==========================
-   CARDS
-========================== */
-
-.sinuca-card {
-
-    background: white;
-
-    border-radius: 12px;
-
-    padding: 25px;
-
-    margin-bottom: 25px;
-
-    box-shadow: 0 2px 8px rgba(0,0,0,.08);
-}
-
-.sinuca-card h2 {
-
-    margin-bottom: 20px;
-
-    color: #2c3e50;
-}
-
-/* ==========================
-   CONFIGURAÇÃO
-========================== */
-
-.config-info {
-
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 20px;
-}
-
-.config-item {
-
-    min-width: 220px;
-
-    display: flex;
-
-    flex-direction: column;
-}
-
-.config-label {
-
-    color: #7f8c8d;
-
-    font-size: 14px;
-
-    margin-bottom: 5px;
-}
-
-.config-value {
-
-    font-size:20px;
-
-    font-weight:600;
-
-    color:#2c3e50;
-
-    margin-top:4px;
-}
-
-/* ==========================
-   RELATÓRIO
-========================== */
-
-.cards-relatorio {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(220px, 1fr)
-        );
-
-    gap: 15px;
-}
-
-.relatorio-card {
-
-    background: #f8f9fa;
-
-    border-left: 5px solid #2e7d32;
-
-    border-radius: 10px;
-
-    padding: 20px;
-}
-
-.relatorio-card span {
-
-    display: block;
-
-    color: #666;
-
-    margin-bottom: 10px;
-
-    font-size: 14px;
-}
-
-.relatorio-card strong {
-
-    display:block;
-
-    margin-top:8px;
-
-    font-size:28px;
-
-    font-weight:700;
-
-    color:#2e7d32;
-}
-
-/* ==========================
-   AÇÕES
-========================== */
-
-.acao-card{
-
-    text-decoration: none;
-
-    color: inherit;
-}
-
-.acao-card:visited{
-
-    color: inherit;
-}
-
-.acao-card:hover{
-
-    color: inherit;
-
-    text-decoration: none;
-}
-
-.acoes-grid{
-
-    display:flex;
-
-    gap:30px;
-
-    margin-top:30px;
-
-    flex-wrap:wrap;
-}
-
-.acao-card{
-
-    flex:1;
-
-    min-width:280px;
-
-    background:#fff;
-
-    border-radius:20px;
-
-    padding:40px;
-
-    text-align:center;
-
-    cursor:pointer;
-
-    transition:0.3s;
-
-    box-shadow:
-        0 4px 12px
-        rgba(0,0,0,0.08);
-}
-
-.acao-card:hover{
-
-    transform:translateY(-5px);
-}
-
-.acao-icon{
-
-    width:90px;
-
-    height:90px;
-
-    margin:auto;
-
-    border-radius:50%;
-
-    background:#2e7d32;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:36px;
-
-    color:white;
-}
-
-.form-grid{
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:20px;
-
-}
-
-.form-group{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:8px;
-
-}
-
-.form-group label{
-
-    font-weight:600;
-
-}
-
-.form-group input{
-
-    height:50px;
-
-    border:1px solid #d1d5db;
-
-    border-radius:12px;
-
-    padding:0 15px;
-
-    font-size:16px;
-
-}
-
-.acao-card h3{
-
-    margin-top:20px;
-
-    margin-bottom:10px;
-
-    color:#2c3e50;
-}
-
-.acao-card p{
-
-    color:#6b7280;
-
-    line-height:1.5;
-}
-
-@media (max-width: 768px){
-
-    .config-info{
-
-        flex-direction:column;
-    }
-
-    .cards-relatorio{
-
-        grid-template-columns:1fr;
-    }
-
-    .acoes-grid{
-
-        flex-direction:column;
-    }
-
-}
+/* ==========================================================
+   SINUCA — SIGC
+   Página: templates/sinuca/configuracao_sinuca.html
+
+   - Página em .sn; modal em .sn-modal (fica fora do .sn no HTML).
+   - Tokens locais --sn-* usando as cores globais do base.css
+     (--cor-vermelha, --cor-preta, --cor-amarela) com valor de reserva.
+   - Contrato com o JS (modal.js): [data-modal], [data-close-modal],
+     .modal e .modal.active. Não renomear.
+   ========================================================== */
+
+   .sn,
+   .sn-modal{
+       --sn-vermelho:var(--cor-vermelha, #c62828);
+       --sn-preto:var(--cor-preta, #1f1f1f);
+       --sn-amarelo:var(--cor-amarela, #fbc02d);
+   
+       --sn-texto:#1f1f1f;
+       --sn-suave:#6b6b6b;
+       --sn-borda:#e3e0da;
+       --sn-borda-campo:#cfcbc3;
+       --sn-fundo-suave:#f7f6f4;
+       --sn-card:#fff;
+       --sn-sombra:0 1px 3px rgba(0, 0, 0, .06), 0 2px 8px rgba(0, 0, 0, .04);
+       --sn-anel:0 0 0 3px rgba(251, 192, 45, .55);
+   }
+   
+   .sn{
+       max-width:1100px;
+       margin:0 auto;
+       color:var(--sn-texto);
+   }
+   
+   .sn *,
+   .sn *::before,
+   .sn *::after,
+   .sn-modal *,
+   .sn-modal *::before,
+   .sn-modal *::after{
+       box-sizing:border-box;
+   }
+   
+   /* ---------- cabeçalho ---------- */
+   
+   .sn-topo{
+       margin-bottom:24px;
+   }
+   
+   .sn .page-title{
+       margin:0;
+       font-size:1.75rem;
+       font-weight:700;
+       letter-spacing:-.02em;
+       line-height:1.2;
+       color:var(--sn-texto);
+   }
+   
+   .sn-subtitulo{
+       margin:6px 0 0;
+       font-size:.9375rem;
+       color:var(--sn-suave);
+   }
+   
+   /* ---------- seções (cartões) ---------- */
+   
+   .sn .sinuca-card{
+       margin:0 0 20px;
+       padding:22px 24px 24px;
+       background:var(--sn-card);
+       border:1px solid var(--sn-borda);
+       border-radius:14px;
+       box-shadow:var(--sn-sombra);
+   }
+   
+   .sn .sn-secao-topo{
+       display:flex;
+       align-items:center;
+       gap:12px;
+       margin:0 0 18px;
+   }
+   
+   .sn .sinuca-card h2{
+       margin:0;
+       font-size:1.0625rem;
+       font-weight:700;
+       letter-spacing:-.01em;
+       color:var(--sn-texto);
+   }
+   
+   .sn .sn-icone{
+       flex-shrink:0;
+       display:flex;
+       align-items:center;
+       justify-content:center;
+       width:36px;
+       height:36px;
+       font-size:.95rem;
+       color:var(--sn-preto);
+       background:var(--sn-fundo-suave);
+       border:1px solid var(--sn-borda);
+       border-radius:10px;
+   }
+   
+   .sn .sn-vazio{
+       margin:0;
+       padding:20px;
+       text-align:center;
+       color:var(--sn-suave);
+       background:var(--sn-fundo-suave);
+       border:1px dashed var(--sn-borda-campo);
+       border-radius:12px;
+   }
+   
+   /* ---------- configuração atual ---------- */
+   
+   .sn .config-info{
+       display:grid;
+       grid-template-columns:repeat(3, minmax(0, 1fr));
+       gap:12px;
+   }
+   
+   .sn .config-item{
+       display:flex;
+       flex-direction:column;
+       gap:4px;
+       min-width:0;
+       padding:14px 16px;
+       background:var(--sn-fundo-suave);
+       border:1px solid var(--sn-borda);
+       border-radius:12px;
+   }
+   
+   .sn .config-label,
+   .sn .relatorio-card span{
+       font-size:.6875rem;
+       font-weight:700;
+       letter-spacing:.08em;
+       text-transform:uppercase;
+       color:var(--sn-suave);
+   }
+   
+   .sn .config-value{
+       margin:0;
+       font-size:1.25rem;
+       font-weight:700;
+       line-height:1.25;
+       color:var(--sn-texto);
+       overflow-wrap:anywhere;
+   }
+   
+   /* ---------- indicadores ---------- */
+   
+   .sn .cards-relatorio{
+       display:grid;
+       grid-template-columns:repeat(4, minmax(0, 1fr));
+       gap:12px;
+   }
+   
+   .sn .relatorio-card{
+       display:flex;
+       flex-direction:column;
+       justify-content:space-between;
+       gap:14px;
+       min-width:0;
+       padding:16px 18px 18px;
+       background:var(--sn-card);
+       border:1px solid var(--sn-borda);
+       border-top:3px solid var(--sn-borda-campo);
+       border-radius:12px;
+   }
+   
+   .sn .relatorio-card span{
+       display:block;
+       margin:0;
+       line-height:1.4;
+   }
+   
+   .sn .relatorio-card strong{
+       display:block;
+       margin:0;
+       font-size:1.625rem;
+       font-weight:700;
+       line-height:1.15;
+       letter-spacing:-.01em;
+       font-variant-numeric:tabular-nums;
+       overflow-wrap:anywhere;
+       color:var(--sn-texto);
+   }
+   
+   /* destaque: valor arrecadado (2º cartão) */
+   .sn .relatorio-card:nth-child(2){
+       background:var(--sn-preto);
+       border-color:var(--sn-preto);
+       border-top-color:var(--sn-amarelo);
+   }
+   
+   .sn .relatorio-card:nth-child(2) span{
+       color:#c9c6bf;
+   }
+   
+   .sn .relatorio-card:nth-child(2) strong{
+       color:#fff;
+   }
+   
+   /* partes do valor: comércio e dono da mesa */
+   .sn .relatorio-card:nth-child(3){
+       border-top-color:var(--sn-vermelho);
+   }
+   
+   .sn .relatorio-card:nth-child(4){
+       border-top-color:var(--sn-preto);
+   }
+   
+   /* ---------- ação: alterar configuração ---------- */
+   
+   .sn .acoes-grid{
+       display:grid;
+       grid-template-columns:minmax(0, 1fr);
+       margin:0;
+   }
+   
+   .sn .acao-card{
+       display:flex;
+       align-items:center;
+       gap:16px;
+       width:100%;
+       min-width:0;
+       margin:0;
+       padding:18px 22px;
+       font:inherit;
+       text-align:left;
+       color:inherit;
+       background:var(--sn-card);
+       border:1px solid var(--sn-borda);
+       border-radius:14px;
+       box-shadow:var(--sn-sombra);
+       cursor:pointer;
+       transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+       -webkit-tap-highlight-color:transparent;
+   }
+   
+   .sn .acao-card:hover{
+       color:inherit;
+       border-color:var(--sn-preto);
+       box-shadow:0 6px 18px rgba(0, 0, 0, .1);
+       transform:translateY(-2px);
+   }
+   
+   .sn .acao-card:focus-visible{
+       outline:none;
+       border-color:var(--sn-preto);
+       box-shadow:var(--sn-anel);
+   }
+   
+   .sn .acao-icon{
+       flex-shrink:0;
+       display:flex;
+       align-items:center;
+       justify-content:center;
+       width:52px;
+       height:52px;
+       margin:0;
+       font-size:1.25rem;
+       color:#fff;
+       background:var(--sn-preto);
+       border-radius:14px;
+       transition:background-color .15s ease, color .15s ease;
+   }
+   
+   .sn .acao-card:hover .acao-icon{
+       color:var(--sn-amarelo);
+   }
+   
+   .sn .acao-texto{
+       flex:1;
+       min-width:0;
+   }
+   
+   .sn .acao-titulo{
+       display:block;
+       margin:0 0 4px;
+       font-size:1rem;
+       font-weight:700;
+       color:var(--sn-texto);
+   }
+   
+   .sn .acao-desc{
+       display:block;
+       margin:0;
+       font-size:.875rem;
+       line-height:1.4;
+       color:var(--sn-suave);
+   }
+   
+   .sn .acao-seta{
+       flex-shrink:0;
+       color:var(--sn-suave);
+       transition:transform .15s ease, color .15s ease;
+   }
+   
+   .sn .acao-card:hover .acao-seta{
+       color:var(--sn-vermelho);
+       transform:translateX(3px);
+   }
+   
+   /* ---------- modal ---------- */
+   
+   .sn-modal .modal-content{
+       width:100%;
+       max-width:480px;
+       overflow:hidden;
+       background:var(--sn-card);
+       border-radius:16px;
+       box-shadow:0 20px 50px rgba(0, 0, 0, .28);
+   }
+   
+   .sn-modal .modal-header{
+       display:flex;
+       align-items:flex-start;
+       justify-content:space-between;
+       gap:16px;
+       padding:20px 24px;
+       border-bottom:1px solid var(--sn-borda);
+   }
+   
+   .sn-modal .sn-modal-titulo h2{
+       margin:0;
+       font-size:1.25rem;
+       font-weight:700;
+       letter-spacing:-.01em;
+       color:var(--sn-texto);
+   }
+   
+   .sn-modal .sn-modal-titulo p{
+       margin:4px 0 0;
+       font-size:.8125rem;
+       color:var(--sn-suave);
+   }
+   
+   .sn-modal .modal-close{
+       flex-shrink:0;
+       display:flex;
+       align-items:center;
+       justify-content:center;
+       width:36px;
+       height:36px;
+       margin:-4px -6px 0 0;
+       padding:0;
+       font-size:1.25rem;
+       line-height:1;
+       color:var(--sn-suave);
+       background:transparent;
+       border:0;
+       border-radius:10px;
+       cursor:pointer;
+       transition:background-color .15s ease, color .15s ease;
+   }
+   
+   .sn-modal .modal-close:hover{
+       color:var(--sn-texto);
+       background:#f1f0ee;
+   }
+   
+   .sn-modal .modal-close:focus-visible{
+       outline:none;
+       box-shadow:var(--sn-anel);
+   }
+   
+   .sn-modal .modal-body{
+       display:grid;
+       gap:16px;
+       padding:22px 24px 24px;
+   }
+   
+   .sn-modal .form-group{
+       display:block;
+       min-width:0;
+       margin:0;
+   }
+   
+   .sn-modal .form-group label{
+       display:block;
+       margin:0 0 6px;
+       font-size:.8125rem;
+       font-weight:600;
+       line-height:1.3;
+       color:var(--sn-texto);
+   }
+   
+   .sn-modal .form-group input{
+       display:block;
+       width:100%;
+       height:auto;
+       min-height:46px;
+       padding:0 14px;
+       font:inherit;
+       font-size:1rem;
+       color:var(--sn-texto);
+       background:var(--sn-card);
+       border:1px solid var(--sn-borda-campo);
+       border-radius:10px;
+       box-shadow:none;
+       transition:border-color .15s ease, box-shadow .15s ease;
+   }
+   
+   .sn-modal .form-group input:hover{
+       border-color:#b9b5ad;
+   }
+   
+   .sn-modal .form-group input:focus{
+       outline:none;
+       border-color:var(--sn-preto);
+       box-shadow:var(--sn-anel);
+   }
+   
+   .sn-modal .modal-footer{
+       display:flex;
+       justify-content:flex-end;
+       gap:12px;
+       padding:16px 24px;
+       background:#faf9f7;
+       border-top:1px solid var(--sn-borda);
+   }
+   
+   .sn-modal .modal-footer .btn{
+       min-height:44px;
+   }
+   
+   /* ---------- responsividade ---------- */
+   
+   @media (max-width:900px){
+   
+       .sn .cards-relatorio{
+           grid-template-columns:repeat(2, minmax(0, 1fr));
+       }
+   }
+   
+   @media (max-width:640px){
+   
+       .sn .sinuca-card{
+           padding:18px 16px 20px;
+       }
+   
+       .sn .config-info{
+           grid-template-columns:1fr;
+           gap:10px;
+       }
+   
+       .sn .config-item{
+           flex-direction:row;
+           align-items:center;
+           justify-content:space-between;
+           gap:16px;
+           padding:12px 14px;
+       }
+   
+       .sn .config-value{
+           font-size:1.0625rem;
+           text-align:right;
+       }
+   
+       .sn .acao-card{
+           padding:16px;
+       }
+   }
+   
+   @media (max-width:520px){
+   
+       .sn .page-title{
+           font-size:1.5rem;
+       }
+   
+       .sn .cards-relatorio{
+           gap:10px;
+       }
+   
+       .sn .relatorio-card{
+           padding:14px;
+       }
+   
+       .sn .relatorio-card strong{
+           font-size:1.375rem;
+       }
+   
+       .sn-modal.modal{
+           padding:12px;
+       }
+   
+       .sn-modal .modal-header,
+       .sn-modal .modal-body,
+       .sn-modal .modal-footer{
+           padding-left:18px;
+           padding-right:18px;
+       }
+   
+       .sn-modal .modal-footer .btn{
+           flex:1;
+       }
+   }
+   
+   @media (max-width:340px){
+   
+       .sn .cards-relatorio{
+           grid-template-columns:1fr;
+       }
+   }
+   
+   @media (prefers-reduced-motion:reduce){
+   
+       .sn .acao-card,
+       .sn .acao-card:hover{
+           transition:none;
+           transform:none;
+       }
+   }

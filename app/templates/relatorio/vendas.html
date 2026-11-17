@@ -1,80 +1,63 @@
 {% extends "base/base.html" %}
 
+{% block titulo %}
+Relatório de Vendas
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/relatorio.css') }}">
+{% endblock %}
+
 {% block conteudo %}
 
-<h1>
+<div class="rl">
 
-    Relatório de Vendas
+    <header class="rl-topo">
+        <div>
+            <h1 class="rl-titulo">Relatório de Vendas</h1>
+            <p class="rl-subtitulo">Escolha o período e o tipo de venda para gerar o PDF.</p>
+        </div>
 
-</h1>
+        <a href="/relatorio" class="btn btn-cancelar">← Voltar</a>
+    </header>
 
-<form
-    method="POST"
-    action="/relatorio/vendas/pdf"
-    target="_blank"
->
-
-    <label>
-
-        Data Inicial
-
-    </label>
-
-    <br>
-
-    <input
-        type="date"
-        name="data_inicial"
-        required
+    <form
+        class="rl-form-card"
+        method="POST"
+        action="/relatorio/vendas/pdf"
+        target="_blank"
     >
-    <label>
-        Tipo de Vendas
-    </label>
-    
-    <select
-        name="tipo_vendas"
-        required
-    >
-    
-        <option value="todas">
-            Todas
-        </option>
-    
-        <option value="pagas">
-            Apenas Pagas
-        </option>
-    
-        <option value="pendentes">
-            Apenas Pendentes
-        </option>
-    
-    </select>
 
-    <label>
+        <div class="rl-campos">
 
-        Data Final
+            <div class="rl-campo">
+                <label for="rl-data-inicial">Data Inicial</label>
+                <input type="date" id="rl-data-inicial" name="data_inicial" required>
+            </div>
 
-    </label>
+            <div class="rl-campo">
+                <label for="rl-data-final">Data Final</label>
+                <input type="date" id="rl-data-final" name="data_final" required>
+            </div>
 
-    <br>
+            <div class="rl-campo rl-campo--cheio">
+                <label for="rl-tipo-vendas">Tipo de Vendas</label>
+                <select id="rl-tipo-vendas" name="tipo_vendas" required>
+                    <option value="todas">Todas</option>
+                    <option value="pagas">Apenas Pagas</option>
+                    <option value="pendentes">Apenas Pendentes</option>
+                </select>
+            </div>
 
-    <input
-        type="date"
-        name="data_final"
-        required
-    >
-    <a href="/relatorio">
+        </div>
 
-        Voltar
+        <div class="rl-acoes">
+            <button type="submit" class="btn btn-salvar">Gerar PDF</button>
+        </div>
 
-    </a>
+    </form>
 
-    <button type="submit">
-
-        Gerar PDF
-
-    </button>
-
-</form>
+</div>
 
 {% endblock %}

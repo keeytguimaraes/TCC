@@ -4,41 +4,46 @@
 Fechamento Diário
 {% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/relatorio.css') }}">
+{% endblock %}
+
 {% block conteudo %}
 
-<h1>Fechamento Diário</h1>
+<div class="rl">
 
-<div class="mb-3">
+    <header class="rl-topo">
+        <div>
+            <h1 class="rl-titulo">Fechamento Diário</h1>
+            <p class="rl-subtitulo">Escolha o dia para gerar o resumo financeiro em PDF.</p>
+        </div>
 
-    <a
-        href="/relatorio"
-        class="btn btn-outline-secondary"
+        <a href="/relatorio" class="btn btn-cancelar">← Voltar</a>
+    </header>
+
+    <form
+        class="rl-form-card rl-form-card--estreito"
+        method="POST"
+        action="/relatorio/fechamento/pdf"
+        target="_blank"
     >
-        ← Voltar
-    </a>
+
+        <div class="rl-campos">
+
+            <div class="rl-campo rl-campo--cheio">
+                <label for="rl-data">Data</label>
+                <input type="date" id="rl-data" name="data" required>
+            </div>
+
+        </div>
+
+        <div class="rl-acoes">
+            <button type="submit" class="btn btn-salvar">Gerar PDF</button>
+        </div>
+
+    </form>
 
 </div>
-
-<form
-    method="POST"
-    action="/relatorio/fechamento/pdf"
-    target="_blank"
->
-
-    <label>
-        Data
-    </label>
-
-    <input
-        type="date"
-        name="data"
-        required
-    >
-
-    <button type="submit">
-        Gerar PDF
-    </button>
-
-</form>
 
 {% endblock %}
