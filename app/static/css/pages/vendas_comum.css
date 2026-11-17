@@ -1,0 +1,201 @@
+/* ============================================================
+   SIGC — MÓDULO VENDAS: ESTILOS COMPARTILHADOS
+   Carregado por: venda, carrinho, histórico e detalhes.
+   Só apresentação. Usa os tokens do base.css.
+   Semântica de cores do módulo:
+     verde = pago / confirmar | azul = fiado | amarelo = pendente
+     vermelho = ação principal / perigo | preto+amarelo = seleção
+   ============================================================ */
+
+   .vendas-pagina {
+    --v-azul: #1A5FC0;
+    --v-amarelo-texto: #7A5B00;
+    width: 100%;
+    min-width: 0;
+    font-family: var(--font-primary);
+    color: var(--text);
+}
+
+/* ---- cabeçalho de página ---- */
+
+.vendas-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+}
+
+.vendas-titulo,
+.vendas-pagina > h1 {
+    margin: 0;
+    font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+    line-height: 1.25;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--text);
+}
+
+.vendas-pagina > h1 {
+    margin-bottom: var(--space-4);
+}
+
+.vendas-subtitulo {
+    margin: 4px 0 0;
+    font-size: .9375rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+/* ---- campo de pesquisa (substitui o visual verde do search.css) ---- */
+
+.vendas-pagina .search-box {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    max-width: none;
+    min-height: 46px;
+    margin: 0;
+    padding: 0 var(--space-4);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--input-radius);
+    box-shadow: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.vendas-pagina .search-box:focus-within {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-focus);
+}
+
+.vendas-pagina .search-box i {
+    flex: none;
+    font-size: .95rem;
+    color: var(--text-muted);
+}
+
+.vendas-pagina .search-box input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    height: 44px;
+    padding: 0;
+    font-family: inherit;
+    font-size: 1rem; /* 16px: evita zoom automático no iOS */
+    color: var(--text);
+    background: transparent;
+    border: 0;
+    outline: 0;
+}
+
+.vendas-pagina .search-box input::placeholder {
+    color: #9a9a9a;
+}
+
+/* ---- painel (cartão) ---- */
+
+.vendas-painel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.vendas-painel-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--border);
+}
+
+.vendas-painel-titulo {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.vendas-contagem {
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* ---- selos de status (histórico) ---- */
+
+.status-venda,
+.cliente-balcao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 96px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: .8125rem;
+    font-weight: 700;
+    line-height: 1.4;
+    text-transform: capitalize;
+    border: 1px solid transparent;
+}
+
+.status-venda.Pago,
+.status-venda.pago {
+    background: var(--success-bg);
+    color: var(--success-text);
+    border-color: var(--success-border);
+}
+
+.status-venda.Pendente,
+.status-venda.pendente {
+    background: var(--warning-bg);
+    color: var(--warning-text);
+    border-color: var(--warning-border);
+}
+
+.status-venda.Fiado,
+.status-venda.fiado {
+    background: #EAF3FE;
+    color: #0B3A75;
+    border-color: #A9CBF5;
+}
+
+.cliente-balcao {
+    background: var(--bg);
+    color: var(--secondary);
+    border-color: var(--border);
+    font-weight: 600;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ---- foco visível em controles do módulo ---- */
+
+.vendas-pagina :is(a, button):focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+@media (max-width: 600px) {
+    .vendas-painel-topo {
+        padding: var(--space-3) var(--space-4);
+    }
+}

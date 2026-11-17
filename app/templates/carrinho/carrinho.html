@@ -8,6 +8,11 @@ Carrinho
 
 <link
     rel="stylesheet"
+    href="{{ url_for('static', filename='css/pages/vendas_comum.css') }}"
+>
+
+<link
+    rel="stylesheet"
     href="{{ url_for('static', filename='css/pages/carrinho.css') }}"
 >
 
@@ -20,6 +25,8 @@ Carrinho
 
 
 {% block conteudo %}
+
+<div class="vendas-pagina">
 
 <div class="cabecalho-carrinho">
 
@@ -195,7 +202,7 @@ Carrinho
 >
 
     <label>
-        Desconto aplicado:
+        Preço unitário (com desconto)
     </label>
 
     <input
@@ -328,22 +335,6 @@ Carrinho
         </strong>
 
     </div>
-
-</div>
-
-<div class="desconto-geral">
-
-    <label>
-        Desconto (R$)
-    </label>
-
-    <input
-        type="number"
-        step="0.01"
-        min="0"
-        name="desconto_venda"
-        value="0"
-    >
 
 </div>
 
@@ -624,6 +615,8 @@ id="modal-limpar-carrinho"
 </div>
 
 </div>
+
+</div> <!-- /vendas-pagina -->
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 

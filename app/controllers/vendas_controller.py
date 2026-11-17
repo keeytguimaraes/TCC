@@ -152,3 +152,34 @@ def pegar_detalhes_venda(
     return buscar_detalhes_venda(
         venda_id
     )
+
+
+
+# ==================================================
+# RESUMO DE UMA VENDA (para a tela de detalhes)
+# ==================================================
+#
+# Retorna os dados gerais de uma venda (data,
+# cliente, responsável, status, valores) para serem
+# exibidos na tela de detalhes.
+#
+# Reutiliza listar_historico_vendas(), que já existe e
+# já traz esses campos. Não cria consulta nova, não
+# calcula nada e não altera nenhuma outra função.
+#
+# Retorna None se a venda não for encontrada.
+#
+# ==================================================
+
+def pegar_resumo_venda(
+
+    venda_id
+):
+
+    for venda in listar_historico_vendas():
+
+        if venda["id"] == venda_id:
+
+            return venda
+
+    return None

@@ -8,12 +8,22 @@ Venda
     rel="stylesheet"
     href="{{ url_for(
         'static',
+        filename='css/pages/vendas_comum.css'
+    ) }}"
+>
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
         filename='css/pages/venda.css'
     ) }}"
 >
 {% endblock %}
 
 {% block conteudo %}
+
+<div class="vendas-pagina">
+
     <h1>
         Venda 
     </h1>
@@ -305,6 +315,8 @@ Venda
         {% endfor %}
     
     </div>
+
+</div> <!-- /vendas-pagina -->
 
     <!-- ==========================
          SCRIPT 

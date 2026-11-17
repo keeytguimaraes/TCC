@@ -5,55 +5,170 @@ Detalhes da Venda
 {% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/detalhes_venda.css') }}">
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/vendas_comum.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/pages/detalhes_venda.css'
+    ) }}"
+>
+
 {% endblock %}
 
 {% block conteudo %}
 
-{# Valor monetário só para exibição: 1234.5 -> R$ 1.234,50 #}
-{% macro moeda(valor) -%}
-{%- if valor is none or (valor|string|trim) == '' -%}
-<span class="vd-nulo">—</span><span class="sr-only">Não informado</span>
-{%- else -%}
-R$ {{ '{:,.2f}'.format(valor|float).replace(',', '#').replace('.', ',').replace('#', '.') }}
-{%- endif -%}
-{%- endmacro %}
+<div class="vendas-pagina detalhes-container">
 
-<div class="detalhes-container vd">
+    <header class="vendas-cabecalho detalhes-topo">
 
-    <header class="vd-topo detalhes-topo">
         <div>
-            <h1 class="detalhes-titulo vd-titulo">Detalhes da Venda</h1>
-            <p class="vd-subtitulo">Produtos incluídos nesta venda.</p>
+            <h1 class="detalhes-titulo vendas-titulo">
+                Detalhes da Venda
+            </h1>
+
+            <p class="vendas-subtitulo">
+                Produtos incluídos nesta venda.
+            </p>
         </div>
 
-        <a href="/venda/historico" class="btn btn-cancelar">← Voltar</a>
+        <a
+            href="/venda/historico"
+            class="button button-secondary"
+        >
+            ← Voltar
+        </a>
+
     </header>
 
-    <section class="vd-painel">
+    {# Resumo da venda: só aparece se a rota enviar a variável "venda" #}
+    {% if venda %}
 
-        <div class="vd-painel-topo">
-            <h2 class="vd-painel-titulo">Produtos</h2>
-            {% if produtos %}
-            <span class="vd-contagem">{{ produtos|length }} {{ 'item' if produtos|length == 1 else 'itens' }}</span>
-            {% endif %}
+    <section class="vendas-painel detalhes-resumo">
+
+        <div class="vendas-painel-topo">
+
+            <h2 class="vendas-painel-titulo">Resumo</h2>
+
+            <span class="status-venda {{ venda.status_pagamento }}">
+                {{ venda.status_pagamento }}
+            </span>
+
         </div>
 
+        <dl class="resumo-lista">
+
+            <div class="resumo-item">
+                <dt>Data</dt>
+                <dd>{{ venda.data_venda.strftime('%d/%m/%Y %H:%M') }}</dd>
+            </div>
+
+            <div class="resumo-item">
+                <dt>Cliente</dt>
+                <dd>
+                    {% if venda.cliente_nome %}
+                        {{ venda.cliente_nome }}
+                    {% elif venda.nome_cliente_temporario %}
+                        {{ venda.nome_cliente_temporario }}
+                    {% else %}
+                        <span class="cliente-balcao">Venda no balcão</span>
+                    {% endif %}
+                </dd>
+            </div>
+
+            <div class="resumo-item">
+                <dt>Forma de pagamento</dt>
+                <dd>
+                    {% if venda.cliente_nome %}
+                        Venda fiado
+                    {% elif venda.nome_cliente_temporario %}
+                        Conta pendente
+                    {% else %}
+                        Pagamento imediato
+                    {% endif %}
+                </dd>
+            </div>
+
+            <div class="resumo-item">
+                <dt>Responsável</dt>
+                <dd>{{ venda.usuario or "Não informado" }}</dd>
+            </div>
+
+            <div class="resumo-item resumo-total">
+                <dt>Total da venda</dt>
+                <dd>R$ {{ venda.valor_total }}</dd>
+            </div>
+
+            {% if not venda.cliente_nome and not venda.nome_cliente_temporario %}
+
+            <div class="resumo-item">
+                <dt>Valor recebido</dt>
+                <dd>R$ {{ venda.valor_recebido }}</dd>
+            </div>
+
+            <div class="resumo-item">
+                <dt>Troco</dt>
+                <dd>R$ {{ venda.troco }}</dd>
+            </div>
+
+            {% elif venda.saldo_devedor is not none %}
+
+            <div class="resumo-item">
+                <dt>Saldo devedor</dt>
+                <dd>R$ {{ venda.saldo_devedor }}</dd>
+            </div>
+
+            {% endif %}
+
+        </dl>
+
+    </section>
+
+    {% endif %}
+
+    <section class="vendas-painel">
+
         {% if produtos %}
+
+        <div class="vendas-painel-topo">
+
+            <h2 class="vendas-painel-titulo">Produtos</h2>
+
+            <span class="vendas-contagem">
+                {{ produtos|length }}
+                {{ 'item' if produtos|length == 1 else 'itens' }}
+            </span>
+
+        </div>
 
         <div class="card-detalhes">
 
             <table class="tabela-produtos">
 
                 <thead>
+
                     <tr>
+
                         <th>Produto</th>
-                        <th class="vd-num">Quantidade</th>
+
+                        <th class="col-num">Quantidade</th>
+
                         <th>Tipo</th>
-                        <th class="vd-num">Preço Unitário</th>
-                        <th class="vd-num">Subtotal</th>
+
+                        <th class="col-num">Preço Unitário</th>
+
+                        <th class="col-num">Subtotal</th>
+
                     </tr>
+
                 </thead>
 
                 <tbody>
@@ -61,17 +176,27 @@ R$ {{ '{:,.2f}'.format(valor|float).replace(',', '#').replace('.', ',').replace(
                     {% for produto in produtos %}
 
                     <tr>
-                        <td data-label="Produto" class="vd-produto">{{ produto.nome }}</td>
 
-                        <td data-label="Quantidade" class="vd-num">{{ produto.quantidade }}</td>
-
-                        <td data-label="Tipo">
-                            <span class="vd-tipo">{{ produto.tipo_venda }}</span>
+                        <td data-label="Produto" class="col-produto">
+                            {{ produto.nome }}
                         </td>
 
-                        <td data-label="Preço Unitário" class="vd-num">{{ moeda(produto.preco_unitario) }}</td>
+                        <td data-label="Quantidade" class="col-num">
+                            {{ produto.quantidade }}
+                        </td>
 
-                        <td data-label="Subtotal" class="vd-num vd-subtotal">{{ moeda(produto.subtotal) }}</td>
+                        <td data-label="Tipo">
+                            <span class="selo-tipo">{{ produto.tipo_venda }}</span>
+                        </td>
+
+                        <td data-label="Preço Unitário" class="col-num">
+                            R$ {{ produto.preco_unitario }}
+                        </td>
+
+                        <td data-label="Subtotal" class="col-num col-subtotal">
+                            R$ {{ produto.subtotal }}
+                        </td>
+
                     </tr>
 
                     {% endfor %}
@@ -84,7 +209,9 @@ R$ {{ '{:,.2f}'.format(valor|float).replace(',', '#').replace('.', ',').replace(
 
         {% else %}
 
-        <p class="vd-vazio">Nenhum produto registrado para esta venda.</p>
+        <p class="detalhes-vazio">
+            Nenhum produto registrado para esta venda.
+        </p>
 
         {% endif %}
 

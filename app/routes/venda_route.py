@@ -1,4 +1,3 @@
-
 # ============================================================
 # ROTAS DE VENDAS — SIGC
 # ============================================================
@@ -61,7 +60,8 @@ from app.utils.auth import (
 from app.controllers.vendas_controller import (
     pegar_historico_vendas,
     cadastrar_venda_controller,
-    pegar_detalhes_venda
+    pegar_detalhes_venda,
+    pegar_resumo_venda
 )
 
 # ------------------------------------------------------------
@@ -636,11 +636,18 @@ def configurar_venda_routes(app):
                 "subtotal": ficha["valor_total"]
             })
 
+        # Recupera o resumo da venda (data, cliente, responsável,
+        # status e valores) para exibir na tela de detalhes.
+        venda_resumo = pegar_resumo_venda(
+            venda_id
+        )
+
         # Renderiza a página de detalhes com a lista combinada
         # de produtos e fichas de sinuca.
         return render_template(
             "venda/detalhes_venda.html",
-            produtos=produtos
+            produtos=produtos,
+            venda=venda_resumo
         )
 
     # --------------------------------------------------------

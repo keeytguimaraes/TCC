@@ -1,262 +1,193 @@
-/* ==========================================================
-   DETALHES DA VENDA — SIGC
-   Página: templates/venda/detalhes_venda.html
-   Tudo escopado em .vd; tokens locais com as cores globais do
-   base.css (--cor-*) e valor de reserva.
-   ========================================================== */
+/* ============================================================
+   SIGC — DETALHES DA VENDA
+   Depende de vendas_comum.css
+   ============================================================ */
 
-   .vd{
-    --vd-vermelho:var(--cor-vermelha, #c62828);
-    --vd-preto:var(--cor-preta, #1f1f1f);
-    --vd-amarelo:var(--cor-amarela, #fbc02d);
+/* ---------- resumo da venda ---------- */
 
-    --vd-texto:#1f1f1f;
-    --vd-suave:#6b6b6b;
-    --vd-borda:#e3e0da;
-    --vd-fundo-suave:#f7f6f4;
-    --vd-card:#fff;
-    --vd-sombra:0 1px 3px rgba(0, 0, 0, .06), 0 2px 8px rgba(0, 0, 0, .04);
-
-    width:100%;
-    color:var(--vd-texto);
+.detalhes-resumo {
+    margin-bottom: var(--space-4);
 }
 
-.vd *,
-.vd *::before,
-.vd *::after{
-    box-sizing:border-box;
+.resumo-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: var(--space-4) var(--space-5);
+    margin: 0;
+    padding: var(--space-5);
 }
 
-.vd .sr-only{
-    position:absolute;
-    width:1px;
-    height:1px;
-    margin:-1px;
-    padding:0;
-    overflow:hidden;
-    clip:rect(0, 0, 0, 0);
-    white-space:nowrap;
-    border:0;
+.resumo-item {
+    min-width: 0;
 }
 
-/* ---------- cabeçalho ---------- */
-
-.vd-topo{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:16px;
-    margin-bottom:24px;
+.resumo-item dt {
+    margin-bottom: 4px;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    color: var(--text-muted);
 }
 
-.vd-titulo{
-    margin:0;
-    font-size:1.75rem;
-    font-weight:700;
-    letter-spacing:-.02em;
-    line-height:1.2;
-    text-align:left;
-    color:var(--vd-texto);
+.resumo-item dd {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    overflow-wrap: anywhere;
 }
 
-.vd-subtitulo{
-    margin:6px 0 0;
-    font-size:.9375rem;
-    color:var(--vd-suave);
+.resumo-total dd {
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -.01em;
+    color: var(--success);
 }
 
-.vd-topo .btn{
-    flex-shrink:0;
-}
-
-/* ---------- painel ---------- */
-
-.vd-painel{
-    overflow:hidden;
-    background:var(--vd-card);
-    border:1px solid var(--vd-borda);
-    border-radius:14px;
-    box-shadow:var(--vd-sombra);
-}
-
-.vd-painel-topo{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:16px 20px;
-    border-bottom:1px solid var(--vd-borda);
-}
-
-.vd-painel-titulo{
-    margin:0;
-    font-size:1rem;
-    font-weight:700;
-}
-
-.vd-contagem{
-    padding:3px 11px;
-    font-size:.75rem;
-    font-weight:700;
-    white-space:nowrap;
-    color:var(--vd-suave);
-    background:#eeeeec;
-    border-radius:999px;
-}
-
-/* ---------- tabela ---------- */
-
-.vd .card-detalhes{
-    margin:0;
-    overflow-x:auto;
-}
-
-.vd .tabela-produtos{
-    width:100%;
-    border-collapse:collapse;
-    font-size:.9375rem;
-}
-
-.vd .tabela-produtos th{
-    padding:13px 16px;
-    text-align:left;
-    white-space:nowrap;
-    font-size:.6875rem;
-    font-weight:700;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:var(--vd-suave);
-    background:var(--vd-fundo-suave);
-    border-bottom:1px solid var(--vd-borda);
-}
-
-.vd .tabela-produtos td{
-    padding:14px 16px;
-    text-align:left;
-    vertical-align:middle;
-    border-bottom:1px solid var(--vd-borda);
-}
-
-.vd .tabela-produtos tbody tr:last-child td{
-    border-bottom:0;
-}
-
-.vd .tabela-produtos tbody tr:hover{
-    background:#faf9f7;
-}
-
-.vd .tabela-produtos .vd-num{
-    text-align:right;
-    white-space:nowrap;
-    font-variant-numeric:tabular-nums;
-}
-
-.vd .vd-produto{
-    min-width:180px;
-    font-weight:600;
-    overflow-wrap:anywhere;
-}
-
-.vd .vd-subtotal{
-    font-weight:700;
-}
-
-.vd .vd-tipo{
-    display:inline-flex;
-    padding:4px 11px;
-    font-size:.75rem;
-    font-weight:600;
-    line-height:1.3;
-    white-space:nowrap;
-    color:var(--vd-suave);
-    background:#eeeeec;
-    border-radius:999px;
-}
-
-.vd .vd-nulo{
-    color:#9a9a9a;
-}
-
-.vd-vazio{
-    padding:40px 16px;
-    text-align:center;
-    color:var(--vd-suave);
-}
-
-/* ---------- celular ---------- */
-
-@media (max-width:760px){
-
-    .vd-topo{
-        flex-direction:column-reverse;
-        align-items:stretch;
-    }
-
-    .vd-topo .btn{
-        align-self:flex-start;
-    }
-
-    .vd .card-detalhes{
-        overflow:visible;
-        padding:12px;
-    }
-
-    .vd .tabela-produtos,
-    .vd .tabela-produtos tbody{
-        display:block;
-        width:100%;
-    }
-
-    .vd .tabela-produtos thead{
-        position:absolute;
-        width:1px;
-        height:1px;
-        overflow:hidden;
-        clip:rect(0, 0, 0, 0);
-    }
-
-    .vd .tabela-produtos tr{
-        display:block;
-        margin-bottom:10px;
-        padding:4px 14px;
-        border:1px solid var(--vd-borda);
-        border-radius:12px;
-    }
-
-    .vd .tabela-produtos tr:last-child{
-        margin-bottom:0;
-    }
-
-    .vd .tabela-produtos td,
-    .vd .tabela-produtos .vd-num{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:16px;
-        min-width:0;
-        padding:9px 0;
-        text-align:right;
-        border-bottom:1px solid var(--vd-borda);
-    }
-
-    .vd .tabela-produtos tr td:last-child{
-        border-bottom:0;
-    }
-
-    .vd .tabela-produtos td[data-label]::before{
-        content:attr(data-label);
-        flex-shrink:0;
-        font-size:.6875rem;
-        font-weight:700;
-        letter-spacing:.08em;
-        text-transform:uppercase;
-        color:var(--vd-suave);
+@media (max-width: 600px) {
+    .resumo-lista {
+        grid-template-columns: 1fr 1fr;
+        padding: var(--space-4);
     }
 }
 
-@media (max-width:520px){
+.card-detalhes {
+    width: 100%;
+    overflow-x: auto;
+}
 
-    .vd-titulo{
-        font-size:1.5rem;
+.tabela-produtos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9375rem;
+}
+
+.tabela-produtos th {
+    padding: 12px var(--space-4);
+    background: var(--black);
+    color: #fff;
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    text-align: left;
+    border-bottom: 3px solid var(--accent);
+}
+
+.tabela-produtos td {
+    padding: 14px var(--space-4);
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border);
+    overflow-wrap: anywhere;
+}
+
+.tabela-produtos tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.tabela-produtos tbody tr:hover {
+    background: #FAF9F7;
+}
+
+.tabela-produtos .col-num {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.col-produto {
+    font-weight: 600;
+}
+
+.col-subtotal {
+    font-weight: 700;
+}
+
+.selo-tipo {
+    display: inline-flex;
+    white-space: nowrap;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--secondary);
+}
+
+.detalhes-vazio {
+    margin: 0;
+    padding: var(--space-8) var(--space-4);
+    text-align: center;
+    color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+
+    .tabela-produtos,
+    .tabela-produtos tbody {
+        display: block;
+    }
+
+    .tabela-produtos thead {
+        display: none;
+    }
+
+    .tabela-produtos tbody {
+        padding: var(--space-3);
+    }
+
+    .tabela-produtos tr {
+        display: block;
+        margin-bottom: var(--space-3);
+        padding: var(--space-3) var(--space-4);
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--accent);
+        border-radius: var(--radius-md);
+    }
+
+    .tabela-produtos tr:last-child {
+        margin-bottom: 0;
+    }
+
+    .tabela-produtos td,
+    .tabela-produtos .col-num {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-3);
+        padding: 8px 0;
+        text-align: right;
+        border-bottom: 1px dashed var(--border);
+    }
+
+    .tabela-produtos tbody tr:last-child td {
+        border-bottom: 1px dashed var(--border);
+    }
+
+    .tabela-produtos td:last-child {
+        border-bottom: 0 !important;
+    }
+
+    .tabela-produtos td::before {
+        content: attr(data-label);
+        flex: none;
+        font-size: .75rem;
+        font-weight: 700;
+        letter-spacing: .03em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-align: left;
+    }
+
+    .tabela-produtos td.col-produto {
+        font-size: 1rem;
+    }
+
+    .vendas-cabecalho .button {
+        width: 100%;
     }
 }
