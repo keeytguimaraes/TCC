@@ -1,4 +1,3 @@
-
 # ============================================================
 # ROTAS DE CLIENTES — SIGC
 # ============================================================
@@ -110,9 +109,18 @@ def configurar_cliente_routes(app):
     #
     # Recebe o nome informado no formulário e solicita
     # ao controller o cadastro do cliente.
+    #
+    # Proteção: o usuário precisa estar autenticado e ter perfil
+    # de administrador ou gerente. Funcionário não cadastra clientes,
+    # nem por requisição direta a esta rota.
     @app.route(
         "/cliente/cadastrar",
         methods=["POST"]
+    )
+    @login_obrigatorio
+    @perfil_obrigatorio(
+        "administrador",
+        "gerente"
     )
     def cadastrar_cliente():
         """

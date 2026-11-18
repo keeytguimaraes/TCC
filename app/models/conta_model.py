@@ -652,6 +652,17 @@ def buscar_vendas_conta_pendente(conta_id):
     return vendas
 
 # ==================================================
+# ERRO DE TRANSFERÊNCIA INVÁLIDA
+#
+# É LEVANTADO QUANDO A TRANSFERÊNCIA NÃO PODE SER
+# FEITA POR UMA REGRA DO SISTEMA (e não por falha
+# técnica). A MENSAGEM É EXIBIDA AO USUÁRIO.
+# ==================================================
+class TransferenciaInvalida(Exception):
+    pass
+
+
+# ==================================================
 # TRANSFERIR CONTA PENDENTE PARA FIADO
 # ==================================================
 def transferir_para_fiado(
@@ -662,24 +673,25 @@ def transferir_para_fiado(
     # ------------------------------------------------
     # ESTA FUNÇÃO É RESPONSÁVEL POR:
     #
-    # 1) LOCALIZAR OU CRIAR UMA CONTA FIADO
+    # 1) CONFERIR QUE A CONTA PENDENTE ESTÁ "aberta"
+    #    (UMA CONTA NÃO É TRANSFERIDA DUAS VEZES)
+    #
+    # 2) CONFERIR QUE O CLIENTE EXISTE E ESTÁ ATIVO
+    #
+    # 3) LOCALIZAR OU CRIAR UMA CONTA FIADO
     #    PARA O CLIENTE SELECIONADO
     #
-    # 2) SOMAR O VALOR TOTAL DAS VENDAS
-    #    DA CONTA PENDENTE
-    #
-    # 3) ADICIONAR ESSE VALOR AO SALDO
+    # 4) SOMAR O SALDO DAS VENDAS AINDA NÃO PAGAS
+    #    DA CONTA PENDENTE E ADICIONAR AO SALDO
     #    DEVEDOR DA CONTA FIADO
     #
-    # 4) TRANSFERIR TODAS AS VENDAS DA
-    #    CONTA PENDENTE PARA A CONTA FIADO
+    # 5) TRANSFERIR ESSAS VENDAS PARA A CONTA FIADO
+    #    (VENDAS JÁ PAGAS NÃO SÃO TRANSFERIDAS)
     #
-    # 5) FECHAR A CONTA PENDENTE
+    # 6) MARCAR A CONTA PENDENTE COMO "transferida"
     #
-    # AO FINAL DO PROCESSO, A CONTA
-    # PENDENTE DEIXA DE EXISTIR COMO
-    # CONTA ABERTA E TODA A DÍVIDA PASSA
-    # A PERTENCER AO CLIENTE CADASTRADO.
+    # TUDO OCORRE EM UMA ÚNICA TRANSAÇÃO: OU TODAS
+    # AS ALTERAÇÕES SÃO GRAVADAS, OU NENHUMA.
     # ------------------------------------------------
 
     # Cria conexão com banco
@@ -690,65 +702,74 @@ def transferir_para_fiado(
         cursor_factory=RealDictCursor
     )
 
-    # ==================================================
-    # ETAPA 1
-    # VERIFICAR SE O CLIENTE JÁ POSSUI
-    # UMA CONTA FIADO ABERTA
-    # ==================================================
+    try:
 
-    sql = """
-        SELECT *
+        # ==================================================
+        # ETAPA 1
+        # CONFERIR A CONTA PENDENTE
+        # ==================================================
 
-        FROM conta
-
-        WHERE cliente_id = %s
-
-        AND status_conta = 'aberta'
-
-        LIMIT 1
-    """
-
-    cursor.execute(
-        sql,
-        (cliente_id,)
-    )
-
-    conta = cursor.fetchone()
-
-    # ------------------------------------------------
-    # SE A CONTA EXISTIR:
-    #
-    # UTILIZA A MESMA CONTA
-    #
-    # SE NÃO EXISTIR:
-    #
-    # CRIA UMA NOVA CONTA FIADO
-    # ------------------------------------------------
-    if conta:
-
-        conta_id = conta["id"]
-
-    else:
-
-        # Cria nova conta aberta
+        # ------------------------------------------------
+        # FOR UPDATE TRAVA A LINHA ATÉ O FIM DA
+        # TRANSAÇÃO. SE DUAS TRANSFERÊNCIAS DA MESMA
+        # CONTA ACONTECEREM AO MESMO TEMPO, A SEGUNDA
+        # ESPERA E ENCONTRA O STATUS JÁ ALTERADO.
+        # ------------------------------------------------
         sql = """
-            INSERT INTO conta (
+            SELECT
+                id,
+                status
 
-                cliente_id,
-                status_conta,
-                saldo_devedor
+            FROM conta_pendente
 
+            WHERE id = %s
+
+            FOR UPDATE
+        """
+
+        cursor.execute(
+            sql,
+            (conta_pendente_id,)
+        )
+
+        conta_pendente = cursor.fetchone()
+
+        if not conta_pendente:
+
+            raise TransferenciaInvalida(
+                "Conta pendente não encontrada."
             )
 
-            VALUES (
+        if conta_pendente["status"] != "aberta":
 
-                %s,
-                'aberta',
-                0
-
+            raise TransferenciaInvalida(
+                "Esta conta pendente já foi "
+                "transferida ou quitada."
             )
 
-            RETURNING id
+        # ==================================================
+        # ETAPA 2
+        # CONFERIR O CLIENTE
+        # ==================================================
+
+        try:
+
+            cliente_id = int(cliente_id)
+
+        except (TypeError, ValueError):
+
+            raise TransferenciaInvalida(
+                "Selecione um cliente válido."
+            )
+
+        sql = """
+            SELECT id
+
+            FROM cliente
+
+            WHERE id = %s
+
+            AND ativo = 1
         """
 
         cursor.execute(
@@ -756,154 +777,258 @@ def transferir_para_fiado(
             (cliente_id,)
         )
 
-        # Obtém ID da conta criada
-        conta_id = cursor.fetchone()[0]
+        if not cursor.fetchone():
 
-    # ==================================================
-    # ETAPA 2
-    # CALCULAR O VALOR TOTAL DA CONTA PENDENTE
-    # ==================================================
+            raise TransferenciaInvalida(
+                "Selecione um cliente válido."
+            )
 
-    # ------------------------------------------------
-    # SOMA O SALDO DEVEDOR DE TODAS AS
-    # VENDAS QUE PERTENCEM À CONTA PENDENTE
-    #
-    # COALESCE GARANTE QUE O RESULTADO
-    # NUNCA SEJA NULL
-    # ------------------------------------------------
-    sql = """
-        SELECT
+        # ==================================================
+        # ETAPA 3
+        # CALCULAR O QUE SERÁ TRANSFERIDO
+        # ==================================================
 
-            COALESCE(
-                SUM(saldo_devedor),
-                0
-            ) AS total
+        # ------------------------------------------------
+        # SOMENTE VENDAS DESTA CONTA PENDENTE QUE
+        # AINDA NÃO FORAM PAGAS ("pago" NÃO ENTRA).
+        #
+        # COALESCE GARANTE QUE O RESULTADO
+        # NUNCA SEJA NULL
+        # ------------------------------------------------
+        sql = """
+            SELECT
 
-        FROM venda
+                COUNT(*) AS quantidade,
 
-        WHERE conta_pendente_id = %s
-    """
+                COALESCE(
+                    SUM(saldo_devedor),
+                    0
+                ) AS total
 
-    cursor.execute(
-        sql,
-        (conta_pendente_id,)
-    )
+            FROM venda
 
-    total = cursor.fetchone()
+            WHERE conta_pendente_id = %s
 
-    # Valor total da dívida
-    saldo = total["total"]
+            AND COALESCE(
+                LOWER(status_pagamento),
+                ''
+            ) <> 'pago'
+        """
 
-    # ==================================================
-    # ETAPA 3
-    # ADICIONAR O SALDO À CONTA FIADO
-    # ==================================================
-
-    # ------------------------------------------------
-    # O VALOR DA CONTA PENDENTE É SOMADO
-    # AO SALDO DEVEDOR DA CONTA FIADO
-    #
-    # CASO O CLIENTE JÁ TENHA DÍVIDAS
-    # ANTERIORES, ELAS SERÃO MANTIDAS.
-    # ------------------------------------------------
-    sql = """
-        UPDATE conta
-
-        SET saldo_devedor =
-            saldo_devedor + %s
-
-        WHERE id = %s
-    """
-
-    cursor.execute(
-        sql,
-        (
-            saldo,
-            conta_id
+        cursor.execute(
+            sql,
+            (conta_pendente_id,)
         )
-    )
 
-    # ==================================================
-    # ETAPA 4
-    # TRANSFERIR AS VENDAS
-    # ==================================================
+        resumo = cursor.fetchone()
 
-    # ------------------------------------------------
-    # TODAS AS VENDAS DA CONTA PENDENTE
-    # PASSAM A PERTENCER À CONTA FIADO
-    #
-    # ALTERA:
-    #
-    # - conta_id
-    # - cliente_id
-    #
-    # REMOVE:
-    #
-    # - conta_pendente_id
-    #
-    # ISSO EFETIVAMENTE MOVE AS VENDAS
-    # PARA O FIADO
-    # ------------------------------------------------
-    sql = """
-        UPDATE venda
+        if resumo["quantidade"] == 0:
 
-        SET
+            raise TransferenciaInvalida(
+                "Esta conta não possui vendas "
+                "em aberto para transferir."
+            )
 
-            conta_id = %s,
+        # Valor total da dívida transferida
+        saldo = resumo["total"]
 
-            cliente_id = %s,
+        # ==================================================
+        # ETAPA 4
+        # VERIFICAR SE O CLIENTE JÁ POSSUI
+        # UMA CONTA FIADO ABERTA
+        # ==================================================
 
-            conta_pendente_id = NULL
+        sql = """
+            SELECT *
 
-        WHERE conta_pendente_id = %s
-    """
+            FROM conta
 
-    cursor.execute(
-        sql,
-        (
-            conta_id,
-            cliente_id,
-            conta_pendente_id
+            WHERE cliente_id = %s
+
+            AND status_conta = 'aberta'
+
+            LIMIT 1
+        """
+
+        cursor.execute(
+            sql,
+            (cliente_id,)
         )
-    )
 
-    # ==================================================
-    # ETAPA 5
-    # FECHAR CONTA PENDENTE
-    # ==================================================
+        conta = cursor.fetchone()
 
-    # ------------------------------------------------
-    # APÓS A TRANSFERÊNCIA,
-    # A CONTA PENDENTE NÃO DEVE MAIS
-    # APARECER COMO ABERTA NO SISTEMA.
-    #
-    # POR ISSO O STATUS É ALTERADO
-    # PARA "fechada".
-    # ------------------------------------------------
-    sql = """
-        UPDATE conta_pendente
+        # ------------------------------------------------
+        # SE A CONTA EXISTIR:
+        #
+        # UTILIZA A MESMA CONTA
+        #
+        # SE NÃO EXISTIR:
+        #
+        # CRIA UMA NOVA CONTA FIADO
+        # ------------------------------------------------
+        if conta:
 
-        SET status = 'fechada'
+            conta_id = conta["id"]
 
-        WHERE id = %s
-    """
+        else:
 
-    cursor.execute(
-        sql,
-        (conta_pendente_id,)
-    )
+            # Cria nova conta aberta
+            sql = """
+                INSERT INTO conta (
 
-    # ==================================================
-    # ETAPA 6
-    # SALVAR TODAS AS ALTERAÇÕES
-    # ==================================================
+                    cliente_id,
+                    status_conta,
+                    saldo_devedor
 
-    # Confirma todas as operações executadas
-    # durante esta transferência
-    conexao.commit()
+                )
 
-    # Libera cursor
-    cursor.close()
+                VALUES (
 
-    # Fecha conexão
-    conexao.close()
+                    %s,
+                    'aberta',
+                    0
+
+                )
+
+                RETURNING id
+            """
+
+            cursor.execute(
+                sql,
+                (cliente_id,)
+            )
+
+            # Obtém ID da conta criada
+            conta_id = cursor.fetchone()["id"]
+
+        # ==================================================
+        # ETAPA 5
+        # ADICIONAR O SALDO À CONTA FIADO
+        # ==================================================
+
+        # ------------------------------------------------
+        # O VALOR DAS VENDAS TRANSFERIDAS É SOMADO
+        # AO SALDO DEVEDOR DA CONTA FIADO
+        #
+        # CASO O CLIENTE JÁ TENHA DÍVIDAS
+        # ANTERIORES, ELAS SERÃO MANTIDAS.
+        # ------------------------------------------------
+        sql = """
+            UPDATE conta
+
+            SET saldo_devedor =
+                saldo_devedor + %s
+
+            WHERE id = %s
+        """
+
+        cursor.execute(
+            sql,
+            (
+                saldo,
+                conta_id
+            )
+        )
+
+        # ==================================================
+        # ETAPA 6
+        # TRANSFERIR AS VENDAS
+        # ==================================================
+
+        # ------------------------------------------------
+        # AS VENDAS EM ABERTO DA CONTA PENDENTE
+        # PASSAM A PERTENCER À CONTA FIADO
+        #
+        # ALTERA:
+        #
+        # - conta_id
+        # - cliente_id
+        #
+        # REMOVE:
+        #
+        # - conta_pendente_id
+        #
+        # VALORES, DATAS E STATUS DAS VENDAS
+        # NÃO SÃO ALTERADOS. VENDAS JÁ PAGAS
+        # PERMANECEM COMO ESTAVAM.
+        # ------------------------------------------------
+        sql = """
+            UPDATE venda
+
+            SET
+
+                conta_id = %s,
+
+                cliente_id = %s,
+
+                conta_pendente_id = NULL
+
+            WHERE conta_pendente_id = %s
+
+            AND COALESCE(
+                LOWER(status_pagamento),
+                ''
+            ) <> 'pago'
+        """
+
+        cursor.execute(
+            sql,
+            (
+                conta_id,
+                cliente_id,
+                conta_pendente_id
+            )
+        )
+
+        # ==================================================
+        # ETAPA 7
+        # MARCAR A CONTA PENDENTE COMO TRANSFERIDA
+        # ==================================================
+
+        # ------------------------------------------------
+        # APÓS A TRANSFERÊNCIA,
+        # A CONTA PENDENTE NÃO DEVE MAIS
+        # APARECER COMO ABERTA NO SISTEMA.
+        #
+        # POR ISSO O STATUS É ALTERADO
+        # PARA "transferida".
+        # ------------------------------------------------
+        sql = """
+            UPDATE conta_pendente
+
+            SET status = 'transferida'
+
+            WHERE id = %s
+
+            AND status = 'aberta'
+        """
+
+        cursor.execute(
+            sql,
+            (conta_pendente_id,)
+        )
+
+        # ==================================================
+        # ETAPA 8
+        # SALVAR TODAS AS ALTERAÇÕES
+        # ==================================================
+
+        # Confirma todas as operações executadas
+        # durante esta transferência
+        conexao.commit()
+
+    except Exception:
+
+        # Qualquer erro desfaz TODAS as alterações
+        # feitas durante esta transferência.
+        conexao.rollback()
+
+        raise
+
+    finally:
+
+        # Libera cursor
+        cursor.close()
+
+        # Fecha conexão
+        conexao.close()

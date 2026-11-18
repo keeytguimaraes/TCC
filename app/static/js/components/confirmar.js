@@ -31,6 +31,13 @@
 
     "use strict";
 
+    // Proteção contra carregamento duplicado: cada execução deste bloco
+    // cria o SEU PRÓPRIO <dialog> e registra o SEU PRÓPRIO ouvinte de
+    // "submit". Se o arquivo for incluído duas vezes (base.html + página),
+    // apareceriam duas janelas de confirmação. Só a primeira execução vale.
+    if (window.__sigcConfirmarIniciado) { return; }
+    window.__sigcConfirmarIniciado = true;
+
     var TIPOS = {
         desativar: {
             titulo: function (r) { return "Desativar " + r; },

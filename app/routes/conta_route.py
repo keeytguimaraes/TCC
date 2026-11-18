@@ -1,4 +1,3 @@
-
 # ============================================================
 # ROTAS DE CONTAS — SIGC
 # ============================================================
@@ -12,6 +11,10 @@
 # - Marcar as vendas relacionadas como pagas;
 # - Exibir a tela de transferência de conta;
 # - Transferir uma conta pendente para o fiado de um cliente.
+#
+# Todas as rotas de pagamento e transferência exigem usuário
+# autenticado. O cadastro de novos clientes (que funcionário
+# não pode fazer) é protegido na rota de clientes.
 #
 # As rotas recebem as requisições do navegador e chamam
 # os controllers ou models responsáveis pelas operações.
@@ -49,7 +52,8 @@ from app.database.conexao import conectar
 # Importa a função responsável por transferir uma conta
 # pendente para o fiado de um cliente.
 from app.models.conta_model import (
-    transferir_para_fiado
+    transferir_para_fiado,
+    TransferenciaInvalida
 )
 
 
@@ -112,6 +116,7 @@ def configurar_conta_routes(app):
         "/conta/pagar/<int:conta_id>",
         methods=["POST"]
     )
+    @login_obrigatorio
     def pagar_conta(conta_id):
         """
         Registra a quitação de uma conta pendente.
@@ -137,12 +142,30 @@ def configurar_conta_routes(app):
             UPDATE conta_pendente
             SET status = 'quitada'
             WHERE id = %s
+            AND status = 'aberta'
         """
 
         cursor.execute(
             sql_conta,
             (conta_id,)
         )
+
+        # Somente uma conta 'aberta' pode ser quitada. Se nenhuma
+        # linha foi atualizada, a conta não existe ou já foi quitada
+        # ou transferida: nada é alterado nas vendas.
+        if cursor.rowcount == 0:
+
+            conexao.rollback()
+
+            cursor.close()
+            conexao.close()
+
+            flash(
+                "Esta conta não está aberta e não pode ser quitada.",
+                "error"
+            )
+
+            return redirect("/conta")
 
         # ----------------------------------------------------
         # 2. MARCAR AS VENDAS COMO PAGAS
@@ -190,6 +213,7 @@ def configurar_conta_routes(app):
     @app.route(
         "/conta/transferir/<int:conta_id>"
     )
+    @login_obrigatorio
     def tela_transferir_conta(conta_id):
         """
         Carrega os clientes e apresenta a tela de transferência.
@@ -223,6 +247,7 @@ def configurar_conta_routes(app):
         "/conta/transferir/confirmar/<int:conta_id>",
         methods=["POST"]
     )
+    @login_obrigatorio
     def confirmar_transferencia(conta_id):
         """
         Transfere uma conta pendente para o fiado de um cliente.
@@ -241,10 +266,25 @@ def configurar_conta_routes(app):
 
         # Chama o model para realizar a transferência.
         # A regra de negócio permanece na função importada.
-        transferir_para_fiado(
-            conta_id,
-            cliente_id
-        )
+        #
+        # Se a transferência não puder ser feita (conta já
+        # transferida ou quitada, cliente inválido, sem vendas
+        # em aberto), o model não altera nada e informa o motivo.
+        try:
+
+            transferir_para_fiado(
+                conta_id,
+                cliente_id
+            )
+
+        except TransferenciaInvalida as erro:
+
+            flash(
+                str(erro),
+                "error"
+            )
+
+            return redirect("/conta")
 
         # Informa que a operação foi concluída.
         flash(

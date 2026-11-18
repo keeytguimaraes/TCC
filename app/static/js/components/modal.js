@@ -1,3 +1,12 @@
+(function () {
+
+    // Proteção contra carregamento duplicado: se este arquivo for
+    // incluído mais de uma vez na página (por exemplo, no base.html e
+    // de novo no bloco de scripts da página), os cliques seriam
+    // registrados em duplicidade. Só a primeira execução vale.
+    if (window.__sigcModalIniciado) { return; }
+    window.__sigcModalIniciado = true;
+
 document.addEventListener(
 
     "DOMContentLoaded",
@@ -83,3 +92,5 @@ document.addEventListener(
     }
 
 );
+
+})();
