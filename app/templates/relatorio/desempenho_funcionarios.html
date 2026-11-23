@@ -7,6 +7,7 @@ Desempenho de Funcionários
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/relatorio.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/desempenho_funcionarios.css') }}">
 {% endblock %}
 
 {% block conteudo %}
@@ -24,10 +25,26 @@ Desempenho de Funcionários
 
     <form
         class="rl-form-card"
+        id="rl-form-desempenho"
         method="POST"
         action="/relatorio/desempenho/pdf"
         target="_blank"
     >
+
+        <!-- ATALHOS DE PERÍODO -->
+
+        <div class="rd-atalhos" role="group" aria-label="Atalhos de período">
+            <span class="rd-atalhos-rotulo">Período rápido</span>
+
+            <div class="rd-atalhos-lista">
+                <button type="button" class="rd-atalho" data-periodo="hoje">Hoje</button>
+                <button type="button" class="rd-atalho" data-periodo="7dias">Últimos 7 dias</button>
+                <button type="button" class="rd-atalho" data-periodo="mes">Este mês</button>
+                <button type="button" class="rd-atalho" data-periodo="mes-anterior">Mês anterior</button>
+            </div>
+        </div>
+
+        <!-- PERÍODO -->
 
         <div class="rl-campos">
 
@@ -43,12 +60,69 @@ Desempenho de Funcionários
 
         </div>
 
+        <p class="rd-aviso-data" id="rd-aviso-data" role="alert" hidden>
+            A data final não pode ser anterior à data inicial.
+        </p>
+
         <div class="rl-acoes">
             <button type="submit" class="btn btn-salvar">Gerar PDF</button>
         </div>
 
     </form>
 
+    <!-- O QUE O PDF MOSTRA -->
+
+    <section class="rd-guia" aria-labelledby="rd-guia-titulo">
+
+        <h2 class="rd-guia-titulo" id="rd-guia-titulo">O que o PDF mostra</h2>
+
+        <ul class="rd-guia-lista">
+
+            <li class="rd-item">
+                <span class="rd-item-icone" aria-hidden="true"><i class="fa-solid fa-user"></i></span>
+                <div>
+                    <strong class="rd-item-nome">Funcionário</strong>
+                    <p class="rd-item-desc">Usuário que finalizou cada venda. Vendas sem usuário registrado aparecem como “Sem responsável registrado”.</p>
+                </div>
+            </li>
+
+            <li class="rd-item">
+                <span class="rd-item-icone" aria-hidden="true"><i class="fa-solid fa-receipt"></i></span>
+                <div>
+                    <strong class="rd-item-nome">Vendas</strong>
+                    <p class="rd-item-desc">Quantidade de vendas realizadas no período.</p>
+                </div>
+            </li>
+
+            <li class="rd-item">
+                <span class="rd-item-icone" aria-hidden="true"><i class="fa-solid fa-coins"></i></span>
+                <div>
+                    <strong class="rd-item-nome">Total vendido</strong>
+                    <p class="rd-item-desc">Soma dos valores de todas as vendas, pagas ou não.</p>
+                </div>
+            </li>
+
+            <li class="rd-item">
+                <span class="rd-item-icone" aria-hidden="true"><i class="fa-solid fa-chart-simple"></i></span>
+                <div>
+                    <strong class="rd-item-nome">Ticket médio</strong>
+                    <p class="rd-item-desc">Valor médio por venda de cada funcionário.</p>
+                </div>
+            </li>
+
+        </ul>
+
+        <p class="rd-guia-nota">
+            <i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i>
+            Ordenado do maior para o menor total vendido. O PDF abre em uma nova aba.
+        </p>
+
+    </section>
+
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/pages/desempenho_funcionarios.js') }}"></script>
 {% endblock %}

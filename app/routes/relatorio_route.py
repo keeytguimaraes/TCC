@@ -1,4 +1,3 @@
-
 # ============================================================
 # ROTAS DE RELATÓRIOS — SIGC
 # ============================================================
@@ -10,7 +9,9 @@
 # - Exibir a tela de relatório de vendas;
 # - Gerar PDF das vendas de um período;
 # - Exibir a tela de fechamento diário;
-# - Gerar PDF do fechamento diário.
+# - Gerar PDF do fechamento diário;
+# - Exibir a tela de desempenho de funcionários;
+# - Gerar PDF do desempenho de funcionários.
 #
 # As consultas dos dados são realizadas pelos controllers.
 # A formatação dos documentos PDF é delegada às funções
@@ -26,6 +27,7 @@ from app.utils.auth import (
 
 # Importa as ferramentas necessárias do Flask.
 from flask import (
+    redirect,
     render_template,
     request,
     send_file
@@ -43,13 +45,16 @@ from app.controllers.relatorio_pdf_controller import (
     pegar_vendas_periodo,
     pegar_resumo_periodo,
     pegar_fechamento_dia,
-    pegar_resumo_fechamento
+    pegar_resumo_fechamento,
+    pegar_desempenho_funcionarios,
+    pegar_resumo_desempenho
 )
 
 # Importa as funções que geram os arquivos PDF.
 from app.utils.pdf_generator import (
     gerar_relatorio_vendas_pdf,
-    gerar_fechamento_diario_pdf
+    gerar_fechamento_diario_pdf,
+    gerar_desempenho_funcionarios_pdf
 )
 
 # datetime permite obter a data e a hora atuais para
@@ -359,6 +364,135 @@ def configurar_relatorio_routes(app):
         # 5. ENVIAR O PDF AO NAVEGADOR
         # ----------------------------------------------------
         # Retorna o arquivo gerado ao navegador como PDF.
+        return send_file(
+            caminho_pdf,
+            mimetype="application/pdf"
+        )
+
+    # --------------------------------------------------------
+    # TELA DE DESEMPENHO DE FUNCIONÁRIOS
+    # --------------------------------------------------------
+    # URL: /relatorio/desempenho
+    # Método: GET
+    #
+    # Exibe o formulário usado para escolher o período
+    # do relatório de desempenho de funcionários.
+    @app.route(
+        "/relatorio/desempenho"
+    )
+    @login_obrigatorio
+    @perfil_obrigatorio(
+        "administrador",
+        "gerente"
+    )
+    def tela_desempenho_funcionarios():
+        """
+        Exibe a página do relatório de desempenho.
+        """
+
+        return render_template(
+            "relatorio/desempenho_funcionarios.html"
+        )
+
+    # --------------------------------------------------------
+    # GERAR DESEMPENHO DE FUNCIONÁRIOS EM PDF
+    # --------------------------------------------------------
+    # URL: /relatorio/desempenho/pdf
+    # Método: POST
+    #
+    # Recebe o período, consulta as vendas agrupadas por
+    # funcionário, gera o PDF e o envia ao navegador.
+    @app.route(
+        "/relatorio/desempenho/pdf",
+        methods=["POST"]
+    )
+    @login_obrigatorio
+    @perfil_obrigatorio(
+        "administrador",
+        "gerente"
+    )
+    def gerar_desempenho_funcionarios():
+        """
+        Gera o PDF de desempenho de funcionários no período.
+        """
+
+        # ----------------------------------------------------
+        # 1. RECUPERAR E VALIDAR O PERÍODO
+        # ----------------------------------------------------
+        data_inicial = request.form.get(
+            "data_inicial"
+        )
+
+        data_final = request.form.get(
+            "data_final"
+        )
+
+        # Datas ausentes, inválidas ou em ordem invertida
+        # voltam ao formulário, em vez de gerar um erro 500.
+        try:
+
+            inicio = datetime.strptime(
+                data_inicial,
+                "%Y-%m-%d"
+            )
+
+            fim = datetime.strptime(
+                data_final,
+                "%Y-%m-%d"
+            )
+
+        except (TypeError, ValueError):
+
+            return redirect(
+                "/relatorio/desempenho"
+            )
+
+        if fim < inicio:
+
+            return redirect(
+                "/relatorio/desempenho"
+            )
+
+        # ----------------------------------------------------
+        # 2. BUSCAR OS DADOS DO PERÍODO
+        # ----------------------------------------------------
+        funcionarios = pegar_desempenho_funcionarios(
+            data_inicial,
+            data_final
+        )
+
+        resumo = pegar_resumo_desempenho(
+            data_inicial,
+            data_final
+        )
+
+        # ----------------------------------------------------
+        # 3. PREPARAR O ARQUIVO
+        # ----------------------------------------------------
+        os.makedirs(
+            "relatorios",
+            exist_ok=True
+        )
+
+        timestamp = datetime.now().strftime(
+            "%Y%m%d_%H%M%S"
+        )
+
+        caminho_pdf = (
+            f"relatorios/desempenho_funcionarios_{timestamp}.pdf"
+        )
+
+        # ----------------------------------------------------
+        # 4. GERAR E ENVIAR O PDF
+        # ----------------------------------------------------
+        gerar_desempenho_funcionarios_pdf(
+            caminho_pdf,
+            data_inicial,
+            data_final,
+            resumo,
+            funcionarios
+        )
+
         return send_file(
             caminho_pdf,
             mimetype="application/pdf"

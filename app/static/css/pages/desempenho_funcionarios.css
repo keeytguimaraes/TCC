@@ -1,0 +1,205 @@
+/* ==========================================================
+   DESEMPENHO DE FUNCIONÁRIOS — SIGC
+   Página: relatorio/desempenho_funcionarios.html
+
+   - Complementa relatorio.css (carregado antes na página).
+   - Tudo escopado em .rl; usa os tokens --rl-* já definidos.
+   - Prefixo .rd- para não colidir com outros relatórios.
+   ========================================================== */
+
+/* ---------- atalhos de período ---------- */
+
+.rl .rd-atalhos{
+    margin:0 0 18px;
+}
+
+.rl .rd-atalhos-rotulo{
+    display:block;
+    margin:0 0 8px;
+    font-size:.8125rem;
+    font-weight:600;
+    line-height:1.3;
+    color:var(--rl-texto);
+}
+
+.rl .rd-atalhos-lista{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.rl .rd-atalho{
+    min-height:38px;
+    margin:0;
+    padding:0 14px;
+    font:inherit;
+    font-size:.875rem;
+    font-weight:600;
+    line-height:1;
+    color:var(--rl-texto);
+    background:var(--rl-card);
+    border:1px solid var(--rl-borda-campo);
+    border-radius:999px;
+    cursor:pointer;
+    transition:border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+
+.rl .rd-atalho:hover{
+    border-color:var(--rl-preto);
+    background:var(--rl-fundo-suave);
+}
+
+.rl .rd-atalho:focus-visible{
+    outline:none;
+    border-color:var(--rl-preto);
+    box-shadow:var(--rl-anel);
+}
+
+.rl .rd-atalho:active{
+    transform:translateY(1px);
+}
+
+.rl .rd-atalho--ativo,
+.rl .rd-atalho--ativo:hover{
+    color:var(--rl-preto);
+    background:var(--rl-amarelo);
+    border-color:var(--rl-preto);
+}
+
+/* ---------- aviso de data ---------- */
+
+.rl .rd-aviso-data{
+    margin:12px 0 0;
+    padding:10px 12px;
+    font-size:.875rem;
+    font-weight:600;
+    line-height:1.4;
+    color:var(--rl-vermelho);
+    background:#fdecec;
+    border:1px solid #f3c2c2;
+    border-left:4px solid var(--rl-vermelho);
+    border-radius:10px;
+}
+
+.rl .rd-aviso-data[hidden]{
+    display:none;
+}
+
+/* ---------- guia: o que o PDF mostra ---------- */
+
+.rl .rd-guia{
+    margin-top:16px;
+    padding:20px 24px 18px;
+    background:var(--rl-card);
+    border:1px solid var(--rl-borda);
+    border-radius:14px;
+    box-shadow:var(--rl-sombra);
+}
+
+.rl .rd-guia-titulo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:0 0 16px;
+    font-size:1.0625rem;
+    font-weight:700;
+    letter-spacing:-.01em;
+    color:var(--rl-texto);
+}
+
+.rl .rd-guia-titulo::before{
+    content:"";
+    flex-shrink:0;
+    width:4px;
+    height:18px;
+    background:var(--rl-vermelho);
+    border-radius:2px;
+}
+
+.rl .rd-guia-lista{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:16px;
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.rl .rd-item{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    min-width:0;
+}
+
+.rl .rd-item-icone{
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    font-size:.95rem;
+    color:var(--rl-amarelo);
+    background:var(--rl-preto);
+    border-radius:10px;
+}
+
+.rl .rd-item-nome{
+    display:block;
+    margin:0 0 2px;
+    font-size:.9375rem;
+    font-weight:700;
+    color:var(--rl-texto);
+}
+
+.rl .rd-item-desc{
+    margin:0;
+    font-size:.875rem;
+    line-height:1.45;
+    color:var(--rl-suave);
+}
+
+.rl .rd-guia-nota{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:18px 0 0;
+    padding-top:14px;
+    font-size:.8125rem;
+    line-height:1.4;
+    color:var(--rl-suave);
+    border-top:1px solid var(--rl-borda);
+}
+
+.rl .rd-guia-nota i{
+    flex-shrink:0;
+    color:var(--rl-vermelho);
+}
+
+/* ---------- responsividade ---------- */
+
+@media (max-width:640px){
+
+    .rl .rd-guia{
+        padding:18px 16px 16px;
+    }
+
+    .rl .rd-guia-lista{
+        grid-template-columns:1fr;
+        gap:14px;
+    }
+
+    .rl .rd-atalho{
+        flex:1 1 calc(50% - 8px);
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+
+    .rl .rd-atalho,
+    .rl .rd-atalho:active{
+        transition:none;
+        transform:none;
+    }
+}

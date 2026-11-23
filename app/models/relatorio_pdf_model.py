@@ -1,4 +1,3 @@
-
 # ============================================================
 # MODEL DE RELATÓRIOS PDF
 # ============================================================
@@ -740,3 +739,137 @@ def resumo_fechamento_dia(data):
 
     # Retorna o dicionário com os indicadores do fechamento.
     return resultado
+
+
+# ============================================================
+# DESEMPENHO DE FUNCIONÁRIOS
+# ============================================================
+# Quem fez cada venda está em venda.usuario_id, que se relaciona
+# com usuario.id (o nome do funcionário está em usuario.nome).
+# O relacionamento é o mesmo já utilizado em
+# listar_historico_vendas(), no vendas_model.py.
+#
+# Como nenhum status de cancelamento existe no sistema (os status
+# de pagamento são apenas 'pago' e 'pendente'), todas as vendas do
+# período são consideradas, no mesmo critério do filtro "todas"
+# dos demais relatórios.
+#
+# O agrupamento é feito por v.usuario_id (e não pelo nome), para
+# que dois usuários com o mesmo nome não sejam somados e para que
+# todas as vendas sem usuário registrado formem um único grupo.
+# O JOIN com usuario é pela chave primária, portanto não duplica
+# vendas.
+
+def buscar_desempenho_funcionarios(
+    data_inicial,
+    data_final
+):
+    """
+    Agrupa as vendas do período por usuário responsável.
+
+    Retorno:
+        Lista de dicionários, do maior para o menor total
+        vendido, contendo:
+        - funcionario: nome do usuário ('Sem responsável
+          registrado' quando a venda não tem usuário);
+        - quantidade_vendas: número de vendas;
+        - total_vendido: soma do valor_total;
+        - ticket_medio: média do valor_total.
+    """
+
+    sql = """
+        SELECT
+            COALESCE(
+                u.nome,
+                'Sem responsável registrado'
+            ) AS funcionario,
+
+            COUNT(*) AS quantidade_vendas,
+
+            COALESCE(
+                SUM(v.valor_total),
+                0
+            ) AS total_vendido,
+
+            COALESCE(
+                AVG(v.valor_total),
+                0
+            ) AS ticket_medio
+
+        FROM venda v
+
+        LEFT JOIN usuario u
+            ON u.id = v.usuario_id
+
+        WHERE DATE(v.data_venda) BETWEEN %s AND %s
+
+        GROUP BY
+            v.usuario_id,
+            u.nome
+
+        ORDER BY
+            total_vendido DESC,
+            funcionario
+    """
+
+    return _consultar_todos(
+        sql,
+        (data_inicial, data_final)
+    )
+
+
+def resumo_desempenho_funcionarios(
+    data_inicial,
+    data_final
+):
+    """
+    Calcula os totais gerais do período para o relatório.
+
+    Retorno:
+        Dicionário com:
+        - funcionarios: quantidade de grupos de responsáveis
+          (cada usuário conta uma vez; vendas sem usuário
+          contam como um único grupo);
+        - total_vendas: quantidade de vendas;
+        - total_vendido: soma do valor_total;
+        - ticket_medio: média do valor_total.
+    """
+
+    sql = """
+        SELECT
+            (
+                SELECT COUNT(*)
+                FROM (
+                    SELECT 1
+                    FROM venda
+                    WHERE DATE(data_venda) BETWEEN %s AND %s
+                    GROUP BY usuario_id
+                ) AS grupos
+            ) AS funcionarios,
+
+            COUNT(*) AS total_vendas,
+
+            COALESCE(
+                SUM(valor_total),
+                0
+            ) AS total_vendido,
+
+            COALESCE(
+                AVG(valor_total),
+                0
+            ) AS ticket_medio
+
+        FROM venda
+
+        WHERE DATE(data_venda) BETWEEN %s AND %s
+    """
+
+    return _consultar_um(
+        sql,
+        (
+            data_inicial,
+            data_final,
+            data_inicial,
+            data_final
+        )
+    )

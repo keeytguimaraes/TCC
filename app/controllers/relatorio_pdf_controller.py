@@ -21,7 +21,11 @@ from app.models.relatorio_pdf_model import (
 
     buscar_vendas_dia,
 
-    resumo_fechamento_dia
+    resumo_fechamento_dia,
+
+    buscar_desempenho_funcionarios,
+
+    resumo_desempenho_funcionarios
 )
 
 
@@ -214,4 +218,57 @@ def pegar_resumo_fechamento(
 
     return resumo_fechamento_dia(
         data
+    )
+
+# ==================================================
+# DESEMPENHO DE FUNCIONÁRIOS
+# ==================================================
+#
+# Retorna as vendas do período agrupadas
+# por funcionário (usuário responsável),
+# ordenadas do maior para o menor total
+# vendido.
+#
+# Cada item contém: funcionario,
+# quantidade_vendas, total_vendido
+# e ticket_medio.
+#
+# ==================================================
+
+def pegar_desempenho_funcionarios(
+
+    data_inicial,
+
+    data_final
+):
+
+    return buscar_desempenho_funcionarios(
+
+        data_inicial,
+
+        data_final
+    )
+
+
+# ==================================================
+# RESUMO DO DESEMPENHO DE FUNCIONÁRIOS
+# ==================================================
+#
+# Totais gerais do período: funcionarios,
+# total_vendas, total_vendido e ticket_medio.
+#
+# ==================================================
+
+def pegar_resumo_desempenho(
+
+    data_inicial,
+
+    data_final
+):
+
+    return resumo_desempenho_funcionarios(
+
+        data_inicial,
+
+        data_final
     )
