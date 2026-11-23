@@ -7,6 +7,7 @@ Fechamento Diário
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/relatorio.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/relatorios_apoio.css') }}">
 {% endblock %}
 
 {% block conteudo %}
@@ -27,7 +28,22 @@ Fechamento Diário
         method="POST"
         action="/relatorio/fechamento/pdf"
         target="_blank"
+        data-relatorio-periodo
+        data-modo="dia"
     >
+
+        <div class="ra-atalhos" role="group" aria-label="Atalhos de data">
+
+            <span class="ra-atalhos-rotulo">Seleção rápida</span>
+
+            <div class="ra-atalhos-lista">
+                <button type="button" class="ra-atalho" data-periodo="hoje">Hoje</button>
+                <button type="button" class="ra-atalho" data-periodo="ontem">Ontem</button>
+                <button type="button" class="ra-atalho" data-periodo="inicio-mes">Primeiro dia do mês</button>
+                <button type="button" class="ra-atalho" data-periodo="fim-mes">Último dia do mês</button>
+            </div>
+
+        </div>
 
         <div class="rl-campos">
 
@@ -44,6 +60,51 @@ Fechamento Diário
 
     </form>
 
+    <section class="ra-guia" aria-labelledby="ra-guia-fechamento">
+
+        <h2 class="ra-guia-titulo" id="ra-guia-fechamento">
+            Sobre o fechamento diário
+        </h2>
+
+        <ul class="ra-guia-lista">
+
+            <li class="ra-item">
+                <span class="ra-item-icone" aria-hidden="true">
+                    <i class="fa-solid fa-calendar-day"></i>
+                </span>
+                <div>
+                    <strong class="ra-item-nome">Data selecionada</strong>
+                    <p class="ra-item-desc">
+                        O fechamento será gerado considerando o dia escolhido no formulário.
+                    </p>
+                </div>
+            </li>
+
+            <li class="ra-item">
+                <span class="ra-item-icone" aria-hidden="true">
+                    <i class="fa-solid fa-file-pdf"></i>
+                </span>
+                <div>
+                    <strong class="ra-item-nome">Documento em PDF</strong>
+                    <p class="ra-item-desc">
+                        O resumo financeiro será gerado em formato PDF para consulta e impressão.
+                    </p>
+                </div>
+            </li>
+
+        </ul>
+
+        <p class="ra-guia-nota">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            O PDF será aberto em uma nova aba.
+        </p>
+
+    </section>
+
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/pages/relatorios_periodo.js') }}"></script>
 {% endblock %}

@@ -7,6 +7,7 @@ Relatório de Vendas
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/components/acoes.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/relatorio.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/relatorios_apoio.css') }}">
 {% endblock %}
 
 {% block conteudo %}
@@ -27,7 +28,22 @@ Relatório de Vendas
         method="POST"
         action="/relatorio/vendas/pdf"
         target="_blank"
+        data-relatorio-periodo
+        data-modo="periodo"
     >
+
+        <div class="ra-atalhos" role="group" aria-label="Atalhos de período">
+
+            <span class="ra-atalhos-rotulo">Período rápido</span>
+
+            <div class="ra-atalhos-lista">
+                <button type="button" class="ra-atalho" data-periodo="hoje">Hoje</button>
+                <button type="button" class="ra-atalho" data-periodo="7dias">Últimos 7 dias</button>
+                <button type="button" class="ra-atalho" data-periodo="mes">Este mês</button>
+                <button type="button" class="ra-atalho" data-periodo="mes-anterior">Mês anterior</button>
+            </div>
+
+        </div>
 
         <div class="rl-campos">
 
@@ -43,6 +59,7 @@ Relatório de Vendas
 
             <div class="rl-campo rl-campo--cheio">
                 <label for="rl-tipo-vendas">Tipo de Vendas</label>
+
                 <select id="rl-tipo-vendas" name="tipo_vendas" required>
                     <option value="todas">Todas</option>
                     <option value="pagas">Apenas Pagas</option>
@@ -52,12 +69,73 @@ Relatório de Vendas
 
         </div>
 
+        <p class="ra-aviso-data" role="alert" hidden>
+            A data final não pode ser anterior à data inicial.
+        </p>
+
         <div class="rl-acoes">
             <button type="submit" class="btn btn-salvar">Gerar PDF</button>
         </div>
 
     </form>
 
+    <section class="ra-guia" aria-labelledby="ra-guia-vendas">
+
+        <h2 class="ra-guia-titulo" id="ra-guia-vendas">
+            Filtros do relatório
+        </h2>
+
+        <ul class="ra-guia-lista">
+
+            <li class="ra-item">
+                <span class="ra-item-icone" aria-hidden="true">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                <div>
+                    <strong class="ra-item-nome">Período</strong>
+                    <p class="ra-item-desc">
+                        Define o intervalo de datas utilizado na geração do relatório.
+                    </p>
+                </div>
+            </li>
+
+            <li class="ra-item">
+                <span class="ra-item-icone" aria-hidden="true">
+                    <i class="fa-solid fa-filter"></i>
+                </span>
+                <div>
+                    <strong class="ra-item-nome">Tipo de venda</strong>
+                    <p class="ra-item-desc">
+                        Permite visualizar todas as vendas, somente as pagas ou somente as pendentes.
+                    </p>
+                </div>
+            </li>
+
+            <li class="ra-item">
+                <span class="ra-item-icone" aria-hidden="true">
+                    <i class="fa-solid fa-file-pdf"></i>
+                </span>
+                <div>
+                    <strong class="ra-item-nome">Relatório em PDF</strong>
+                    <p class="ra-item-desc">
+                        Gera o documento de acordo com os filtros selecionados.
+                    </p>
+                </div>
+            </li>
+
+        </ul>
+
+        <p class="ra-guia-nota">
+            <i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i>
+            Selecione os filtros desejados antes de gerar o PDF. O documento será aberto em uma nova aba.
+        </p>
+
+    </section>
+
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/pages/relatorios_periodo.js') }}"></script>
 {% endblock %}
