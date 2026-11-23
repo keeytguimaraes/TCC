@@ -7,7 +7,6 @@
     <title>Entrar · SIGC</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/login.css') }}">
-
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
 </head>
@@ -25,12 +24,28 @@
 
             <div class="login-media__brand">
                 <div class="login-media__mark">S</div>
-                <span class="login-media__name">SIGC</span>
+                <div class="login-media__brand-text">
+                    <span class="login-media__name">SIGC</span>
+                    <small>Sistema Integrado de Gestão Comercial</small>
+                </div>
             </div>
 
             <div class="login-media__caption">
-                <h2>Gestão comercial do seu jeito.</h2>
-                <p>Estoque, vendas e caixa em um só lugar.</p>
+                <div class="login-media__eyebrow">
+                    <span></span>
+                    BAR E MERCEARIA
+                </div>
+
+                <h2>Bem-vindo de volta ao <strong>1º Gole.</strong></h2>
+
+                <p>Estoque, vendas, fiado e relatórios do seu comércio, em um só lugar.</p>
+
+                <div class="login-media__modules">
+                    <span>Estoque</span>
+                    <span>Vendas</span>
+                    <span>Fiado</span>
+                    <span>Relatórios</span>
+                </div>
             </div>
         </div>
 
@@ -60,7 +75,7 @@
                 <form class="login-form" method="POST" action="{{ url_for('login') }}" novalidate>
 
                     <div class="login-field">
-                        <label for="usuario">Usuário</label>
+                        <label for="usuario">E-mail ou usuário</label>
                         <div class="login-input-wrap">
                             <svg class="login-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <rect x="2" y="4" width="20" height="16" rx="2"/>
@@ -70,7 +85,7 @@
                                 type="text"
                                 id="usuario"
                                 name="usuario"
-                                placeholder="seu usuário"
+                                placeholder="seuemail@empresa.com"
                                 value="{{ usuario_preenchido|default('') }}"
                                 autocomplete="username"
                                 autofocus
@@ -90,7 +105,7 @@
                                 type="password"
                                 id="senha"
                                 name="senha"
-                                placeholder="sua senha"
+                                placeholder="Sua senha"
                                 autocomplete="current-password"
                                 required
                             >
@@ -122,6 +137,10 @@
                     <button type="submit" class="login-submit" id="botao-entrar">
                         <span class="login-submit__spinner" aria-hidden="true"></span>
                         <span class="login-submit__label">Entrar</span>
+                        <svg class="login-submit__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M5 12h14"/>
+                            <path d="m12 5 7 7-7 7"/>
+                        </svg>
                     </button>
 
                 </form>
