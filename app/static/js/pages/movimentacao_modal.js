@@ -127,14 +127,14 @@ document.addEventListener(
                 ) || 0;
 
             const vendePorUnidade =
-                Number(
-                    opcaoSelecionada.dataset.unidade
-                ) || 0;
-
+                ["true", "1"].includes(
+                    String(opcaoSelecionada.dataset.unidade).toLowerCase()
+                );
+            
             const vendePorDose =
-                Number(
-                    opcaoSelecionada.dataset.dose
-                ) || 0;
+                ["true", "1"].includes(
+                    String(opcaoSelecionada.dataset.dose).toLowerCase()
+                );
 
             const categoria =
                 (
@@ -163,7 +163,7 @@ document.addEventListener(
             }
 
             else if(
-                vendePorDose === 1
+                vendePorDose
             ){
 
                 labelCaixa.textContent =
@@ -214,7 +214,8 @@ document.addEventListener(
             // ==========================
 
             if(
-                vendePorUnidade === 1
+                quantidadePorCaixa > 1 ||
+                vendePorUnidade
             ){
 
                 grupoUnidade.style.display =
@@ -227,13 +228,12 @@ document.addEventListener(
                     "none";
 
             }
-
             // ==========================
             // DOSE / AVULSO
             // ==========================
 
             if(
-                vendePorDose === 1 ||
+                vendePorDose ||
                 categoria.includes(
                     "cigarro"
                 )
