@@ -638,6 +638,14 @@
     box-shadow: var(--shadow-focus);
 }
 
+/* Oculta o botão nativo de revelar senha do Edge/Chromium. O campo já tem
+   o botão de olho do SIGC; sem esta regra o navegador desenha um segundo
+   ícone dentro do campo assim que algo é digitado. */
+.campo-senha input::-ms-reveal,
+.campo-senha input::-ms-clear {
+    display: none;
+}
+
 .acoes-formulario {
     display: flex;
     justify-content: flex-end;
